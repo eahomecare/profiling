@@ -33,16 +33,16 @@ model Customer {
   keys               String[] @default([])
   profile_completion Int?
 
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @updatedAt
-  created_by       String?
-  updated_by       String?
-  personal_details Personal_Details?
-  // age                  age?
-  // Vehicle_Details      Vehicle_Details?
-  // Sports               Sports?
-  // Health               Health?
-  // Food_And_Restaurants Food_And_Restaurants?
+  created_at           DateTime              @default(now())
+  updated_at           DateTime              @updatedAt
+  created_by           String?
+  updated_by           String?
+  personal_details     Personal_Details?
+  age                  age?
+  Vehicle_Details      Vehicle_Details?
+  Sports               Sports?
+  Health               Health?
+  Food_And_Restaurants Food_And_Restaurants?
 
   @@map("customers")
 }
@@ -61,32 +61,32 @@ model Personal_Details {
   anniversary   String?
 }
 
-// model age {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   customer    Customer @relation(fields: [customer_id], references: [id])
-//   customer_id String   @unique @db.ObjectId
-// }
+model age {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique @db.ObjectId
+}
 
-// model Vehicle_Details {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   customer    Customer @relation(fields: [customer_id], references: [id])
-//   customer_id String   @unique @db.ObjectId
-// }
+model Vehicle_Details {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique @db.ObjectId
+}
 
-// model Sports {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   customer    Customer @relation(fields: [customer_id], references: [id])
-//   customer_id String   @unique @db.ObjectId
-// }
+model Sports {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique @db.ObjectId
+}
 
-// model Health {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   customer    Customer @relation(fields: [customer_id], references: [id])
-//   customer_id String   @unique @db.ObjectId
-// }
+model Health {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique @db.ObjectId
+}
 
-// model Food_And_Restaurants {
-//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-//   customer    Customer @relation(fields: [customer_id], references: [id])
-//   customer_id String   @unique @db.ObjectId
-// }
+model Food_And_Restaurants {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customer    Customer @relation(fields: [customer_id], references: [id])
+  customer_id String   @unique @db.ObjectId
+}
