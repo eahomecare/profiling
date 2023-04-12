@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = {
+    Vehicle_Details: ['Automatic', 'Fuel Efficiency', 'Safety', 'Upgradable', 'Ownership', 'Maintenance Requirements', 'Environment Impact', 'Insurances', 'Vehicle Identification Number', 'License', 'Registration Fees', 'Taxation', 'Bicycle', 'Motorcycle', 'Car', 'Pickup truck', 'Scooters', 'Boat', 'Yacht', 'Two wheeler', 'Four wheeler'],
+    Health: ['Mental Health', 'Physical Health', 'Fitness', 'Nutrition', 'Exercise', 'Sleep', 'Diet', 'Paleo', 'Vegan', 'Low_Carb', 'Dukan', 'Ultra_Low_Fat', 'Atkins', 'HCG', 'Fasting', 'Intermittent', 'Phycology'],
+    Sports: ['Athletics', 'Team', 'Individual', 'Extreme', 'Olympics', 'Common Wealth', 'Net', 'Fielding', 'Striking', 'Target', 'Animal', 'Underwater', 'Mind', 'Martial Arts', 'Air', 'Adventure', 'Golf',],
+    Food_And_Restaurants: ['Cuisine', 'North Indian', 'South Indian', 'North Eastern', 'Cooking', 'Recipes', 'Snack', 'Lunch', 'breakfast', 'dinner', 'brunch', 'diet', 'organic', 'delivery takeaway', 'culinary', 'flyovers', 'foodie', 'food culture', 'comfort food', 'street food', 'fast food'],
+    Occupation: ['Role', 'Position', 'Duty', 'Profession', 'Trade', 'Craft', 'Business', 'Livelihood', 'Avocation', 'Vocation ', 'Appointment', 'Job'],
+    Family_Details: ['Nuclear', 'Joint', 'Siblings', 'Children', 'Grandparents', 'Aunt & Uncle', 'Cousins', 'Relatives', 'Love', 'Friendship', 'Care_giver', 'daughter_in_law', 'mother_in_law', 'father_in_law', 'sister_in_law', 'divorce', 'engaged', 'ex_husband', 'ex_wife', 'half_brother', 'half_sister', 'step_brother', 'step_sister', 'kin', 'next_to_kin', 'single', 'twins', 'offspring'],
+    Social_Media: ['Networking', 'Research', 'Review', 'Creation', 'Image sharing', 'video sharing', 'Engagement', 'Community', 'Blogs', 'Vlogs', 'Discussion Platform'],
+    Location: ['Area', 'PIN Code', 'home', 'Address', 'Street Address', 'Postal Code', 'Locality', 'City', 'State', 'Landmarks'],
+    Travel: ['Trip', 'Business Trip', 'Exploration', 'Holiday', 'Vacation', 'Sightseeing', 'Getaway', 'Destination', 'Journey', 'Hotel', 'tickets', 'air ticket', 'train', 'taxi', 'airfare', 'package', 'budget travel',],
+    Insurance: ['Car insurance', 'insurance quotes', 'auto', 'public liability', 'insurance agents', 'business insurance', 'broker', 'policy', 'insurance policy', 'risk', 'coverage', 'premiums', 'claims', 'liabilities', 'financial security', 'safety', 'investments', 'assurance'],
+    Cards: ['Debit', 'Credit', 'Prepaid', 'Electronic', 'Black', 'Platinum', 'Premium', 'Reloadable', 'Millennia', 'Forex', 'Commercial Credit Card', 'MasterCard', 'Visa', 'Luxury', 'American Express', 'ATM Card', 'Interest Rates', 'Payment Security', 'Fraud Prevention'],
+    Events: ['Conferences', 'Trade', 'Networking', 'Workshops', 'Team Building', 'Product Launch', 'Charity', 'Internal Corporate Events', 'Weddings', 'Engagements', 'Parties', 'Ball', 'Banquets', 'Birthday', 'Dinner', 'Garden', 'Cocktail', 'Tea', 'Celebration', 'Occasion', 'Festival', 'Music', 'Concerts', 'Ceremony', 'Reception', 'Formal', 'Carnival', 'Symposium', 'Summit', 'Exposition', 'Expo', 'Auto_Expo', 'Fair', 'Gala', 'Get_together', 'Jubilee', 'Meet', 'Outing', 'Parade', 'rally', 'soiree', 'tournament', 'reunion'],
+    Income_Sources: ['Salary', 'Revenue', 'Profit', 'Earning', 'Credit Score', 'Wages', 'Bankroll', 'Tips', 'Funds', 'Trust', 'Expenses', 'Expenditure', 'Taxation', 'Budgeting', 'Savings', 'Benefits', 'Influx', 'inflow', 'CTC', 'Tax', 'Returns',],
+};
+//# sourceMappingURL=classification.object.js.map
