@@ -1,19 +1,33 @@
-import { Text, Button, Stack } from "@mantine/core";
-import { ThemeProvider } from "./ThemeProvider";
+
+import Layout from "./components/Layout";
+// import PrivateRoute from "./components/PrivateRoute";
+import { Route, Routes } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
+import { setAuth } from "./redux/authSlice";
+
+
 import Login from "./pages/Login/Login";
+import Profile from "./pages/Profile/Profile";
+import { RootState } from "./redux/store";
 
 
-const handleLogin = (username: string, password: string) => {
-  console.log(`Logging in with username: ${username} and password: ${password}`);
-  // Perform login logic here
-};
+function App() {
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state:RootState) => state.auth);
 
-export default function App() {
+
   return (
-    <ThemeProvider>
-      <Login />
-    </ThemeProvider>
+    <Routes>
+      <>
+      <Route path="/login">
+       <Login/>
+      </Route>
+      </>
+      
+    </Routes>
   );
 }
 
-
+export default App;
