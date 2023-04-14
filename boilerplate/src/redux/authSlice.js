@@ -13,7 +13,7 @@ const initialState = {
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (userData) => {
-    const { data } = await axios.post("/auth/login", userData);
+    const { data } = await axios.post("/auth/signin", userData);
     return data;
   }
 );
@@ -21,7 +21,7 @@ export const loginUser = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData) => {
-    const { data } = await axios.post("/auth/register", userData);
+    const { data } = await axios.post("/auth/signup", userData);
     return data;
   }
 );

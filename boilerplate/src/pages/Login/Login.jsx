@@ -30,17 +30,19 @@ import {
   
   
   export default function Login() {
-      const [loginData, setLoginData] = useState({ email: "", password: "" });
+
+      const [email,setEmail] = useState("")
+      const [password,setPassword] = useState("")
       const dispatch = useDispatch();
       //   const navigate = useNavigate();
   
   
     const { status, isLoggedIn } = useSelector((state)=> state.auth);
   
-  //   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
-  //     dispatch(loginUser(loginData));
-  //   };
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      dispatch(loginUser({email,password}));
+    };
   
   
     const form = useForm({
@@ -109,13 +111,13 @@ import {
                                         bg={'#F1F5F9'}
                                     >
   
-                                        <form >
-                                            <TextInput label="Email" placeholder="you@ea.in" required {...form.getInputProps("email")} />
+                                            <TextInput label="Email" placeholder="you@ea.in" value={email} required onChange={(e) => setEmail(e.target.value)} />
                                             <PasswordInput
                                                 label="Password"
                                                 placeholder="Your password"
                                                 required
                                                 mt="md"
+                                                onChange={(e) => setPassword(e.target.value)}
                                             />
                                             <Group position="apart" mt="lg">
                                                 <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
@@ -127,10 +129,9 @@ import {
                                                     Forgot password?
                                                 </Anchor>
                                             </Group>
-                                            <Button fullWidth mt="xl" type="submit">
+                                            <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
                                                 Sign in
                                             </Button>
-                                        </form>
                                     </Card>
                                 </Stack>
                             </Center>
