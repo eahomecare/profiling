@@ -2,15 +2,28 @@ import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Nav
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
-// import { getCustomers } from "./GetCustomers"
-// import TableDisplay from "./TableDisplay"
+import { getCustomers } from "../../redux/customerSlice"
+import { useDispatch, useSelector } from "react-redux";
+import TableDisplay from "../../components/TableDisplay"
+
 
 const Customers = () => { 
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [customerList, setCustomerList] = useState([])
 
-    if (isLoading) {
+    const dispatch = useDispatch();
+
+    const { status, customers } = useSelector(state => state.customer);
+
+    // if(Array.isArray(customers) && customers.length > 0) setCustomerList(customers)
+    
+    useEffect(() => {
+        dispatch(getCustomers());
+      }, []);
+
+
+
+
+    if (status === 'loading') {
         return (
             <LoadingOverlay visible overlayBlur={2}
                 loaderProps={{
@@ -93,7 +106,7 @@ const Customers = () => {
                                     </Container>
                                 </span>
                             </div>
-                            {/* <TableDisplay customerList={customerList} /> */}
+                            <TableDisplay customerList={customers} />
                         </div>
                     </span>
                 </div>

@@ -25,7 +25,8 @@ import {
   import { loginUser } from "../../redux/authSlice";
   import React, { useEffect, useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  // import { useNavigate } from 'react-router-dom';
+  import { useHistory } from "react-router";
+
   
   
   
@@ -34,7 +35,7 @@ import {
       const [email,setEmail] = useState("")
       const [password,setPassword] = useState("")
       const dispatch = useDispatch();
-      //   const navigate = useNavigate();
+      const history = useHistory();      
   
   
     const { status, isLoggedIn } = useSelector((state)=> state.auth);
@@ -45,14 +46,13 @@ import {
     };
   
   
-    const form = useForm({
-        initialValues: { email: '' },
-  
-        // functions will be used to validate values at corresponding key
-        validate: {
-            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-        },
-    });
+
+    useEffect(() => {
+        if (isLoggedIn) {
+          history.push("/")
+        }
+      }, [isLoggedIn, history]);
+
     return (
         <>
             <Box>
@@ -129,8 +129,9 @@ import {
                                                     Forgot password?
                                                 </Anchor>
                                             </Group>
+
                                             <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
-                                                Sign in
+                                                {status === "loading"? <>Signing in</>:<>Sign in</>} 
                                             </Button>
                                     </Card>
                                 </Stack>

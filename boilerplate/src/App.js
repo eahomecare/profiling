@@ -30,12 +30,15 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    const { isLoggedIn } = JSON.parse(localStorage.getItem("login")) || {};
-    if (isLoggedIn) {
-      dispatch(setAuth({ isLoggedIn }));
-    }
-  }, [dispatch, isLoggedIn]);
+
+  //handle persistance 
+
+  // useEffect(() => {
+  //   const { isLoggedIn } = JSON.parse(localStorage.getItem("login")) || {};
+  //   if (isLoggedIn) {
+  //     dispatch(setAuth({ isLoggedIn }));
+  //   }
+  // }, [dispatch, isLoggedIn]);
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
@@ -51,7 +54,7 @@ function App() {
         <Route path="/register">
           <Register />
         </Route>
-        <Route path="/customers">
+        <Route path="/">
           <Customers/>
         </Route>
       </Switch>

@@ -93,13 +93,19 @@ export const authSlice = createSlice({
     },
     [registerUser.fulfilled]: (state, action) => {
       state.status = "success";
-      const { token, name, email } = action.payload.response;
+      const { access_token } = action.payload;
+      const {email,sub} = parseJwt(access_token);
+      const _id = sub
+      const token = access_token
+      
+      
       localStorage.setItem(
         "login",
-        JSON.stringify({ token, name, email, isLoggedIn: true })
+        JSON.stringify({ token, email, _id, isLoggedIn: true })
       );
-      state.user.name = name;
       state.user.email = email;
+      state.user._id = _id;
+      state.status = "success";
       state.isLoggedIn = true;
     },
     [registerUser.rejected]: (state, action) => {

@@ -9,8 +9,9 @@ const initialState = {
 };
 
 export const getCustomers = createAsyncThunk("customer/getCustomers", async () => {
-  await sleep(3000)
+  // await sleep(3000)
   const { data } = await axios.get("/customers");
+  console.log(data);
   return data;
 });
 
@@ -37,8 +38,8 @@ export const customerSlice = createSlice({
 
       const curr_state_obj = {}
       const res_obj = {}
-      state.customers.map(e => curr_state_obj[e._id] = e)
-      action.payload.response.customers.map(e => res_obj[e._id] = e)
+      state.customers.map(e => curr_state_obj[e.id] = e)
+      action.payload.customer_details.map(e => res_obj[e.id] = e)
       state.customers = Object.values(Object.assign(curr_state_obj,res_obj)) ;
     },
     [getCustomers.rejected]: (state, action) => {
