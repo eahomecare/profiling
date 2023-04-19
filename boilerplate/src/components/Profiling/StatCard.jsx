@@ -23,7 +23,7 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const getExpertiseLevel = (percentageCompleted: number) => {
+const getExpertiseLevel = (percentageCompleted) => {
     if (percentageCompleted >= 0 && percentageCompleted <= 10) {
         return 'Clueless Newbie';
     } else if (percentageCompleted > 10 && percentageCompleted <= 25) {
@@ -41,7 +41,7 @@ const getExpertiseLevel = (percentageCompleted: number) => {
     }
 }
 
-export function StatsCard({ title, url, percentage, frequency, lastUpdated }: any) {
+export function StatsCard({ title, url, percentage, frequency, lastUpdated }) {
     const { classes } = useStyles();
 
     return (

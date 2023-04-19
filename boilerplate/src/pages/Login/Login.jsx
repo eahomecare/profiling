@@ -25,7 +25,6 @@ import {
   import { loginUser } from "../../redux/authSlice";
   import React, { useEffect, useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  import { useHistory } from "react-router";
 
   
   
@@ -35,7 +34,8 @@ import {
       const [email,setEmail] = useState("")
       const [password,setPassword] = useState("")
       const dispatch = useDispatch();
-      const history = useHistory();      
+      const navigate = useNavigate();
+    
   
   
     const { status, isLoggedIn } = useSelector((state)=> state.auth);
@@ -49,9 +49,9 @@ import {
 
     useEffect(() => {
         if (isLoggedIn) {
-          history.push("/")
+          navigate("/")
         }
-      }, [isLoggedIn, history]);
+      }, [isLoggedIn, navigate]);
 
     return (
         <>

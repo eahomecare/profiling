@@ -61,8 +61,8 @@ const data = [
     { link: 'Social Media', label: 'Social Media', icon: <IconSocial /> },
 ];
 
-const DashboardNavbar = ({ opened, setOpened }: any) => {
-    const { classes, cx }: any = useStyles();
+const DashboardNavbar = ({ opened, setOpened }) => {
+    const { classes, cx } = useStyles();
     const [active, setActive] = useState('Personal Information');
     const theme = useMantineTheme();
 

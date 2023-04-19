@@ -1,24 +1,21 @@
-import Login from "./pages/Login/Login";
-import Layout from "./components/Layout";
-import { Profile } from "./pages/Profile/Profile";
-import PrivateRoute from "./components/PrivateRoute";
-import { Route, Switch } from "react-router";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect ,useState} from "react";
 import axios from "axios";
 import { setAuth } from "./redux/authSlice";
-import { ThemeProvider } from "./ThemeProvider";
-import Register from "./pages/Login/Register";
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Customers from "./pages/Customers/Customers";
-import { ColorScheme, ColorSchemeProvider, MantineProvider, Paper, Transition } from '@mantine/core'
-import { Notifications } from '@mantine/notifications'
-
-
+import Register from "./pages/Login/Register";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import Layout from "./components/Layout";
+import PrivateRoute from "./components/PrivateRoute";
+import { ThemeProvider } from "./ThemeProvider";
+import Login from "./pages/Login/Login";
 
 function App() {
-  const [colorScheme, setColorScheme] = useState('light');
+  const [colorScheme, setColorScheme] = useState("light");
   const toggleColorScheme = (value) =>
-  setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -30,37 +27,41 @@ function App() {
     }
   }, [isLoggedIn]);
 
+  const navigate = useNavigate();
 
-  //handle persistance 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
 
-  // useEffect(() => {
-  //   const { isLoggedIn } = JSON.parse(localStorage.getItem("login")) || {};
-  //   if (isLoggedIn) {
-  //     dispatch(setAuth({ isLoggedIn }));
-  //   }
-  // }, [dispatch, isLoggedIn]);
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <Switch>
-        <PrivateRoute exact path="/profile/:id">
-          <Layout>
-            <Profile />
-          </Layout>
-        </PrivateRoute>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          <Customers/>
-        </Route>
-      </Switch>
+        <Routes>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/dashboard/*">
+            <PrivateRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </PrivateRoute>
+          </Route>
+          <Route path="/">
+            <PrivateRoute>
+              <Layout>
+                <Customers />
+              </Layout>
+            </PrivateRoute>
+          </Route>
+        </Routes>
       </MantineProvider>
     </ColorSchemeProvider>
-    
   );
 }
 
