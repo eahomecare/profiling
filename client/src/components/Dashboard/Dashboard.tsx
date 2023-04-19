@@ -150,9 +150,9 @@ const Dashboard = () => {
                             >
                                 <Route index element={<PersonalInformation selectedCustomer={selectedCustomer} />} />
                                 <Route path='/personalInformation' element={<PersonalInformation selectedCustomer={selectedCustomer} />} />
-                                <Route path='/keywords' element={<KeywordsEntry selectedCustomer={selectedCustomer} setSelectedCustomer={() => setSelectedCustomer} />} />
+                                <Route path='/keywords' element={<KeywordsEntry selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} />} />
                                 <Route path='/profiling' element={<Profiling />} />
-                                <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} />} />
+                                <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} />} />
                             </Route>
                         </Routes>
                     </Card>

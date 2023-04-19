@@ -7,8 +7,9 @@ import { IconX } from '@tabler/icons-react';
 export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }: any) {
     console.log('keywordsEntry', selectedCustomer)
     const [keywordList, setKeywordList] = useState([...keywordOptions, ...selectedCustomer.profiling?.garbage])
+    // const [keywordList, setKeywordList] = useState([...keywordOptions, ...selectedCustomer.keys])
     const [keywordsSelected, setKeywordsSelected]: any = useState(selectedCustomer.keys)
-
+    console.log('keywords selected in keywords entry', keywordsSelected)
     // useEffect(() => {
     //     setTimeout(() => setKeywordList(keywordOptions), 1000)
     // }, [])
@@ -25,7 +26,7 @@ export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }:
             </ActionIcon>
         );
         return <div {...others}>
-            <Badge size="sm" variant="outline" rightSection={removeButton}>
+            <Badge key={label} size="sm" variant="outline" rightSection={removeButton}>
                 {label}
             </Badge>
         </div>
