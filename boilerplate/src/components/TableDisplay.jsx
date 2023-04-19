@@ -1,11 +1,20 @@
 import { Button, Card, Center, Container, Flex, RingProgress, Table, Text } from '@mantine/core';
+import { setCurrentCustomer } from '../redux/customerSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+
 
 
 export default function TableDisplay({ customerList }) {
+  const dispatch = useDispatch();
+  const { status, customerDetails } = useSelector(state => state.customer);
+
+  
+
   // const { customer_details } = customerList
-  console.log(customerList);
   // const { customerContext, setCustomerContext } = useContext(CustomerContext)
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const profileCompletion = (percentage) => {
     return (
@@ -26,11 +35,23 @@ export default function TableDisplay({ customerList }) {
     )
   }
 
+  const buttonClick = (customer) => {
+    // setCustomerContext(customer)
+    navigate('/dashboard')
+    dispatch(setCurrentCustomer(customer))
+
+  }
+
+
+  console.log(customerDetails);
+
+
+  
+
   const rows = customerList.map((customer) => {
-    const buttonClick = () => {
-      // setCustomerContext(customer)
-      // navigate('/dashboard', { state: { customer } })
-    }
+    
+
+
 
     return (
       <tr key={customer.id}>
@@ -46,7 +67,7 @@ export default function TableDisplay({ customerList }) {
             // variant={'light'}
             variant={'gradient'}
             gradient={{ from: 'indigo', to: 'cyan' }}
-            onClick={() => buttonClick()}>
+            onClick={() => buttonClick(customer)}>
             View
           </Button>
         </td>

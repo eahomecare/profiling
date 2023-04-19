@@ -11,7 +11,6 @@ const initialState = {
 export const getCustomers = createAsyncThunk("customer/getCustomers", async () => {
   // await sleep(3000)
   const { data } = await axios.get("/customers");
-  console.log(data);
   return data;
 });
 
@@ -28,7 +27,12 @@ export const getCustomerDetails = createAsyncThunk(
 export const customerSlice = createSlice({
   name: "customer",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentCustomer:(state,action) => {
+      console.log(action.payload);
+      state.customerDetails = action.payload
+    }
+  },
   extraReducers: {
     [getCustomers.pending]: (state, action) => {
       state.status = "loading";
@@ -60,3 +64,4 @@ export const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
+export const { setCurrentCustomer } = customerSlice.actions;

@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"unique":true,"key":{"customer_id":{"$numberInt":"1"}},"name":"Personal_Details_customer_id_key"}],"uuid":"913823427ab2415bb974269ad913a444","collectionName":"Personal_Details","type":"collection"}
