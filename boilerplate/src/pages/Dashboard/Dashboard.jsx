@@ -45,15 +45,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
   const { isLoggedIn } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
-
-
-  useEffect(() => {
-    console.log(isLoggedIn);
-    if(!isLoggedIn){
-      navigate("/login");
-    }
-  }, [])
+  
   
 
   const [selectedCustomer, setSelectedCustomer] = useState();
