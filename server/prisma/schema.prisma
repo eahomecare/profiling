@@ -38,6 +38,9 @@ model Customer {
   created_by       String?
   updated_by       String?
   personal_details Personal_Details?
+  keywordIDs       String[]          @db.ObjectId
+  keywords         Keyword[]         @relation(fields: [keywordIDs], references: [id])
+
   // age                  age?
   // Vehicle_Details      Vehicle_Details?
   // Sports               Sports?
@@ -59,6 +62,16 @@ model Personal_Details {
   employment    String?
   location      String?
   anniversary   String?
+}
+
+model Keyword {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  category    String
+  value       String
+  customerIDs String[]   @db.ObjectId
+  customers   Customer[] @relation(fields: [customerIDs], references: [id])
+
+  @@map("keywords")
 }
 
 // model age {
