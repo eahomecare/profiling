@@ -8,6 +8,8 @@ const Profiling = () => {
     const stats = assetList.map((list) => {
         const title = list[0]
         const url = list[1]
+        console.log(url);
+        
         function getCustomerStats() {
             const frequency = Math.floor(Math.random() * 16); // A random frequency per month between 0 and 15
             const maxLastUpdated = Math.floor((1 - frequency / 15) * 30);

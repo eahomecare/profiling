@@ -15,7 +15,7 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {  Routes, Route,Navigate,useNavigate } from "react-router-dom";
 import {
   IconAdjustmentsHorizontal,
   IconArrowNarrowLeft,
@@ -37,13 +37,24 @@ import {
 // import KeywordsEntry from '../KeywordsEntry/KeywordsEntry';
 // import Interests from '../Interests/Interests';
 import DashboardNavbar from "./DashboardNavbar";
-// import Profiling from '../../components/Profiling/Profiling'
+import Profiling from '../../components/Profiling/Profiling'
 import PersonalInformation from "../../components/PersonalInformation/PersonalInformation";
 import LightDarkButton from "../../components/LightDarkButton";
 import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    console.log(isLoggedIn);
+    if(!isLoggedIn){
+      navigate("/login");
+    }
+  }, [])
+  
 
   const [selectedCustomer, setSelectedCustomer] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -150,11 +161,11 @@ const Dashboard = () => {
             mih={510}
           >
               <Routes>
-        
-                  <Route
+                <Route>
+                <Route
                     index
                     element={
-                      <PersonalInformation selectedCustomer={customerDetails} />
+                      <PersonalInformation selectedCustomer={customerDetails}/>
                     }
                   />
                   <Route
@@ -163,9 +174,14 @@ const Dashboard = () => {
                       <PersonalInformation selectedCustomer={customerDetails} />
                     }
                   />
+                  <Route path='/profiling' element={<Profiling/>} />
                   {/* <Route path='/keywords' element={<KeywordsEntry selectedCustomer={selectedCustomer} setSelectedCustomer={() => setSelectedCustomer} />} />
-                                <Route path='/profiling' element={<Profiling />} /> */}
+                                 */}
                   {/* <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} />} /> */}
+
+                </Route>
+        
+                 
               </Routes>
           </Card>
         </Container>
