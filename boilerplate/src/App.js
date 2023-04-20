@@ -39,26 +39,10 @@ function App() {
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
         <Routes>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Register />
-          </Route>
-          <Route path="/dashboard/*">
-            <PrivateRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
-            </PrivateRoute>
-          </Route>
-          <Route path="/">
-            <PrivateRoute>
-              <Layout>
-                <Customers />
-              </Layout>
-            </PrivateRoute>
-          </Route>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/register" element={<Register/>}/>
+          <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
+          <PrivateRoute path="/" element={<Customers />} />
         </Routes>
       </MantineProvider>
     </ColorSchemeProvider>

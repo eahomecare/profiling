@@ -5,6 +5,7 @@ import { RootState } from "../redux/store";
 
 
 export default function PrivateRoute({ path, ...props }) {
+  console.log(path,props);
   const { isLoggedIn } = useSelector((state) => state.auth);
   if (isLoggedIn) {
     return <Route path={path} {...props} />;
