@@ -2,32 +2,64 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { KeywordService } from './keyword.service';
 import { Keyword } from '@prisma/client';
 
+interface CreateKeywordDto {
+  category: string;
+  value: string;
+  customerIDs?: string[];
+}
+
 @Controller('keyword')
 export class KeywordController {
   constructor(private readonly keywordService: KeywordService) {}
 
   @Post()
-  create(@Body() data: Keyword): Promise<Keyword> {
-    return this.keywordService.create(data);
+  async create(@Body() data: Keyword): Promise<{ success: boolean, data?: Keyword, error?: string }> {
+    try {
+      const keyword = await this.keywordService.create(data);
+      return { success: true, data: keyword, error: undefined };
+    } catch (error) {
+      return { success: false, data: undefined, error: error.message };
+    }
   }
 
   @Get()
-  findAll(): Promise<Keyword[]> {
-    return this.keywordService.findAll();
+  async findAll(): Promise<{ success: boolean, data?: Keyword[], error?: string }> {
+    try {
+      const keywords = await this.keywordService.findAll();
+      return { success: true, data: keywords };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Keyword | null> {
-    return this.keywordService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<{ success: boolean, data?: Keyword | null, error?: string }> {
+    try {
+      const keyword = await this.keywordService.findOne(id);
+      return { success: true, data: keyword };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Keyword): Promise<Keyword> {
-    return this.keywordService.update(id, data);
+  async update(@Param('id') id: string, @Body() data: Keyword): Promise<{ success: boolean, data?: Keyword, error?: string }> {
+    try {
+      const keyword = await this.keywordService.update(id, data);
+      return { success: true, data: keyword };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Keyword> {
-    return this.keywordService.remove(id);
+  async remove(@Param('id') id: string): Promise<{ success: boolean, data?: Keyword, error?: string }> {
+    try {
+      const keyword = await this.keywordService.remove(id);
+      return { success: true, data: keyword };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   }
 }
+
