@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete,Query } from '@nestjs/common';
 import { KeywordService } from './keyword.service';
 import { Keyword } from '@prisma/client';
 
@@ -42,6 +42,17 @@ export class KeywordController {
     }
   }
 
+  @Get('/search')
+  async search(@Query() query: { q: string }): Promise<any> {
+    try {
+      const results = await this.keywordService.search(query.q);
+      return results;
+    } catch (error) {
+      // handle the error
+      console.log(error);
+      throw new Error(`Could not search for keywords: ${error.message}`);
+    }
+  }
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: Keyword): Promise<{ success: boolean, data?: Keyword, error?: string }> {
     try {
