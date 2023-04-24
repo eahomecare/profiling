@@ -54,19 +54,86 @@ export class KeywordService {
     }
   }
 
+  async search(query: string): Promise<Keyword[]> {
+    try {
+      const keywords = await this.prisma.keyword.findMany({
+        where: {
+          OR: [
+            { category: { contains: query } },
+            { value: { contains: query } },
+          ],
+        },
+      });
+      return keywords;
+    } catch (error) {
+      throw new Error(`Could not search for keywords: ${error.message}`);
+    }
+  }
+  
+
   async update(id: string, data: Keyword): Promise<Keyword> {
     try {
-      return await this.prisma.keyword.update({ where: { id }, data });
+      const keyword = await this.prisma.keyword.update({ where: { id }, data });
+  
+      let customersToUpdate = [];
+      if (data.customerIDs && data.customerIDs.length > 0) {
+        customersToUpdate = await Promise.all(
+          data.customerIDs.map(async (customerId) => {
+            const customer = await this.prisma.customer.update({
+              where: { id: customerId },
+              data: {
+                keywordIDs: {
+                  push: keyword.id,
+                },
+              },
+            });
+            return customer;
+          })
+        );
+      }
+  
+      // Update Elasticsearch index
+      // await this.elasticsearchService.updateIndex(keyword);
+  
+      return keyword;
     } catch (error) {
       throw new Error(`Could not update keyword with id ${id}: ${error.message}`);
     }
   }
+  
+  
+  
+  
+  
+  
+  
 
   async remove(id: string): Promise<Keyword> {
     try {
-      return await this.prisma.keyword.delete({ where: { id } });
+      const deletedKeyword = await this.prisma.keyword.delete({
+        where: { id },
+        include: { customers: true },
+      });
+  
+      if (deletedKeyword.customers && deletedKeyword.customers.length > 0) {
+        await Promise.all(
+          deletedKeyword.customers.map(async (customer) => {
+            const updatedCustomer = await this.prisma.customer.update({
+              where: { id: customer.id },
+              data: {
+                keywordIDs: {
+                  set: customer.keywordIDs.filter((keywordId) => keywordId !== deletedKeyword.id),
+                },
+              },
+            });
+            return updatedCustomer;
+          })
+        );
+      }
+  
+      return deletedKeyword;
     } catch (error) {
       throw new Error(`Could not delete keyword with id ${id}: ${error.message}`);
     }
-  }
+  }  
 }
