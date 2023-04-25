@@ -41,6 +41,7 @@ import Profiling from '../../components/Profiling/Profiling'
 import PersonalInformation from "../../components/PersonalInformation/PersonalInformation";
 import LightDarkButton from "../../components/LightDarkButton";
 import { useDispatch, useSelector } from "react-redux";
+import KeywordsEntry from "../../components/KeywordsEntry/KeywordsEntry";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
@@ -167,8 +168,8 @@ const Dashboard = () => {
                     }
                   />
                   <Route path='/profiling' element={<Profiling/>} />
-                  {/* <Route path='/keywords' element={<KeywordsEntry selectedCustomer={selectedCustomer} setSelectedCustomer={() => setSelectedCustomer} />} />
-                                 */}
+                   <Route path='/keywords' element={<KeywordsEntry/>} />
+                                 
                   {/* <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} />} /> */}
 
                 </Route>

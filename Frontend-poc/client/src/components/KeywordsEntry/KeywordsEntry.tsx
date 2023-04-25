@@ -17,6 +17,9 @@ export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }:
         setKeywordsSelected(change)
     }
 
+    console.log(keywordList,keywordsSelected);
+    
+
 
     const value = ({ label, onRemove, ...others }: MultiSelectValueProps) => {
         const removeButton = (
