@@ -8,7 +8,7 @@ interface CreateKeywordDto {
   customerIDs?: string[];
 }
 
-@Controller('keyword')
+@Controller('keywords')
 export class KeywordController {
   constructor(private readonly keywordService: KeywordService) {}
 
@@ -68,6 +68,16 @@ export class KeywordController {
     try {
       const keyword = await this.keywordService.remove(id);
       return { success: true, data: keyword };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  @Get('/customer/:id')
+  async getCustomerKeywords(@Param('id') id: string) : Promise<{ success: boolean, data?: Keyword[], error?: string }> {
+    try {
+      const keywords = await this.keywordService.findByCustomerId(id);
+      return { success: true, data: keywords };
     } catch (error) {
       return { success: false, error: error.message };
     }
