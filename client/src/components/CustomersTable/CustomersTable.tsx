@@ -1,10 +1,11 @@
-import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { ActionIcon, Center, Container, Flex, Group, Header, Image, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import { useAuthContext } from "../../contexts/AuthContext"
 import LightDarkButton from "../Dashboard/LightDarkButton"
 import { getCustomers } from "./GetCustomers"
 import TableDisplay from "./TableDisplay"
+import eaLogo from './assets/eaLogo.png'
 
 const CustomersTable = () => {
     const { token } = useAuthContext()
@@ -36,15 +37,12 @@ const CustomersTable = () => {
             <>
                 <Header height={{ base: 50, md: 70 }} p="md" withBorder={false} m={'md'}>
                     <div style={{ display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'space-between' }}>
-                        <Text
-                            variant="gradient"
-                            gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-                            sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
-                            ta="center"
-                            fz="xl"
-                            fw={700}
-                            mt={-20}
-                        >EAI CRM</Text>
+                        <Image
+                            width={90}
+                            height={90}
+                            src={eaLogo}
+                            mt={10}
+                        />
                         <TextInput
                             placeholder="Search"
                             mb="md"
