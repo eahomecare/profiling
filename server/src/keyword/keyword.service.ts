@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Keyword } from '@prisma/client';
+const { RegExp } = require('mongodb');
+
 
 @Injectable()
 export class KeywordService {
@@ -73,19 +75,17 @@ export class KeywordService {
     }
   }
 
-  async search(
-    query: string,
-  ): Promise<Keyword[]> {
+ 
+  async search(query: string): Promise<Keyword[]> {
     try {
-      const keywords =
-        await this.prisma.keyword.findMany({
-          where: {
-            OR: [
-              { category: { contains: query } },
-              { value: { contains: query } },
-            ],
-          },
-        });
+      const keywords = await this.prisma.keyword.findMany({
+        where: {
+          OR: [
+            { category: { contains: query, mode: "insensitive" } },
+            { value: { contains: query, mode: "insensitive" } },
+          ],
+        },
+      });
       return keywords;
     } catch (error) {
       throw new Error(
@@ -93,6 +93,7 @@ export class KeywordService {
       );
     }
   }
+  
 
   async update(
     id: string,
