@@ -42,10 +42,10 @@ export class KeywordController {
     }
   }
 
-  @Get('/search')
-  async search(@Query() query: { q: string }): Promise<any> {
+  @Get('/search/:query')
+  async search(@Param('query') query: string): Promise<any> {
     try {
-      const results = await this.keywordService.search(query.q);
+      const results = await this.keywordService.search(query);
       return results;
     } catch (error) {
       // handle the error
