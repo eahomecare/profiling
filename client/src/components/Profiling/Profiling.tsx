@@ -8,8 +8,6 @@ const Profiling = () => {
     const stats = assetList.map((list) => {
         const title = list[0]
         const url = list[1]
-        console.log(url);
-        
         function getCustomerStats() {
             const frequency = Math.floor(Math.random() * 16); // A random frequency per month between 0 and 15
             const maxLastUpdated = Math.floor((1 - frequency / 15) * 30);
@@ -22,11 +20,14 @@ const Profiling = () => {
 
         const customerStats = getCustomerStats();
         console.log(customerStats);
-        return (<>
-            <Grid.Col span={4}>
-                <StatsCard title={title} url={url} percentage={customerStats[1]} frequency={customerStats[0]} lastUpdated={customerStats[2]} />
-            </Grid.Col>
-        </>)
+        if (customerStats[1] > 50)
+            return (<>
+                <Grid.Col span={4}>
+                    <StatsCard title={title} url={url} percentage={customerStats[1]} frequency={customerStats[0]} lastUpdated={customerStats[2]} />
+                </Grid.Col>
+            </>)
+        else
+            return null
     })
     return (
         <>

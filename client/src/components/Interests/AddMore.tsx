@@ -40,7 +40,7 @@ export default function AddMore({ title, tags, setTags, badgeClicked, selectedCu
             return payload
         }
 
-        const url = `http://localhost:3000/customers/${selectedCustomer.id}`
+        const url = `${import.meta.env.VITE_API_BASE_URL}customers/${selectedCustomer.id}`
         const payload = createPayload()
         const config = {
             headers: {
@@ -55,7 +55,7 @@ export default function AddMore({ title, tags, setTags, badgeClicked, selectedCu
             .then(console.log)
             .catch(console.log)
 
-        const customerUrl = `http://localhost:3000/customers/${selectedCustomer.id}`
+        const customerUrl = `${import.meta.env.VITE_API_BASE_URL}customers/${selectedCustomer.id}`
         const { data } = await axios.get(url, config)
         setSelectedCustomer(data.customer_details)
     }
