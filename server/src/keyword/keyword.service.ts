@@ -65,7 +65,7 @@ export class KeywordService {
     try {
       return await this.prisma.keyword.findMany({
         include: {
-          customers: true,
+          customers: false,
         },
       });
     } catch (error) {
