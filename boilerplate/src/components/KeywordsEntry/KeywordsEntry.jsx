@@ -1,8 +1,8 @@
 import { MultiSelect, Button } from "@mantine/core";
-import React, { useState, useEffect,useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import AddKeywordsModal from "./AddKeywordsModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerKeywords } from "../../redux/keywordSlice";
+import { getCustomerKeywords ,getKeywords} from "../../redux/keywordSlice";
 import _ from "lodash";
 
 const KeywordsEntry = ({ props }) => {
@@ -11,37 +11,61 @@ const KeywordsEntry = ({ props }) => {
   const { status, customerDetails } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
 
-  const { customerKeywords } = useSelector((state) => state.keyword);
+  const { customerKeywords,keywords } = useSelector((state) => state.keyword);
+
 
   const [values, setValue] = useState();
   const [searchValue, onSearchChange] = useState("");
 
+  // const keywordFinalPaylaod = []
+
+  // const filteredKeywords = _.filter(values, (keyword) => _.includes(idsToFind, keyword.id));
+  // const existingIds = _.map(filteredKeywords, 'id');
+  // const notFoundIds = _.difference(idsToFind, foundIds);
+
   const transformedData = useMemo(
     () =>
-      _.map(customerKeywords, ({ value }) => ({
-        value: value,
-        label: value,
+      _.map(customerKeywords, ({ id,value,category }) => ({
+        value: id,
+        label: `${value} [${category}]`,
       })),
     [customerKeywords]
   );
 
+  const allKeywords = useMemo(
+    () =>
+      _.map(keywords, ({ id,value,category }) => ({
+        value: id,
+        label: `${value} [${category}]`,
+      })),
+    [keywords]
+  );
 
   useEffect(() => {
-
-    setData(transformedData);
+    setData(allKeywords);
     setValue(transformedData.map((obj) => obj.value));
+  }, []);
 
+  useEffect(() => {
+    // setData(allKeywords);
+    // setValue(transformedData.map((obj) => obj.value));
     console.log(values);
-  }, [customerDetails, dispatch,data]);
+  }, [ data,values]);
+
 
   useEffect(() => {
     dispatch(getCustomerKeywords(customerDetails.id));
+    dispatch(getKeywords())
   }, []);
 
+  const handleSearchChange = useMemo(
+    () =>
+      _.debounce((value) => {
+        onSearchChange(value);
 
-  useEffect(() => {
-    
-  },[])
+      }, 200),
+    []
+  );
 
   return (
     <>
@@ -49,13 +73,13 @@ const KeywordsEntry = ({ props }) => {
         data={data}
         value={values}
         onChange={(e) => setValue(e)}
-        defaultValue={{ value: "react", label: "React" }}
         label="Keywords"
         searchable
         searchValue={searchValue}
-        onSearchChange={onSearchChange}
+        onSearchChange={(event) => handleSearchChange(event)}
         clearable
-        placeholder="Pick all that you like"
+        
+        placeholder="Add keywords"
         creatable
         getCreateLabel={(query) => `+ Create ${query}`}
         onCreate={(query) => {
@@ -64,7 +88,6 @@ const KeywordsEntry = ({ props }) => {
           return item;
         }}
       />
-
     </>
   );
 };
