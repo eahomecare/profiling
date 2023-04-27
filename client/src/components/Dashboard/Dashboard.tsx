@@ -1,23 +1,20 @@
 import { useState, useEffect } from 'react';
 import {
     AppShell,
-    Navbar,
     Header,
-    Text,
     MediaQuery,
     Burger,
     useMantineTheme,
     Card,
-    NavLink,
     Container,
     LoadingOverlay,
     TextInput,
     ActionIcon,
     Image,
 } from '@mantine/core';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import LightDarkButton from './LightDarkButton'
-import { IconAdjustmentsHorizontal, IconArrowNarrowLeft, IconBriefcase, IconCar, IconCarCrash, IconCircleKey, IconComet, IconFriends, IconHammer, IconHealthRecognition, IconPalette, IconReportMoney, IconSearch, IconSocial, IconTimeline, IconUser } from '@tabler/icons-react';
+import { IconAdjustmentsHorizontal, IconSearch } from '@tabler/icons-react';
 import KeywordsEntry from '../KeywordsEntry/KeywordsEntry';
 import PersonalInformation from '../PersonalInformation/PersonalInformation';
 import Interests from '../Interests/Interests';
@@ -83,15 +80,6 @@ const Dashboard = () => {
                                 />
                             </MediaQuery>
 
-                            {/* <Text
-                                variant="gradient"
-                                gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-                                sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
-                                ta="center"
-                                fz="xl"
-                                fw={700}
-                                mt={-20}
-                            >EAI CRM</Text> */}
                             <Image
                                 width={90}
                                 height={90}
