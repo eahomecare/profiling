@@ -47,6 +47,20 @@ export class KeywordService {
     }
   }
 
+  async findByCategoryAndValue(category: string, value: string): Promise<Keyword | null> {
+    const keywords = await this.prisma.keyword.findMany({
+      where: {
+        AND: [
+          { category: category },
+          { value: value },
+        ],
+      },
+    });
+
+    return keywords[0] || null;
+  }
+
+
   async findAll(): Promise<Keyword[]> {
     try {
       return await this.prisma.keyword.findMany({
