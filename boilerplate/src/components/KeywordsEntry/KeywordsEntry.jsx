@@ -5,17 +5,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCustomerKeywords ,getKeywords} from "../../redux/keywordSlice";
 import _ from "lodash";
 
-const KeywordsEntry = ({ props }) => {
+const KeywordsEntry = ({updateKeywordValuesParent }) => {
   const [data, setData] = useState([]);
+
+
 
   const { status, customerDetails } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
 
-  const { customerKeywords,keywords } = useSelector((state) => state.keyword);
+  const { customerKeywords,keywords,keywordsStatus,customerKeywordsStatus } = useSelector((state) => state.keyword);
 
 
   const [values, setValue] = useState();
   const [searchValue, onSearchChange] = useState("");
+
+
 
   // const keywordFinalPaylaod = []
 
@@ -42,14 +46,18 @@ const KeywordsEntry = ({ props }) => {
   );
 
   useEffect(() => {
-    setData(allKeywords);
-    setValue(transformedData.map((obj) => obj.value));
-  }, []);
+    if(keywordsStatus == 'success' && customerKeywordsStatus == 'success' ){
+      setData(allKeywords);
+      setValue(transformedData.map((obj) => obj.value));
+    }
+    
+  }, [customerKeywords, keywords]);
 
   useEffect(() => {
     // setData(allKeywords);
     // setValue(transformedData.map((obj) => obj.value));
     console.log(values);
+    updateKeywordValuesParent(values)
   }, [ data,values]);
 
 
@@ -69,7 +77,9 @@ const KeywordsEntry = ({ props }) => {
 
   return (
     <>
-      <MultiSelect
+    {keywordsStatus == 'success' && customerKeywordsStatus == 'success' ?
+    <>
+    <MultiSelect
         data={data}
         value={values}
         onChange={(e) => setValue(e)}
@@ -88,6 +98,12 @@ const KeywordsEntry = ({ props }) => {
           return item;
         }}
       />
+    </>
+    :<>
+    <p>Please wait.......</p>
+    </>
+    }
+      
     </>
   );
 };
