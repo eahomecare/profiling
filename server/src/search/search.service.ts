@@ -10,8 +10,7 @@ export class SearchService {
             index,
             id,
             body,
-        }
-        );
+        });
     }
 
     async search(index: string, query: string) {
@@ -23,6 +22,20 @@ export class SearchService {
                         message: query,
                     },
                 },
+            },
+        });
+    }
+
+    async getById(index: string, id: string) {
+        return await this.elasticsearchService.get({ index, id });
+    }
+
+    async update(index: string, id: string, body: Record<string, any>) {
+        return await this.elasticsearchService.update({
+            index,
+            id,
+            body: {
+                doc: body,
             },
         });
     }
