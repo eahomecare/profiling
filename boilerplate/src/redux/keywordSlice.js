@@ -3,7 +3,8 @@ import axios from "axios";
 import { sleep } from "../utils/sleep";
 
 const initialState = {
-  status: "idle",
+  KeywordsStatus: "idle",
+  customerKeywordsStatus: "idle",
   keywords: [],
   customerKeywords:[]
 };
@@ -37,10 +38,10 @@ export const keywordSlice = createSlice({
   },
   extraReducers: {
     [getKeywords.pending]: (state, action) => {
-      state.status = "loading";
+      state.keywordsStatus = "loading";
     },
     [getKeywords.fulfilled]: (state, action) => {
-      state.status = "success";
+      state.keywordsStatus = "success";
 
       const curr_state_obj = {}
       const res_obj = {}
@@ -49,27 +50,27 @@ export const keywordSlice = createSlice({
       state.keywords = Object.values(Object.assign(curr_state_obj,res_obj)) ;
     },
     [getKeywords.rejected]: (state, action) => {
-      state.status = "failed";
+      state.keywordsStatus = "failed";
     },
     [getCustomerKeywords.pending]: (state, action) => {
-      state.status = "loading";
+      state.customerKeywordsStatus = "loading";
     },
     [getCustomerKeywords.fulfilled]: (state, action) => {
-      state.status = "success";
+      state.customerKeywordsStatus = "success";
       state.customerKeywords = action.payload.data
     },
     [getCustomerKeywords.rejected]: (state, action) => {
-      state.status = "failed";
+      state.customerKeywordsStatus = "failed";
     },
     [searchKeywords.pending]: (state, action) => {
-      state.status = "loading";
+      state.keywordsStatus = "loading";
     },
     [searchKeywords.fulfilled]: (state, action) => {
-      // state.status = "success";
+      // state.keywordsStatus = "success";
 
     },
     [searchKeywords.rejected]: (state, action) => {
-      state.status = "failed";
+      state.keywordsStatus = "failed";
     }
   },
 });
