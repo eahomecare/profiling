@@ -21,30 +21,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     providers: [SearchService],
     exports: [SearchService],
 })
-export class SearchModule implements OnModuleInit {
-    constructor(private searchService: SearchService) { }
-    onModuleInit() {
-        this.searchService.create('test', '1', { test: 'test' }).then();
-    }
-}
-// import { Module } from '@nestjs/common';
-// import { ConfigModule, ConfigService } from '@nestjs/config';
-// import { ElasticsearchModule } from '@nestjs/elasticsearch';
-// import { SearchService } from './search.service';
-
-// @Module({
-//     imports: [
-//         ConfigModule,
-//         ElasticsearchModule.registerAsync({
-//             imports: [ConfigModule],
-//             useFactory: async (configService: ConfigService) => ({
-//                 node: configService.get('ELASTICSEARCH_NODE'),
-//             }),
-//             inject: [ConfigService],
-//         }),
-//     ],
-//     exports: [ElasticsearchModule],
-//     // exports: [SearchService],
-//     providers: [SearchService]
-// })
-// export class SearchModule { }
+// export class SearchModule implements OnModuleInit {
+//     constructor(private searchService: SearchService) { }
+//     onModuleInit() {
+//         this.searchService.create('test', '1', { test: 'test' }).then();
+//     }
+// }
+export class SearchModule { }
