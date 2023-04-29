@@ -22,6 +22,10 @@ interface KeywordWithOptionalError
   error?: any;
 }
 
+interface UpdateData {
+  customerId: string;
+}
+
 @Controller('keywords')
 export class KeywordController {
   constructor(
@@ -29,9 +33,7 @@ export class KeywordController {
   ) {}
 
   @Post()
-  async create(
-    @Body() data: Keyword,
-  ): Promise<{
+  async create(@Body() data: Keyword): Promise<{
     success: boolean;
     data?: Keyword;
     error?: string;
@@ -167,9 +169,7 @@ export class KeywordController {
   }
 
   @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-  ): Promise<{
+  async remove(@Param('id') id: string): Promise<{
     success: boolean;
     data?: Keyword;
     error?: string;
@@ -203,6 +203,32 @@ export class KeywordController {
     } catch (error) {
       return {
         success: false,
+        error: error.message,
+      };
+    }
+  }
+
+  @Post('/update/many')
+  async updateMany(
+    @Body() data: UpdateData,
+  ): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+  }> {
+    try {
+      await this.keywordService.removeCustomerFromKeywords(
+        data.customerId,
+      );
+      return {
+        success: true,
+        data: 'done',
+        error: undefined,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        data: undefined,
         error: error.message,
       };
     }

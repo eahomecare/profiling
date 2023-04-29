@@ -219,4 +219,30 @@ export class KeywordService {
       );
     }
   }
+
+
+  async removeCustomerFromKeywords(customerId: string): Promise<void> {
+    try {
+      const keywords = await this.prisma.keyword.findMany({
+        where: {
+          customerIDs: {
+            has: customerId,
+          },
+        },
+      });
+  
+      const updatedKeywords = keywords.map((keyword) => {
+        const updatedCustomerIDs = keyword.customerIDs.filter((id) => id !== customerId);
+        return { id: keyword.id, customerIDs: updatedCustomerIDs };
+      });
+  
+      await Promise.all(updatedKeywords.map((keyword) => this.prisma.keyword.update({
+        where: { id: keyword.id },
+        data: { customerIDs: { set: keyword.customerIDs } },
+      })));
+    } catch (error) {
+      throw new Error(`Could not remove customer from keywords: ${error.message}`);
+    }
+  }
+  
 }
