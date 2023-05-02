@@ -5,6 +5,7 @@ import { sleep } from "../utils/sleep";
 const initialState = {
   KeywordsStatus: "idle",
   customerKeywordsStatus: "idle",
+  updateKeywordsStatus:"idle",
   keywords: [],
   customerKeywords:[]
 };
@@ -25,6 +26,13 @@ export const searchKeywords = createAsyncThunk("keywords/searchKeywords", async 
   return data;
 });
 
+export const updateKeywords = createAsyncThunk(
+  "keywords/searchKeywords",
+  async (keywordPayload) => {
+    const { data } = await axios.post("/keywords/update/many", keywordPayload);
+    return data;
+  }
+);
 
 export const keywordSlice = createSlice({
   name: "keyword",
@@ -71,6 +79,15 @@ export const keywordSlice = createSlice({
     },
     [searchKeywords.rejected]: (state, action) => {
       state.keywordsStatus = "failed";
+    },
+    [updateKeywords.pending]: (state, action) => {
+      state.updateKeywordsStatus = "loading";
+    },
+    [updateKeywords.fulfilled]: (state, action) => {
+      state.updateKeywordsStatus = "success";
+    },
+    [updateKeywords.rejected]: (state, action) => {
+      state.updateKeywordsStatus = "failed";
     }
   },
 });
