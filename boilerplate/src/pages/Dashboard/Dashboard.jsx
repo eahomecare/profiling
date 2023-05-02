@@ -45,9 +45,12 @@ import KeywordsEntry from "../../components/KeywordsEntry/KeywordsEntry";
 import { Notification } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { sleep } from "../../utils/sleep";
+import { updateKeywords } from "../../redux/keywordSlice";
+
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
+  const {updateKeywordsStatus} = useSelector((state) => state.keyword)
   const [submitKeywords, setSubmitKeywords] = useState(false);
   const [routesClicked, setRoutesClicked] = useState("");
   const [keywordValues, setKeywordValues] = useState([]);
@@ -59,6 +62,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   let customer;
   const location = useLocation();
+  const dispatch = useDispatch();
+
   // useEffect(() => {
   //     setTimeout(() => {
   //         if (location?.state?.customer) {
@@ -80,12 +85,25 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (routesClicked.at(-2) && routesClicked.at(-2) == "/dashboard/keywords") {
-      setNotification(true)
-      sleep(5000).then(data => setNotification(false))
+    if (routesClicked.at(-2) && routesClicked.at(-2) === "/dashboard/keywords") {
+      
 
+      const updateKeywordPayload = {
+        "customerId":customerDetails.id,
+        "keywordsPayload":keywordValues
     }
-  }, [routesClicked]);
+
+    console.log(keywordValues,customerDetails.id);
+
+
+    setNotification(true)
+    sleep(5000).then(data => setNotification(false))
+
+    dispatch(updateKeywords(updateKeywordPayload))
+
+    
+    }
+  }, [routesClicked,dispatch]);
 
   if (status == "loading") {
     return (
