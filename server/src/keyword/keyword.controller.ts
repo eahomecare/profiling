@@ -10,12 +10,8 @@ import {
 } from '@nestjs/common';
 import { KeywordService } from './keyword.service';
 import { Keyword } from '@prisma/client';
-
-interface CreateKeywordDto {
-  category: string;
-  value: string;
-  customerIDs?: string[];
-}
+import { ObjectId } from 'mongodb';
+import { CustomerService } from 'src/customer/customer.service';
 
 interface KeywordWithOptionalError
   extends Keyword {
@@ -24,12 +20,21 @@ interface KeywordWithOptionalError
 
 interface UpdateData {
   customerId: string;
+  keywordsPayload: string[];
+}
+
+interface CreateKeywordInput
+  extends Omit<Keyword, 'id'> {
+  value: string;
+  category: string;
+  customerIDs: string[];
 }
 
 @Controller('keywords')
 export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
+    private customerService: CustomerService,
   ) {}
 
   @Post()
@@ -220,6 +225,43 @@ export class KeywordController {
       await this.keywordService.removeCustomerFromKeywords(
         data.customerId,
       );
+
+      const keywordIds: string[] = [];
+
+      for (const idOrValue of data.keywordsPayload) {
+        if (ObjectId.isValid(idOrValue)) {
+          const keyword =
+            await this.keywordService.findOne(
+              idOrValue,
+            );
+
+          if (keyword) {
+            const updatedKeyword =
+              await this.keywordService.addCustomerToKeyword(
+                keyword.id,
+                data.customerId,
+              );
+            keywordIds.push(updatedKeyword.id);
+          } else {
+            continue;
+          }
+        } else {
+          const newKeyword =
+            await this.keywordService.create({
+              id: undefined,
+              value: idOrValue,
+              category: 'unknown',
+              customerIDs: [data.customerId],
+            });
+          keywordIds.push(newKeyword.id);
+        }
+      }
+
+      await this.customerService.updateKeywords(
+        data.customerId,
+        keywordIds,
+      );
+
       return {
         success: true,
         data: 'done',
