@@ -85,4 +85,75 @@ describe('SearchService', () => {
     expect(result.body.result).toEqual('deleted');
 
   });
+
+  it('should check if an index exists', async () => {
+    const index = 'test-index';
+
+    const result: boolean = await searchService.checkIfIndexExists(index);
+
+    expect(result).toBeDefined();
+    expect(typeof result).toBe('boolean');
+  });
+
+  it('should create an autocomplete index', async () => {
+    const index = 'test-autocomplete-index';
+
+    const result: any = await searchService.createAutocompleteIndex(index);
+
+    expect(result).toBeDefined();
+    expect(result.body).toBeDefined();
+    expect(result.body.acknowledged).toBe(true);
+  });
+
+  it('should insert data for autocomplete', async () => {
+    const index = 'test-autocomplete-index';
+    const id = 'e0d8ff-Insta';
+    const label = 'Insta [Instagram]';
+
+    const result: any = await searchService.insertData(index, id, label);
+
+    expect(result).toBeDefined();
+    expect(result.body).toBeDefined();
+    expect(result.body.result).toEqual('created');
+  });
+
+  it('should insert multiple data entries for autocomplete', async () => {
+    const index = 'test-autocomplete-index';
+    const data = [
+      { id: 'e0d8ff-Insta', label: 'Insta [Instagram]' },
+      { id: 'z03jr3-Reel', label: 'Reels [Instagram]' },
+      { id: 'a1b2c3-Face', label: 'Face [Facebook]' },
+      { id: 'x5y6z7-Twit', label: 'Twit [Twitter]' },
+    ];
+
+    const result: any = await searchService.insertBulkData(index, data);
+
+    expect(result).toBeDefined();
+    expect(result.body).toBeDefined();
+    expect(result.body.errors).toBe(false);
+  });
+
+  it('should get autocomplete suggestions', async () => {
+    const index = 'test-autocomplete-index';
+    const prefix = 'Ins';
+
+    // Allow time for Elasticsearch to update its search indices
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const suggestions = await searchService.suggestLabels(index, prefix);
+
+    expect(suggestions).toBeDefined();
+    expect(Array.isArray(suggestions)).toBe(true);
+    expect(suggestions[0]).toEqual({ value: 'e0d8ff-Insta', label: 'Insta [Instagram]' });
+  });
+
+  it('should delete the autocomplete index', async () => {
+    const index = 'test-autocomplete-index';
+
+    const result: any = await searchService.deleteIndex(index);
+
+    expect(result).toBeDefined();
+    expect(result.body).toBeDefined();
+    expect(result.body.acknowledged).toBe(true);
+  });
 });
