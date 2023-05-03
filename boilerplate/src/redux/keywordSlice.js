@@ -85,6 +85,8 @@ export const keywordSlice = createSlice({
     },
     [updateKeywords.fulfilled]: (state, action) => {
       state.updateKeywordsStatus = "success";
+      state.customerKeywords = action.payload.data
+
     },
     [updateKeywords.rejected]: (state, action) => {
       state.updateKeywordsStatus = "failed";

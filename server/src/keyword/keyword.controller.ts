@@ -218,7 +218,7 @@ export class KeywordController {
     @Body() data: UpdateData,
   ): Promise<{
     success: boolean;
-    data?: string;
+    data?: Keyword[];
     error?: string;
   }> {
     try {
@@ -264,7 +264,9 @@ export class KeywordController {
 
       return {
         success: true,
-        data: 'done',
+        data: await this.keywordService.findAllByIds(
+          keywordIds,
+        ),
         error: undefined,
       };
     } catch (error) {

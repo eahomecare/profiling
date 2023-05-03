@@ -6,7 +6,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CustomerModule } from './customer/customer.module';
 import { KeywordModule } from './keyword/keyword.module';
-import { SearchModule } from './search/search.module';
+// import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { SearchModule } from './search/search.module';
     PrismaModule,
     CustomerModule,
     KeywordModule,
-    SearchModule,
+    // SearchModule,
   ],
 })
 export class AppModule {}
