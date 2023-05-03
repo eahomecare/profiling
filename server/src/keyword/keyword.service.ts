@@ -300,4 +300,25 @@ export class KeywordService {
       );
     }
   }
+
+  async findAllByIds(
+    keywordIds: string[],
+  ): Promise<Keyword[]> {
+    try {
+      return await this.prisma.keyword.findMany({
+        where: {
+          id: {
+            in: keywordIds,
+          },
+        },
+        include: {
+          customers: false,
+        },
+      });
+    } catch (error) {
+      throw new Error(
+        `Could not find keywords: ${error.message}`,
+      );
+    }
+  }
 }
