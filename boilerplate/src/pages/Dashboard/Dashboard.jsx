@@ -46,6 +46,7 @@ import { Notification } from "@mantine/core";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { sleep } from "../../utils/sleep";
 import { updateKeywords } from "../../redux/keywordSlice";
+import Interests from "../../components/Interests/Interests";
 
 
 const Dashboard = () => {
@@ -92,9 +93,6 @@ const Dashboard = () => {
         "customerId":customerDetails.id,
         "keywordsPayload":keywordValues
     }
-
-    console.log(keywordValues,customerDetails.id);
-
 
     setNotification(true)
     sleep(5000).then(data => setNotification(false))
@@ -218,7 +216,8 @@ const Dashboard = () => {
                   }
                 />
 
-                {/* <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} />} /> */}
+                <Route path="/interests" element={<Interests />} />
+
               </Route>
             </Routes>
           </Card>
