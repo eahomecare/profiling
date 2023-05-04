@@ -1,6 +1,6 @@
 import { ActionIcon, Avatar, Box, Card, Center, Container, Divider, Grid, Group, Paper, RingProgress, Space, Text } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import InfoTag from './InfoTag'
+import InfoTag from '../common/InfoTag'
 import { IconEdit } from '@tabler/icons-react'
 
 const PersonalInformation = ({ selectedCustomer }: any) => {

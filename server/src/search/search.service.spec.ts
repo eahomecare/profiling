@@ -141,6 +141,7 @@ describe('SearchService', () => {
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     const suggestions = await searchService.suggestLabels(index, prefix);
+    console.log('***Suggestions', suggestions)
 
     expect(suggestions).toBeDefined();
     expect(Array.isArray(suggestions)).toBe(true);

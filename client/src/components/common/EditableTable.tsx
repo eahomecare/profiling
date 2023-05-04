@@ -27,18 +27,19 @@ interface EditableTableProps<T> {
     title: string;
     initialData: T[];
     headerData: string[];
-    createEmptyRow: () => T
+    createEmptyRow: () => T;
+    customInputs?: {
+        [key: string]: (value: string, onChange: (value: string) => void) => React.ReactNode;
+    };
 }
 
-export function EditableTable<T extends Record<string, any>>({ title, initialData, headerData, createEmptyRow }: EditableTableProps<T>) {
+export function EditableTable<T extends Record<string, any>>({ title, initialData, headerData, createEmptyRow, customInputs }: EditableTableProps<T>) {
     const { classes, cx } = useStyles();
     const [selection, setSelection] = useState<string[]>([]);
     const [data, setData] = useState(initialData);
     const [editRow, setEditRow] = useState<string | null>(null);
     const [newRow, setNewRow] = useState<Partial<T> | null>(null);
-    const [showEditColumn, setShowEditColumn] = useState(false);
     const [tempEditData, setTempEditData] = useState<Partial<T> | null>(null);
-
 
     const headerElements = headerData.map((headerItem: string, index: number) => (
         <th key={index}>{headerItem}</th>
@@ -112,9 +113,6 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
     };
 
     const handleAdd = () => {
-        if (showEditColumn) {
-            setShowEditColumn(false);
-        }
         if (newRow) {
             setNewRow(null);
         } else {
@@ -122,23 +120,26 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
         }
     };
 
-    const handleToggleEditColumn = () => {
-        if (newRow) {
-            setNewRow(null);
-        }
-        setShowEditColumn(!showEditColumn);
-    };
-
     const newRowElement = newRow ? (
-        <tr >
-            {Object.keys(newRow).map((key) => (
-                <td key={key}>
-                    <TextInput
-                        value={newRow[key as keyof T] || ''}
-                        onChange={(event) => handleNewRowChange(key as keyof T, event.currentTarget.value)}
-                    />
-                </td>
-            ))}
+        <tr>
+            {Object.keys(newRow)
+                .filter((key) => key !== 'id')
+                .map((key) => (
+                    <td key={key}>
+                        {customInputs && customInputs[key as string] ? (
+                            customInputs[key as string](
+                                newRow && newRow[key as keyof T] || '',
+                                (value) => handleNewRowChange(key as keyof T, value),
+                            )
+                        ) : (
+                            <TextInput
+                                value={newRow && newRow[key as keyof T] || ''}
+                                onChange={(event) =>
+                                    handleNewRowChange(key as keyof T, event.currentTarget.value)}
+                            />
+                        )}
+                    </td>
+                ))}
             <td>
                 <Button onClick={handleSaveNewRow} bg={'#4E70EA'}>Save</Button>
             </td>
@@ -159,7 +160,14 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                 {Object.keys(item)
                     .filter(item => item != 'id')
                     .map((key) =>
-                        editRow === item.id ? (
+                        editRow === item.id && customInputs && customInputs[key as string] ? (
+                            <td key={key}>
+                                {customInputs[key as string](
+                                    tempEditData && tempEditData[key as keyof T] || '',
+                                    (value) => handleEditChange(item.id, key as keyof T, value),
+                                )}
+                            </td>
+                        ) : editRow === item.id ? (
                             <td key={key}>
                                 <TextInput
                                     value={tempEditData && tempEditData[key as keyof T] || ''}
@@ -171,24 +179,22 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                             <td key={key}>{item[key as keyof T]}</td>
                         ),
                     )}
-                {showEditColumn && (
-                    <td>
-                        {editRow === item.id ? (
-                            <>
-                                <ActionIcon onClick={() => handleEditSave(item.id)} color='green' variant='subtle' size={'sm'}>
-                                    <IconCheck />
-                                </ActionIcon>
-                                <ActionIcon onClick={() => handleDiscard(item.id)} color='red' variant='subtle' size={'sm'}>
-                                    <IconX />
-                                </ActionIcon>
-                            </>
-                        ) : (
-                            <ActionIcon onClick={() => handleEdit(item.id)} color='blue' variant='subtle' size={'sm'}>
-                                <IconEdit color='#4E70EA' />
+                <td>
+                    {editRow === item.id ? (
+                        <>
+                            <ActionIcon onClick={() => handleEditSave(item.id)} color='green' variant='subtle' size={'sm'}>
+                                <IconCheck />
                             </ActionIcon>
-                        )}
-                    </td>
-                )}
+                            <ActionIcon onClick={() => handleDiscard(item.id)} color='red' variant='subtle' size={'sm'}>
+                                <IconX />
+                            </ActionIcon>
+                        </>
+                    ) : (
+                        <ActionIcon onClick={() => handleEdit(item.id)} color='blue' variant='subtle' size={'sm'}>
+                            <IconEdit color='#4E70EA' />
+                        </ActionIcon>
+                    )}
+                </td>
             </tr>
         );
     });
@@ -207,12 +213,6 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                             </ActionIcon>
                             <Text ml={-18} color='red' size={'sm'}>Delete</Text>
                         </Group>
-                        <Group onClick={handleToggleEditColumn} style={{ cursor: 'pointer' }}>
-                            <ActionIcon variant='subtle' size={'sm'}>
-                                <IconEdit color='#4E70EA' />
-                            </ActionIcon>
-                            <Text ml={-18} color='#4E70EA' size={'sm'}>Edit</Text>
-                        </Group>
                         <Group onClick={handleAdd} style={{ cursor: 'pointer' }}>
                             <ActionIcon color='blue' variant='subtle' size={'sm'}>
                                 <IconPlus color='#4E70EA' />
@@ -222,20 +222,19 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                     </Group>
                 </Box>
             </Group>
-            <ScrollArea>
-                <Table miw={800} verticalSpacing="sm">
+            <ScrollArea style={{ maxHeight: rem(300) }}>
+                <Table>
                     <thead>
                         <tr>
-                            <th style={{ width: rem(40) }}>
+                            <th>
                                 <Checkbox
+                                    checked={selection.length === data.length && data.length > 0}
                                     onChange={toggleAll}
-                                    checked={selection.length === data.length}
-                                    indeterminate={selection.length > 0 && selection.length !== data.length}
                                     transitionDuration={0}
                                 />
                             </th>
                             {headerElements}
-                            {showEditColumn && <th></th>}
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -245,5 +244,5 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                 </Table>
             </ScrollArea>
         </>
-    );
-}
+    )
+};

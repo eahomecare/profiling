@@ -22,6 +22,12 @@ import DashboardNavbar from './DashboardNavbar';
 import Profiling from '../Profiling/Profiling';
 import eaLogo from './assets/eaLogo.png'
 import { Occupation } from '../Occupation/Occupation';
+import { FamilyDetails } from '../FamilyDetails/FamilyDetails';
+import FinancialInformation from '../FinancialInformation/FinancialInformation';
+import { InsuranceDetails } from '../InsuranceDetails/InsuranceDetails';
+import { VehicleDetails } from '../VehicleDetails/VehicleDetails';
+import { SocialMediaDetails } from '../SocialMedia/socialMedia';
+import Health from '../Health/Health';
 
 const Dashboard = () => {
     const [selectedCustomer, setSelectedCustomer] = useState()
@@ -119,6 +125,12 @@ const Dashboard = () => {
                                 <Route path='/profiling' element={<Profiling />} />
                                 <Route path='/interests' element={<Interests selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} />} />
                                 <Route path='/occupation' element={<Occupation />} />
+                                <Route path='/familyDetails' element={<FamilyDetails />} />
+                                <Route path='/financialInformation' element={<FinancialInformation />} />
+                                <Route path='/insuranceDetails' element={<InsuranceDetails />} />
+                                <Route path='/vehicle' element={<VehicleDetails />} />
+                                <Route path='/health' element={<Health />} />
+                                <Route path='/socialMedia' element={<SocialMediaDetails />} />
                             </Route>
                         </Routes>
                     </Card>
