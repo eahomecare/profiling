@@ -47,7 +47,7 @@ const IdentityCard: React.FC<IdentityCardProps> = ({ title, subTitle, detail, in
                     <Box>
                         {isEditing ? (
                             <>
-                                <ActionIcon onClick={handleSave} color="blue" variant="subtle" size={'sm'}>
+                                <ActionIcon onClick={handleSave} color="green" variant="subtle" size={'sm'}>
                                     <IconCheck color="#4E70EA" />
                                 </ActionIcon>
                                 <ActionIcon onClick={handleDiscard} color="red" variant="subtle" size={'sm'}>

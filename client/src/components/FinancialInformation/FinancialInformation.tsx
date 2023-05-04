@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Divider } from '@mantine/core';
 import { BankDetails } from './BankDetails';
 import IdentityCard from './IdentityCard';
@@ -23,13 +23,27 @@ const data: Data[] = [
 ];
 
 const FinancialInformation: React.FC = () => {
+    const [identityData, setIdentityData] = useState<Data[]>(data);
+
+    const updateDetail = (index: number, newValue: string) => {
+        setIdentityData((prevState) =>
+            prevState.map((item, idx) => (idx === index ? { ...item, detail: newValue } : item)),
+        );
+    };
+
     return (
         <>
             <BankDetails />
-            {data.map((item) => (
+            {identityData.map((item, index) => (
                 <React.Fragment key={item.title}>
                     <Divider my="md" size={'xs'} color={'#4E70EA'} />
-                    <IdentityCard title={item.title} subTitle={item.subTitle} detail={item.detail} />
+                    <IdentityCard
+                        title={item.title}
+                        subTitle={item.subTitle}
+                        detail={item.detail}
+                        index={index}
+                        onUpdateDetail={updateDetail}
+                    />
                 </React.Fragment>
             ))}
         </>

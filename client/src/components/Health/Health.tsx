@@ -2,6 +2,7 @@ import React from 'react'
 import BMISpeedometer from './BMImeter'
 import { Box, Flex, Grid, Text } from '@mantine/core'
 import InfoTag from '../common/InfoTag'
+import Allergies from './Allergies'
 
 const Health = () => {
     return (
@@ -11,10 +12,10 @@ const Health = () => {
                 <Flex>
                     <Grid gutter="xl" pt={'sm'}>
                         <Grid.Col span={6}>
-                            <InfoTag title={'First Name'} subject={'hi'} />
+                            <InfoTag title={'First Name'} subject={'Elon'} />
                         </Grid.Col>
                         <Grid.Col span={6}>
-                            <InfoTag title={'Last Name'} subject={'Elon'} />
+                            <InfoTag title={'Last Name'} subject={'Musk'} />
                         </Grid.Col>
                         <Grid.Col span={6}>
                             <InfoTag title={'Date of birth'} subject={'Musk'} />
@@ -37,6 +38,9 @@ const Health = () => {
                     </Grid>
                     <BMISpeedometer bmi={12} />
                 </Flex>
+                <Box mt={10}>
+                    <Allergies />
+                </Box>
             </Box>
         </>
     )
