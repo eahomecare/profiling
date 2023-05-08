@@ -13,7 +13,8 @@ const Submit = ({ keywordsSelected, selectedCustomer, setSelectedCustomer }: any
     // }, [])
     const createPayload = () => {
         const payload = {
-            ...selectedCustomer, keys: keywordsSelected
+            ...selectedCustomer, keys: keywordsSelected,
+            profile_completion: (selectedCustomer.keys.length / keywordsSelected.length) * 100 > 100 ? 100 : (selectedCustomer.keys.length / keywordsSelected.length) * 100
             // mobile,
             // keys: keys,
             // source: 2,

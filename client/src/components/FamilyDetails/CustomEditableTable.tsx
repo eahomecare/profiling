@@ -13,6 +13,7 @@ import {
     ActionIcon,
 } from '@mantine/core';
 import { IconCheck, IconEdit, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import MyModal from './ModalView';
 
 const useStyles = createStyles((theme) => ({
     rowSelected: {
@@ -31,9 +32,10 @@ export interface EditableTableProps<T> {
     customInputs?: {
         [key: string]: (value: string, onChange: (value: string) => void) => React.ReactNode;
     };
+    rowData: T
 }
 
-export function EditableTable<T extends Record<string, any>>({ title, initialData, headerData, createEmptyRow, customInputs }: EditableTableProps<T>) {
+export function EditableTable<T extends Record<string, any>>({ title, initialData, headerData, createEmptyRow, customInputs, rowData }: EditableTableProps<T>) {
     const { classes, cx } = useStyles();
     const [selection, setSelection] = useState<string[]>([]);
     const [data, setData] = useState(initialData);
@@ -179,6 +181,9 @@ export function EditableTable<T extends Record<string, any>>({ title, initialDat
                             <td key={key}>{item[key as keyof T]}</td>
                         ),
                     )}
+                <td>
+                    <MyModal<T> rowData={item} />
+                </td>
                 <td>
                     {editRow === item.id ? (
                         <>

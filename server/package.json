@@ -24,11 +24,9 @@
     "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^7.9.1",
     "@nestjs/common": "^9.3.9",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.3.9",
-    "@nestjs/elasticsearch": "^9.0.0",
     "@nestjs/jwt": "^10.0.2",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.3.9",
@@ -36,7 +34,6 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "lodash": "^4.17.21",
-    "mongodb": "^5.3.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "prisma": "^4.11.0",
