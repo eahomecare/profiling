@@ -51,7 +51,7 @@ const data = [
     { link: 'keywords', label: 'Keywords', icon: <IconCircleKey /> },
     { link: 'profiling', label: 'Profiling', icon: <IconTimeline /> },
     { link: 'interests', label: 'Interests', icon: <IconPalette /> },
-    { link: 'Occupation', label: 'Occupation', icon: <IconBriefcase /> },
+    { link: 'occupation', label: 'Occupation', icon: <IconBriefcase /> },
     { link: 'Activity', label: 'Activity', icon: <IconComet /> },
     { link: 'Family Details', label: 'Family Details', icon: <IconFriends /> },
     { link: 'Financial Information', label: 'Financial Information', icon: <IconReportMoney /> },

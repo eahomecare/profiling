@@ -48,3 +48,15 @@ export interface Keyword {
   customerIDs:string[]
   customers: Customer
 }
+
+
+export interface Occupation {
+  id:string
+  type:string
+  industry: string
+  to :string
+  from : string
+  incomeBracket:string
+  customerIDs :string[]   
+  customers :Customer
+}
