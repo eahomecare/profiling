@@ -23,29 +23,26 @@ model User {
 }
 
 model Customer {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  mobile             String   @unique
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  mobile             String            @unique
   other_mobile       Json?
   email              String?
   other_email        Json?
   source             Int
   profiling          Json?
-  keys               String[] @default([])
+  keys               String[]          @default([])
   profile_completion Int?
-
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @updatedAt
-  created_by       String?
-  updated_by       String?
-  personal_details Personal_Details?
-  keywordIDs       String[]          @db.ObjectId
-  keywords         Keyword[]         @relation(fields: [keywordIDs], references: [id])
-
-  // age                  age?
-  // Vehicle_Details      Vehicle_Details?
-  // Sports               Sports?
-  // Health               Health?
-  // Food_And_Restaurants Food_And_Restaurants?
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+  created_by         String?
+  updated_by         String?
+  personal_details   Personal_Details?
+  keywordIDs         String[]          @db.ObjectId
+  keywords           Keyword[]         @relation(fields: [keywordIDs], references: [id])
+  occupationIDs      String[]          @db.ObjectId
+  occupations        Occupation[]      @relation(fields: [occupationIDs], references: [id])
+  vehicele_detailIDs String[]          @db.ObjectId
+  vehicele_details   Vehicle_Detail[]  @relation(fields: [vehicele_detailIDs], references: [id])
 
   @@map("customers")
 }
@@ -72,6 +69,37 @@ model Keyword {
   customers   Customer[] @relation(fields: [customerIDs], references: [id])
 
   @@map("keywords")
+}
+
+model Occupation {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  type          String
+  industry      String
+  to            String
+  from          String
+  incomeBracket String
+  customerIDs   String[]   @db.ObjectId
+  customers     Customer[] @relation(fields: [customerIDs], references: [id])
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
+
+  @@map("occupations")
+}
+
+model Vehicle_Detail {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  vin         String
+  productType String
+  validity    String
+  expiryDate  String
+  status      String
+  customerIDs String[]   @db.ObjectId
+  customers   Customer[] @relation(fields: [customerIDs], references: [id])
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+
+  @@map("vehicle_details")
 }
 
 // model age {
