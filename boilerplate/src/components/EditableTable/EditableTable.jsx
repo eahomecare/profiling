@@ -1,103 +1,238 @@
-import React, { useState } from 'react';
-import { Table, Button, TextInput, Text } from '@mantine/core';
+import { useState } from 'react';
+import {
+    createStyles,
+    Table,
+    Checkbox,
+    ScrollArea,
+    TextInput,
+    Button,
+    Box,
+    Text,
+    rem,
+    Group,
+    ActionIcon,
+} from '@mantine/core';
+import { IconCheck, IconEdit, IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 
-function ExampleTable() {
-  const [data, setData] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [newData, setNewData] = useState({ name: '', age: '', email: '' });
+const useStyles = createStyles((theme) => ({
+    rowSelected: {
+        backgroundColor:
+            theme.colorScheme === 'dark'
+                ? theme.fn.rgba(theme.colors[theme.primaryColor][7], 0.2)
+                : theme.colors[theme.primaryColor][0],
+    },
+}));
 
-  const handleEdit = (index) => {
-    setEditingIndex(index);
-  };
+export function EditableTable({ title, initialData, headerData, createEmptyRow, customInputs }) {
+    const { classes, cx } = useStyles();
+    const [selection, setSelection] = useState([]);
+    const [data, setData] = useState(initialData);
+    const [editRow, setEditRow] = useState(null);
+    const [newRow, setNewRow] = useState(null);
+    const [tempEditData, setTempEditData] = useState(null);
 
-  const handleSave = (index) => {
-    setData((prevData) =>
-      prevData.map((item, i) => (i === index ? newData : item))
-    );
-    setEditingIndex(null);
-    setNewData({ name: '', age: '', email: '' });
-  };
+    const headerElements = headerData.map((headerItem, index) => (
+        <th key={index}>{headerItem}</th>
+    ));
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.currentTarget;
-    setNewData((prevData) => ({ ...prevData, [name]: value }));
-  };
+    const toggleRow = (id) =>
+        setSelection((current) =>
+            current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+        );
 
-  const handleAddNew = () => {
-    setData((prevData) => [...prevData, newData]);
-    setNewData({ name: '', age: '', email: '' });
-  };
+    const toggleAll = () =>
+        setSelection((current) =>
+            current.length === data.length ? [] : data.map((item) => item.id),
+        );
 
-  return (
-    <>
-      <Table
-        data={data}
-        columns={[
-          { label: 'Name', dataKey: 'name' },
-          { label: 'Age', dataKey: 'age' },
-          { label: 'Email', dataKey: 'email' },
-          {
-            label: 'Actions',
-            align: 'right',
-            render: (_, index) =>
-              editingIndex === index ? (
-                <>
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    onClick={() => handleSave(index)}
-                    style={{ marginRight: 10 }}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="xs"
-                    onClick={() => setEditingIndex(null)}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="xs"
-                  onClick={() => handleEdit(index)}
-                >
-                  Edit
-                </Button>
-              ),
-          },
-        ]}
-      />
-      <div style={{ display: 'flex', marginTop: 20 }}>
-        <TextInput
-          label="Name"
-          name="name"
-          value={newData.name}
-          onChange={handleInputChange}
-          style={{ marginRight: 10 }}
-        />
-        <TextInput
-          label="Age"
-          name="age"
-          value={newData.age}
-          onChange={handleInputChange}
-          style={{ marginRight: 10 }}
-        />
-        <TextInput
-          label="Email"
-          name="email"
-          value={newData.email}
-          onChange={handleInputChange}
-          style={{ marginRight: 10 }}
-        />
-        <Button variant="primary" onClick={handleAddNew}>
-          Add New
-        </Button>
-      </div>
-    </>
-  );
-}
+    const handleEditChange = (
+        rowId,
+        key,
+        value,
+    ) => {
+        setTempEditData((prevData) =>
+            prevData && prevData.id === rowId
+                ? { ...prevData, [key]: value }
+                : prevData,
+        );
+    };
 
-export default ExampleTable;
+    const handleDelete = () => {
+        setData((prevData) => prevData.filter((item) => !selection.includes(item.id)));
+        setSelection([]);
+    };
+
+    const handleNewRowChange = (key, value) => {
+        if (newRow) {
+            setNewRow({ ...newRow, [key]: value });
+        }
+    };
+
+    const handleEditSave = (rowId) => {
+        setData((prevData) =>
+            prevData.map((item) =>
+                item.id === rowId ? { ...item, ...tempEditData } : item,
+            ),
+        );
+        setEditRow(null);
+        setTempEditData(null);
+    };
+
+    const handleDiscard = (rowId) => {
+        setEditRow(null);
+        setTempEditData(null);
+    };
+
+    const handleSaveNewRow = () => {
+        if (newRow) {
+            setData((prevData) => [
+                ...prevData,
+                {
+                    ...createEmptyRow(),
+                    ...newRow,
+                    id: (data.length + 1).toString(),
+                },
+            ]);
+            setNewRow(null);
+        }
+    };
+
+    const handleEdit = (rowId) => {
+        setTempEditData(data.find((item) => item.id === rowId) || null);
+        setEditRow((prevState) => (prevState === rowId ? null : rowId));
+    };
+
+    const handleAdd = () => {
+        if (newRow) {
+            setNewRow(null);
+        } else {
+            setNewRow(createEmptyRow());
+        }
+    };
+
+    const newRowElement = newRow ? (
+        <tr>
+            {Object.keys(newRow)
+                .filter((key) => key !== 'id')
+                .map((key) => (
+                    <td key={key}>
+                        {customInputs && customInputs[key] ? (
+                            customInputs[key](
+                                newRow && newRow[key] || '',
+                                (value) => handleNewRowChange(key, value),
+                            )
+                        ) : (
+                            <TextInput
+                                value={newRow && newRow[key] || ''}
+                                onChange={(event) =>
+                                    handleNewRowChange(key, event.currentTarget.value)}
+                            />
+                        )}
+                    </td>
+                ))}
+            <td>
+                <Button onClick={handleSaveNewRow} bg={'#4E70EA'}>Save</Button>
+            </td>
+        </tr>
+    ) : null;
+
+    const rows = data.map((item) => {
+        const selected = selection.includes(item.id);
+        return (
+            <tr key={item.id} className={cx({ [classes.rowSelected]: selected })}>
+                <td>
+                    <Checkbox
+                        checked={selection.includes(item.id)}
+                        onChange={() => toggleRow(item.id)}
+                        transitionDuration={0}
+                    />
+                </td>
+                {Object.keys(item)
+                    .filter(item => item != 'id')
+                    .map((key) =>
+                        editRow === item.id && customInputs && customInputs[key ] ? (
+                            <td key={key}>
+                                {customInputs[key ](
+                                    tempEditData && tempEditData[key ] || '',
+                                    (value) => handleEditChange(item.id, key , value),
+                                )}
+                            </td>
+                        ) : editRow === item.id ? (
+                            <td key={key}>
+                                <TextInput
+                                    value={tempEditData && tempEditData[key ] || ''}
+                                    onChange={(event) =>
+                                        handleEditChange(item.id, key , event.currentTarget.value)}
+                                />
+                            </td>
+                        ) : (
+                            <td key={key}>{item[key ]}</td>
+                        ),
+                    )}
+                <td>
+                    {editRow === item.id ? (
+                        <>
+                            <ActionIcon onClick={() => handleEditSave(item.id)} color='green' variant='subtle' size={'sm'}>
+                                <IconCheck />
+                            </ActionIcon>
+                            <ActionIcon onClick={() => handleDiscard(item.id)} color='red' variant='subtle' size={'sm'}>
+                                <IconX />
+                            </ActionIcon>
+                        </>
+                    ) : (
+                        <ActionIcon onClick={() => handleEdit(item.id)} color='#4E70EA' variant='subtle' size={'sm'}>
+                            <IconEdit color='#4E70EA' />
+                        </ActionIcon>
+                    )}
+                </td>
+            </tr>
+        );
+    });
+
+    return (
+        <>
+            <Group position='apart'>
+                <Box mb={5}>
+                    <Text fw={700}>{title || ''}</Text>
+                </Box>
+                <Box mb={5}>
+                    <Group>
+                        <Group onClick={handleDelete} style={{ cursor: 'pointer' }} >
+                            <ActionIcon color='red' variant='subtle' size={'sm'}>
+                                <IconTrash />
+                            </ActionIcon>
+                            <Text ml={-18} color='red' size={'sm'}>Delete</Text>
+                        </Group>
+                        <Group onClick={handleAdd} style={{ cursor: 'pointer' }}>
+                            <ActionIcon color='blue' variant='subtle' size={'sm'}>
+                                <IconPlus color='#4E70EA' />
+                            </ActionIcon>
+                            <Text ml={-18} color='#4E70EA' size={'sm'}>Add More</Text>
+                        </Group>
+                    </Group>
+                </Box>
+            </Group>
+            <ScrollArea style={{ maxHeight: rem(300) }}>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <Checkbox
+                                    checked={selection.length === data.length && data.length > 0}
+                                    onChange={toggleAll}
+                                    transitionDuration={0}
+                                />
+                            </th>
+                            {headerElements}
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows}
+                        {newRowElement}
+                    </tbody>
+                </Table>
+            </ScrollArea>
+        </>
+    )
+};

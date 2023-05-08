@@ -47,8 +47,7 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 import { sleep } from "../../utils/sleep";
 import { updateKeywords } from "../../redux/keywordSlice";
 import Interests from "../../components/Interests/Interests";
-import Occupation from "../../components/Occupation/Occupation";
-
+import { Occupation } from "../../components/Occupation/Occupation";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
