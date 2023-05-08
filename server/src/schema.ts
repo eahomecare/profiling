@@ -22,8 +22,6 @@ export interface Customer {
   created_by?: string;
   updated_by?: string;
   personal_details?: Personal_Details;
-  keywordIDs:string[]
-  keywords:Keyword
 }
 
 export interface Personal_Details {
@@ -38,13 +36,4 @@ export interface Personal_Details {
   employment?: string;
   location?: string;
   anniversary?: string;
-}
-
-
-export interface Keyword {
-  id:string
-  category:string
-  value:string
-  customerIDs:string[]
-  customers: Customer
 }
