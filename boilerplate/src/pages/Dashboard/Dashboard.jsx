@@ -48,6 +48,7 @@ import { sleep } from "../../utils/sleep";
 import { updateKeywords } from "../../redux/keywordSlice";
 import Interests from "../../components/Interests/Interests";
 import { Occupation } from "../../components/Occupation/Occupation";
+import { FamilyDetails } from "../../components/FamilyDetails/FamilyDetails";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
@@ -218,6 +219,7 @@ const Dashboard = () => {
 
                 <Route path="/interests" element={<Interests />} />
                 <Route path="/occupation" element={<Occupation />} />
+                <Route path="/familydetails" element={<FamilyDetails />} />
 
               </Route>
             </Routes>
