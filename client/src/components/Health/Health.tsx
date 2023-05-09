@@ -10,7 +10,7 @@ const Health = () => {
     const [data, setData] = useState({
         firstName: 'Elon',
         lastName: 'Musk',
-        dob: '1971-06-28',
+        dob: '28-06-1971',
         gender: 'Male',
         height: 170, // cm
         weight: 78, // kg

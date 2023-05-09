@@ -34,7 +34,7 @@ const IdentityCard: React.FC<IdentityCardProps> = ({ title, subTitle, detail, in
                 <Flex justify={'space-between'} p={20}>
                     <Box>
                         <Text>{title}</Text>
-                        <Text>{subTitle}</Text>
+                        <Text fz={'sm'} c='dimmed'>{subTitle}</Text>
                         {isEditing ? (
                             <TextInput
                                 value={editedValue}
@@ -47,7 +47,7 @@ const IdentityCard: React.FC<IdentityCardProps> = ({ title, subTitle, detail, in
                     <Box>
                         {isEditing ? (
                             <>
-                                <ActionIcon onClick={handleSave} color="#4E70EA" variant="subtle" size={'sm'}>
+                                <ActionIcon onClick={handleSave} color="green" variant="subtle" size={'sm'}>
                                     <IconCheck color="#4E70EA" />
                                 </ActionIcon>
                                 <ActionIcon onClick={handleDiscard} color="red" variant="subtle" size={'sm'}>
@@ -55,7 +55,7 @@ const IdentityCard: React.FC<IdentityCardProps> = ({ title, subTitle, detail, in
                                 </ActionIcon>
                             </>
                         ) : (
-                            <ActionIcon onClick={() => setIsEditing(true)} color="#4E70EA" variant="subtle" size={'sm'}>
+                            <ActionIcon onClick={() => setIsEditing(true)} color="blue" variant="subtle" size={'sm'}>
                                 <IconEdit color="#4E70EA" />
                             </ActionIcon>
                         )}
