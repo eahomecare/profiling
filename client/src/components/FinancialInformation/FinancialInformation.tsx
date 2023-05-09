@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Divider } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import { BankDetails } from './BankDetails';
 import IdentityCard from './IdentityCard';
 
@@ -34,9 +34,9 @@ const FinancialInformation: React.FC = () => {
     return (
         <>
             <BankDetails />
+            <Text mt={30} fw={700}>{'Identity Details'}</Text>
             {identityData.map((item, index) => (
                 <React.Fragment key={item.title}>
-                    <Divider my="md" size={'xs'} color={'#4E70EA'} />
                     <IdentityCard
                         title={item.title}
                         subTitle={item.subTitle}
@@ -44,6 +44,7 @@ const FinancialInformation: React.FC = () => {
                         index={index}
                         onUpdateDetail={updateDetail}
                     />
+                    <Divider my="md" size={'xs'} color={'#4E70EA'} />
                 </React.Fragment>
             ))}
         </>
