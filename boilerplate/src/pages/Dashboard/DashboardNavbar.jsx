@@ -53,7 +53,7 @@ const data = [
     { link: 'interests', label: 'Interests', icon: <IconPalette /> },
     { link: 'occupation', label: 'Occupation', icon: <IconBriefcase /> },
     { link: 'Activity', label: 'Activity', icon: <IconComet /> },
-    { link: 'Family Details', label: 'Family Details', icon: <IconFriends /> },
+    { link: 'familydetails', label: 'Family Details', icon: <IconFriends /> },
     { link: 'Financial Information', label: 'Financial Information', icon: <IconReportMoney /> },
     { link: 'Insurance Details', label: 'Insurance Details  ', icon: <IconCarCrash /> },
     { link: 'Vehicle', label: 'Vehicle', icon: <IconCar /> },

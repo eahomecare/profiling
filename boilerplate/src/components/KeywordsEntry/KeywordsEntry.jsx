@@ -1,4 +1,4 @@
-import { MultiSelect, Button } from "@mantine/core";
+import { MultiSelect, Button,Badge  } from "@mantine/core";
 import React, { useState, useEffect, useMemo } from "react";
 import AddKeywordsModal from "./AddKeywordsModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
 
   const [values, setValue] = useState();
   const [searchValue, onSearchChange] = useState("");
+  const [unknowns,setUnknowns] = useState([])
 
 
 
@@ -45,18 +46,28 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
     [keywords]
   );
 
+  
+
+  const unknownValues = _.map(
+    _.filter(keywords, { category: 'unknown' }),
+    'value'
+  );
+
+  
   useEffect(() => {
     if(keywordsStatus == 'success' && customerKeywordsStatus == 'success' ){
       setData(allKeywords);
       setValue(transformedData.map((obj) => obj.value));
+      setUnknowns(unknownValues)
+
     }
+
     
   }, [customerKeywords, keywords]);
 
   useEffect(() => {
     // setData(allKeywords);
     // setValue(transformedData.map((obj) => obj.value));
-    console.log(values);
     updateKeywordValuesParent(values)
   }, [ data,values]);
 
@@ -98,6 +109,18 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
           return item;
         }}
       />
+      
+      <div style={{ marginTop: '1rem' }}>
+            Existing Unknown keywords : {unknowns.map((unknown, index) => (
+              <Badge
+              key={unknown}
+              variant="gradient"
+              gradient={{ from: 'indigo', to: 'cyan' }}
+            >
+              {unknown}
+            </Badge>
+            ))}
+          </div>
     </>
     :<>
     <p>Please wait.......</p>
