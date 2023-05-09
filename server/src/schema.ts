@@ -37,27 +37,22 @@ export interface Personal_Details {
   location?: string;
   anniversary?: string;
 }
-<<<<<<< HEAD
-
 
 export interface Keyword {
-  id:string
-  category:string
-  value:string
-  customerIDs:string[]
-  customers: Customer
+  id: string;
+  category: string;
+  value: string;
+  customerIDs: string[];
+  customers: Customer;
 }
-
 
 export interface Occupation {
-  id:string
-  type:string
-  industry: string
-  to :string
-  from : string
-  incomeBracket:string
-  customerIDs :string[]   
-  customers :Customer
+  id: string;
+  type: string;
+  industry: string;
+  to: string;
+  from: string;
+  incomeBracket: string;
+  customerIDs: string[];
+  customers: Customer;
 }
-=======
->>>>>>> 10bc3a679589f1eefff6aad596ec2a69cda37e7c

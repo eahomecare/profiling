@@ -32,7 +32,6 @@ model Customer {
   profiling          Json?
   keys               String[]          @default([])
   profile_completion Int?
-<<<<<<< HEAD
   created_at         DateTime          @default(now())
   updated_at         DateTime          @updatedAt
   created_by         String?
@@ -44,19 +43,6 @@ model Customer {
   occupations        Occupation[]      @relation(fields: [occupationIDs], references: [id])
   vehicele_detailIDs String[]          @db.ObjectId
   vehicele_details   Vehicle_Detail[]  @relation(fields: [vehicele_detailIDs], references: [id])
-=======
-
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @updatedAt
-  created_by       String?
-  updated_by       String?
-  personal_details Personal_Details?
-  // age                  age?
-  // Vehicle_Details      Vehicle_Details?
-  // Sports               Sports?
-  // Health               Health?
-  // Food_And_Restaurants Food_And_Restaurants?
->>>>>>> 10bc3a679589f1eefff6aad596ec2a69cda37e7c
 
   @@map("customers")
 }
@@ -75,7 +61,6 @@ model Personal_Details {
   anniversary   String?
 }
 
-<<<<<<< HEAD
 model Keyword {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   category    String
@@ -117,8 +102,6 @@ model Vehicle_Detail {
   @@map("vehicle_details")
 }
 
-=======
->>>>>>> 10bc3a679589f1eefff6aad596ec2a69cda37e7c
 // model age {
 //   id          String   @id @default(auto()) @map("_id") @db.ObjectId
 //   customer    Customer @relation(fields: [customer_id], references: [id])
