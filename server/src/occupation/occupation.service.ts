@@ -1,30 +1,41 @@
-import { PrismaClient, Occupation } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class OccupationService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
-  async create(data: Omit<Occupation, 'id'>): Promise<Occupation> {
-    return this.prisma.occupation.create({ data });
-  }
+  async createOccupationAndMapping(payload: {
+    type: string;
+    industry: string;
+    from: number;
+    to: number;
+    incomeBracket: string;
+    customerId: string;
+  }) {
+    const { type, industry, from, to, incomeBracket, customerId } = payload;
 
-  async findAll(): Promise<Occupation[]> {
-    return this.prisma.occupation.findMany();
-  }
+    // Create Occupation
+    const occupation = await this.prisma.occupation.create({
+      data: { title: type, industry },
+    });
 
-  async findOne(id: string): Promise<Occupation | null> {
-    return this.prisma.occupation.findUnique({ where: { id } });
-  }
+    // Create OccupationCustomerMapping
+    const occupationCustomerMapping = await this.prisma.occupationCustomerMapping.create(
+      {
+        data: {
+          occupationId: occupation.id,
+          customerId,
+          incomeBracket,
+          from,
+          to,
+        },
+      },
+    );
 
-  async update(
-    id: string,
-    data: Partial<Omit<Occupation, 'id'>>,
-  ): Promise<Occupation | null> {
-    return this.prisma.occupation.update({ where: { id }, data });
-  }
-
-  async remove(id: string): Promise<Occupation | null> {
-    return this.prisma.occupation.delete({ where: { id } });
+    return {
+      occupation,
+      occupationCustomerMapping,
+    };
   }
 }
