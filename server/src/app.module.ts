@@ -8,7 +8,6 @@ import { CustomerModule } from './customer/customer.module';
 import { KeywordModule } from './keyword/keyword.module';
 // import { SearchModule } from './search/search.module';
 import { OccupationModule } from './occupation/occupation.module';
-import { VehicleDetailModule } from './vehicle_detail/vehicle_detail.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { VehicleDetailModule } from './vehicle_detail/vehicle_detail.module';
     CustomerModule,
     KeywordModule,
     OccupationModule,
-    VehicleDetailModule,
     // SearchModule,
   ],
 })
