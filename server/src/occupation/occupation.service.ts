@@ -1,6 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Occupation } from '.prisma/client';
+// import { OccupationCustomerMapping } from '.prisma/client';
+
+interface OccupationCustomerMapping {
+  id: string;
+  occupationId: string;
+  customerId: string;
+  incomeBracket: string;
+  from: Date;
+  to: Date;
+  occupation?: Occupation;
+}
 
 @Injectable()
 export class OccupationService {
@@ -32,15 +43,35 @@ export class OccupationService {
 
   async findAllByCustomerId(
     customerId: string,
-  ): Promise<Occupation[]> {
-    return await this.prisma.occupation.findMany({
-      where: {
-        customers: {
-          some: {
-            customerId,
-          },
+  ): Promise<OccupationCustomerMapping[]> {
+    return await this.prisma.occupationCustomerMapping.findMany(
+      {
+        where: {
+          customerId,
         },
       },
-    });
+    );
+  }
+
+  async populateOccupations(
+    mappings: OccupationCustomerMapping[],
+  ): Promise<OccupationCustomerMapping[]> {
+    const populatedMappings: OccupationCustomerMapping[] =
+      [];
+
+    for (const mapping of mappings) {
+      const occupation =
+        await this.prisma.occupation.findUnique({
+          where: {
+            id: mapping.occupationId,
+          },
+        });
+      populatedMappings.push({
+        ...mapping,
+        occupation,
+      });
+    }
+
+    return populatedMappings;
   }
 }
