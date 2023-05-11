@@ -85,30 +85,31 @@ model OccupationCustomerMapping {
   customerId    String
   customer      Customer   @relation(fields: [customerId], references: [id])
   incomeBracket String
-  from          Int
-  to            Int
+  from          DateTime
+  to            DateTime
 
   @@map("occupation_customer_mapping")
 }
 
 model Vehicle {
-  id        String                   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  industry  String
-  customers VehicleCustomerMapping[]
+  id          String                   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  productType String
+  customers   VehicleCustomerMapping[]
 
   @@map("vehicles")
 }
 
 model VehicleCustomerMapping {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  vehicle       Vehicle  @relation(fields: [occupationId], references: [id])
-  occupationId  String
-  customerId    String
-  customer      Customer @relation(fields: [customerId], references: [id])
-  incomeBracket String
-  from          Int
-  to            Int
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  vehicle    Vehicle  @relation(fields: [vehicleId], references: [id])
+  vehicleId  String
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  vin        String
+  validity   String
+  expiryDate DateTime
+  status     String
 
   @@map("vehicle_customer_mapping")
 }

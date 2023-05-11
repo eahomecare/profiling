@@ -1,36 +1,71 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+} from '@nestjs/common';
 import { OccupationService } from './occupation.service';
 import { Occupation } from '@prisma/client';
+import { OccupationCustomerMappingService } from './occupation-customer-mapping.service';
 
 @Controller('occupations')
 export class OccupationController {
-  constructor(private readonly occupationService: OccupationService) {}
+  constructor(
+    private occupationService: OccupationService,
+    private occupationCustomerMappingService: OccupationCustomerMappingService,
+  ) {}
 
   @Post()
-  create(@Body() data: Omit<Occupation, 'id'>): Promise<Occupation> {
-    return this.occupationService.create(data);
+  async create(@Body() payload): Promise<any> {
+    const {
+      vehicleId,
+      title,
+      industry,
+      from,
+      to,
+      incomeBracket,
+      customerId,
+    } = payload;
+
+    const occupation =
+      await this.occupationService.findOne(
+        vehicleId,
+      );
+
+    if (occupation || !!vehicleId) {
+      await this.occupationCustomerMappingService.create(
+        customerId,
+        occupation.id,
+        incomeBracket,
+        from,
+        to,
+      );
+    } else {
+      const newOccupation =
+        await this.occupationService.create(
+          title,
+          industry,
+        );
+
+      await this.occupationCustomerMappingService.create(
+        customerId,
+        newOccupation.id,
+        incomeBracket,
+        from,
+        to,
+      );
+    }
+
+    return { success: true };
   }
 
-  @Get()
-  findAll(): Promise<Occupation[]> {
-    return this.occupationService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Occupation | null> {
-    return this.occupationService.findOne(id);
-  }
-
-  @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() data: Partial<Omit<Occupation, 'id'>>,
-  ): Promise<Occupation | null> {
-    return this.occupationService.update(id, data);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<Occupation | null> {
-    return this.occupationService.remove(id);
+  @Get(':customerId')
+  async findAllByCustomerId(
+    @Param('customerId') customerId: string,
+  ): Promise<Occupation[]> {
+    return await this.occupationService.findAllByCustomerId(
+      customerId,
+    );
   }
 }
