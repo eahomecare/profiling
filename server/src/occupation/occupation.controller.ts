@@ -8,6 +8,8 @@ import {
 import { OccupationService } from './occupation.service';
 import { Occupation } from '@prisma/client';
 import { OccupationCustomerMappingService } from './occupation-customer-mapping.service';
+import { OccupationCustomerMapping } from '@prisma/client';
+import { DateTime } from 'luxon';
 
 @Controller('occupations')
 export class OccupationController {
@@ -28,18 +30,34 @@ export class OccupationController {
       customerId,
     } = payload;
 
-    const occupation =
-      await this.occupationService.findOne(
-        vehicleId,
-      );
+    let fromDate = null;
+    let toDate = null;
+
+    if (typeof from === 'string') {
+      fromDate = new Date(from);
+    } else if (from instanceof DateTime) {
+      fromDate = from;
+    }
+
+    if (typeof to === 'string') {
+      toDate = new Date(to);
+    } else if (to instanceof DateTime) {
+      toDate = to;
+    }
+
+    const occupation = !!vehicleId
+      ? await this.occupationService.findOne(
+          vehicleId,
+        )
+      : null;
 
     if (occupation || !!vehicleId) {
       await this.occupationCustomerMappingService.create(
         customerId,
         occupation.id,
         incomeBracket,
-        from,
-        to,
+        fromDate,
+        toDate,
       );
     } else {
       const newOccupation =
@@ -52,8 +70,8 @@ export class OccupationController {
         customerId,
         newOccupation.id,
         incomeBracket,
-        from,
-        to,
+        fromDate,
+        toDate,
       );
     }
 
@@ -63,9 +81,13 @@ export class OccupationController {
   @Get(':customerId')
   async findAllByCustomerId(
     @Param('customerId') customerId: string,
-  ): Promise<Occupation[]> {
-    return await this.occupationService.findAllByCustomerId(
-      customerId,
+  ): Promise<OccupationCustomerMapping[]> {
+    const mappings =
+      await this.occupationService.findAllByCustomerId(
+        customerId,
+      );
+    return this.occupationService.populateOccupations(
+      mappings,
     );
   }
 }
