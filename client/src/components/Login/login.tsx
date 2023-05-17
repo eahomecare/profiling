@@ -22,6 +22,7 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons-react";
 import loginImage from './assets/login.png'
 import eaLogo from './assets/eaLogo.png'
+import Recaptcha from "./Recaptcha";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -99,6 +100,11 @@ export default function Login() {
                                                 required
                                                 mt="md"
                                             />
+                                            <Center pt={10}>
+                                                <Paper>
+                                                    <Recaptcha />
+                                                </Paper>
+                                            </Center>
                                             <Group position="apart" mt="lg">
                                                 <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
                                                 <Anchor<"a">

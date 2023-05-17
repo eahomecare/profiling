@@ -1,6 +1,7 @@
-import { Avatar, Card, Center, Container, Divider, Grid, Group, RingProgress, Space, Text } from '@mantine/core'
+import { ActionIcon, Avatar, Box, Card, Center, Container, Divider, Grid, Group, Paper, RingProgress, Space, Text } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import InfoTag from './InfoTag'
+import InfoTag from '../common/InfoTag'
+import { IconEdit } from '@tabler/icons-react'
 
 const PersonalInformation = ({ selectedCustomer }: any) => {
     const [profile, setProfile] = useState({ ...selectedCustomer.profiling.personal_details })
@@ -33,12 +34,27 @@ const PersonalInformation = ({ selectedCustomer }: any) => {
                     <Text mt={70} fw={500}>Basic Details</Text>
                     <Space h={40} />
                     <div>
+
                         <Space h={40} />
-                        {profileCompletion(profile_completion)}
+                        <Group grow position='apart'>
+                            {profileCompletion(profile_completion)}
+                            <Box>
+                                <Group ml={50}>
+                                    <ActionIcon color='blue' variant='subtle'>
+                                        <IconEdit />
+                                    </ActionIcon>
+                                    <Text ml={-10} color='blue'>Edit</Text>
+                                </Group>
+                            </Box>
+                        </Group>
                     </div>
                 </Group>
                 <div style={{ marginTop: '-30px' }}>
-                    <InfoTag title={'Picture'} subject={<Avatar radius={'xl'} size='xl' />} />
+                    <InfoTag title={'Picture'} subject={
+                        profile.full_name == 'Elon Musk' ?
+                            <Avatar radius={'xl'} size='xl' src={'https://wefilmevents.ca/wp-content/uploads/2019/06/elon-musk-speaking.png'} /> :
+                            <Avatar radius={'xl'} size='xl' />
+                    } />
                     <Grid gutter="xl" pt={'sm'}>
                         <Grid.Col span={4}>
                             <InfoTag title={'First Name'} subject={profile.full_name.split(' ')[0]} />

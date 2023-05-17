@@ -8,6 +8,8 @@ import { useState } from 'react'
 import { Notifications } from '@mantine/notifications'
 import CustomersTable from './components/CustomersTable/CustomersTable'
 import { CustomerProvider } from './contexts/CustomerContext'
+import SimulateCall from './components/AgentPages/MobileSimulation'
+import AgentEntry from './components/AgentPages/AgentEntry'
 
 function App() {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -26,6 +28,8 @@ function App() {
                   <Route path='/register' element={<Register />} />
                   <Route path='/customers' element={<CustomersTable />} />
                   <Route path='/dashboard/*' element={<Dashboard />} />
+                  <Route path='/mobileSimulation' element={<SimulateCall />} />
+                  <Route path='/agent' element={<AgentEntry />} />
                 </Routes>
               </Paper>
             </BrowserRouter>
