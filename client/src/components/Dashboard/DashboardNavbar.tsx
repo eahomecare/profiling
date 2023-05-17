@@ -53,12 +53,12 @@ const data = [
     { link: 'interests', label: 'Interests', icon: <IconPalette /> },
     { link: 'Occupation', label: 'Occupation', icon: <IconBriefcase /> },
     { link: 'Activity', label: 'Activity', icon: <IconComet /> },
-    { link: 'familyDetails', label: 'Family Details', icon: <IconFriends /> },
-    { link: 'financialInformation', label: 'Financial Information', icon: <IconReportMoney /> },
-    { link: 'insuranceDetails', label: 'Insurance Details  ', icon: <IconCarCrash /> },
-    { link: 'vehicle', label: 'Vehicle', icon: <IconCar /> },
-    { link: 'health', label: 'Health', icon: <IconHealthRecognition /> },
-    { link: 'socialMedia', label: 'Social Media', icon: <IconSocial /> },
+    { link: 'Family Details', label: 'Family Details', icon: <IconFriends /> },
+    { link: 'Financial Information', label: 'Financial Information', icon: <IconReportMoney /> },
+    { link: 'Insurance Details', label: 'Insurance Details  ', icon: <IconCarCrash /> },
+    { link: 'Vehicle', label: 'Vehicle', icon: <IconCar /> },
+    { link: 'Health', label: 'Health', icon: <IconHealthRecognition /> },
+    { link: 'Social Media', label: 'Social Media', icon: <IconSocial /> },
 ];
 
 const DashboardNavbar = ({ opened, setOpened }: any) => {

@@ -13,8 +13,7 @@ const Submit = ({ keywordsSelected, selectedCustomer, setSelectedCustomer }: any
     // }, [])
     const createPayload = () => {
         const payload = {
-            ...selectedCustomer, keys: keywordsSelected,
-            profile_completion: (selectedCustomer.keys.length / keywordsSelected.length) * 100 > 100 ? 100 : (selectedCustomer.keys.length / keywordsSelected.length) * 100
+            ...selectedCustomer, keys: keywordsSelected
             // mobile,
             // keys: keys,
             // source: 2,
@@ -58,7 +57,7 @@ const Submit = ({ keywordsSelected, selectedCustomer, setSelectedCustomer }: any
     }
 
     const handleSubmit = async () => {
-        const url = `${import.meta.env.VITE_API_BASE_URL}customers/${selectedCustomer.id}`
+        const url = `http://localhost:3000/customers/${selectedCustomer.id}`
         const payload = createPayload()
         const config = {
             headers: {
@@ -74,10 +73,6 @@ const Submit = ({ keywordsSelected, selectedCustomer, setSelectedCustomer }: any
             .then(successNotification)
             .catch(errorNotification)
             .catch(console.log)
-
-        const customerUrl = `${import.meta.env.VITE_API_BASE_URL}customers/${selectedCustomer.id}`
-        const { data } = await axios.get(url, config)
-        setSelectedCustomer(data.customer_details)
     }
     return (
         <Button variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }} onClick={handleSubmit}>
