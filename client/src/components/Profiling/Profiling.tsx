@@ -2,7 +2,7 @@ import { Grid } from '@mantine/core'
 import assets from './assets'
 import { StatsCard } from './StatCard'
 
-const Profiling = () => {
+const Profiling = ({ selectedCustomer }: any) => {
 
     const assetList = Object.entries(assets)
     const stats = assetList.map((list) => {
@@ -20,14 +20,11 @@ const Profiling = () => {
 
         const customerStats = getCustomerStats();
         console.log(customerStats);
-        if (customerStats[1] > 50)
-            return (<>
-                <Grid.Col span={4}>
-                    <StatsCard title={title} url={url} percentage={customerStats[1]} frequency={customerStats[0]} lastUpdated={customerStats[2]} />
-                </Grid.Col>
-            </>)
-        else
-            return null
+        return (<>
+            <Grid.Col span={4}>
+                <StatsCard title={title} url={url} percentage={customerStats[1]} frequency={customerStats[0]} lastUpdated={customerStats[2]} />
+            </Grid.Col>
+        </>)
     })
     return (
         <>
