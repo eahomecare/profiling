@@ -1,23 +1,16 @@
-import { useEffect, useState } from 'react';
-import { ActionIcon, Badge, Flex, MultiSelect, MultiSelectValueProps, rem, TextInput } from '@mantine/core';
-import keywordOptions from './keywordOptions'
-import Submit from './Submit';
+import { useEffect, useRef, useState } from 'react';
+import { ActionIcon, Badge, Flex, MultiSelect, MultiSelectValueProps, rem, Text, TextInput } from '@mantine/core';
+import keywordOptions from '../KeywordsEntry/keywordOptions'
 import { IconX } from '@tabler/icons-react';
 
-export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }: any) {
-    console.log('keywordsEntry', selectedCustomer)
-    const [keywordList, setKeywordList] = useState([...keywordOptions, ...selectedCustomer.profiling?.garbage])
-    // const [keywordList, setKeywordList] = useState([...keywordOptions, ...selectedCustomer.keys])
-    const [keywordsSelected, setKeywordsSelected]: any = useState(selectedCustomer.keys)
-    console.log('keywords selected in keywords entry', keywordsSelected)
-    // useEffect(() => {
-    //     setTimeout(() => setKeywordList(keywordOptions), 1000)
-    // }, [])
+export default function KeywordsEntry() {
+    const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>(keywordOptions)
+    const [keywordsSelected, setKeywordsSelected] = useState([]) // initialize it as an empty array
+    const inputRef = useRef(null); // create a ref to the input element
 
     const handleChange = (change: any) => {
         setKeywordsSelected(change)
     }
-
 
     const value = ({ label, onRemove, ...others }: MultiSelectValueProps) => {
         const removeButton = (
@@ -32,11 +25,17 @@ export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }:
         </div>
     }
 
+    useEffect(() => {
+        // Automatically focus the input field every time keywordsSelected changes
+        inputRef.current?.focus();
+    }, [keywordsSelected]);
+
     const MultiSelectComponent = () => (
         <MultiSelect
             hoverOnSearchChange
-            label={`Keywords (${keywordsSelected.length})`}
-            // maxDropdownHeight={150}
+            variant='filled'
+            radius={'md'}
+            label={<Text fw={700}>{`Keywords (${keywordsSelected.length})`}</Text>}
             value={keywordsSelected}
             data={keywordList}
             searchable
@@ -58,27 +57,18 @@ export default function KeywordsEntry({ selectedCustomer, setSelectedCustomer }:
                 return item;
             }}
             styles={{
-                input: { minHeight: '200px', backgroundColor: '#FFFFFF00', },
+                input: { minHeight: '7rem' },
             }}
             valueComponent={value}
             transitionProps={{ duration: 150, transition: 'pop-top-left', timingFunction: 'ease' }}
+            ref={inputRef} // pass the ref to the MultiSelect component
         />
     )
 
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-                {/* <div>
-                    <TextInput label={'Mobile'} required value={mobile} onChange={(e) => setMobile(e.target.value)}
-                        icon={<IconPhone size="1rem" />}
-                        placeholder={'Enter Mobile Number'}
-
-                    />
-                </div> */}
                 <MultiSelectComponent />
-                <Flex pt={4}>
-                    <Submit keywordsSelected={keywordsSelected} selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} />
-                </Flex>
             </div>
         </>
     );
