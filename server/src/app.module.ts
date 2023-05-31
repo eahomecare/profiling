@@ -8,6 +8,8 @@ import { CustomerModule } from './customer/customer.module';
 import { KeywordModule } from './keyword/keyword.module';
 // import { SearchModule } from './search/search.module';
 import { OccupationModule } from './occupation/occupation.module';
+import { ProfileController } from './profile/profile.controller';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { OccupationModule } from './occupation/occupation.module';
     CustomerModule,
     KeywordModule,
     OccupationModule,
+    ProfileModule
     // SearchModule,
   ],
 })
