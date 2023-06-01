@@ -10,6 +10,7 @@ import Remarks from './Remarks';
 import Questionnaire from './Questionnaire';
 import { notifications } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons-react';
+import axios, { AxiosError } from 'axios';
 
 interface ProfileDetails {
     name: string;
@@ -17,10 +18,28 @@ interface ProfileDetails {
     mobileNo: string;
     source: string;
     city: string;
+    customerId: string;
+}
+
+interface Category {
+    key: string;
+    level: number;
+}
+
+interface Categories {
+    sports: Category[];
+    food: Category[];
+    travel: Category[];
+    music: Category[];
+    fitness: Category[];
+    automobile: Category[];
+    gadget: Category[];
+    technology: Category[];
 }
 
 interface AgentProfile {
     details: ProfileDetails;
+    categories: Categories;
     profileCompletion: number;
     profilingTypes: string[];
 }
@@ -31,41 +50,20 @@ const initialProfileDetails: ProfileDetails = {
     mobileNo: '',
     source: '',
     city: '',
+    customerId: '',
 };
 
-const initialProfileList: AgentProfile[] = [
-    {
-        details: {
-            name: 'Yuvraj Singh',
-            email: 'yuvisingh8888@gmail.com',
-            mobileNo: '9999999999',
-            source: 'Homecare',
-            city: 'Mumbai',
-        },
-        profileCompletion: 55,
-        profilingTypes: ['Avid Traveler', 'Foodie']
-    },
-    {
-        details: {
-            name: 'Elon Musk',
-            email: 'elonmusk@tesla.com',
-            mobileNo: '8888888888',
-            source: 'Homecare,Cyberior',
-            city: 'Bangalore',
-        },
-        profileCompletion: 75,
-        profilingTypes: ['Techie', 'Sports Fan']
-    },
-];
-
 const AgentEntry = () => {
-    const { mobileNo } = useQueryParams();
-    const [currentProfile, setCurrentProfile] = useState<ProfileDetails>({ ...initialProfileDetails, mobileNo });
-    const [profileList, setProfileList] = useState<AgentProfile[]>(initialProfileList);
+    const { name, email, source, city, mobileNo, customerId, categories, profileCompletion, profilingTypes = "" } = useQueryParams();
+    const [currentProfile, setCurrentProfile] = useState<ProfileDetails>({ name, email, mobileNo, source, city, customerId });
+    const [percentageCompleted, setPercentageCompleted] = useState<number>(parseInt(profileCompletion, 10));
+    const [profilingInterests, setProfilingInterests] = useState<string[]>(profilingTypes.split(','));
+    const [categoryObject, setCategoryObject] = useState<Categories>(JSON.parse(categories));
+    const [profileList, setProfileList] = useState<AgentProfile[]>([{ details: currentProfile, categories: categoryObject, profileCompletion: percentageCompleted, profilingTypes: profilingInterests }]);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFullScreen, setFullScreen] = useState(false);
-    const [percentageCompleted, setPercentageCompleted] = useState(0);
-    const [profilingInterests, setProfilingInterests] = useState<string[]>([]);
+    const [questionHistory, setQuestionHistory] = useState<SelectedQuestions[]>([]);
+    const [keywordsAdded, setKeywordsAdded] = useState<string[]>([]);
 
     useEffect(() => {
         const profile = profileList.find(profile => profile.details.mobileNo === mobileNo);
@@ -79,9 +77,28 @@ const AgentEntry = () => {
         }
     }, [mobileNo, profileList]);
 
+    useEffect(() => {
+        console.log('questionHistory', questionHistory);
+        console.log('categories in AgentEntry', categories)
+    }, [questionHistory]);
+
     const handleProfileChange = (key: keyof ProfileDetails, value: string) => {
         setCurrentProfile((prevProfile) => ({ ...prevProfile, [key]: value }));
     };
+
+    const errorNotification = (error: AxiosError) => notifications.show({
+        id: 'submit-error',
+        withCloseButton: true,
+        onClose: () => console.log('unmounted'),
+        onOpen: () => console.log('mounted'),
+        autoClose: 5000,
+        title: error.message,
+        message: 'There seems to be a problem with the network',
+        color: 'red',
+        icon: <IconX />,
+        className: 'my-notification-class',
+        loading: false,
+    });
 
     const successNotification = () => {
         notifications.show({
@@ -99,20 +116,34 @@ const AgentEntry = () => {
         });
     };
 
-    const handleProfileSubmit = () => {
-        setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, profileCompletion: 0, profilingTypes: [] }]);
-        successNotification();
-        setTimeout(() => {
-            window.parent.postMessage('closeIframe', '*');
-        }, 2000)
+    //Submit the keywords and questionHistory
+    const handleProfileSubmit = async () => {
+        try {
+            // Set the url for submitting
+            const url = ''
+            const body = {
+                customerId,
+                mobileNo,
+                keywordsAdded,
+                questionHistory
+            }
+            await axios.post(url, body)
+                .then(console.log)
+                .then(successNotification)
+                .then(() => setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, categories: categoryObject, profileCompletion: 0, profilingTypes: [] }]))
+                .then(() => setTimeout(() => {
+                    window.parent.postMessage('closeIframe', '*');
+                }, 2000))
+                .catch(errorNotification)
+                .catch(console.log)
+        }
+        catch {
+            errorNotification(new AxiosError('Failed to submit!'))
+        }
     };
 
     const handleClose = (submit: boolean) => {
-        // if (submit) {
         handleProfileSubmit();
-        // }
-        // setModalOpen(false);
-        // window.parent.postMessage('closeIframe', '*');
     };
 
     const handleIconXClick = () => {
@@ -179,11 +210,11 @@ const AgentEntry = () => {
 
             <Group position='apart' grow>
                 <Box pt={10}>
-                    <KeywordsEntry />
+                    <KeywordsEntry setKeywordsAdded={setKeywordsAdded} />
                     <Remarks />
                 </Box>
                 <Box>
-                    <Questionnaire />
+                    <Questionnaire categories={categoryObject} setQuestionsHistory={setQuestionHistory} />
                 </Box>
             </Group>
 

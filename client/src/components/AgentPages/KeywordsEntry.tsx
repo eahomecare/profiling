@@ -3,7 +3,7 @@ import { ActionIcon, Badge, Flex, MultiSelect, MultiSelectValueProps, rem, Text,
 import keywordOptions from '../KeywordsEntry/keywordOptions'
 import { IconX } from '@tabler/icons-react';
 
-export default function KeywordsEntry() {
+export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: (keywordsSelect: string[]) => void }) {
     const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>(keywordOptions)
     const [keywordsSelected, setKeywordsSelected] = useState([]) // initialize it as an empty array
     const inputRef = useRef(null); // create a ref to the input element
@@ -28,6 +28,7 @@ export default function KeywordsEntry() {
     useEffect(() => {
         // Automatically focus the input field every time keywordsSelected changes
         inputRef.current?.focus();
+        setKeywordsAdded(keywordsSelected)
     }, [keywordsSelected]);
 
     const MultiSelectComponent = () => (
