@@ -118,6 +118,14 @@ const AgentEntry = () => {
 
     //Submit the keywords and questionHistory
     const handleProfileSubmit = async () => {
+        let newCategories: any = categoryObject
+        questionHistory.forEach(e => {
+            if (e.selectedAnswers.length != 0)
+                newCategories[e.category].push({
+                    key: e.answers.find(element => element.id == e.selectedAnswers[0]).text,
+                    level: newCategories[e.category].length + 1
+                })
+        })
         try {
             // Set the url for submitting
             const url = ''
@@ -125,9 +133,11 @@ const AgentEntry = () => {
                 customerId,
                 mobileNo,
                 keywordsAdded,
-                questionHistory
+                // questionHistory
+                categories: newCategories
             }
             console.log('body =>', body)
+            console.dir(body)
             await axios.post(url, body)
                 .then(console.log)
                 .then(successNotification)
