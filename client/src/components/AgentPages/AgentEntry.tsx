@@ -127,6 +127,7 @@ const AgentEntry = () => {
                 keywordsAdded,
                 questionHistory
             }
+            console.log('body =>', body)
             await axios.post(url, body)
                 .then(console.log)
                 .then(successNotification)
@@ -163,7 +164,7 @@ const AgentEntry = () => {
     const profileExists = profileList.some(profile => profile.details.mobileNo === mobileNo);
 
     return (
-        <Paper p={10}>
+        <Paper p={10} >
             <Box >
                 <Group position='apart'>
                     <Box></Box>

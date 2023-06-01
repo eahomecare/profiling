@@ -1,4 +1,4 @@
-import { Flex, Group, ScrollArea, Stack, Text } from '@mantine/core';
+import { Flex, Group, ScrollArea, Stack, Text, Loader } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Questionnaire.css';
@@ -45,6 +45,7 @@ interface QuestionnaireProps {
 const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsHistory }) => {
     const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswers>({});
     const [selectedQuestions, setSelectedQuestions] = useState<SelectedQuestions[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleAnswerChange = (questionId: number, answerId: number, isMultiple: boolean) => {
         setSelectedAnswers(prevState => {
@@ -63,7 +64,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
     };
 
     useEffect(() => {
-        console.log('categories in questionnaire', categories)
+        setIsLoading(true);
+
         const fetchQuestions = async () => {
             const categoriesKeys = Object.keys(categories);
             const randomCategories = [];
@@ -78,14 +80,11 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
             const fetchedQuestions: SelectedQuestions[] = [];
             for (let categoryItems of randomCategories) {
                 const bodyInputParts = [];
-                console.log('CategoryItems', categoryItems)
-                // Get all Category objects for this category and create input parts
                 for (let item of categoryItems) {
                     bodyInputParts.push(`key: ${item.key}, level: ${item.level}`);
                 }
 
                 const body = { "input": bodyInputParts.join(", ") };
-                console.log('body before call', body)
                 const response = await axios.post('http://localhost:3000/process', body, {
                     headers: {
                         'Content-Type': 'application/json'
@@ -95,7 +94,8 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
                 const result = response.data.result;
                 const questionText = result.split(': ')[2].split(', level')[0];
                 const questionLevel = parseInt(result.split(', level: ')[1].split(', Answers')[0]);
-                const questionAnswers = result.split('Answers: ')[1].split(', ');
+                let questionAnswers = result.split('Answers: ')[1].split(', ');
+                questionAnswers.push('None')
 
                 fetchedQuestions.push({
                     id: fetchedQuestions.length + 1,
@@ -109,6 +109,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
 
             setSelectedQuestions(fetchedQuestions);
             setQuestionsHistory(fetchedQuestions);
+            setIsLoading(false);
         };
 
         fetchQuestions();
@@ -123,6 +124,14 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
         setQuestionsHistory(updatedQuestions);
     }, [selectedAnswers])
 
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Loader color='red' variant='bars' />
+            </div>
+        );
+    }
+
     return (
         <div>
             <Stack spacing={'xs'} >
@@ -130,16 +139,16 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
                     {selectedQuestions.map((question, index) => (
                         <div key={question.id}>
                             <Text pt={15} fz={'sm'} c='dimmed'>{`Q${index + 1}: ${question.question}`}</Text>
-                            <Group spacing={7}>
+                            <Group spacing={1}>
                                 {question.answers.map(answer => (
                                     <label key={answer.id}>
-                                        <Group spacing={2}>
+                                        <Group spacing={4}>
                                             <input
                                                 type={'checkbox'}
                                                 checked={selectedAnswers[question.id]?.includes(answer.id) || false}
                                                 onChange={() => handleAnswerChange(question.id, answer.id, question.type === 'multiple')}
                                             />
-                                            <Text fz={'sm'} c='dimmed'>{answer.text}</Text>
+                                            <Text fz={'sm'} mr={5} c='dimmed'>{answer.text}</Text>
                                         </Group>
                                     </label>
                                 ))}
