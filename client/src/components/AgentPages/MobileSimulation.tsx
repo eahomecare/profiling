@@ -16,16 +16,16 @@ interface SimulateCallProps { }
 const initialProfileList = [
     {
         details: {
-            name: 'Yuvraj Singh',
+            name: 'Thomas Edison',
             email: 'yuvisingh8888@gmail.com',
             mobileNo: '9999999999',
             source: 'Homecare',
             city: 'Mumbai',
-            customerId: 'flkjs'
+            customerId: '642499f53bfe3509302f7ea4'
         },
         categories: {
-            sports: [{ key: 'sports', level: 1 }, { key: 'volleyball', level: 2 }],
-            food: [{ key: 'food', level: 1 }, { key: 'Indian', level: 2 }],
+            sports: [{ key: 'sports', level: 1 },],
+            food: [{ key: 'food', level: 1 },],
             travel: [{ key: 'travel', level: 1 }],
             music: [{ key: 'music', level: 1 }],
             fitness: [{ key: 'fitness', level: 1 }],
@@ -43,10 +43,10 @@ const initialProfileList = [
             mobileNo: '8888888888',
             source: 'Homecare,Cyberior',
             city: 'Bangalore',
-            customerId: 'flewkjs'
+            customerId: '64256063f857d8919c7109b0'
         },
         categories: {
-            sports: [{ key: 'sports', level: 1 }, { key: 'volleyball', level: 2 }],
+            sports: [{ key: 'sports', level: 1 }],
             food: [{ key: 'food', level: 1 }],
             travel: [{ key: 'travel', level: 1 }],
             music: [{ key: 'music', level: 1 }],
