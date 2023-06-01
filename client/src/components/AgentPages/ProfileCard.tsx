@@ -18,7 +18,7 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ details, onDetailChange, editable }) => {
     return (
         <Box>
-            {Object.entries(details).map(([key, value]) => (
+            {Object.entries(details).filter(([key, value]) => key != 'customerId').map(([key, value]) => (
                 <Grid key={key} gutter="5" justify="start" align="center">
                     <Col span={3}>
                         <Text fw={550} size={12}>{key.replace(/^\w/, c => c.toUpperCase())}</Text>
