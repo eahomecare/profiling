@@ -1,7 +1,7 @@
 import { Flex, Group, ScrollArea, Stack, Text } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
-import { questions } from './questions';
-import './Questionnaire.css'
+import axios from 'axios';
+import './Questionnaire.css';
 
 interface SelectedAnswers {
     [questionId: number]: number[];
@@ -17,9 +17,32 @@ interface SelectedQuestions {
     question: string;
     answers: Answer[];
     type: 'single' | 'multiple';
+    level: number;
+    category: string;
 }
 
-const Questionnaire = () => {
+interface Category {
+    key: string;
+    level: number;
+}
+
+interface Categories {
+    sports: Category[];
+    food: Category[];
+    travel: Category[];
+    music: Category[];
+    fitness: Category[];
+    automobile: Category[];
+    gadget: Category[];
+    technology: Category[];
+}
+
+interface QuestionnaireProps {
+    categories: Categories,
+    setQuestionsHistory: (questions: SelectedQuestions[]) => void
+}
+
+const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsHistory }) => {
     const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswers>({});
     const [selectedQuestions, setSelectedQuestions] = useState<SelectedQuestions[]>([]);
 
@@ -40,8 +63,65 @@ const Questionnaire = () => {
     };
 
     useEffect(() => {
-        setSelectedQuestions(questions.sort(() => 0.5 - Math.random()).slice(0, 3));
+        console.log('categories in questionnaire', categories)
+        const fetchQuestions = async () => {
+            const categoriesKeys = Object.keys(categories);
+            const randomCategories = [];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * categoriesKeys.length);
+                const randomCategoryKey = categoriesKeys[randomIndex];
+                const randomCategoryItems = categories[randomCategoryKey];
+                randomCategories.push(randomCategoryItems);
+                categoriesKeys.splice(randomIndex, 1);
+            }
+
+            const fetchedQuestions: SelectedQuestions[] = [];
+            for (let categoryItems of randomCategories) {
+                const bodyInputParts = [];
+                console.log('CategoryItems', categoryItems)
+                // Get all Category objects for this category and create input parts
+                for (let item of categoryItems) {
+                    bodyInputParts.push(`key: ${item.key}, level: ${item.level}`);
+                }
+
+                const body = { "input": bodyInputParts.join(", ") };
+                console.log('body before call', body)
+                const response = await axios.post('http://localhost:3000/process', body, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const result = response.data.result;
+                const questionText = result.split(': ')[2].split(', level')[0];
+                const questionLevel = parseInt(result.split(', level: ')[1].split(', Answers')[0]);
+                const questionAnswers = result.split('Answers: ')[1].split(', ');
+
+                fetchedQuestions.push({
+                    id: fetchedQuestions.length + 1,
+                    question: questionText,
+                    answers: questionAnswers.map((text, idx) => ({ id: idx + 1, text })),
+                    type: 'multiple',
+                    level: questionLevel,
+                    category: categoryItems[0].key, // assuming the first key is the main category
+                });
+            }
+
+            setSelectedQuestions(fetchedQuestions);
+            setQuestionsHistory(fetchedQuestions);
+        };
+
+        fetchQuestions();
     }, [])
+
+    useEffect(() => {
+        const updatedQuestions = selectedQuestions.map(question => ({
+            ...question,
+            selectedAnswers: selectedAnswers[question.id] || []
+        }));
+
+        setQuestionsHistory(updatedQuestions);
+    }, [selectedAnswers])
 
     return (
         <div>
@@ -53,7 +133,7 @@ const Questionnaire = () => {
                             <Group spacing={7}>
                                 {question.answers.map(answer => (
                                     <label key={answer.id}>
-                                        <Group spacing={2} >
+                                        <Group spacing={2}>
                                             <input
                                                 type={'checkbox'}
                                                 checked={selectedAnswers[question.id]?.includes(answer.id) || false}
