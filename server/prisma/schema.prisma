@@ -41,6 +41,7 @@ model Customer {
   keywords                   Keyword[]                   @relation(fields: [keywordIDs], references: [id])
   OccupationCustomerMappings OccupationCustomerMapping[]
   VehicleCustomerMappings    VehicleCustomerMapping[]
+  questionHistory            CustomerQuestionHistory?
 
   @@map("customers")
 }
@@ -112,4 +113,13 @@ model VehicleCustomerMapping {
   status     String
 
   @@map("vehicle_customer_mapping")
+}
+
+model CustomerQuestionHistory {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  historyLogs Json
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  String   @unique @db.ObjectId
+
+  @@map("customer_history_question")
 }
