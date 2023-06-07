@@ -23,25 +23,27 @@ model User {
 }
 
 model Customer {
-  id                         String                      @id @default(auto()) @map("_id") @db.ObjectId
-  mobile                     String                      @unique
+  id                         String                       @id @default(auto()) @map("_id") @db.ObjectId
+  mobile                     String                       @unique
   other_mobile               Json?
   email                      String?
   other_email                Json?
   source                     Int
   profiling                  Json?
-  keys                       String[]                    @default([])
+  keys                       String[]                     @default([])
   profile_completion         Int?
-  created_at                 DateTime                    @default(now())
-  updated_at                 DateTime                    @updatedAt
+  created_at                 DateTime                     @default(now())
+  updated_at                 DateTime                     @updatedAt
   created_by                 String?
   updated_by                 String?
   personal_details           Personal_Details?
-  keywordIDs                 String[]                    @db.ObjectId
-  keywords                   Keyword[]                   @relation(fields: [keywordIDs], references: [id])
+  keywordIDs                 String[]                     @db.ObjectId
+  keywords                   Keyword[]                    @relation(fields: [keywordIDs], references: [id])
   OccupationCustomerMappings OccupationCustomerMapping[]
   VehicleCustomerMappings    VehicleCustomerMapping[]
-  questionHistory            CustomerQuestionHistory?
+  questionsIDs               String[]                     @db.ObjectId
+  questions                  Question[]                   @relation(fields: [questionsIDs], references: [id])
+  ProfileTypeCustomerMapping ProfileTypeCustomerMapping[]
 
   @@map("customers")
 }
@@ -61,11 +63,16 @@ model Personal_Details {
 }
 
 model Keyword {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  category    String
-  value       String
-  customerIDs String[]   @db.ObjectId
-  customers   Customer[] @relation(fields: [customerIDs], references: [id])
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  category       String
+  value          String
+  level          String
+  customerIDs    String[]      @db.ObjectId
+  customers      Customer[]    @relation(fields: [customerIDs], references: [id])
+  questionIDs    String[]      @db.ObjectId
+  questions      Question[]    @relation(fields: [questionIDs], references: [id])
+  profileTypeIDs String[]      @db.ObjectId
+  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
 
   @@map("keywords")
 }
@@ -82,8 +89,8 @@ model Occupation {
 model OccupationCustomerMapping {
   id            String     @id @default(auto()) @map("_id") @db.ObjectId
   occupation    Occupation @relation(fields: [occupationId], references: [id])
-  occupationId  String
-  customerId    String
+  occupationId  String     @db.ObjectId
+  customerId    String     @db.ObjectId
   customer      Customer   @relation(fields: [customerId], references: [id])
   incomeBracket String
   from          DateTime
@@ -104,8 +111,8 @@ model Vehicle {
 model VehicleCustomerMapping {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   vehicle    Vehicle  @relation(fields: [vehicleId], references: [id])
-  vehicleId  String
-  customerId String
+  vehicleId  String   @db.ObjectId
+  customerId String   @db.ObjectId
   customer   Customer @relation(fields: [customerId], references: [id])
   vin        String
   validity   String
@@ -115,11 +122,53 @@ model VehicleCustomerMapping {
   @@map("vehicle_customer_mapping")
 }
 
-model CustomerQuestionHistory {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  historyLogs Json
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  String   @unique @db.ObjectId
+model Question {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  question       String
+  options        String[]
+  customerIDs    String[]      @db.ObjectId
+  customers      Customer[]    @relation(fields: [customerIDs], references: [id])
+  keywordIDs     String[]      @db.ObjectId
+  keywords       Keyword[]     @relation(fields: [keywordIDs], references: [id])
+  profileTypeIDs String[]      @db.ObjectId
+  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
 
-  @@map("customer_history_question")
+  @@map("questions")
+}
+
+model ProfileType {
+  id           String                       @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  category     String
+  description  String
+  questionsIDs String[]                     @db.ObjectId
+  questions    Question[]                   @relation(fields: [questionsIDs], references: [id])
+  keywordIDs   String[]                     @db.ObjectId
+  keywords     Keyword[]                    @relation(fields: [keywordIDs], references: [id])
+  customers    ProfileTypeCustomerMapping[]
+  serviceIDs   String[]                     @db.ObjectId
+  services     Services[]                   @relation(fields: [serviceIDs], references: [id])
+
+  @@map("profile_types")
+}
+
+model ProfileTypeCustomerMapping {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  profileType   ProfileType @relation(fields: [profileTypeId], references: [id])
+  profileTypeId String      @db.ObjectId
+  customerId    String      @db.ObjectId
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  level         Int         @default(0)
+
+  @@map("profile_type_customer_mapping")
+}
+
+model Services {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  description    String
+  profileTypeIDs String[]      @db.ObjectId
+  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
+
+  @@map("services")
 }

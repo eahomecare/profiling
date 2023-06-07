@@ -10,7 +10,6 @@ import { KeywordModule } from './keyword/keyword.module';
 import { OccupationModule } from './occupation/occupation.module';
 import { ProfileController } from './profile/profile.controller';
 import { ProfileModule } from './profile/profile.module';
-import { CustomerQuestionHistoryModule } from './customer-question-history/customer-question-history.module';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { CustomerQuestionHistoryModule } from './customer-question-history/custo
     KeywordModule,
     OccupationModule,
     ProfileModule,
-    CustomerQuestionHistoryModule
     // SearchModule,
   ],
 })
