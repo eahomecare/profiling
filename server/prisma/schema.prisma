@@ -23,27 +23,28 @@ model User {
 }
 
 model Customer {
-  id                         String                       @id @default(auto()) @map("_id") @db.ObjectId
-  mobile                     String                       @unique
-  other_mobile               Json?
-  email                      String?
-  other_email                Json?
-  source                     Int
-  profiling                  Json?
-  keys                       String[]                     @default([])
-  profile_completion         Int?
-  created_at                 DateTime                     @default(now())
-  updated_at                 DateTime                     @updatedAt
-  created_by                 String?
-  updated_by                 String?
-  personal_details           Personal_Details?
-  keywordIDs                 String[]                     @db.ObjectId
-  keywords                   Keyword[]                    @relation(fields: [keywordIDs], references: [id])
-  OccupationCustomerMappings OccupationCustomerMapping[]
-  VehicleCustomerMappings    VehicleCustomerMapping[]
-  questionsIDs               String[]                     @db.ObjectId
-  questions                  Question[]                   @relation(fields: [questionsIDs], references: [id])
-  ProfileTypeCustomerMapping ProfileTypeCustomerMapping[]
+  id                          String                        @id @default(auto()) @map("_id") @db.ObjectId
+  mobile                      String                        @unique
+  other_mobile                Json?
+  email                       String?
+  other_email                 Json?
+  source                      String
+  profiling                   Json?
+  keys                        String[]                      @default([])
+  profile_completion          Int?
+  created_at                  DateTime                      @default(now())
+  updated_at                  DateTime                      @updatedAt
+  created_by                  String?
+  updated_by                  String?
+  personal_details            Personal_Details?
+  keywordIDs                  String[]                      @db.ObjectId
+  keywords                    Keyword[]                     @relation(fields: [keywordIDs], references: [id])
+  OccupationCustomerMappings  OccupationCustomerMapping[]
+  VehicleCustomerMappings     VehicleCustomerMapping[]
+  questionsIDs                String[]                      @db.ObjectId
+  questions                   Question[]                    @relation(fields: [questionsIDs], references: [id])
+  ProfileTypeCustomerMapping  ProfileTypeCustomerMapping[]
+  ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
 
   @@map("customers")
 }
@@ -66,7 +67,7 @@ model Keyword {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   category       String
   value          String
-  level          String
+  level          Int
   customerIDs    String[]      @db.ObjectId
   customers      Customer[]    @relation(fields: [customerIDs], references: [id])
   questionIDs    String[]      @db.ObjectId
@@ -147,7 +148,7 @@ model ProfileType {
   keywords     Keyword[]                    @relation(fields: [keywordIDs], references: [id])
   customers    ProfileTypeCustomerMapping[]
   serviceIDs   String[]                     @db.ObjectId
-  services     Services[]                   @relation(fields: [serviceIDs], references: [id])
+  services     Service[]                    @relation(fields: [serviceIDs], references: [id])
 
   @@map("profile_types")
 }
@@ -163,12 +164,32 @@ model ProfileTypeCustomerMapping {
   @@map("profile_type_customer_mapping")
 }
 
-model Services {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  description    String
-  profileTypeIDs String[]      @db.ObjectId
-  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
+model Service {
+  id                          String                        @id @default(auto()) @map("_id") @db.ObjectId
+  name                        String
+  subType                     String
+  description                 String
+  profileTypeIDs              String[]                      @db.ObjectId
+  profile_types               ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
+  ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
 
   @@map("services")
+}
+
+model ServiceCustomerUsageMapping {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  service           Service  @relation(fields: [serviceId], references: [id])
+  serviceId         String   @db.ObjectId
+  customerId        String   @db.ObjectId
+  customer          Customer @relation(fields: [customerId], references: [id])
+  ticket_id         String
+  order_id          String
+  source_of_booking String
+  ticket_type       String
+  ticket_date       String
+  action            String
+  action_date_time  String
+  tat               Int
+
+  @@map("service_customer_usage_mapping")
 }

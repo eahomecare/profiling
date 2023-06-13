@@ -10,6 +10,7 @@ import { KeywordModule } from './keyword/keyword.module';
 import { OccupationModule } from './occupation/occupation.module';
 import { ProfileController } from './profile/profile.controller';
 import { ProfileModule } from './profile/profile.module';
+import { ServiceCustomerController } from './service-customer/service-customer.controller';
 
 @Module({
   imports: [
@@ -25,5 +26,6 @@ import { ProfileModule } from './profile/profile.module';
     ProfileModule,
     // SearchModule,
   ],
+  controllers: [ServiceCustomerController],
 })
 export class AppModule {}
