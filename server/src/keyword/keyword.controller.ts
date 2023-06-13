@@ -20,7 +20,10 @@ interface KeywordWithOptionalError
 
 interface UpdateData {
   customerId: string;
+  questionId:string;
+  profileTypeId:string;
   keywordsPayload: string[];
+  level:number
 }
 
 interface CreateKeywordInput
@@ -246,13 +249,18 @@ export class KeywordController {
             continue;
           }
         } else {
-          const newKeyword =
-            await this.keywordService.create({
-              id: undefined,
-              value: idOrValue,
-              category: 'unknown',
-              customerIDs: [data.customerId],
-            });
+
+          const newKeyword: Keyword = {
+            id: undefined,
+            value: idOrValue,
+            category: 'unknown',
+            customerIDs: [data.customerId],
+            level: data.level,
+            questionIDs: [data.questionId],
+            profileTypeIDs: [data.profileTypeId] 
+          };
+          
+        
           keywordIds.push(newKeyword.id);
         }
       }
