@@ -13,6 +13,60 @@ export class ProfileController {
     this.prisma = new PrismaClient();
   }
 
+
+  @Get()
+  async getAllProfileCompletion() {
+    try {
+      const customers = await this.prisma.customer.findMany({
+        include: {
+          personal_details: true,
+          keywords: true,
+          OccupationCustomerMappings: true,
+          VehicleCustomerMappings: true,
+        },
+      });
+
+      const profileCompletion = {};
+
+      for (const customer of customers) {
+        let completionPercentage = 0;
+
+        if (customer.personal_details) {
+          completionPercentage += 25;
+        }
+
+        if (customer.OccupationCustomerMappings.length > 0) {
+          completionPercentage += 25;
+        }
+
+        if (customer.VehicleCustomerMappings.length > 0) {
+          completionPercentage += 25;
+        }
+
+        if (
+          customer.keywords.length > 0 &&
+          customer.keywords.length < 10
+        ) {
+          completionPercentage +=
+            25 * (customer.keywords.length / 10);
+        } else if (customer.keywords.length >= 10) {
+          completionPercentage += 25;
+        }
+
+        completionPercentage = Math.round(completionPercentage);
+
+        profileCompletion[customer.id] = `${completionPercentage}%`;
+      }
+
+      return { profileCompletion };
+    } catch (error) {
+      // Handle error
+    } finally {
+      await this.prisma.$disconnect();
+    }
+  }
+
+
   @Get(':customerId')
   async getProfileCompletion(
     @Param('customerId') customerId: string,

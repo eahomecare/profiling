@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-export default function TableDisplay({ customerList }) {
+export default function TableDisplay({ customerList ,fetchedPofileCompleteness}) {
   const dispatch = useDispatch();
   const { status, customerDetails } = useSelector(state => state.customer);
 
@@ -23,7 +23,7 @@ export default function TableDisplay({ customerList }) {
           <RingProgress
             size={50}
             thickness={5}
-            sections={[{ value: percentage, color: (percentage > 75 ? '#1D9B25' : percentage > 60 ? '#CFA400' : '#D85972') }]}
+            sections={[{ value: percentage, color: (percentage > 25 ? '#1D9B25' : percentage > 50 ? '#CFA400' : '#D85972') }]}
             label={
               <Text color="" weight={20} align="center" size="xs">
                 {percentage}%
@@ -43,10 +43,8 @@ export default function TableDisplay({ customerList }) {
   }
 
 
-  console.log(customerDetails);
 
 
-  
 
   const rows = customerList.map((customer) => {
     
@@ -86,7 +84,7 @@ export default function TableDisplay({ customerList }) {
             <th><Flex><Text fw={900} fz={17}>Email</Text></Flex></th>
             <th><Flex><Text fw={900} fz={17}>Source</Text></Flex></th>
             <th><Flex><Text fw={900} fz={17}>Mobile</Text></Flex></th>
-            <th><Flex><Text fw={900} fz={17}>Profile Completion</Text></Flex></th>
+            <th><Flex><Text fw={900} fz={17}>{fetchedPofileCompleteness? "Profile Completion":"Fetching Profile completeness...."} </Text></Flex></th>
             <th></th>
           </tr>
         </thead>

@@ -5,12 +5,20 @@ import { sleep } from "../utils/sleep";
 const initialState = {
   status: "idle",
   customers: [],
-  customerDetails: {}
+  customerDetails: {},
+  fetchedPofileCompleteness:false
 };
 
 export const getCustomers = createAsyncThunk("customer/getCustomers", async () => {
   // await sleep(3000)
   const { data } = await axios.get("/customers");
+  return data;
+});
+
+
+export const getCustomersProfileCompleteness = createAsyncThunk("customer/getCustomersProfileCompleteness", async () => {
+  await sleep(200)
+  const { data } = await axios.get("/profile");
   return data;
 });
 
@@ -58,6 +66,23 @@ export const customerSlice = createSlice({
       state.customerDetails = action.payload.response.customer;
     },
     [getCustomerDetails.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    [getCustomersProfileCompleteness.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [getCustomersProfileCompleteness.fulfilled]: (state, action) => {
+      state.status = "success";
+      const copyCustomers = [...state.customers]
+      copyCustomers.map((e,index)=>{
+        copyCustomers[index]['profile_completion'] = action.payload.profileCompletion[e.id]?action.payload.profileCompletion[e.id]:0
+      })
+
+      state.fetchedPofileCompleteness = true
+
+      
+    },
+    [getCustomersProfileCompleteness.rejected]: (state, action) => {
       state.status = "failed";
     }
   },
