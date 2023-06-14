@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Respon
 import { JwtGuard } from 'src/auth/guard';
 import { CustomerService } from './customer.service';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller('customers')
 export class CustomerController {
 

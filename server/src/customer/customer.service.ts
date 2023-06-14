@@ -104,14 +104,35 @@ export class CustomerService {
     }
   }
 
+  // async fetchCustomerDetails() {
+  //   const customerDetails = {
+  //     customer_details:
+  //       await this.prisma.customer.findMany({include:{personal_details:true}}),
+  //   };
+  //   return customerDetails;
+  // }
+
+
   async fetchCustomerDetails() {
-    const customerDetails = {
-      customer_details:
-        await this.prisma.customer.findMany(),
-      // personal_details: await this.prisma.personal_Details.findMany(),
-    };
-    return customerDetails;
+    const customerDetails = await this.prisma.customer.findMany({
+      include: {
+        personal_details: true,
+      },
+    });
+  
+    const formattedCustomerDetails = customerDetails.map((customer) => {
+      const { personal_details, ...rest } = customer;
+      return {
+        ...rest,
+        profiling: {
+          personal_details,
+        },
+      };
+    });
+  
+    return {customer_details:formattedCustomerDetails} 
   }
+  
 
   async fetchCustomerInfo(customerId: string) {
     const customerDetails = {

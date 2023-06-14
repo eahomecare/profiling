@@ -67,7 +67,7 @@ model Keyword {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   category       String
   value          String
-  level          Int
+  level          Int?
   customerIDs    String[]      @db.ObjectId
   customers      Customer[]    @relation(fields: [customerIDs], references: [id])
   questionIDs    String[]      @db.ObjectId
@@ -168,7 +168,7 @@ model Service {
   id                          String                        @id @default(auto()) @map("_id") @db.ObjectId
   name                        String
   subType                     String
-  description                 String
+  description                 String?
   profileTypeIDs              String[]                      @db.ObjectId
   profile_types               ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
   ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
@@ -191,5 +191,5 @@ model ServiceCustomerUsageMapping {
   action_date_time  String
   tat               Int
 
-  @@map("service_customer_usage_mapping")
+  @@map("service_customer_usage_mappings")
 }
