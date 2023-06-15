@@ -212,7 +212,7 @@ export function EditableTable({ title, initialData, headerData, createEmptyRow, 
                     </Group>
                 </Box>
             </Group>
-            <ScrollArea style={{ maxHeight: rem(300) }}>
+            <ScrollArea style={{ maxHeight: "100%",fontSize:"10px" }}>
                 <Table>
                     <thead>
                         <tr>

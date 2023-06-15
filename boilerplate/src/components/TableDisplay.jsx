@@ -2,6 +2,7 @@ import { Button, Card, Center, Container, Flex, RingProgress, Table, Text } from
 import { setCurrentCustomer } from '../redux/customerSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Loader } from '@mantine/core';
 
 
 
@@ -56,9 +57,9 @@ export default function TableDisplay({ customerList ,fetchedPofileCompleteness})
         <td><Flex>{customer.profiling?.personal_details?.full_name}</Flex></td>
         <td><Flex>{'CLID' + customer.id.substr(0, 6) + '....'}</Flex></td>
         <td><Flex>{customer.email}</Flex></td>
-        <td><Flex>{customer.source == 1 ? 'Homecare' : customer.source == '01' ? 'Cyberior' : 'Cyberior & Homecare'}</Flex></td>
+        <td><Flex>{customer.source}</Flex></td>
         <td><Flex>{customer.mobile}</Flex></td>
-        <td><Flex>{profileCompletion(customer.profile_completion)}</Flex></td>
+        <td><Flex>{!fetchedPofileCompleteness? <Loader/>: profileCompletion(customer.profile_completion)}</Flex></td>
         <td>
           <Button
             // color={'#DDE5FF'}
@@ -84,7 +85,7 @@ export default function TableDisplay({ customerList ,fetchedPofileCompleteness})
             <th><Flex><Text fw={900} fz={17}>Email</Text></Flex></th>
             <th><Flex><Text fw={900} fz={17}>Source</Text></Flex></th>
             <th><Flex><Text fw={900} fz={17}>Mobile</Text></Flex></th>
-            <th><Flex><Text fw={900} fz={17}>{fetchedPofileCompleteness? "Profile Completion":"Fetching Profile completeness...."} </Text></Flex></th>
+            <th><Flex><Text fw={900} fz={17}>Profile Completion</Text></Flex></th>
             <th></th>
           </tr>
         </thead>

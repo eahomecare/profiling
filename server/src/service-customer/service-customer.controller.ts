@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body ,Get,Param} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -71,22 +71,28 @@ export class ServiceCustomerController {
           });
         }
 
-        const serviceMappingCreated = await prisma.serviceCustomerUsageMapping.create({
-          data: {
-            serviceId: existingService ? existingService.id : newService.id,
-            customerId: existingCustomer ? existingCustomer.id : newCustomer.id,
-            ticket_id: payload.ticket_id,
-            order_id: payload.order_id,
-            source_of_booking: payload.source_of_booking,
-            ticket_type: payload.ticket_type,
-            ticket_date: payload.ticket_date,
-            action: payload.action,
-            action_date_time: payload.action_date_time,
-            tat: payload.tat,
-          },
+        const existingServiceMapping = await prisma.serviceCustomerUsageMapping.findFirst({
+          where: { ticket_id: payload.ticket_id },
         });
 
-        serviceMappings.push(serviceMappingCreated);
+        if (!existingServiceMapping) {
+          const serviceMappingCreated = await prisma.serviceCustomerUsageMapping.create({
+            data: {
+              serviceId: existingService ? existingService.id : newService.id,
+              customerId: existingCustomer ? existingCustomer.id : newCustomer.id,
+              ticket_id: payload.ticket_id,
+              order_id: payload.order_id,
+              source_of_booking: payload.source_of_booking,
+              ticket_type: payload.ticket_type,
+              ticket_date: payload.ticket_date,
+              action: payload.action,
+              action_date_time: payload.action_date_time,
+              tat: payload.tat,
+            },
+          });
+
+          serviceMappings.push(serviceMappingCreated);
+        }
       }
 
       return { message: 'Customers and service usage mappings created successfully.', data: serviceMappings };
@@ -94,6 +100,29 @@ export class ServiceCustomerController {
       console.error(error);
 
       return { error: 'An error occurred while creating customers and service usage mappings.' };
+    }
+  }
+
+  @Get('service-customer-mappings/:customerId')
+  async getServiceCustomerMappings(
+    @Param('customerId') customerId: string,
+  ) {
+    try {
+      const mappings = await prisma.serviceCustomerUsageMapping.findMany({
+        where: { customerId },
+        include: { service: true },
+      });
+
+      return {
+        message: 'Service-customer mappings retrieved successfully.',
+        data: mappings,
+      };
+    } catch (error) {
+      console.error(error);
+
+      return {
+        error: 'An error occurred while retrieving service-customer mappings.',
+      };
     }
   }
 }

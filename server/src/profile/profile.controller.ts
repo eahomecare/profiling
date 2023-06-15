@@ -55,7 +55,7 @@ export class ProfileController {
 
         completionPercentage = Math.round(completionPercentage);
 
-        profileCompletion[customer.id] = `${completionPercentage}%`;
+        profileCompletion[customer.id] = completionPercentage;
       }
 
       return { profileCompletion };
