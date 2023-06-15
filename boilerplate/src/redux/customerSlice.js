@@ -6,7 +6,10 @@ const initialState = {
   status: "idle",
   customers: [],
   customerDetails: {},
-  fetchedPofileCompleteness:false
+  customerServiceHistory:[],
+  fetchedPofileCompleteness:false,
+  customerServiceHistoryStatus:"idle",
+  customerDetailsStatus:"idle"
 };
 
 export const getCustomers = createAsyncThunk("customer/getCustomers", async () => {
@@ -26,10 +29,20 @@ export const getCustomerDetails = createAsyncThunk(
   "customer/getCustomerDetails",
   async (id) => {
     const { data } = await axios.get("/customers/" + id);
+    return data;
+  }
+);
+
+
+export const getCustomerServicesHistory = createAsyncThunk(
+  "customer/getCustomerDetails",
+  async (id) => {
+    const { data } = await axios.get("/api/service-customer-mappings/" + id);
     console.log(data);
     return data;
   }
 );
+
 
 
 export const customerSlice = createSlice({
@@ -59,32 +72,49 @@ export const customerSlice = createSlice({
     },
 
     [getCustomerDetails.pending]: (state, action) => {
-      state.status = "loading";
+      state.customerDetailsStatus = "loading";
     },
     [getCustomerDetails.fulfilled]: (state, action) => {
-      state.status = "success";
+      state.customerDetailsStatus = "success";
       state.customerDetails = action.payload.response.customer;
     },
     [getCustomerDetails.rejected]: (state, action) => {
-      state.status = "failed";
+      state.customerDetailsStatus = "failed";
     },
     [getCustomersProfileCompleteness.pending]: (state, action) => {
       state.status = "loading";
     },
-    [getCustomersProfileCompleteness.fulfilled]: (state, action) => {
+   [getCustomersProfileCompleteness.fulfilled]: (state, action) => {
       state.status = "success";
-      const copyCustomers = [...state.customers]
-      copyCustomers.map((e,index)=>{
-        copyCustomers[index]['profile_completion'] = action.payload.profileCompletion[e.id]?action.payload.profileCompletion[e.id]:0
-      })
 
-      state.fetchedPofileCompleteness = true
+      const updatedCustomers = state.customers.map((customer) => {
+        const profileCompletion = action.payload.profileCompletion[customer.id] || 0;
+        return {
+          ...customer,
+          profile_completion: profileCompletion,
+        };
+      });
 
-      
+      return {
+        ...state,
+        customers: updatedCustomers,
+        fetchedPofileCompleteness: true,
+      };
     },
+
     [getCustomersProfileCompleteness.rejected]: (state, action) => {
       state.status = "failed";
-    }
+    },
+    [getCustomerServicesHistory.pending]: (state, action) => {
+      state.customerServiceHistoryStatus = "loading";
+    },
+    [getCustomerServicesHistory.fulfilled]: (state, action) => {
+      state.customerServiceHistoryStatus = "success";
+      state.customerServiceHistory = action.payload.data;
+    },
+    [getCustomerServicesHistory.rejected]: (state, action) => {
+      state.customerServiceHistoryStatus = "failed";
+    },
   },
 });
 
