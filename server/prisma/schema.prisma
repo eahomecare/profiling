@@ -126,6 +126,8 @@ model VehicleCustomerMapping {
 model Question {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   question       String
+  type           String
+  level          Int
   options        String[]
   customerIDs    String[]      @db.ObjectId
   customers      Customer[]    @relation(fields: [customerIDs], references: [id])
