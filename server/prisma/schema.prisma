@@ -141,7 +141,7 @@ model ProfileType {
   id           String                       @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   category     String
-  description  String
+  description  String?
   questionsIDs String[]                     @db.ObjectId
   questions    Question[]                   @relation(fields: [questionsIDs], references: [id])
   keywordIDs   String[]                     @db.ObjectId
@@ -159,7 +159,7 @@ model ProfileTypeCustomerMapping {
   profileTypeId String      @db.ObjectId
   customerId    String      @db.ObjectId
   customer      Customer    @relation(fields: [customerId], references: [id])
-  level         Int         @default(0)
+  level         Int         @default(1)
 
   @@map("profile_type_customer_mapping")
 }
