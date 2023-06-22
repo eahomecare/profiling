@@ -11,6 +11,7 @@ import { OccupationModule } from './occupation/occupation.module';
 import { ProfileController } from './profile/profile.controller';
 import { ProfileModule } from './profile/profile.module';
 import { ServiceCustomerController } from './service-customer/service-customer.controller';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ServiceCustomerController } from './service-customer/service-customer.c
     KeywordModule,
     OccupationModule,
     ProfileModule,
+    QuestionModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
