@@ -12,6 +12,7 @@ import { ProfileController } from './profile/profile.controller';
 import { ProfileModule } from './profile/profile.module';
 import { ServiceCustomerController } from './service-customer/service-customer.controller';
 import { QuestionModule } from './question/question.module';
+import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { QuestionModule } from './question/question.module';
     OccupationModule,
     ProfileModule,
     QuestionModule,
+    ProfileMappingModule
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
