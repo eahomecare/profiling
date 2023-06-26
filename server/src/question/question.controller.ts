@@ -1,48 +1,29 @@
-import {
-  Controller,
-  Post,
-  Body,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 @Controller('question')
 export class QuestionController {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   @Post('process')
-  async processSurvey(
-    @Body() payload: any,
-  ): Promise<any> {
+  async processSurvey(@Body() payload: any): Promise<any> {
     const { history, customerId } = payload;
 
     for (const item of history) {
-      const {
-        id,
-        question,
-        answers,
-        category,
-        level,
-        selectedAnswers,
-        type,
-      } = item;
+      const { id, question, answers, category, level, selectedAnswers, type } = item;
 
-      const createdQuestion =
-        await this.prisma.question.create({
-          data: {
-            id: id.toString(),
-            question,
-            level,
-            category,
-            options: answers.map(
-              (answer) => answer.text,
-            ),
-            customerIDs: [
-              selectedAnswers.length > 0 &&
-                customerId,
-            ],
+      const createdQuestion = await this.prisma.question.create({
+        data: {
+          id: undefined,
+          question,
+          level,
+          category,
+          options: answers.map((answer) => answer.text),
+          customers: {
+            connect: selectedAnswers.length > 0 ? { id: customerId } : undefined,
           },
-        });
+        },
+      });
 
       for (const answer of answers) {
         await this.prisma.keyword.create({
@@ -50,12 +31,12 @@ export class QuestionController {
             category: item.category,
             value: answer.text,
             level: item.level,
-            customerIDs: [
-              selectedAnswers.includes(
-                answer.id,
-              ) && customerId,
-            ],
-            questionIDs: [createdQuestion.id],
+            customers: {
+              connect: selectedAnswers.includes(answer.id) ? { id: customerId } : undefined,
+            },
+            questions: {
+              connect: { id: createdQuestion.id },
+            },
           },
         });
       }
