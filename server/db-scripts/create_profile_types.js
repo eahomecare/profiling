@@ -1,3 +1,31 @@
+// const { PrismaClient } = require('@prisma/client');
+
+// const prisma = new PrismaClient();
+
+// async function createProfileTypes() {
+//   const uniqueCategories = await prisma.keyword.findMany({
+//     select: {
+//       category: true,
+//     },
+//     distinct: ['category'],
+//   });
+
+//   for (const category of uniqueCategories) {
+//     const profileTypeData = { name: category.category, category: category.category };
+//     await prisma.profileType.create({ data: profileTypeData });
+//     console.log(`Profile type created: ${profileTypeData.name}`);
+//   }
+// }
+
+// createProfileTypes()
+//   .catch((error) => {
+//     console.error(error);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
+
+
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
