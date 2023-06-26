@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 @Controller('question')
-export class QuestionControllerController {
+export class QuestionController {
   constructor(
     private readonly prisma: PrismaService,
   ) {}
@@ -34,7 +34,6 @@ export class QuestionControllerController {
             question,
             level,
             category,
-            type,
             options: answers.map(
               (answer) => answer.text,
             ),

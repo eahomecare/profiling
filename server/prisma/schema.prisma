@@ -126,7 +126,7 @@ model VehicleCustomerMapping {
 model Question {
   id             String        @id @default(auto()) @map("_id") @db.ObjectId
   question       String
-  type           String
+  category       String
   level          Int
   options        String[]
   customerIDs    String[]      @db.ObjectId
