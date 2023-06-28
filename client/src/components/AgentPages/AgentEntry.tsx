@@ -118,38 +118,54 @@ const AgentEntry = () => {
 
     //Submit the keywords and questionHistory
     const handleProfileSubmit = async () => {
-        let newCategories: any = categoryObject
-        questionHistory.forEach(e => {
-            if (e.selectedAnswers.length != 0)
-                newCategories[e.category].push({
-                    key: e.answers.find(element => element.id == e.selectedAnswers[0]).text,
-                    level: newCategories[e.category].length + 1
-                })
-        })
         try {
-            // Set the url for submitting
-            const url = ''
-            const body = {
-                customerId,
-                mobileNo,
-                keywordsAdded,
-                // questionHistory
-                categories: newCategories
+            if (keywordsAdded.length > 0) {
+
+                // Making keywords API friendly and submitting one at a time
+                const keywordsPayloadBody = {
+                    customerId,
+                    keywordsPayload: keywordsAdded
+                }
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}keywords/update/many`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(keywordsPayloadBody),
+                });
+                if (!response.ok) {
+                    console.error("Error updating keyword:", response.statusText);
+                    return;
+                }
+                console.log("Keywords updated successfully!");
             }
-            console.log('body =>', body)
-            console.dir(body)
-            await axios.post(url, body)
-                .then(console.log)
-                .then(successNotification)
-                .then(() => setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, categories: categoryObject, profileCompletion: 0, profilingTypes: [] }]))
-                .then(() => setTimeout(() => {
-                    window.parent.postMessage('closeIframe', '*');
-                }, 2000))
-                .catch(errorNotification)
-                .catch(console.log)
         }
-        catch {
-            errorNotification(new AxiosError('Failed to submit!'))
+        catch (e) {
+            console.log('Failed to submit keywords!')
+        }
+        finally {
+            try {
+                const url = `${import.meta.env.VITE_API_BASE_URL}question/process`
+                const body = {
+                    customerId,
+                    history: questionHistory
+                }
+                console.log('body =>', body)
+                console.dir(body)
+                // setting timeout for atlas
+                await axios.post(url, body)
+                    .then(console.log)
+                    .then(successNotification)
+                    .then(() => setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, categories: categoryObject, profileCompletion: 0, profilingTypes: [] }]))
+                    .then(() => setTimeout(() => {
+                        window.parent.postMessage('closeIframe', '*');
+                    }, 2000))
+                    .catch(errorNotification)
+                    .catch(console.log)
+            }
+            catch {
+                errorNotification(new AxiosError('Failed to submit questionHistory!'))
+            }
         }
     };
 

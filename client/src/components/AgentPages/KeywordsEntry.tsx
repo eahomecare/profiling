@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { ActionIcon, Badge, Flex, MultiSelect, MultiSelectValueProps, rem, Text, TextInput } from '@mantine/core';
-import keywordOptions from '../KeywordsEntry/keywordOptions'
+// import keywordOptions from '../KeywordsEntry/keywordOptions'
 import { IconX } from '@tabler/icons-react';
+import axios from 'axios';
+import _ from 'lodash';
 
 export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: (keywordsSelect: string[]) => void }) {
-    const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>(keywordOptions)
+    // const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>(keywordOptions)
+    const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>([])
     const [keywordsSelected, setKeywordsSelected] = useState([]) // initialize it as an empty array
     const inputRef = useRef(null); // create a ref to the input element
 
@@ -24,6 +27,24 @@ export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: 
             </Badge>
         </div>
     }
+
+    useEffect(() => {
+        axios.get(`${import.meta.env.VITE_API_BASE_URL}keywords`)
+            .then(response => {
+                // setKeywordList(response.data);
+                console.log('keywords', response.data.data)
+                const newData = response.data.data.map(({ id, category, value }) => {
+                    return {
+                        value: id,
+                        label: `${value} [${category}]`,
+                    }
+                })
+                setKeywordList(newData)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
 
     useEffect(() => {
         // Automatically focus the input field every time keywordsSelected changes

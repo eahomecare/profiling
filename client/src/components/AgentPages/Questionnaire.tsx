@@ -92,9 +92,20 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
                 });
 
                 const result = response.data.result;
-                const questionText = result.split(': ')[2].split(', level')[0];
-                const questionLevel = parseInt(result.split(', level: ')[1].split(', Answers')[0]);
-                let questionAnswers = result.split('Answers: ')[1].split(', ');
+                let questionText
+                let questionLevel
+                let questionAnswers
+                try {
+                    questionText = result.split(': ')[2].split(', level')[0];
+                    questionLevel = parseInt(result.split(', level: ')[1].split(', Answers')[0]);
+                    questionAnswers = result.split('Answers: ')[1].split(', ');
+                }
+                catch {
+                    console.error('Failed to get a question ')
+                    questionText = "Test Question"
+                    questionLevel = 2
+                    questionAnswers = ["Test Answer 1", "Test Answer 2", "Test Answer 3", "None"]
+                }
                 questionAnswers.push('None')
 
                 fetchedQuestions.push({

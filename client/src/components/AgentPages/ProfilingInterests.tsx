@@ -14,20 +14,22 @@ const ProfilingInterests: React.FC<ProfilingInterestsProps> = ({ profilingIntere
     return (
         <Group position="center">
             {profilingInterests.map((interest) => {
-                const url = assets[interest];
+                if (interest) {
+                    const url = assets[interest];
 
-                return (
-                    <div key={interest}>
-                        <Avatar
-                            size={ICON_SIZE}
-                            radius={ICON_SIZE}
-                            src={url}
-                        />
-                        <Center>
-                            <Text fw={550} size={15}>{interest}</Text>
-                        </Center>
-                    </div>
-                );
+                    return (
+                        <div key={interest}>
+                            <Avatar
+                                size={ICON_SIZE}
+                                radius={ICON_SIZE}
+                                src={url}
+                            />
+                            <Center>
+                                <Text fw={550} size={15}>{interest}</Text>
+                            </Center>
+                        </div>
+                    );
+                }
             })}
         </Group>
     );

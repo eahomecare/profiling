@@ -10,55 +10,9 @@ import {
 import { IconUser, IconX } from '@tabler/icons-react';
 import BouncingAvatar from './BouncingAvatar';
 import axios from 'axios';
+import mobileIdMap from './mobileIdMap'
 
 interface SimulateCallProps { }
-
-const initialProfileList = [
-    {
-        details: {
-            name: 'Thomas Edison',
-            email: 'yuvisingh8888@gmail.com',
-            mobileNo: '9999999999',
-            source: 'Homecare',
-            city: 'Mumbai',
-            customerId: '642499f53bfe3509302f7ea4'
-        },
-        categories: {
-            sports: [{ key: 'sports', level: 1 },],
-            food: [{ key: 'food', level: 1 },],
-            travel: [{ key: 'travel', level: 1 }],
-            music: [{ key: 'music', level: 1 }],
-            fitness: [{ key: 'fitness', level: 1 }],
-            automobile: [{ key: 'automobile', level: 1 }],
-            gadget: [{ key: 'gadget', level: 1 }],
-            technology: [{ key: 'technology', level: 1 }],
-        },
-        profileCompletion: 55,
-        profilingTypes: ['Avid Traveler', 'Foodie']
-    },
-    {
-        details: {
-            name: 'Elon Musk',
-            email: 'elonmusk@tesla.com',
-            mobileNo: '8888888888',
-            source: 'Homecare,Cyberior',
-            city: 'Bangalore',
-            customerId: '64256063f857d8919c7109b0'
-        },
-        categories: {
-            sports: [{ key: 'sports', level: 1 }],
-            food: [{ key: 'food', level: 1 }],
-            travel: [{ key: 'travel', level: 1 }],
-            music: [{ key: 'music', level: 1 }],
-            fitness: [{ key: 'fitness', level: 1 }],
-            automobile: [{ key: 'automobile', level: 1 }],
-            gadget: [{ key: 'gadget', level: 1 }],
-            technology: [{ key: 'technology', level: 1 }],
-        },
-        profileCompletion: 75,
-        profilingTypes: ['Techie', 'Sports Fan']
-    },
-];
 
 const SimulateCall: React.FC<SimulateCallProps> = () => {
     const theme = useMantineTheme();
@@ -86,34 +40,41 @@ const SimulateCall: React.FC<SimulateCallProps> = () => {
 
     const handleSimulateCall = async () => {
         if (isValidMobileNumber) {
-            setShowIcon(true);
-            const profile = initialProfileList.find(
-                (profile) => profile.details.mobileNo === mobileNumber
-            );
-            if (profile) {
+            const customerId = mobileIdMap[mobileNumber];
+            if (customerId) {
                 try {
-                    const response = await axios.get('https://your-api-url', {
-                        params: {
-                            mobileNo: profile.details.mobileNo,
-                            customerId: profile.details.customerId,
-                        },
-                    });
-                    if (response.data) {
-                        profile.profileCompletion = response.data.profileCompletion;
-                        profile.categories = response.data.categories;
+                    const responseProfile = await axios.get(`${import.meta.env.VITE_API_BASE_URL}customers/${customerId}`);
+                    const responseCategories = await axios.get(`${import.meta.env.VITE_API_BASE_URL}profile_mapping/${customerId}`);
+                    const responseCompletion = await axios.get(`${import.meta.env.VITE_API_BASE_URL}profile/${customerId}`);
+                    console.log('profile response', responseProfile)
+                    const details = {
+                        name: responseProfile.data.customer_details.personal_details.full_name || '-',
+                        email: responseProfile.data.customer_details.email || '-',
+                        mobileNo: responseProfile.data.customer_details.mobile || '-',
+                        source: responseProfile.data.customer_details.source || '-',
+                        city: responseProfile.data.customer_details.personal_details.location || '-',
+                        customerId: customerId
                     }
+
+                    console.log('details', details)
+
+                    if (responseProfile.data && responseCategories.data && responseCompletion.data) {
+                        setIframeSrc(
+                            `/agent?${new URLSearchParams({
+                                ...details,
+                                profileCompletion: responseCompletion.data.completionPercentage.toString(),
+                                categories: JSON.stringify(responseCategories.data.categories),
+                                profilingTypes: 'Foodie',
+                            })}`
+                        );
+                    } else {
+                        throw new Error("Failed to get updated profile details");
+                    }
+
+                    setShowIcon(true);
                 } catch (error) {
                     console.error('Failed to fetch updated profile details:', error);
                 }
-                console.log('categories in Mobilesimulation before iframe', JSON.stringify(profile.categories))
-                setIframeSrc(
-                    `/agent?${new URLSearchParams({
-                        ...profile.details,
-                        profileCompletion: profile.profileCompletion.toString(),
-                        categories: JSON.stringify(profile.categories),
-                        profilingTypes: profile.profilingTypes.join(","),
-                    })}`
-                );
             }
         } else {
             setShowIcon(false);
@@ -126,7 +87,7 @@ const SimulateCall: React.FC<SimulateCallProps> = () => {
 
     const validateMobileNumber = (value: string) => {
         const isValid = /^([6-9]{1}\d{9})$/.test(value);
-        setIsValidMobileNumber(isValid);
+        setIsValidMobileNumber(true);
         setMobileNumberError(isValid ? '' : 'Please enter a valid mobile number');
     };
 
