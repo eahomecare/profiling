@@ -16,6 +16,8 @@ export class ProfileMappingController {
   async getProfileMappings(
     @Param('customerId') customerId: string,
   ) {
+
+    console.log('Recieved customer id for profile_mapping', customerId)
     const mappings =
       await this.profileService.getProfileMappings(
         customerId,
@@ -51,6 +53,8 @@ export class ProfileMappingController {
         });
       }
     }
+
+    console.log('Categories objec in response', { categories })
 
     return { categories };
   }
