@@ -23,6 +23,8 @@ export class ProfileMappingController {
         customerId,
       );
 
+    console.log('mappings =>', mappings)
+
     const categories = {};
     for (const mapping of mappings) {
       const { profileType, customer, level } =
@@ -30,21 +32,25 @@ export class ProfileMappingController {
 
       const keywords = customer.keywords;
 
+      console.log('unfiltered keywords', keywords)
+
       const categoryName =
         profileType.name.toLowerCase();
 
       if (!categories[categoryName]) {
         categories[categoryName] = [];
+        categories[categoryName].push({
+          key: categoryName,
+          level: 1,
+        });
       }
 
-      categories[categoryName].push({
-        key: categoryName,
-        level: 1,
-      });
       const filtered_keywords = _.filter(
         keywords,
         { category: categoryName },
       );
+
+      console.log('filtered keywords', keywords)
 
       for (const keyword of filtered_keywords) {
         categories[categoryName].push({
@@ -54,7 +60,7 @@ export class ProfileMappingController {
       }
     }
 
-    console.log('Categories objec in response', { categories })
+    console.dir('Categories objec in response', categories)
 
     return { categories };
   }
