@@ -10,7 +10,7 @@ import { Customer } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async addCustomerDetails(
     customer_details: any,
@@ -119,7 +119,7 @@ export class CustomerService {
         personal_details: true,
       },
     });
-  
+
     const formattedCustomerDetails = customerDetails.map((customer) => {
       const { personal_details, ...rest } = customer;
       return {
@@ -129,16 +129,17 @@ export class CustomerService {
         },
       };
     });
-  
-    return {customer_details:formattedCustomerDetails} 
+
+    return { customer_details: formattedCustomerDetails }
   }
-  
+
 
   async fetchCustomerInfo(customerId: string) {
     const customerDetails = {
       customer_details:
         await this.prisma.customer.findUnique({
           where: { id: customerId },
+          include: { personal_details: true }
         }),
     };
     return customerDetails;
