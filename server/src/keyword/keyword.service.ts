@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import {
   Customer,
   Keyword,
@@ -8,7 +8,7 @@ const { RegExp } = require('mongodb');
 
 @Injectable()
 export class KeywordService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(data: Keyword): Promise<Keyword> {
     try {

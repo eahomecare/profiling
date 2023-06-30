@@ -11,7 +11,7 @@ import {
 import { KeywordService } from './keyword.service';
 import { Keyword } from '@prisma/client';
 import { ObjectId } from 'mongodb';
-import { CustomerService } from 'src/customer/customer.service';
+import { CustomerService } from '../customer/customer.service';
 
 interface KeywordWithOptionalError
   extends Keyword {
@@ -20,10 +20,10 @@ interface KeywordWithOptionalError
 
 interface UpdateData {
   customerId: string;
-  questionId:string;
-  profileTypeId:string;
+  questionId: string;
+  profileTypeId: string;
   keywordsPayload: string[];
-  level:number
+  level: number
 }
 
 interface CreateKeywordInput
@@ -38,7 +38,7 @@ export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
     private customerService: CustomerService,
-  ) {}
+  ) { }
 
   @Post()
   async create(@Body() data: Keyword): Promise<{
@@ -257,10 +257,10 @@ export class KeywordController {
             customerIDs: [data.customerId],
             level: data.level,
             questionIDs: [data.questionId],
-            profileTypeIDs: [data.profileTypeId] 
+            profileTypeIDs: [data.profileTypeId]
           };
-          
-        
+
+
           keywordIds.push(newKeyword.id);
         }
       }

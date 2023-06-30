@@ -57,6 +57,7 @@ const SimulateCall: React.FC<SimulateCallProps> = () => {
                     }
 
                     console.log('details', details)
+                    console.log('response Categories data', responseCategories)
 
                     if (responseProfile.data && responseCategories.data && responseCompletion.data) {
                         setIframeSrc(

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Occupation } from '.prisma/client';
 // import { OccupationCustomerMapping } from '.prisma/client';
 
@@ -15,7 +15,7 @@ interface OccupationCustomerMapping {
 
 @Injectable()
 export class OccupationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findOne(
     vehicleId: string,
