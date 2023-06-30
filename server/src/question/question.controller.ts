@@ -3,7 +3,7 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 @Controller('question')
 export class QuestionController {
   constructor(
@@ -49,15 +49,23 @@ export class QuestionController {
           if (selectedAnswers.includes(
             answer.id,
           )) {
-            await this.prisma.keyword.create({
+            const createdKeyword = await this.prisma.keyword.create({
               data: {
-                category: item.category,
+                category: category,
                 value: answer.text,
-                level: item.level,
+                level: level,
                 customerIDs: [
                   customerId,
                 ],
                 questionIDs: [createdQuestion.id],
+              },
+            });
+            await this.prisma.customer.update({
+              where: { id: customerId },
+              data: {
+                keywordIDs: {
+                  push: createdKeyword.id,
+                },
               },
             });
           }

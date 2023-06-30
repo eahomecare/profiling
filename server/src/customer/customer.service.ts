@@ -3,8 +3,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { findInClassification } from 'src/classifications/find.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { findInClassification } from '../classifications/find.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { merge } from 'lodash';
 import { Customer } from '@prisma/client';
 
