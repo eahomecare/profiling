@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e73bd3ed.chunk.css",
+    "main.js": "/static/js/main.9f76742f.chunk.js",
+    "main.js.map": "/static/js/main.9f76742f.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.6649c910.js",
+    "runtime-main.js.map": "/static/js/runtime-main.6649c910.js.map",
+    "static/js/2.68171474.chunk.js": "/static/js/2.68171474.chunk.js",
+    "static/js/2.68171474.chunk.js.map": "/static/js/2.68171474.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.e73bd3ed.chunk.css.map": "/static/css/main.e73bd3ed.chunk.css.map",
+    "static/js/2.68171474.chunk.js.LICENSE.txt": "/static/js/2.68171474.chunk.js.LICENSE.txt",
+    "static/media/Avid Traveler.png": "/static/media/Avid Traveler.153391f9.png",
+    "static/media/eaLogo.9e9a6d4e.png": "/static/media/eaLogo.9e9a6d4e.png",
+    "static/media/getFetch.cjs": "/static/media/getFetch.582d29c4.cjs",
+    "static/media/login.fb9a0a6a.png": "/static/media/login.fb9a0a6a.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6649c910.js",
+    "static/js/2.68171474.chunk.js",
+    "static/css/main.e73bd3ed.chunk.css",
+    "static/js/main.9f76742f.chunk.js"
+  ]
+}
