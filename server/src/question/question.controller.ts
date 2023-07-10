@@ -10,7 +10,7 @@ export class QuestionController {
     private readonly prisma: PrismaService,
   ) { }
 
-  @Post('process')
+  @Post('api/process')
   async processSurvey(
     @Body() payload: any,
   ): Promise<any> {
