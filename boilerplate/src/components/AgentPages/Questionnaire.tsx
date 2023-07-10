@@ -85,7 +85,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
                 }
 
                 const body = { "input": bodyInputParts.join(", ") };
-                const response = await axios.post('http://localhost:3000/process', body, {
+                const response = await axios.post(`${process.env.REACT_APP_AI_URL}/process`, body, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

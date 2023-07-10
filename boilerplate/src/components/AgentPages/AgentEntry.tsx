@@ -126,7 +126,7 @@ const AgentEntry = () => {
                     customerId,
                     keywordsPayload: keywordsAdded
                 }
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}keywords/update/many`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}keywords/update/many`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const AgentEntry = () => {
         }
         finally {
             try {
-                const url = `${import.meta.env.VITE_API_BASE_URL}question/process`
+                const url = `${process.env.REACT_APP_API_URL}question/process`
                 const body = {
                     customerId,
                     history: questionHistory
