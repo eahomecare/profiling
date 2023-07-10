@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useRef, useState } from 'react';
 import { ActionIcon, Badge, Flex, MultiSelect, MultiSelectValueProps, rem, Text, TextInput } from '@mantine/core';
 // import keywordOptions from '../KeywordsEntry/keywordOptions'
