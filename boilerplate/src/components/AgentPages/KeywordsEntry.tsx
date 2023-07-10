@@ -29,7 +29,7 @@ export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: 
     }
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}keywords`)
+        axios.get(`${process.env.REACT_APP_API_URL}keywords`)
             .then(response => {
                 // setKeywordList(response.data);
                 console.log('keywords', response.data.data)
