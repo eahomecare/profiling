@@ -11,6 +11,7 @@ import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import { ThemeProvider } from "./ThemeProvider";
 import Login from "./pages/Login/Login";
+import SimulateCall from "./components/AgentPages/MobileSimulation";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -39,10 +40,11 @@ function App() {
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
         <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/register" element={<Register/>}/>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
           <PrivateRoute path="/" element={<Customers />} />
+          <Route path="/agent" element={<SimulateCall />} />
         </Routes>
       </MantineProvider>
     </ColorSchemeProvider>
