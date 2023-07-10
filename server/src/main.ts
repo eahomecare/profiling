@@ -7,7 +7,7 @@ async function bootstrap() {
   app.enableCors({
     // origin: ['https://custprofile.europ-assistance.in', 'http://localhost:5000'],
     origin: ['*'],
-    methods: 'GET,POST,PATCH',
+    methods: 'GET,POST,PATCH,OPTIONS',
     // allowedHeaders: 'Content-Type, Authorization',
     credentials: false
   })
