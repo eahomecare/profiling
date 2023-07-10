@@ -1,8 +1,8 @@
 export default {
-    [`Avid Traveler`]: new URL('./Avid Traveler.png', import.meta.url).href,
-    [`Fitness Freak`]: new URL('./Fitness Freak.png', import.meta.url).href,
-    [`Foodie`]: new URL('./Foodie.png', import.meta.url).href,
-    [`Sports Fan`]: new URL('./Sports Fan.png', import.meta.url).href,
-    [`Techie`]: new URL('./Techie.png', import.meta.url).href,
-    [`AddProfile`]: new URL('./AddProfile.png', import.meta.url).href,
-}
+    'Avid Traveler': process.env.BASE_URL + '/Avid Traveler.png',
+    'Fitness Freak': process.env.BASE_URL + '/Fitness Freak.png',
+    'Foodie': process.env.BASE_URL + '/Foodie.png',
+    'Sports Fan': process.env.BASE_URL + '/Sports Fan.png',
+    'Techie': process.env.BASE_URL + '/Techie.png',
+    'AddProfile': process.env.BASE_URL + '/AddProfile.png',
+};
