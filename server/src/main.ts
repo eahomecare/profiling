@@ -8,9 +8,9 @@ async function bootstrap() {
     // origin: ['https://custprofile.europ-assistance.in', 'http://localhost:5000'],
     origin: ['*'],
     methods: 'GET,POST,PATCH,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization',
+    allowedHeaders: '*',
     // credentials: true,
-    preflightContinue: true
+    // preflightContinue: true
   })
   app.useGlobalPipes(
     new ValidationPipe({
