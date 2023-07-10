@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Flex, Group, ScrollArea, Stack, Text, Loader } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';

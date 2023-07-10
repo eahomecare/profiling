@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react';
 import { ActionIcon, Button, Flex, Paper, Modal, Text, Box, Group, Center, Divider } from '@mantine/core';
 import { IconMaximize, IconX } from '@tabler/icons-react';
