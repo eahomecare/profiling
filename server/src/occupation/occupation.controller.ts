@@ -11,12 +11,12 @@ import { OccupationCustomerMappingService } from './occupation-customer-mapping.
 import { OccupationCustomerMapping } from '@prisma/client';
 import { DateTime } from 'luxon';
 
-@Controller('api/occupations')
+@Controller('occupations')
 export class OccupationController {
   constructor(
     private occupationService: OccupationService,
     private occupationCustomerMappingService: OccupationCustomerMappingService,
-  ) { }
+  ) {}
 
   @Post()
   async create(@Body() payload): Promise<any> {
@@ -47,8 +47,8 @@ export class OccupationController {
 
     const occupation = !!vehicleId
       ? await this.occupationService.findOne(
-        vehicleId,
-      )
+          vehicleId,
+        )
       : null;
 
     if (occupation || !!vehicleId) {

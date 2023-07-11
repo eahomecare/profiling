@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
-@Controller('api/profile')
+@Controller('profile')
 export class ProfileController {
   private prisma: PrismaClient;
 

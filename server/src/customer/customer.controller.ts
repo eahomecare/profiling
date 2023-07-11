@@ -3,7 +3,7 @@ import { JwtGuard } from '../auth/guard';
 import { CustomerService } from './customer.service';
 
 // @UseGuards(JwtGuard)
-@Controller('api/customers')
+@Controller('customers')
 export class CustomerController {
 
     constructor(private customerService: CustomerService) { }

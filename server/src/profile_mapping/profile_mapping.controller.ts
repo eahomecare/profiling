@@ -6,7 +6,7 @@ import {
 import { ProfileTypeCustomerMappingService } from './profile_mapping.service';
 const _ = require('lodash');
 
-@Controller('api/profile_mapping')
+@Controller('profile_mapping')
 export class ProfileMappingController {
   constructor(
     private readonly profileService: ProfileTypeCustomerMappingService,

@@ -33,7 +33,7 @@ interface CreateKeywordInput
   customerIDs: string[];
 }
 
-@Controller('api/keywords')
+@Controller('keywords')
 export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
