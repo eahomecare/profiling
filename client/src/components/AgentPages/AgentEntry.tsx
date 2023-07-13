@@ -58,7 +58,8 @@ const AgentEntry = () => {
     const [currentProfile, setCurrentProfile] = useState<ProfileDetails>({ name, email, mobileNo, source, city, customerId });
     const [percentageCompleted, setPercentageCompleted] = useState<number>(parseInt(profileCompletion, 10));
     const [profilingInterests, setProfilingInterests] = useState<string[]>(profilingTypes.split(','));
-    const [categoryObject, setCategoryObject] = useState<Categories>(JSON.parse(categories));
+    // const [categoryObject, setCategoryObject] = useState<Categories>(JSON.parse(categories));
+    const [categoryObject, setCategoryObject] = useState<Categories>(categories ? JSON.parse(categories) : {/* default value */ });
     const [profileList, setProfileList] = useState<AgentProfile[]>([{ details: currentProfile, categories: categoryObject, profileCompletion: percentageCompleted, profilingTypes: profilingInterests }]);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFullScreen, setFullScreen] = useState(false);
@@ -237,7 +238,7 @@ const AgentEntry = () => {
 
             <Group position='apart' grow>
                 <Box pt={10}>
-                    <KeywordsEntry setKeywordsAdded={setKeywordsAdded} />
+                    <KeywordsEntry setKeywordsAdded={setKeywordsAdded} customerId={customerId} />
                     <Remarks />
                 </Box>
                 <Box>

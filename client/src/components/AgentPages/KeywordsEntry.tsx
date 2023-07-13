@@ -5,7 +5,7 @@ import { IconX } from '@tabler/icons-react';
 import axios from 'axios';
 import _ from 'lodash';
 
-export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: (keywordsSelect: string[]) => void }) {
+export default function KeywordsEntry({ setKeywordsAdded, customerId }: { setKeywordsAdded: (keywordsSelect: string[]) => void, customerId: string }) {
     // const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>(keywordOptions)
     const [keywordList, setKeywordList] = useState<{ label: string, value: string }[]>([])
     const [keywordsSelected, setKeywordsSelected] = useState([]) // initialize it as an empty array
@@ -30,10 +30,10 @@ export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: 
 
     useEffect(() => {
         axios.get(`${import.meta.env.VITE_API_BASE_URL}keywords`)
-            .then(response => {
-                // setKeywordList(response.data);
-                console.log('keywords', response.data.data)
-                const newData = response.data.data.map(({ id, category, value }) => {
+            .then(async response => {
+                const customerKeywordsData = await axios.get(`${import.meta.env.VITE_API_BASE_URL}keywords/customer/${customerId}`)
+                const keywordsDifference = _.differenceWith(response.data.data, customerKeywordsData.data.data, _.isEqual);
+                const newData = keywordsDifference.map(({ id, category, value }) => {
                     return {
                         value: id,
                         label: `${value} [${category}]`,
@@ -67,10 +67,11 @@ export default function KeywordsEntry({ setKeywordsAdded }: { setKeywordsAdded: 
             placeholder={"Enter customer's keywords"}
             clearable
             filter={(value, selected, item) => {
-                if (!selected && item.label?.toLowerCase().startsWith(value.toLowerCase().trim())) {
-                    return true
-                }
-                else return false
+                // if (!selected && item.label?.toLowerCase().startsWith(value.toLowerCase().trim())) {
+                //     return true
+                // }
+                // else return false
+                return !selected
             }
             }
             onCreate={(query) => {

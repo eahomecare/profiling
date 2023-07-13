@@ -44,9 +44,9 @@ const SimulateCall: React.FC<SimulateCallProps> = () => {
             const customerId = mobileIdMap[mobileNumber];
             if (customerId) {
                 try {
-                    const responseProfile = await axios.get(`${process.env.REACT_APP_API_URL}customers/${customerId}`);
-                    const responseCategories = await axios.get(`${process.env.REACT_APP_API_URL}profile_mapping/${customerId}`);
-                    const responseCompletion = await axios.get(`${process.env.REACT_APP_API_URL}profile/${customerId}`);
+                    const responseProfile = await axios.get(`${process.env.REACT_APP_API_URL}/customers/${customerId}`);
+                    const responseCategories = await axios.get(`${process.env.REACT_APP_API_URL}/profile_mapping/${customerId}`);
+                    const responseCompletion = await axios.get(`${process.env.REACT_APP_API_URL}/profile/${customerId}`);
                     console.log('profile response', responseProfile)
                     const details = {
                         name: responseProfile.data.customer_details.personal_details.full_name || '-',
