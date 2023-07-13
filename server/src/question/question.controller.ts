@@ -14,8 +14,23 @@ export class QuestionController {
   async processSurvey(
     @Body() payload: any,
   ): Promise<any> {
-    const { history, customerId } = payload;
-    console.log('payload', payload)
+    const { history, customerId, keywords } =
+      payload;
+    console.log('payload', payload);
+
+    if (Array.isArray(keywords) && keywords.length > 0) {
+      const keywordIds = keywords.map((keyword) => keyword.id);
+
+      await this.prisma.keyword.updateMany({
+        where: { id: { in: keywordIds } },
+        data: { customerIDs: { push: customerId } },
+      });
+
+      await this.prisma.customer.update({
+        where: { id: customerId },
+        data: { keywordIDs: { push: keywordIds } },
+      });
+    }
 
     for (const item of history) {
       const {
@@ -28,7 +43,10 @@ export class QuestionController {
         type,
       } = item;
 
-      if (selectedAnswers && selectedAnswers.length > 0) {
+      if (
+        selectedAnswers &&
+        selectedAnswers.length > 0
+      ) {
         const createdQuestion =
           await this.prisma.question.create({
             data: {
@@ -39,27 +57,26 @@ export class QuestionController {
               options: answers.map(
                 (answer) => answer.text,
               ),
-              customerIDs: [
-                customerId,
-              ],
+              customerIDs: [customerId],
             },
           });
 
         for (const answer of answers) {
-          if (selectedAnswers.includes(
-            answer.id,
-          )) {
-            const createdKeyword = await this.prisma.keyword.create({
-              data: {
-                category: category,
-                value: answer.text,
-                level: level,
-                customerIDs: [
-                  customerId,
-                ],
-                questionIDs: [createdQuestion.id],
-              },
-            });
+          if (
+            selectedAnswers.includes(answer.id)
+          ) {
+            const createdKeyword =
+              await this.prisma.keyword.create({
+                data: {
+                  category: category,
+                  value: answer.text,
+                  level: level,
+                  customerIDs: [customerId],
+                  questionIDs: [
+                    createdQuestion.id,
+                  ],
+                },
+              });
             await this.prisma.customer.update({
               where: { id: customerId },
               data: {
