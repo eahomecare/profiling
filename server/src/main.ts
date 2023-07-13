@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
     // origin: ['https://custprofile.europ-assistance.in', 'http://localhost:5000'],
-    origin: ['*'],
+    origin: '*',
     methods: 'GET,POST,PATCH,OPTIONS',
     allowedHeaders: '*',
     // credentials: true,
