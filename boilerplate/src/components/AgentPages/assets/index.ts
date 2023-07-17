@@ -1,8 +1,15 @@
+import AvidTraveler from './Avid Traveler.png';
+import FitnessFreak from './Fitness Freak.png';
+import Foodie from './Foodie.png';
+import SportsFan from './Sports Fan.png';
+import Techie from './Techie.png';
+import AddProfile from './AddProfile.png';
+
 export default {
-    'Avid Traveler': process.env.BASE_URL + '/Avid Traveler.png',
-    'Fitness Freak': process.env.BASE_URL + '/Fitness Freak.png',
-    'Foodie': process.env.BASE_URL + '/Foodie.png',
-    'Sports Fan': process.env.BASE_URL + '/Sports Fan.png',
-    'Techie': process.env.BASE_URL + '/Techie.png',
-    'AddProfile': process.env.BASE_URL + '/AddProfile.png',
-};
+    'Avid Traveler': AvidTraveler,
+    'Fitness Freak': FitnessFreak,
+    'Foodie': Foodie,
+    'Sports Fan': SportsFan,
+    'Techie': Techie,
+    'AddProfile': AddProfile,
+}

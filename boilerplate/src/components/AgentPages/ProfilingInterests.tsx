@@ -1,6 +1,7 @@
+//@ts-nocheck
 import React from 'react';
 import { Group, Text, Avatar, Center } from '@mantine/core';
-import assets from '../Profiling/assets';
+import assets from './assets';
 
 type AssetKeys = keyof typeof assets;
 

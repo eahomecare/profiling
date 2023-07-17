@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { useEffect, useState } from 'react';
 import { ActionIcon, Button, Flex, Paper, Modal, Text, Box, Group, Center, Divider } from '@mantine/core';
 import { IconMaximize, IconX } from '@tabler/icons-react';
@@ -59,7 +59,8 @@ const AgentEntry = () => {
     const [currentProfile, setCurrentProfile] = useState<ProfileDetails>({ name, email, mobileNo, source, city, customerId });
     const [percentageCompleted, setPercentageCompleted] = useState<number>(parseInt(profileCompletion, 10));
     const [profilingInterests, setProfilingInterests] = useState<string[]>(profilingTypes.split(','));
-    const [categoryObject, setCategoryObject] = useState<Categories>(JSON.parse(categories));
+    // const [categoryObject, setCategoryObject] = useState<Categories>(JSON.parse(categories));
+    const [categoryObject, setCategoryObject] = useState<Categories>(categories ? JSON.parse(categories) : {/* default value */ });
     const [profileList, setProfileList] = useState<AgentProfile[]>([{ details: currentProfile, categories: categoryObject, profileCompletion: percentageCompleted, profilingTypes: profilingInterests }]);
     const [isModalOpen, setModalOpen] = useState(false);
     const [isFullScreen, setFullScreen] = useState(false);
@@ -119,55 +120,56 @@ const AgentEntry = () => {
 
     //Submit the keywords and questionHistory
     const handleProfileSubmit = async () => {
-        try {
-            if (keywordsAdded.length > 0) {
+        // try {
+        //     if (keywordsAdded.length > 0) {
 
-                // Making keywords API friendly and submitting one at a time
-                const keywordsPayloadBody = {
-                    customerId,
-                    keywordsPayload: keywordsAdded
-                }
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/keywords/update/many`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(keywordsPayloadBody),
-                });
-                if (!response.ok) {
-                    console.error("Error updating keyword:", response.statusText);
-                    return;
-                }
-                console.log("Keywords updated successfully!");
+        //         // Making keywords API friendly and submitting one at a time
+        //         const keywordsPayloadBody = {
+        //             customerId,
+        //             keywordsPayload: keywordsAdded
+        //         }
+        //         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}keywords/update/many`, {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //             body: JSON.stringify(keywordsPayloadBody),
+        //         });
+        //         if (!response.ok) {
+        //             console.error("Error updating keyword:", response.statusText);
+        //             return;
+        //         }
+        //         console.log("Keywords updated successfully!");
+        //     }
+        // }
+        // catch (e) {
+        //     console.log('Failed to submit keywords!')
+        // }
+        // finally {
+        try {
+            const url = `${process.env.REACT_APP_API_URL}/question/process`
+            const body = {
+                customerId,
+                keywords: keywordsAdded,
+                history: questionHistory
             }
+            console.log('body =>', body)
+            console.dir(body)
+            // setting timeout for atlas
+            await axios.post(url, body)
+                .then(console.log)
+                .then(successNotification)
+                .then(() => setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, categories: categoryObject, profileCompletion: 0, profilingTypes: [] }]))
+                .then(() => setTimeout(() => {
+                    window.parent.postMessage('closeIframe', '*');
+                }, 2000))
+                .catch(errorNotification)
+                .catch(console.log)
         }
-        catch (e) {
-            console.log('Failed to submit keywords!')
+        catch {
+            errorNotification(new AxiosError('Failed to submit questionHistory!'))
         }
-        finally {
-            try {
-                const url = `${process.env.REACT_APP_API_URL}/question/process`
-                const body = {
-                    customerId,
-                    history: questionHistory
-                }
-                console.log('body =>', body)
-                console.dir(body)
-                // setting timeout for atlas
-                await axios.post(url, body)
-                    .then(console.log)
-                    .then(successNotification)
-                    .then(() => setProfileList(prevProfileList => [...prevProfileList, { details: currentProfile, categories: categoryObject, profileCompletion: 0, profilingTypes: [] }]))
-                    .then(() => setTimeout(() => {
-                        window.parent.postMessage('closeIframe', '*');
-                    }, 2000))
-                    .catch(errorNotification)
-                    .catch(console.log)
-            }
-            catch {
-                errorNotification(new AxiosError('Failed to submit questionHistory!'))
-            }
-        }
+        // }
     };
 
     const handleClose = (submit: boolean) => {
@@ -238,7 +240,7 @@ const AgentEntry = () => {
 
             <Group position='apart' grow>
                 <Box pt={10}>
-                    <KeywordsEntry setKeywordsAdded={setKeywordsAdded} />
+                    <KeywordsEntry setKeywordsAdded={setKeywordsAdded} customerId={customerId} />
                     <Remarks />
                 </Box>
                 <Box>

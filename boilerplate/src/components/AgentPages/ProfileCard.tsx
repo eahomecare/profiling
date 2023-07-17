@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Box, Text, TextInput, Col, Grid } from '@mantine/core'
 import React from 'react'
 
