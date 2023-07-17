@@ -19,7 +19,7 @@ export class QuestionController {
     console.log('payload', payload);
 
     if (Array.isArray(keywords) && keywords.length > 0) {
-      const keywordIds = keywords.map((keyword) => keyword.id);
+      const keywordIds = keywords.map((keyword) => keyword);
 
       await this.prisma.keyword.updateMany({
         where: { id: { in: keywordIds } },
