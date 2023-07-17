@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { Flex, Group, ScrollArea, Stack, Text, Loader } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -86,7 +86,7 @@ const Questionnaire: React.FC<QuestionnaireProps> = ({ categories, setQuestionsH
                 }
 
                 const body = { "input": bodyInputParts.join(", ") };
-                const response = await axios.post(`${process.env.REACT_APP_AI_URL}/process`, body, {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/process`, body, {
                     headers: {
                         'Content-Type': 'application/json'
                     }

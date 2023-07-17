@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Text, Textarea } from '@mantine/core'
 import React from 'react'
 

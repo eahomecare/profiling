@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Center, RingProgress, Stack, Text } from '@mantine/core'
 import React from 'react'
 

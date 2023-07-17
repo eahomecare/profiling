@@ -13,6 +13,7 @@ import { ProfileModule } from './profile/profile.module';
 import { ServiceCustomerController } from './service-customer/service-customer.controller';
 import { QuestionModule } from './question/question.module';
 import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
+import { LangchainModule } from './langchain/langchain.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
     OccupationModule,
     ProfileModule,
     QuestionModule,
-    ProfileMappingModule
+    ProfileMappingModule,
+    LangchainModule
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
