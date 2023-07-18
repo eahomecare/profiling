@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.75d8ed32.chunk.css",
-    "main.js": "/static/js/main.d01bf669.chunk.js",
-    "main.js.map": "/static/js/main.d01bf669.chunk.js.map",
+    "main.js": "/static/js/main.56279d5a.chunk.js",
+    "main.js.map": "/static/js/main.56279d5a.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.6649c910.js",
     "runtime-main.js.map": "/static/js/runtime-main.6649c910.js.map",
-    "static/js/2.1abe927c.chunk.js": "/static/js/2.1abe927c.chunk.js",
-    "static/js/2.1abe927c.chunk.js.map": "/static/js/2.1abe927c.chunk.js.map",
+    "static/js/2.728e446a.chunk.js": "/static/js/2.728e446a.chunk.js",
+    "static/js/2.728e446a.chunk.js.map": "/static/js/2.728e446a.chunk.js.map",
     "index.html": "/index.html",
     "static/css/main.75d8ed32.chunk.css.map": "/static/css/main.75d8ed32.chunk.css.map",
-    "static/js/2.1abe927c.chunk.js.LICENSE.txt": "/static/js/2.1abe927c.chunk.js.LICENSE.txt",
+    "static/js/2.728e446a.chunk.js.LICENSE.txt": "/static/js/2.728e446a.chunk.js.LICENSE.txt",
     "static/media/AddProfile.4fbe8ef9.png": "/static/media/AddProfile.4fbe8ef9.png",
     "static/media/Avid Traveler.png": "/static/media/Avid Traveler.153391f9.png",
     "static/media/Fitness Freak.46faf880.png": "/static/media/Fitness Freak.46faf880.png",
@@ -22,8 +22,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.6649c910.js",
-    "static/js/2.1abe927c.chunk.js",
+    "static/js/2.728e446a.chunk.js",
     "static/css/main.75d8ed32.chunk.css",
-    "static/js/main.d01bf669.chunk.js"
+    "static/js/main.56279d5a.chunk.js"
   ]
 }
