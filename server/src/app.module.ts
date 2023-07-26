@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
@@ -15,6 +15,8 @@ import { QuestionModule } from './question/question.module';
 import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
 import { LangchainModule } from './langchain/langchain.module';
 import { V1Module } from './api/v1/v1.module';
+import { MulterMiddleware } from './api/v1/middleware/multer';
+import { V1Controller } from './api/v1/v1.controller';
 
 @Module({
   imports: [
@@ -36,4 +38,10 @@ import { V1Module } from './api/v1/v1.module';
   ],
   controllers: [ServiceCustomerController],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(MulterMiddleware)
+      .forRoutes(V1Controller);
+  }
+}
