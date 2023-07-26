@@ -223,7 +223,7 @@ model Role {
   id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
   name                      String
   defaultPermissionsIDs     String[]                    @db.ObjectId
-  defaultPermissions        Permission[]                @relation(fields: [defaultPermissionsIDs], references: [id])
+  // defaultPermissions        Permission[]                @relation(fields: [defaultPermissionsIDs], references: [id])
   userRolePermissionMapping userRolePermissionMapping[]
   created_at                DateTime                    @default(now())
   updated_at                DateTime                    @updatedAt
@@ -231,26 +231,27 @@ model Role {
   @@unique([name])
 }
 
-model Permission {
-  id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
-  name                      String
-  defaultRolesIDs           String[]                    @db.ObjectId
-  defaultRoles              Role[]                      @relation(fields: [defaultRolesIDs], references: [id])
-  userRolePermissionMapping userRolePermissionMapping[]
-  created_at                DateTime                    @default(now())
-  updated_at                DateTime                    @updatedAt
-}
+// model Permission {
+//   id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
+//   name                      String
+//   defaultRolesIDs           String[]                    @db.ObjectId
+//   defaultRoles              Role[]                      @relation(fields: [defaultRolesIDs], references: [id])
+//   userRolePermissionMapping userRolePermissionMapping[]
+//   created_at                DateTime                    @default(now())
+//   updated_at                DateTime                    @updatedAt
+// }
 
 model userRolePermissionMapping {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  roleId       String     @db.ObjectId
-  role         Role       @relation(fields: [roleId], references: [id])
-  permissionId String     @db.ObjectId
-  permission   Permission @relation(fields: [permissionId], references: [id])
-  userId       String     @db.ObjectId
-  user         User       @relation(fields: [userId], references: [id])
-  created_at   DateTime   @default(now())
-  updated_at   DateTime   @updatedAt
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  roleId     String   @db.ObjectId
+  role       Role     @relation(fields: [roleId], references: [id])
+  // permissionId String     @db.ObjectId
+  // permission   Permission @relation(fields: [permissionId], references: [id])
+  userId     String   @db.ObjectId
+  user       User     @relation(fields: [userId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  @@unique([userId, roleId, permissionId])
+  // @@unique([userId, roleId, permissionId])
+  @@unique([userId, roleId])
 }

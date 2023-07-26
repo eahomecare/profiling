@@ -7,7 +7,7 @@ export class V1Service {
     constructor(private prisma: PrismaService) { }
 
     async registerAgent(data) {
-        const { staticKey, ID, Name, email, mobile } = data;
+        const { staticKey, ID, name, email, mobile } = data;
 
         if (staticKey !== process.env.HC_STATIC_KEY) {
             throw new Error('Invalid static key');
@@ -66,11 +66,11 @@ export class V1Service {
                 data: {
                     agentID: ID,
                     agentJWT,
-                    agentName: Name,
+                    agentName: name,
                     email,
                     mobile,
                     agentCRM: ['HC'],
-                    hash: '', // You need to generate a hash for password or any other field
+                    hash: '', // Hash needs to be generated when upgrading agent to other roles
                     userRolePermissionMapping: {
                         create: {
                             roleId: agentRole.id,
