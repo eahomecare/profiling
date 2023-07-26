@@ -5,17 +5,23 @@ import {
     HttpStatus,
     Post,
     Res,
-    Req
+    Req,
+    ValidationPipe
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { V1Service } from './v1.service';
+import { RegisterAgentDto } from './dto/register-agent.dto';
 
 @Controller('api/v1')
 export class V1Controller {
     constructor(private readonly v1Service: V1Service) { }
 
     @Post('/register')
-    async registerAgent(@Req() request: Request, @Body() body, @Res() res: Response) {
+    async registerAgent(
+        @Req() request: Request,
+        @Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) registerAgentDto: RegisterAgentDto,
+        @Res() res: Response
+    ) {
         try {
             const authorizationHeader = request.headers.authorization;
             if (!authorizationHeader)
@@ -27,20 +33,24 @@ export class V1Controller {
 
             const staticKey = Buffer.from(encodedStaticKey, 'base64').toString();
 
-            const { ID, name, email, mobile } = body;
-            if (!(ID && name && email && mobile))
-                throw new HttpException('Missing fields in request body', HttpStatus.BAD_REQUEST)
-
-            const data = { ID, name, email, mobile, staticKey };
+            const data = { ...registerAgentDto, staticKey };
             const msg = await this.v1Service.registerAgent(data);
 
-            res.status(HttpStatus.CREATED).json(msg);
+            res.status(HttpStatus.CREATED).json({ ...msg, success: true });
         } catch (error) {
+            let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+            let message = 'Internal server error';
+
             if (error instanceof HttpException) {
-                throw error;
-            } else {
-                throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+                statusCode = error.getStatus();
+                message = error.message;
             }
+
+            res.status(statusCode).json({
+                success: false,
+                status: statusCode,
+                message: message
+            });
         }
     }
 }
