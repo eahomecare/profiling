@@ -12,7 +12,12 @@ datasource db {
 
 model User {
   id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
+  agentID                   String?                     @unique
+  agentJWT                  String?                     @unique
+  agentCRM                  String[]
+  agentName                 String?
   email                     String                      @unique
+  mobile                    String?                     @unique
   hash                      String
   created_at                DateTime                    @default(now())
   userRolePermissionMapping userRolePermissionMapping[]
