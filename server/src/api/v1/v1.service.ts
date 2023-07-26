@@ -25,7 +25,12 @@ export class V1Service {
                 );
 
                 if (isAgent) {
-                    throw new BadRequestException('Agent already exists');
+                    // throw new BadRequestException('Agent already exists');
+                    return {
+                        status: 200,
+                        message: 'Agent already exists',
+                        agentAuthenticationKey: existingUser.agentJWT,
+                    }
                 } else {
                     const agentRole = await this.prisma.role.findUnique({
                         where: { name: 'agent' },
