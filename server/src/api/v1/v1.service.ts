@@ -25,7 +25,6 @@ export class V1Service {
                 );
 
                 if (isAgent) {
-                    // throw new BadRequestException('Agent already exists');
                     return {
                         status: 200,
                         message: 'Agent already exists',
@@ -37,7 +36,11 @@ export class V1Service {
                     });
 
                     if (!agentRole) {
-                        throw new NotFoundException('Agent role not found');
+                        await this.prisma.role.create({
+                            data: {
+                                name: 'agent'
+                            }
+                        })
                     }
 
                     const agentJWT = jwt.sign(data, process.env.JWT_SECRET);
