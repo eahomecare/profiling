@@ -14,6 +14,8 @@ import { ServiceCustomerController } from './service-customer/service-customer.c
 import { QuestionModule } from './question/question.module';
 import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
 import { LangchainModule } from './langchain/langchain.module';
+import { ApiModule } from './api/api.module';
+import { V1Module } from './api/v1/v1.module';
 
 @Module({
   imports: [
@@ -29,7 +31,9 @@ import { LangchainModule } from './langchain/langchain.module';
     ProfileModule,
     QuestionModule,
     ProfileMappingModule,
-    LangchainModule
+    LangchainModule,
+    ApiModule,
+    V1Module
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
