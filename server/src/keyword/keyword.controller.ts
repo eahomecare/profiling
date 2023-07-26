@@ -250,6 +250,7 @@ export class KeywordController {
           }
         } else {
 
+          //@ts-ignore
           const newKeyword: Keyword = {
             id: undefined,
             value: idOrValue,
