@@ -70,7 +70,12 @@ export class V1Service {
                 });
 
                 if (!agentRole) {
-                    throw new NotFoundException('Agent role not found');
+                    await this.prisma.role.create({
+                        data: {
+                            name: 'agent'
+                        }
+                    })
+                    return
                 }
 
                 const agentJWT = jwt.sign(data, process.env.JWT_SECRET);
