@@ -14,7 +14,7 @@ export class RegisterAgentDto {
     email: string;
 
     @IsNotEmpty({ message: "Mobile number should not be blank" })
-    @IsPhoneNumber({ message: "Mobile number should be a 10 digit number" })
     @IsNumberStartingWith6789({ message: "Mobile number should start with 6, 7, 8, or 9" })
+    @IsPhoneNumber({ message: "Mobile number should be a 10 digit number" })
     mobile: string;
 }

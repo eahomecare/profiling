@@ -9,7 +9,7 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
             options: validationOptions,
             validator: {
                 validate(value: any, args: ValidationArguments) {
-                    const re = /^[6-9]\d{9}$/;
+                    const re = /^\d{10}$/;
                     return typeof value === 'string' && re.test(value);
                 },
                 defaultMessage(args: ValidationArguments) {
