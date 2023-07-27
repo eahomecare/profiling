@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsNumberString, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
+import { IsPhoneNumber, IsNumberStartingWith6789 } from '../decorators/isPhoneNumber.decorator';
 
 export class RegisterAgentDto {
     @IsNotEmpty({ message: "ID should not be blank" })
@@ -8,10 +9,12 @@ export class RegisterAgentDto {
     @Matches(/^[a-zA-Z\s]*$/, { message: "Name should not have numbers" })
     name: string;
 
+    @IsNotEmpty({ message: "Email should not be blank" })
     @IsEmail({}, { message: "Invalid email" })
     email: string;
 
-    @IsNumberString({}, { message: "Mobile number should be digits only" })
-    @Matches(/^[6-9]\d{9}$/, { message: "Mobile number should be a 10 digit number that starts with 6,7,8, or 9" })
+    @IsNotEmpty({ message: "Mobile number should not be blank" })
+    @IsPhoneNumber({ message: "Mobile number should be a 10 digit number" })
+    @IsNumberStartingWith6789({ message: "Mobile number should start with 6, 7, 8, or 9" })
     mobile: string;
 }
