@@ -33,8 +33,8 @@ export class V1Controller {
     ) {
         try {
             const staticKey = this.authorizationService.validateAndDecodeStaticKey(request);
-
-            const data = { ...registerAgentDto, staticKey };
+            const crmName = this.authorizationService.validateCrm(staticKey);
+            const data = { ...registerAgentDto, staticKey, crmName };
             const msg = await this.registerAgentService.registerAgent(data);
 
             res.status(HttpStatus.CREATED).json({ ...msg, success: true });
