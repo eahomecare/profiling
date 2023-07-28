@@ -24,6 +24,7 @@ model User {
   updated_at                DateTime                    @updatedAt
   created_by                String?
   updated_by                String?
+  UserAgentSessionMapping   UserAgentSessionMapping[]
 
   @@map("users")
 }
@@ -254,4 +255,28 @@ model userRolePermissionMapping {
   updated_at   DateTime   @updatedAt
 
   @@unique([userId, roleId, permissionId])
+}
+
+model AgentSession {
+  id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
+  CRM                     String // name of the CRM infered from the static key
+  authorizationToken      String
+  userAgentSessionMapping UserAgentSessionMapping[]
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @updatedAt
+
+  @@map("agentSessions")
+}
+
+model UserAgentSessionMapping {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @db.ObjectId
+  user       User         @relation(fields: [userId], references: [id])
+  sessionId  String       @db.ObjectId
+  session    AgentSession @relation(fields: [sessionId], references: [id])
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+
+  @@unique([userId, sessionId])
+  @@map("userAgentSessionMappings")
 }
