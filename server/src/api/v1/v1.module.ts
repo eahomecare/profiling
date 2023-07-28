@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { V1Controller } from './v1.controller';
-import { V1Service } from './v1.service';
-import { AgentSessionService } from './agent-session.service';
+import { RegisterAgentService } from './registerAgent.service';
+import { CreateAgentSessionService } from './createAgentSession.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { AuthorizationService } from './authorization.service';
 
 @Module({
+  imports: [ConfigModule],
   controllers: [V1Controller],
-  providers: [V1Service, AgentSessionService]
+  providers: [RegisterAgentService, CreateAgentSessionService, PrismaService, AuthorizationService],
 })
 export class V1Module { }
