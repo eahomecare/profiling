@@ -6,7 +6,7 @@ import { CreateAgentSessionDto } from './dto/agent-session.dto';
 import { sign } from 'jsonwebtoken';
 
 @Injectable()
-export class AgentSessionService {
+export class CreateAgentSessionService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
