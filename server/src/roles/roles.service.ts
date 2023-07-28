@@ -13,7 +13,6 @@ export class RolesService {
             });
             return createdRole;
         } catch (error) {
-            // Handle error, e.g., logging, throwing custom exception, etc.
             throw new Error('Failed to create role');
         }
     }
@@ -23,34 +22,7 @@ export class RolesService {
             const roles = await this.prisma.role.findMany();
             return roles;
         } catch (error) {
-            // Handle error, e.g., logging, throwing custom exception, etc.
             throw new Error('Failed to fetch roles');
-        }
-    }
-
-    async findAllRolesOfUser(userId: string): Promise<Role[]> {
-        try {
-            const user = await this.prisma.user.findUnique({
-                where: { id: userId },
-                include: {
-                    userRolePermissionMapping: {
-                        include: {
-                            role: true,
-                        },
-                    },
-                },
-            });
-
-            if (!user) {
-                // Handle case when the user is not found
-                throw new Error('User not found');
-            }
-
-            const roles = user.userRolePermissionMapping.map((mapping) => mapping.role);
-            return roles;
-        } catch (error) {
-            // Handle error, e.g., logging, throwing custom exception, etc.
-            throw new Error('Failed to fetch roles of user');
         }
     }
 
@@ -67,8 +39,24 @@ export class RolesService {
             });
             return roles;
         } catch (error) {
-            // Handle error, e.g., logging, throwing custom exception, etc.
             throw new Error('Failed to fetch roles by userId');
+        }
+    }
+
+    async findUsersByRoleId(roleId: string): Promise<any[]> {
+        try {
+            const users = await this.prisma.user.findMany({
+                where: {
+                    userRolePermissionMapping: {
+                        some: {
+                            roleId,
+                        },
+                    },
+                },
+            });
+            return users;
+        } catch (error) {
+            throw new Error('Failed to fetch users by roleId');
         }
     }
 }
