@@ -26,30 +26,6 @@ export class PermissionsService {
     }
   }
 
-  async findAllPermissionsOfUser(userId: string): Promise<Permission[]> {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: { id: userId },
-        include: {
-          userRolePermissionMapping: {
-            include: {
-              permission: true,
-            },
-          },
-        },
-      });
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      const permissions = user.userRolePermissionMapping.map((mapping) => mapping.permission);
-      return permissions;
-    } catch (error) {
-      throw new Error('Failed to fetch permissions of user');
-    }
-  }
-
   async findPermissionsByUserId(userId: string): Promise<Permission[]> {
     try {
       const permissions = await this.prisma.permission.findMany({
@@ -64,6 +40,23 @@ export class PermissionsService {
       return permissions;
     } catch (error) {
       throw new Error('Failed to fetch permissions by userId');
+    }
+  }
+
+  async findUsersByPermissionId(permissionId: string): Promise<any[]> {
+    try {
+      const users = await this.prisma.user.findMany({
+        where: {
+          userRolePermissionMapping: {
+            some: {
+              permissionId,
+            },
+          },
+        },
+      });
+      return users;
+    } catch (error) {
+      throw new Error('Failed to fetch users by permissionId');
     }
   }
 }
