@@ -2,22 +2,19 @@ import { Injectable, NotFoundException, BadRequestException, InternalServerError
 import { PrismaService } from '../../prisma/prisma.service';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { AuthorizationService } from './authorization.service';
 
 @Injectable()
 export class RegisterAgentService {
     constructor(
         private prisma: PrismaService,
         private configService: ConfigService,
+        private authorizationService: AuthorizationService
     ) { }
 
     async registerAgent(data) {
         const { staticKey, ID, name, email, mobile } = data;
-
-        const HC_STATIC_KEY = this.configService.get('HC_STATIC_KEY');
-
-        if (staticKey !== HC_STATIC_KEY) {
-            throw new BadRequestException('Invalid static key');
-        }
+        const crmName = this.authorizationService.validateCrm(staticKey);
 
         try {
             const existingUser = await this.prisma.user.findUnique({
@@ -31,6 +28,17 @@ export class RegisterAgentService {
                 );
 
                 if (isAgent) {
+                    if (!existingUser.agentCRM.includes(crmName)) {
+                        await this.prisma.user.update({
+                            where: { id: existingUser.id },
+                            data: {
+                                agentCRM: {
+                                    set: [...existingUser.agentCRM, crmName],
+                                },
+                            },
+                        });
+                    }
+
                     return {
                         status: 200,
                         message: 'Agent already exists',
@@ -56,7 +64,9 @@ export class RegisterAgentService {
                         where: { id: existingUser.id },
                         data: {
                             agentJWT,
-                            agentCRM: ['HC'],
+                            agentCRM: {
+                                set: [crmName],
+                            },
                             userRolePermissionMapping: {
                                 create: {
                                     roleId: agentRole.id,
@@ -94,7 +104,9 @@ export class RegisterAgentService {
                         agentName: name,
                         email,
                         mobile,
-                        agentCRM: ['HC'],
+                        agentCRM: {
+                            set: [crmName],
+                        },
                         hash: '', // Hash needs to be generated when upgrading agent to other roles
                         userRolePermissionMapping: {
                             create: {
