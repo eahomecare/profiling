@@ -19,6 +19,7 @@ import { MulterMiddleware } from './api/v1/middleware/multer';
 import { V1Controller } from './api/v1/v1.controller';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     V1Module,
     RolesModule,
     PermissionsModule,
+    UserRolePermissionMappingModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
