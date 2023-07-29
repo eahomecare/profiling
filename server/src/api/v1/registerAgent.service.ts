@@ -66,12 +66,7 @@ export class RegisterAgentService {
                             agentJWT,
                             agentCRM: {
                                 set: [crmName],
-                            },
-                            userRolePermissionMapping: {
-                                create: {
-                                    roleId: agentRole.id,
-                                },
-                            },
+                            }
                         },
                     });
 
@@ -108,11 +103,6 @@ export class RegisterAgentService {
                             set: [crmName],
                         },
                         hash: '', // Hash needs to be generated when upgrading agent to other roles
-                        userRolePermissionMapping: {
-                            create: {
-                                roleId: agentRole.id,
-                            },
-                        },
                     },
                 });
 
