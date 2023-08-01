@@ -81,20 +81,20 @@ model Keyword {
   questions      Question[]    @relation(fields: [questionIDs], references: [id])
   profileTypeIDs String[]      @db.ObjectId
   profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt
+  // created_at     DateTime      @default(now())
+  // updated_at     DateTime      @updatedAt
 
   @@unique([value, category])
   @@map("keywords")
 }
 
 model Occupation {
-  id         String                      @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  industry   String
-  customers  OccupationCustomerMapping[]
-  created_at DateTime                    @default(now())
-  updated_at DateTime                    @updatedAt
+  id        String                      @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  industry  String
+  customers OccupationCustomerMapping[]
+  // created_at DateTime                    @default(now())
+  // updated_at DateTime                    @updatedAt
 
   @@map("occupations")
 }
@@ -117,8 +117,8 @@ model Vehicle {
   name        String
   productType String
   customers   VehicleCustomerMapping[]
-  created_at  DateTime                 @default(now())
-  updated_at  DateTime                 @updatedAt
+  // created_at  DateTime                 @default(now())
+  // updated_at  DateTime                 @updatedAt
 
   @@map("vehicles")
 }
@@ -150,8 +150,8 @@ model Question {
   keywords       Keyword[]     @relation(fields: [keywordIDs], references: [id])
   profileTypeIDs String[]      @db.ObjectId
   profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt
+  // created_at     DateTime      @default(now())
+  // updated_at     DateTime      @updatedAt
 
   @@unique([question])
   @@map("questions")
@@ -169,8 +169,8 @@ model ProfileType {
   customers    ProfileTypeCustomerMapping[]
   serviceIDs   String[]                     @db.ObjectId
   services     Service[]                    @relation(fields: [serviceIDs], references: [id])
-  created_at   DateTime                     @default(now())
-  updated_at   DateTime                     @updatedAt
+  // created_at   DateTime                     @default(now())
+  // updated_at   DateTime                     @updatedAt
 
   @@unique([name])
   @@map("profile_types")
@@ -195,8 +195,8 @@ model Service {
   profileTypeIDs              String[]                      @db.ObjectId
   profile_types               ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
   ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
-  created_at                  DateTime                      @default(now())
-  updated_at                  DateTime                      @updatedAt
+  // created_at                  DateTime                      @default(now())
+  // updated_at                  DateTime                      @updatedAt
 
   @@unique([name])
   @@map("services")
@@ -226,8 +226,8 @@ model Role {
   defaultPermissionsIDs     String[]                    @db.ObjectId
   // defaultPermissions        Permission[]                @relation(fields: [defaultPermissionsIDs], references: [id])
   userRolePermissionMapping userRolePermissionMapping[]
-  created_at                DateTime                    @default(now())
-  updated_at                DateTime                    @updatedAt
+  // created_at                DateTime                    @default(now())
+  // updated_at                DateTime                    @updatedAt
 
   @@unique([name])
 }

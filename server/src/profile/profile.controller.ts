@@ -58,9 +58,12 @@ export class ProfileController {
         profileCompletion[customer.id] = completionPercentage;
       }
 
+      console.log(profileCompletion);
+
+
       return { profileCompletion };
     } catch (error) {
-      // Handle error
+      console.log(error);
     } finally {
       await this.prisma.$disconnect();
     }
