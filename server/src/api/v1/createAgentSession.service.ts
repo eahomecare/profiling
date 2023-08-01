@@ -42,7 +42,7 @@ export class CreateAgentSessionService {
                     where: { id: existingSession.sessionId },
                 });
 
-                throw new UnauthorizedException('Existing session found and destroyed');
+                // throw new UnauthorizedException('Existing session found and destroyed');
             }
         }
 
