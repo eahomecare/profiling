@@ -88,7 +88,7 @@ export const customerSlice = createSlice({
       state.status = "success";
 
       const updatedCustomers = state.customers.map((customer) => {
-        const profileCompletion = action.payload.profileCompletion[customer.id] || 0;
+        const profileCompletion = action.payload.profileCompletion ? action.payload.profileCompletion[customer.id] : 0;
         return {
           ...customer,
           profile_completion: profileCompletion,
