@@ -103,7 +103,7 @@ const DashboardNavbar = ({ opened, setOpened }) => {
                 </Card>
 
                 <Navbar.Section>
-                    <NavLink icon={<IconArrowNarrowLeft />} component={Link} variant="subtle" to='/customers' label={'Go Back'} rightSection />
+                    <NavLink icon={<IconArrowNarrowLeft />} component={Link} variant="subtle" to='/' label={'Go Back'} rightSection />
                 </Navbar.Section>
             </Stack>
         </Navbar >
