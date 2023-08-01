@@ -6,7 +6,9 @@ import {
     Post,
     Res,
     Req,
-    ValidationPipe
+    ValidationPipe,
+    UnauthorizedException,
+    Delete
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RegisterAgentDto } from './dto/register-agent.dto';
@@ -15,6 +17,9 @@ import { CreateAgentSessionDto } from './dto/agent-session.dto';
 import { RegisterAgentService } from './registerAgent.service';
 import { CreateAgentSessionService } from './createAgentSession.service';
 import { AuthorizationService } from './authorization.service';
+import { LogoutAgentService } from './logoutAgent.service';
+import { ValidateAgentTokenService } from './validateAgentToken.service';
+import { ValidateAgentTokenDto } from './dto/validate-agent-token.dto';
 
 @Controller('api/v1')
 export class V1Controller {
@@ -22,7 +27,9 @@ export class V1Controller {
         private readonly registerAgentService: RegisterAgentService,
         private readonly createAgentSessionService: CreateAgentSessionService,
         private readonly configService: ConfigService,
-        private readonly authorizationService: AuthorizationService
+        private readonly authorizationService: AuthorizationService,
+        private readonly logoutAgentService: LogoutAgentService,
+        private readonly validateAgentTokenService: ValidateAgentTokenService,
     ) { }
 
     @Post('/register')
@@ -57,6 +64,42 @@ export class V1Controller {
             const result = await this.createAgentSessionService.create(createAgentSessionDto, crmName);
 
             res.status(HttpStatus.OK).json({ success: true, ...result });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
+
+    @Delete('/logout')
+    async logoutAgent(
+        @Req() request: Request,
+        @Res() res: Response
+    ) {
+        try {
+            const staticKey = this.authorizationService.validateAndDecodeStaticKey(request);
+            const crmName = this.authorizationService.validateCrm(staticKey);
+
+            const authorizationToken = request.body.agentAuthorizationToken;
+            if (!authorizationToken) {
+                throw new UnauthorizedException('Invalid authorization token');
+            }
+
+            const result = await this.logoutAgentService.logout(authorizationToken, crmName);
+
+            res.status(HttpStatus.OK).json({ success: true, ...result });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
+
+    @Post('/validate')
+    async validateAgentToken(
+        @Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) ValidateAgentTokenDto: ValidateAgentTokenDto,
+        @Res() res: Response
+    ) {
+        console.log('token', ValidateAgentTokenDto)
+        try {
+            const result = await this.validateAgentTokenService.validate(ValidateAgentTokenDto.agentAuthorizationToken);
+            res.status(HttpStatus.OK).json(result);
         } catch (error) {
             this.handleException(error, res);
         }
