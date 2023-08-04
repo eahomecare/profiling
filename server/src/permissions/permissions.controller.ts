@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { Permission, Prisma } from '@prisma/client';
 
@@ -24,5 +24,13 @@ export class PermissionsController {
     @Get('users/:userId')
     async getPermissionsByUserId(@Param('userId') userId: string): Promise<Permission[]> {
         return this.permissionsService.findPermissionsByUserId(userId);
+    }
+
+    @Patch('update_roles/:permissionId')
+    async updateDefaultRoles(
+        @Param('permissionId') permissionId: string,
+        @Body('roleIds') roleIds: string[],
+    ): Promise<Permission> {
+        return this.permissionsService.updateDefaultRoles(permissionId, roleIds);
     }
 }

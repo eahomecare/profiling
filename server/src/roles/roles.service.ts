@@ -4,7 +4,9 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RolesService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService
+    ) { }
 
     async create(data: Prisma.RoleCreateInput): Promise<Role> {
         try {
@@ -59,4 +61,36 @@ export class RolesService {
             throw new Error('Failed to fetch users by roleId');
         }
     }
+
+    async updateDefaultPermissions(roleId: string, permissionIds: string[]): Promise<Role> {
+        try {
+            const updatedRole = await this.prisma.role.update({
+                where: { id: roleId },
+                data: {
+                    defaultPermissionsIDs: { set: permissionIds },
+                },
+                include: {
+                    defaultPermissions: true,
+                },
+            });
+
+            const permissionUpdatePromises = updatedRole.defaultPermissions.map((permission) => {
+                return this.prisma.permission.update({
+                    where: { id: permission.id },
+                    data: {
+                        defaultRolesIDs: {
+                            set: updatedRole.id,
+                        },
+                    },
+                });
+            });
+            await Promise.all(permissionUpdatePromises);
+
+            return updatedRole;
+        } catch (error) {
+            throw new Error('Failed to update role defaultPermissionsIDs');
+        }
+    }
+
+
 }
