@@ -58,6 +58,9 @@ export class ProfileController {
         profileCompletion[customer.id] = completionPercentage;
       }
 
+      console.log(profileCompletion);
+
+
       return { profileCompletion };
     } catch (error) {
       console.log(error);

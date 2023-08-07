@@ -133,6 +133,9 @@ export default function Login() {
                                         <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
                                             {status === "loading" ? <>Signing in</> : <>Sign in</>}
                                         </Button>
+                                        
+                                        {status === "failed" && <Text style={{color:"red",padding:"10px"}}>Incorrect credentials !</Text>}
+
                                     </Card>
                                 </Stack>
                             </Center>
