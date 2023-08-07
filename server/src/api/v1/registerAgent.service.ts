@@ -4,6 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { AuthorizationService } from './authorization.service';
 
+ 
+
 @Injectable()
 export class RegisterAgentService {
     constructor(
@@ -12,9 +14,13 @@ export class RegisterAgentService {
         private authorizationService: AuthorizationService
     ) { }
 
+ 
+
     async registerAgent(data) {
         const { staticKey, ID, name, email, mobile } = data;
         const crmName = this.authorizationService.validateCrm(staticKey);
+
+ 
 
         try {
             const existingUser = await this.prisma.user.findUnique({
@@ -22,10 +28,14 @@ export class RegisterAgentService {
                 include: { userRolePermissionMapping: { include: { role: true } } },
             });
 
+ 
+
             if (existingUser) {
                 const isAgent = existingUser.userRolePermissionMapping.some(
                     (userRole) => userRole.role.name === 'agent',
                 );
+
+ 
 
                 if (isAgent) {
                     if (!existingUser.agentCRM.includes(crmName)) {
@@ -39,6 +49,8 @@ export class RegisterAgentService {
                         });
                     }
 
+ 
+
                     return {
                         status: 200,
                         message: 'Agent already exists',
@@ -49,6 +61,8 @@ export class RegisterAgentService {
                         where: { name: 'agent' },
                     });
 
+ 
+
                     if (!agentRole) {
                         await this.prisma.role.create({
                             data: {
@@ -57,8 +71,12 @@ export class RegisterAgentService {
                         })
                     }
 
+ 
+
                     const JWT_SECRET = this.configService.get('JWT_SECRET');
                     const agentJWT = jwt.sign(data, JWT_SECRET);
+
+ 
 
                     await this.prisma.user.update({
                         where: { id: existingUser.id },
@@ -66,9 +84,16 @@ export class RegisterAgentService {
                             agentJWT,
                             agentCRM: {
                                 set: [crmName],
-                            }
+                            },
+                            userRolePermissionMapping: {
+                                create: {
+                                    roleId: agentRole.id,
+                                },
+                            },
                         },
                     });
+
+ 
 
                     return {
                         status: 201,
@@ -81,6 +106,8 @@ export class RegisterAgentService {
                     where: { name: 'agent' },
                 });
 
+ 
+
                 if (!agentRole) {
                     await this.prisma.role.create({
                         data: {
@@ -89,8 +116,12 @@ export class RegisterAgentService {
                     })
                 }
 
+ 
+
                 const JWT_SECRET = this.configService.get('JWT_SECRET');
                 const agentJWT = jwt.sign(data, JWT_SECRET);
+
+ 
 
                 const newUser = await this.prisma.user.create({
                     data: {
@@ -103,8 +134,15 @@ export class RegisterAgentService {
                             set: [crmName],
                         },
                         hash: '', // Hash needs to be generated when upgrading agent to other roles
+                        userRolePermissionMapping: {
+                            create: {
+                                roleId: agentRole.id,
+                            },
+                        },
                     },
                 });
+
+ 
 
                 return {
                     status: 201,
