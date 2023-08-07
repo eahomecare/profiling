@@ -60,7 +60,9 @@ export class ProfileController {
 
       return { profileCompletion };
     } catch (error) {
-      // Handle error
+      console.log(error);
+      throw new Error('Failed to fetch profiles');
+
     } finally {
       await this.prisma.$disconnect();
     }
