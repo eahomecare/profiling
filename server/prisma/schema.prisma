@@ -28,7 +28,6 @@ model User {
   roleIds                   String[]                    @db.ObjectId
   role                      Role[]                      @relation(fields: [roleIds], references: [id])
 
-
   @@map("users")
 }
 
@@ -234,7 +233,6 @@ model Role {
   created_at                DateTime                    @default(now())
   updated_at                DateTime                    @updatedAt
 
-
   @@unique([name])
 }
 
@@ -261,31 +259,6 @@ model userRolePermissionMapping {
   updated_at   DateTime   @updatedAt
 
   @@unique([userId, roleId, permissionId])
-}
-
-model AgentSession {
-  id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
-  CRM                     String // name of the CRM infered from the static key
-  authorizationToken      String
-  userAgentSessionMapping UserAgentSessionMapping[]
-  created_at              DateTime                  @default(now())
-  updated_at              DateTime                  @updatedAt
-
-  @@unique([authorizationToken])
-  @@map("agentSessions")
-}
-
-model UserAgentSessionMapping {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String       @db.ObjectId
-  user       User         @relation(fields: [userId], references: [id])
-  sessionId  String       @db.ObjectId
-  session    AgentSession @relation(fields: [sessionId], references: [id])
-  created_at DateTime     @default(now())
-  updated_at DateTime     @updatedAt
-
-  @@unique([userId, sessionId])
-  @@map("userAgentSessionMappings")
 }
 
 model AgentSession {
