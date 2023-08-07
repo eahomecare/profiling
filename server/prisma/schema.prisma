@@ -269,7 +269,6 @@ model AgentSession {
   created_at              DateTime                  @default(now())
   updated_at              DateTime                  @updatedAt
 
-  @@unique([authorizationToken])
   @@map("agentSessions")
 }
 
