@@ -25,15 +25,17 @@ export class RegisterAgentService {
         try {
             const existingUser = await this.prisma.user.findUnique({
                 where: { email },
-                include: { userRolePermissionMapping: { include: { role: true } } },
+                include: { role: true },
             });
 
-
-
             if (existingUser) {
-                const isAgent = existingUser.userRolePermissionMapping.some(
-                    (userRole) => userRole.role.name === 'agent',
-                );
+                let isAgent = false;
+                for (const userRole of existingUser.role) {
+                    if (userRole.name === 'agent') {
+                        isAgent = true;
+                        break;
+                    }
+                }
 
 
 
@@ -85,11 +87,6 @@ export class RegisterAgentService {
                             agentCRM: {
                                 set: [crmName],
                             },
-                            // userRolePermissionMapping: {
-                            //     create: {
-                            //         roleId: agentRole.id,
-                            //     },
-                            // },
                         },
                     });
 
@@ -103,20 +100,8 @@ export class RegisterAgentService {
                 }
             } else {
                 const agentRole = await this.prisma.role.findUnique({
-                    where: { name: 'agent' },
+                    where: { name: 'agent' }, include: { defaultPermissions: true },
                 });
-
-
-
-                if (!agentRole) {
-                    await this.prisma.role.create({
-                        data: {
-                            name: 'agent'
-                        }
-                    })
-                }
-
-
 
                 const JWT_SECRET = this.configService.get('JWT_SECRET');
                 const agentJWT = jwt.sign(data, JWT_SECRET);
@@ -130,17 +115,25 @@ export class RegisterAgentService {
                         agentName: name,
                         email,
                         mobile,
+                        roleIds: agentRole.id,
                         agentCRM: {
                             set: [crmName],
                         },
                         hash: '', // Hash needs to be generated when upgrading agent to other roles
-                        // userRolePermissionMapping: {
-                        //     create: {
-                        //         roleId: agentRole.id,
-                        //     },
-                        // },
+
                     },
                 });
+
+                const userRolePermissionMappingData = agentRole.defaultPermissions.map((permission) => ({
+                    roleId: agentRole.id,
+                    userId: newUser.id,
+                    permissionId: permission.id
+                }));
+
+                await this.prisma.userRolePermissionMapping.createMany({
+                    data: userRolePermissionMappingData,
+                });
+
 
 
 
