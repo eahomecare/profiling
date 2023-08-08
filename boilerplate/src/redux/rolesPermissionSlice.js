@@ -74,7 +74,7 @@ export const rolesPermissionSlice = createSlice({
     },
     [getAllRolesPermissionsMappings.fulfilled]: (state, action) => {
       state.rolesPermissionsStatus = "success";
-      state.rolesPermissions = action.payload.data;
+      state.rolesPermissions = action.payload;
     },
     [getAllRolesPermissionsMappings.rejected]: (state, action) => {
       state.rolesPermissionsStatus = "failed";

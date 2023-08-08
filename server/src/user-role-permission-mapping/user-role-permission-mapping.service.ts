@@ -19,7 +19,13 @@ export class UserRolePermissionMappingService {
 
     async findAll(): Promise<userRolePermissionMapping[]> {
         try {
-            const mappings = await this.prisma.userRolePermissionMapping.findMany();
+            const mappings = await this.prisma.userRolePermissionMapping.findMany({
+                include: {
+                    role: true,
+                    user: true,
+                    permission: true,
+                },
+            });
             return mappings;
         } catch (error) {
             throw new Error('Failed to fetch userRolePermissionMappings');
