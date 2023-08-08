@@ -2,31 +2,57 @@ import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Nav
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
-import { getCustomers, getCustomersProfileCompleteness } from "../../redux/customerSlice"
+import { getCustomers ,getCustomersProfileCompleteness} from "../../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay"
-import { Link } from "react-router-dom";
+import { EditableTable } from "../../components/EditableTable/EditableTable"
+import { getAllRolesPermissionsMappings } from "../../redux/rolesPermissionSlice"
 
 
 
-const Customers = () => {
+
+const title = "list of all permissions"
+
+
+const Acl = () => { 
+
+    const headerData = [ 'rolename', 'permissionname', 'username', 'isactive', 'created_at'];
+
+
+    const createEmptyRow = () => ({
+        id: '',
+        rolename: '',
+        permissionname: '',
+        username: '',
+        isactive: '',
+        created_at: ''
+    });
 
 
     const dispatch = useDispatch();
 
-    const { status, customers, fetchedPofileCompleteness } = useSelector(state => state.customer);
-
-    // if(Array.isArray(customers) && customers.length > 0) setCustomerList(customers)
+    const { rolesPermissionsStatus, rolesPermissions } = useSelector(state => state.rolePermission);
 
     useEffect(() => {
-        dispatch(getCustomers());
-        dispatch(getCustomersProfileCompleteness())
-    }, []);
+        dispatch(getAllRolesPermissionsMappings());
+      }, []);
 
 
 
 
-    if (status === 'loading') {
+    const initialData = rolesPermissions.map((data) => ({
+        id: data.id,
+        rolename: data.role.name,
+        permissionname: data.permission.name,
+        username: data.user.email,
+        isactive: data.isActive?"active":"inactive",
+        created_at: data.created_at,
+    }));
+
+
+
+
+    if (rolesPermissionsStatus === 'loading') {
         return (
             <LoadingOverlay visible overlayBlur={2}
                 loaderProps={{
@@ -36,7 +62,7 @@ const Customers = () => {
             />
         )
     }
-    else {
+    else { 
         return (
             <>
                 <Header height={{ base: 50, md: 70 }} p="md" withBorder={false} m={'md'}>
@@ -73,11 +99,7 @@ const Customers = () => {
                         <Navbar width={{ base: 50 }} height={500} p="xs" withBorder={false}>
                             <Space h={5} />
                             <Stack>
-                                <Link to="/acl">
-                                    <ActionIcon variant="subtle" c="cyan">
-                                        <IconSettings size="1rem" />
-                                    </ActionIcon>
-                                </Link>
+                                <ActionIcon variant="subtle" c='cyan'><IconSettings size="1rem" /></ActionIcon>
                                 <ActionIcon variant="subtle" c='cyan'><Icon3dCubeSphere size="1rem" /></ActionIcon>
                                 <ActionIcon variant="subtle" c='cyan'><IconAccessible size="1rem" /></ActionIcon>
                                 <ActionIcon variant="subtle" c='cyan'><IconLayoutAlignBottom size="1rem" /></ActionIcon>
@@ -90,7 +112,7 @@ const Customers = () => {
                         <div style={{ padding: '10px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
                                 <span>
-                                    <Title pl={5}>Customers</Title>
+                                    <Title pl={5}>ACL</Title>
                                 </span>
                                 <span>
                                     <Container>
@@ -113,7 +135,7 @@ const Customers = () => {
                                     </Container>
                                 </span>
                             </div>
-                            <TableDisplay customerList={customers} fetchedPofileCompleteness={fetchedPofileCompleteness} />
+                            <EditableTable title={title} initialData={initialData} headerData={headerData} createEmptyRow={createEmptyRow} />
                         </div>
                     </span>
                 </div>
@@ -122,4 +144,4 @@ const Customers = () => {
     }
 }
 
-export default Customers;
+export default Acl;

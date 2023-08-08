@@ -13,6 +13,7 @@ import { ThemeProvider } from "./ThemeProvider";
 import Login from "./pages/Login/Login";
 import SimulateCall from "./components/AgentPages/MobileSimulation";
 import AgentEntry from "./components/AgentPages/AgentEntry";
+import Acl from "./pages/Acl/Acl";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -45,6 +46,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
           <PrivateRoute path="/" element={<Customers />} />
+          <Route path="/acl" element={<Acl/>}/>
           <Route path="/mobileSimulation" element={<SimulateCall />} />
           <Route path="/agent" element={<AgentEntry />} />
         </Routes>
