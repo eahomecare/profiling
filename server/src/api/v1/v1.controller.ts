@@ -8,7 +8,8 @@ import {
     Req,
     ValidationPipe,
     UnauthorizedException,
-    Delete
+    Delete,
+    Get
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RegisterAgentDto } from './dto/register-agent.dto';
@@ -18,8 +19,10 @@ import { RegisterAgentService } from './registerAgent.service';
 import { CreateAgentSessionService } from './createAgentSession.service';
 import { AuthorizationService } from './authorization.service';
 import { LogoutAgentService } from './logoutAgent.service';
+import { KeywordsService } from './agentKeyword.service';
 import { ValidateAgentTokenService } from './validateAgentToken.service';
 import { ValidateAgentTokenDto } from './dto/validate-agent-token.dto';
+import { KeywordsDto } from './dto/agent-keywords.dto';
 
 @Controller('api/v1')
 export class V1Controller {
@@ -30,6 +33,7 @@ export class V1Controller {
         private readonly authorizationService: AuthorizationService,
         private readonly logoutAgentService: LogoutAgentService,
         private readonly validateAgentTokenService: ValidateAgentTokenService,
+        private readonly keywordsService: KeywordsService,
     ) { }
 
     @Post('/register')
@@ -104,6 +108,30 @@ export class V1Controller {
             this.handleException(error, res);
         }
     }
+
+    @Post('/keywords')
+    async getKeywords(
+        @Req() request: Request,
+        @Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) keywordsDto: KeywordsDto,
+        @Res() res: Response
+    ) {
+        try {
+            const decodedAuthorizationToken = this.authorizationService.decodeAuthorizationToken(request);
+            const agentSession = await this.validateAgentTokenService.validate(decodedAuthorizationToken);
+
+            if (!agentSession) {
+                throw new UnauthorizedException('Invalid authorization token');
+            }
+
+            const mobileNumber = keywordsDto.mobile;
+            const keywords = await this.keywordsService.getKeywordsForMobile(mobileNumber);
+
+            res.status(HttpStatus.OK).json({ success: true, ...keywords });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
+
 
     private handleException(error: any, res: Response) {
         let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
