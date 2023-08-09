@@ -17,6 +17,9 @@ import { LangchainModule } from './langchain/langchain.module';
 import { V1Module } from './api/v1/v1.module';
 import { MulterMiddleware } from './api/v1/middleware/multer';
 import { V1Controller } from './api/v1/v1.controller';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
 
 @Module({
   imports: [
@@ -33,7 +36,10 @@ import { V1Controller } from './api/v1/v1.controller';
     QuestionModule,
     ProfileMappingModule,
     LangchainModule,
-    V1Module
+    V1Module,
+    RolesModule,
+    PermissionsModule,
+    UserRolePermissionMappingModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
