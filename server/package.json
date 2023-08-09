@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "view-keywords": "node db-scripts/view-keywords.js",
+    "transfer-keywords": "node db-scripts/transfer-keywords.js",
+    "delete-keywords": "node db-scripts/delete-keywords.js",
     "prisma:dev:deploy": "npx prisma db push",
     "prisma:test:deploy": "dotenv -e .env.test -- prisma db push",
     "prebuild": "rimraf dist",
@@ -24,6 +27,7 @@
     "test:e2e": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^7.17.12",
     "@nestjs/common": "^9.3.9",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.3.9",

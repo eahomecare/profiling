@@ -8,9 +8,11 @@ import { AuthorizationService } from './authorization.service';
 import { LogoutAgentService } from './logoutAgent.service';
 import { ValidateAgentTokenService } from './validateAgentToken.service';
 import { KeywordsService } from './agentKeyword.service';
+import { SearchService } from 'src/search/search.service';
+import { SearchModule } from 'src/search/search.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, SearchModule],
   controllers: [V1Controller],
   providers: [RegisterAgentService, CreateAgentSessionService, PrismaService, AuthorizationService, LogoutAgentService, ValidateAgentTokenService, KeywordsService],
 })

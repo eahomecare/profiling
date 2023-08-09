@@ -23,6 +23,7 @@ import { KeywordsService } from './agentKeyword.service';
 import { ValidateAgentTokenService } from './validateAgentToken.service';
 import { ValidateAgentTokenDto } from './dto/validate-agent-token.dto';
 import { KeywordsDto } from './dto/agent-keywords.dto';
+import { SearchService } from 'src/search/search.service';
 
 @Controller('api/v1')
 export class V1Controller {
@@ -34,6 +35,7 @@ export class V1Controller {
         private readonly logoutAgentService: LogoutAgentService,
         private readonly validateAgentTokenService: ValidateAgentTokenService,
         private readonly keywordsService: KeywordsService,
+        private readonly searchService: SearchService,
     ) { }
 
     @Post('/register')
@@ -127,6 +129,29 @@ export class V1Controller {
             const keywords = await this.keywordsService.getKeywordsForMobile(mobileNumber);
 
             res.status(HttpStatus.OK).json({ success: true, ...keywords });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
+
+    @Post('/search')
+    async searchKeywords(
+        @Req() request: Request,
+        @Body() searchDto: { term: string, field: 'category' | 'value' | 'both' },
+        @Res() res: Response
+    ) {
+        console.log('body', searchDto)
+        try {
+            const decodedAuthorizationToken = this.authorizationService.decodeAuthorizationToken(request);
+            const agentSession = await this.validateAgentTokenService.validate(decodedAuthorizationToken);
+
+            if (!agentSession) {
+                throw new UnauthorizedException('Invalid authorization token');
+            }
+
+            const results = await this.searchService.autocomplete('keywords', searchDto.term, searchDto.field);
+
+            res.status(HttpStatus.OK).json({ success: true, results });
         } catch (error) {
             this.handleException(error, res);
         }
