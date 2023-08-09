@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -23,4 +24,14 @@ export class UserService {
 
     return user;
   }
+
+  async getAllUsers(): Promise<User[]> {
+    try {
+      const users = await this.prisma.user.findMany();
+      return users;
+    } catch (error) {
+      throw new Error('Failed to fetch users');
+    }
+  }
+
 }
