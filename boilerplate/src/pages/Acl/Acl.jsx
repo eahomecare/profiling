@@ -1,33 +1,49 @@
-import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { Modal, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
-import { getCustomers ,getCustomersProfileCompleteness} from "../../redux/customerSlice"
+import { getCustomers, getCustomersProfileCompleteness } from "../../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay"
 import { EditableTable } from "../../components/EditableTable/EditableTable"
 import { getAllRolesPermissionsMappings } from "../../redux/rolesPermissionSlice"
+import { Table } from "@mantine/core";
+import { createStyles, ScrollArea, rem } from '@mantine/core';
+import { Select } from '@mantine/core';
+import { getUsers } from "../../redux/authSlice"
 
 
 
-
-const title = "list of all permissions"
-
-
-const Acl = () => { 
-
-    const headerData = [ 'rolename', 'permissionname', 'username', 'isactive', 'created_at'];
+const Acl = () => {
 
 
-    const createEmptyRow = () => ({
-        id: '',
-        rolename: '',
-        permissionname: '',
-        username: '',
-        isactive: '',
-        created_at: ''
-    });
 
+    const useStyles = createStyles((theme) => ({
+        header: {
+            position: 'sticky',
+            top: 0,
+            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+            transition: 'box-shadow 150ms ease',
+
+            '&::after': {
+                content: '""',
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderBottom: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[2]
+                    }`,
+            },
+        },
+
+        scrolled: {
+            boxShadow: theme.shadows.sm,
+        },
+    }));
+
+    const { classes, cx } = useStyles();
+    const [scrolled, setScrolled] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -35,7 +51,8 @@ const Acl = () => {
 
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
-      }, []);
+        dispatch(getUsers())
+    }, []);
 
 
 
@@ -45,11 +62,24 @@ const Acl = () => {
         rolename: data.role.name,
         permissionname: data.permission.name,
         username: data.user.email,
-        isactive: data.isActive?"active":"inactive",
+        isactive: data.isActive ? "active" : "inactive",
         created_at: data.created_at,
     }));
 
+    const rows = initialData.map((row) => (
+        <tr key={row.id}>
+            <td>{row.rolename}</td>
+            <td>{row.permissionname}</td>
+            <td>{row.username}</td>
+            <td>{row.isactive}</td>
+            <td>{row.created_at}</td>
+        </tr>
+    ));
 
+
+    const handleAddRoleClick = () => {
+        setIsModalOpen(true); // Open the modal when button is clicked
+    };
 
 
     if (rolesPermissionsStatus === 'loading') {
@@ -62,7 +92,7 @@ const Acl = () => {
             />
         )
     }
-    else { 
+    else {
         return (
             <>
                 <Header height={{ base: 50, md: 70 }} p="md" withBorder={false} m={'md'}>
@@ -118,8 +148,62 @@ const Acl = () => {
                                     <Container>
                                         <Center>
                                             <Flex mt={5}>
-                                                <TextInput w={30} />
-                                                <Text mt={5} ml={5} fw={20}>Items per page</Text>
+                                                <Button
+                                                    variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
+                                                    className="mt-4"
+                                                    onClick={handleAddRoleClick}
+                                                >
+                                                    Assign permissions
+                                                </Button>
+                                                <Modal
+                                                    opened={isModalOpen}
+                                                    onClose={() => setIsModalOpen(false)}
+                                                    title="Assign permissions"
+
+                                                >
+                                                    <br />
+                                                    <Select
+                                                        label="Select user"
+                                                        placeholder="Pick one"
+                                                        data={[
+                                                            { value: 'react', label: 'React' },
+                                                            { value: 'ng', label: 'Angular' },
+                                                            { value: 'svelte', label: 'Svelte' },
+                                                            { value: 'vue', label: 'Vue' },
+                                                        ]}
+                                                    />
+                                                    <Select
+                                                        label="Select role"
+                                                        placeholder="Pick one"
+                                                        data={[
+                                                            { value: 'react', label: 'React' },
+                                                            { value: 'ng', label: 'Angular' },
+                                                            { value: 'svelte', label: 'Svelte' },
+                                                            { value: 'vue', label: 'Vue' },
+                                                        ]}
+                                                    />
+                                                    <Select
+                                                        label="Select permission"
+                                                        placeholder="Pick one"
+                                                        data={[
+                                                            { value: 'react', label: 'React' },
+                                                            { value: 'ng', label: 'Angular' },
+                                                            { value: 'svelte', label: 'Svelte' },
+                                                            { value: 'vue', label: 'Vue' },
+                                                        ]}
+                                                    />
+
+                                                    <br />
+
+                                                    <Button
+                                                        variant="gradient" gradient={{ from: 'indigo', to: 'red' }}
+                                                        className="mt-4"
+                                                        onClick={handleAddRoleClick}
+                                                    >
+                                                        Create
+                                                    </Button>
+
+                                                </Modal>
                                                 <Container mt={5}>
                                                     <Flex>
                                                         <ActionIcon>
@@ -135,7 +219,25 @@ const Acl = () => {
                                     </Container>
                                 </span>
                             </div>
-                            <EditableTable title={title} initialData={initialData} headerData={headerData} createEmptyRow={createEmptyRow} />
+
+                            <div>
+
+
+                                <ScrollArea h={300} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                                    <Table miw={700}>
+                                        <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+                                            <tr>
+                                                <th>Role Name</th>
+                                                <th>Permission Name</th>
+                                                <th>User Email</th>
+                                                <th>Status</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>{rows}</tbody>
+                                    </Table>
+                                </ScrollArea>
+                            </div>
                         </div>
                     </span>
                 </div>
