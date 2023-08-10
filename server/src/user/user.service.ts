@@ -27,7 +27,9 @@ export class UserService {
 
   async getAllUsers(): Promise<User[]> {
     try {
-      const users = await this.prisma.user.findMany();
+      const users = await this.prisma.user.findMany({
+        include: { role: true }
+      });
       return users;
     } catch (error) {
       throw new Error('Failed to fetch users');
