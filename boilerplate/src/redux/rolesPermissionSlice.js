@@ -9,8 +9,12 @@ const initialState = {
   createPermissionStatus: "idle",
   getAllRolesStatus: "idle",
   getAllPermissionsStatus: "idle",
+  permissionsByRoleStatus:"idle",
   roles: [],
   permissions: [],
+  userRoles:[],
+  userPermissions :[],
+  permissionsByRole:[]
 };
 
 export const getAllRolesPermissionsMappings = createAsyncThunk(
@@ -64,10 +68,30 @@ export const getAllPermissions = createAsyncThunk(
   }
 );
 
+
+export const getAllPermissionsByRole = createAsyncThunk(
+  "permissions/byRoleId",
+  async(roleid) => {
+    const {data} = await axios.get("/permissions/roles/"+roleid)
+    return data
+  }
+)
+
 export const rolesPermissionSlice = createSlice({
   name: "rolesPermission",
   initialState,
-  reducers: {},
+  reducers: {
+    getUserRolesPermissionsByMapping:(state,action) => {
+      state.userRoles = []
+      state.userPermissions = []
+      state.rolesPermissions.map(e=>{
+        if(e.userId === action.payload){
+          if (e.role ) state.userRoles.push(e.role)
+          if (e.permission) state.userPermissions.push(e.permission)
+        }
+      })
+    }
+  },
   extraReducers: {
     [getAllRolesPermissionsMappings.pending]: (state, action) => {
       state.rolesPermissionsStatus = "loading";
@@ -75,6 +99,8 @@ export const rolesPermissionSlice = createSlice({
     [getAllRolesPermissionsMappings.fulfilled]: (state, action) => {
       state.rolesPermissionsStatus = "success";
       state.rolesPermissions = action.payload;
+      
+     
     },
     [getAllRolesPermissionsMappings.rejected]: (state, action) => {
       state.rolesPermissionsStatus = "failed";
@@ -126,7 +152,20 @@ export const rolesPermissionSlice = createSlice({
     [getAllPermissions.rejected]: (state, action) => {
       state.getAllPermissionsStatus = "failed";
     },
+    [getAllPermissionsByRole.pending]: (state, action) => {
+      state.permissionsByRoleStatus = "loading";
+    },
+    [getAllPermissionsByRole.fulfilled]: (state, action) => {
+      state.permissionsByRoleStatus = "success";
+      state.permissionsByRole = action.payload;
+    },
+    [getAllPermissionsByRole.rejected]: (state, action) => {
+      state.permissionsByRoleStatus = "failed";
+    },
   },
 });
+
+export const { getUserRolesPermissionsByMapping } = rolesPermissionSlice.actions;
+
 
 export default rolesPermissionSlice.reducer;

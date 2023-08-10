@@ -46,7 +46,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
           <PrivateRoute path="/" element={<Customers />} />
-          <Route path="/acl" element={<Acl/>}/>
+          <PrivateRoute path="/acl" element={<Acl/>}/>
           <Route path="/mobileSimulation" element={<SimulateCall />} />
           <Route path="/agent" element={<AgentEntry />} />
         </Routes>

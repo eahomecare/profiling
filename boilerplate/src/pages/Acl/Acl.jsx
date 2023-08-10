@@ -1,4 +1,4 @@
-import { Modal, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { Modal,MultiSelect, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
@@ -6,7 +6,7 @@ import { getCustomers, getCustomersProfileCompleteness } from "../../redux/custo
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay"
 import { EditableTable } from "../../components/EditableTable/EditableTable"
-import { getAllRolesPermissionsMappings } from "../../redux/rolesPermissionSlice"
+import { getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping, getAllPermissionsByRole } from "../../redux/rolesPermissionSlice"
 import { Table } from "@mantine/core";
 import { createStyles, ScrollArea, rem } from '@mantine/core';
 import { Select } from '@mantine/core';
@@ -44,17 +44,36 @@ const Acl = () => {
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null)
+    const [selectedRole, setSelectedRole] = useState(null)
+    const [selectedPermission,setSelectedPermission] = useState(null)
+    const [userRoles,setUserRoles] = useState([])
 
     const dispatch = useDispatch();
 
-    const { rolesPermissionsStatus, rolesPermissions } = useSelector(state => state.rolePermission);
+    const { rolesPermissionsStatus, rolesPermissions,userPermissions,
+        permissionsByRole,permissionsByRoleStatus } = useSelector(state => state.rolePermission);
+    const { user, users } = useSelector(state => state.auth)
 
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
         dispatch(getUsers())
     }, []);
 
+    useEffect(() => {
+        if (selectedUser !== null) {
+            dispatch(getUserRolesPermissionsByMapping(selectedUser))
+            const userBySelectedId = users.find(x => x.id === selectedUser);
+            if(userBySelectedId.role) setUserRoles(userBySelectedId.role)
+        }
+    }, [selectedUser])
 
+
+    useEffect(() => {
+        if (selectedRole !== null) {
+            dispatch(getAllPermissionsByRole(selectedRole));
+        }
+    }, [selectedRole])
 
 
     const initialData = rolesPermissions.map((data) => ({
@@ -78,7 +97,7 @@ const Acl = () => {
 
 
     const handleAddRoleClick = () => {
-        setIsModalOpen(true); // Open the modal when button is clicked
+        setIsModalOpen(true);
     };
 
 
@@ -165,32 +184,36 @@ const Acl = () => {
                                                     <Select
                                                         label="Select user"
                                                         placeholder="Pick one"
-                                                        data={[
-                                                            { value: 'react', label: 'React' },
-                                                            { value: 'ng', label: 'Angular' },
-                                                            { value: 'svelte', label: 'Svelte' },
-                                                            { value: 'vue', label: 'Vue' },
-                                                        ]}
+                                                        data={users.map((user) => ({
+                                                            value: user.id,
+                                                            label: user.agentName || user.email,
+                                                        }))}
+                                                        value={selectedUser}
+                                                        onChange={setSelectedUser}
                                                     />
                                                     <Select
                                                         label="Select role"
                                                         placeholder="Pick one"
-                                                        data={[
-                                                            { value: 'react', label: 'React' },
-                                                            { value: 'ng', label: 'Angular' },
-                                                            { value: 'svelte', label: 'Svelte' },
-                                                            { value: 'vue', label: 'Vue' },
-                                                        ]}
+                                                        disabled={selectedUser === null}
+                                                        data={userRoles.map((role) => ({
+                                                            value: role.id,
+                                                            label: role.name
+                                                        }))}
+                                                        value={selectedRole}
+                                                        onChange={setSelectedRole}
                                                     />
                                                     <Select
                                                         label="Select permission"
                                                         placeholder="Pick one"
-                                                        data={[
-                                                            { value: 'react', label: 'React' },
-                                                            { value: 'ng', label: 'Angular' },
-                                                            { value: 'svelte', label: 'Svelte' },
-                                                            { value: 'vue', label: 'Vue' },
-                                                        ]}
+                                                        
+                                                        disabled={selectedRole === null}
+                                                        data={permissionsByRole.map((permission) => ({
+                                                            value:permission.id,
+                                                            label:permission.name,
+                                                            disabled: userPermissions.some(userPermission => userPermission.id === permission.id)
+                                                        }))}
+                                                        value={selectedPermission}
+                                                        onChange={setSelectedPermission}
                                                     />
 
                                                     <br />

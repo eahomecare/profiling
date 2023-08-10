@@ -91,6 +91,4 @@ export class RolesService {
             throw new Error('Failed to update role defaultPermissionsIDs');
         }
     }
-
-
 }
