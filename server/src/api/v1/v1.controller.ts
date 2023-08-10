@@ -9,7 +9,8 @@ import {
     ValidationPipe,
     UnauthorizedException,
     Delete,
-    Get
+    Get,
+    BadRequestException
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RegisterAgentDto } from './dto/register-agent.dto';
@@ -193,13 +194,17 @@ export class V1Controller {
         @Res() res: Response
     ) {
         try {
+            const { selectedKeywords, remarks, createdKeywords, questionResponses } = submitDataDto;
+            if (!selectedKeywords && !remarks && !createdKeywords && !questionResponses) {
+                throw new BadRequestException('At least one of selectedKeywords, remarks, createdKeywords, or questionResponses must be provided.');
+            }
+
             const decodedAuthorizationToken = this.authorizationService.decodeAuthorizationToken(request);
             const agentSession = await this.validateAgentTokenService.validate(decodedAuthorizationToken);
 
             if (!agentSession) {
                 throw new UnauthorizedException('Invalid authorization token');
             }
-
             const customer = await this.submitService.findCustomerByMobile(submitDataDto.mobile);
 
             if (!customer) {
@@ -209,15 +214,17 @@ export class V1Controller {
             const userAgentMapping = await this.submitService.findUserByAgentSession(agentSession.id);
             const agentID = await this.submitService.getAgentIDFromSession(userAgentMapping)
 
+
             let agentSubmitData = {
                 CRM: agentSession.CRM,
                 customerID: customer.id,
                 agentID,
-                remarks: submitDataDto.remarks || undefined,
+                remarks: submitDataDto.remarks || '',
                 createdKeywords: [],
                 questions: [],
                 Keywords: [],
             };
+
 
             if (submitDataDto.selectedKeywords && submitDataDto.selectedKeywords.length) {
                 const connectedKeywords = await this.submitService.connectCustomerToKeywords(customer.id, submitDataDto.selectedKeywords);
@@ -230,12 +237,11 @@ export class V1Controller {
                 agentSubmitData.Keywords = [...agentSubmitData.Keywords, ...questionsData.keywords];
             }
 
-            let createdKeywordsList = [];
             if (submitDataDto.createdKeywords && submitDataDto.createdKeywords.length) {
-                createdKeywordsList = await this.submitService.handleCreatedKeywords(customer.id, userAgentMapping.userId, submitDataDto.createdKeywords);
+                agentSubmitData.createdKeywords = await this.submitService.handleCreatedKeywords(customer.id, agentID, submitDataDto.createdKeywords);
             }
 
-            await this.submitService.createAgentSubmit(agentSubmitData, createdKeywordsList);
+            await this.submitService.createAgentSubmit(agentSubmitData);
 
             res.status(HttpStatus.OK).json({ success: true, message: 'Data submitted successfully' });
         } catch (error) {

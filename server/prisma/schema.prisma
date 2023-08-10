@@ -271,7 +271,7 @@ model userRolePermissionMapping {
 
 model AgentSession {
   id                      String                    @id @default(auto()) @map("_id") @db.ObjectId
-  CRM                     String // name of the CRM infered from the static key
+  CRM                     String
   authorizationToken      String
   userAgentSessionMapping UserAgentSessionMapping[]
   created_at              DateTime                  @default(now())
@@ -299,8 +299,8 @@ model createdKeywords {
   keyword    String
   customerID String       @db.ObjectId
   customer   Customer     @relation(fields: [customerID], references: [id])
-  agentID    String       @db.ObjectId
-  agent      User         @relation(fields: [agentID], references: [id])
+  agentID    String
+  agent      User         @relation(fields: [agentID], references: [agentID])
   submitID   String       @db.ObjectId
   submits    agentSubmits @relation(fields: [submitID], references: [id])
 
