@@ -20,6 +20,7 @@ export class CreateAgentSessionService {
             where: { agentJWT: createAgentSessionDto.agentAuthenticationKey },
         });
 
+
         if (!user) {
             throw new UnauthorizedException('Invalid agent authentication key');
         }

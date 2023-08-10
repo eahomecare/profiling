@@ -24,6 +24,9 @@ import { ValidateAgentTokenService } from './validateAgentToken.service';
 import { ValidateAgentTokenDto } from './dto/validate-agent-token.dto';
 import { KeywordsDto } from './dto/agent-keywords.dto';
 import { SearchService } from 'src/search/search.service';
+import { AgentQuestionService } from './agentQuestion.service';
+import { SubmitService } from './agentSubmit.service';
+import { SubmitDataDto } from './dto/agent-submit.dto';
 
 @Controller('api/v1')
 export class V1Controller {
@@ -36,6 +39,8 @@ export class V1Controller {
         private readonly validateAgentTokenService: ValidateAgentTokenService,
         private readonly keywordsService: KeywordsService,
         private readonly searchService: SearchService,
+        private readonly agentQuestionService: AgentQuestionService,
+        private readonly submitService: SubmitService,
     ) { }
 
     @Post('/register')
@@ -75,7 +80,7 @@ export class V1Controller {
         }
     }
 
-    @Delete('/logout')
+    @Post('/logout')
     async logoutAgent(
         @Req() request: Request,
         @Res() res: Response
@@ -157,6 +162,86 @@ export class V1Controller {
         }
     }
 
+    @Post('/questions')
+    async getQuestions(
+        @Req() request: Request,
+        @Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) questionsDto: KeywordsDto,
+        @Res() res: Response
+    ) {
+        try {
+            const decodedAuthorizationToken = this.authorizationService.decodeAuthorizationToken(request);
+            const agentSession = await this.validateAgentTokenService.validate(decodedAuthorizationToken);
+
+            if (!agentSession) {
+                throw new UnauthorizedException('Invalid authorization token');
+            }
+
+            const mobileNumber = questionsDto.mobile;
+            const questions = await this.agentQuestionService.getQuestionsForMobile(mobileNumber);
+
+            res.status(HttpStatus.OK).json({ success: true, ...questions });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
+
+
+    @Post('/submit')
+    async submitData(
+        @Req() request: Request,
+        @Body(new ValidationPipe({ exceptionFactory: (errors) => new HttpException(errors, HttpStatus.BAD_REQUEST) })) submitDataDto: SubmitDataDto,
+        @Res() res: Response
+    ) {
+        try {
+            const decodedAuthorizationToken = this.authorizationService.decodeAuthorizationToken(request);
+            const agentSession = await this.validateAgentTokenService.validate(decodedAuthorizationToken);
+
+            if (!agentSession) {
+                throw new UnauthorizedException('Invalid authorization token');
+            }
+
+            const customer = await this.submitService.findCustomerByMobile(submitDataDto.mobile);
+
+            if (!customer) {
+                throw new UnauthorizedException('No customer found with provided mobile number.');
+            }
+
+            const userAgentMapping = await this.submitService.findUserByAgentSession(agentSession.id);
+            const agentID = await this.submitService.getAgentIDFromSession(userAgentMapping)
+
+            let agentSubmitData = {
+                CRM: agentSession.CRM,
+                customerID: customer.id,
+                agentID,
+                remarks: submitDataDto.remarks || undefined,
+                createdKeywords: [],
+                questions: [],
+                Keywords: [],
+            };
+
+            if (submitDataDto.selectedKeywords && submitDataDto.selectedKeywords.length) {
+                const connectedKeywords = await this.submitService.connectCustomerToKeywords(customer.id, submitDataDto.selectedKeywords);
+                agentSubmitData.Keywords = connectedKeywords.map(keyword => keyword.id);
+            }
+
+            if (submitDataDto.questionResponses && submitDataDto.questionResponses.length) {
+                const questionsData = await this.submitService.handleQuestionResponses(submitDataDto.questionResponses, customer.id);
+                agentSubmitData.questions = questionsData.questions;
+                agentSubmitData.Keywords = [...agentSubmitData.Keywords, ...questionsData.keywords];
+            }
+
+            let createdKeywordsList = [];
+            if (submitDataDto.createdKeywords && submitDataDto.createdKeywords.length) {
+                createdKeywordsList = await this.submitService.handleCreatedKeywords(customer.id, userAgentMapping.userId, submitDataDto.createdKeywords);
+            }
+
+            await this.submitService.createAgentSubmit(agentSubmitData, createdKeywordsList);
+
+            res.status(HttpStatus.OK).json({ success: true, message: 'Data submitted successfully' });
+        } catch (error) {
+            this.handleException(error, res);
+        }
+    }
 
     private handleException(error: any, res: Response) {
         let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;

@@ -27,20 +27,7 @@ export class KeywordsService {
             throw new UnauthorizedException('No customer found with provided mobile number');
         }
 
-        const allKeywords = await this.prisma.keyword.findMany({
-            select: {
-                id: true,
-                category: true,
-                value: true,
-                level: true,
-                customerIDs: false,
-                questionIDs: false,
-                profileTypeIDs: false
-            }
-        });
-
         return {
-            allKeywords,
             customerKeywords: customer.keywords
         };
     }
