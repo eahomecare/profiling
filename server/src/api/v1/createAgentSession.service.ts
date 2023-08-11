@@ -20,30 +20,29 @@ export class CreateAgentSessionService {
             where: { agentJWT: createAgentSessionDto.agentAuthenticationKey },
         });
 
-
         if (!user) {
             throw new UnauthorizedException('Invalid agent authentication key');
         }
 
-        const agentSessions = await this.prisma.agentSession.findMany({
-            where: { CRM: crmName },
+        // Fetch existing session mappings for the given CRM and user.
+        const existingSessions = await this.prisma.userAgentSessionMapping.findMany({
+            where: {
+                user: { id: user.id },
+                session: { CRM: crmName }
+            },
+            select: { sessionId: true }
         });
 
-        for (const agentSession of agentSessions) {
-            const existingSession = await this.prisma.userAgentSessionMapping.findUnique({
-                where: { userId_sessionId: { userId: user.id, sessionId: agentSession.id } },
-            });
-
-            if (existingSession) {
+        // If any existing sessions found, delete them.
+        if (existingSessions.length > 0) {
+            for (let existingSession of existingSessions) {
                 await this.prisma.userAgentSessionMapping.delete({
-                    where: { id: existingSession.id },
+                    where: { userId_sessionId: { userId: user.id, sessionId: existingSession.sessionId } },
                 });
 
                 await this.prisma.agentSession.delete({
                     where: { id: existingSession.sessionId },
                 });
-
-                // throw new UnauthorizedException('Existing session found and destroyed');
             }
         }
 
