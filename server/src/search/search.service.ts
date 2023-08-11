@@ -1,125 +1,164 @@
-// import { Injectable, OnModuleInit } from '@nestjs/common';
-// import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-// @Injectable()
-// export class SearchService implements OnModuleInit {
-//     constructor(private readonly elasticsearchService: ElasticsearchService) { }
+@Injectable()
+export class SearchService implements OnModuleInit {
+    constructor(private readonly elasticsearchService: ElasticsearchService) { }
 
-//     async onModuleInit() {
-//         const index = 'your_index_name';
-//         const indexExists = await this.checkIfIndexExists(index);
+    async onModuleInit() {
+        try {
+            const index = 'keywords';
+            const indexExists = await this.checkIfIndexExists(index);
 
-//         if (!indexExists) {
-//             await this.createAutocompleteIndex(index);
-//         }
-//     }
+            if (!indexExists) {
+                await this.createAutocompleteIndex(index);
+            }
+        } catch (error) {
+            console.error('Error during module initialization:', error);
+        }
+    }
 
-//     async checkIfIndexExists(index: string): Promise<boolean> {
-//         const response = await this.elasticsearchService.indices.exists({ index });
-//         return response.body;
-//     }
+    async checkIfIndexExists(index: string): Promise<boolean> {
+        try {
+            const response = await this.elasticsearchService.indices.exists({ index });
+            return response.body;
+        } catch (error) {
+            console.error('Error checking index existence:', error);
+            return false;
+        }
+    }
 
-//     async createAutocompleteIndex(index: string) {
-//         return await this.elasticsearchService.indices.create({
-//             index,
-//             body: {
-//                 mappings: {
-//                     properties: {
-//                         id: {
-//                             type: 'keyword',
-//                         },
-//                         label: {
-//                             type: 'completion',
-//                         },
-//                     },
-//                 },
-//             },
-//         });
-//     }
+    async createAutocompleteIndex(index: string) {
+        try {
+            return await this.elasticsearchService.indices.create({
+                index,
+                body: {
+                    mappings: {
+                        properties: {
+                            id: {
+                                type: 'keyword',
+                            },
+                            category: {
+                                type: 'text',
+                                fields: {
+                                    suggest: {
+                                        type: 'completion'
+                                    }
+                                }
+                            },
+                            value: {
+                                type: 'text',
+                                fields: {
+                                    suggest: {
+                                        type: 'completion'
+                                    }
+                                }
+                            },
+                            level: {
+                                type: 'integer',
+                            },
+                        },
+                    },
+                },
+            });
+        } catch (error) {
+            console.error('Error creating autocomplete index:', error);
+            throw error;
+        }
+    }
 
-//     async insertData(index: string, id: string, label: string) {
-//         return await this.elasticsearchService.index({
-//             index,
-//             id,
-//             body: {
-//                 id,
-//                 label,
-//             },
-//         });
-//     }
+    async autocomplete(index: string, term: string, field: 'category' | 'value' | 'both' = 'value') {
+        let suggestField;
 
-//     async insertBulkData(index: string, data: Array<{ id: string; label: string }>) {
-//         const body = data.flatMap(item => [
-//             { index: { _index: index, _id: item.id } },
-//             { id: item.id, label: item.label },
-//         ]);
+        switch (field) {
+            case 'category':
+                suggestField = 'category_suggest';
+                break;
+            case 'value':
+                suggestField = 'value_suggest';
+                break;
+            case 'both':
+                return await this.autocompleteBothFields(index, term);
+            default:
+                suggestField = 'value_suggest';
+                break;
+        }
 
-//         return await this.elasticsearchService.bulk({ refresh: true, body });
-//     }
+        try {
+            const response = await this.elasticsearchService.search({
+                index,
+                _source: ["category", "value", "level"],
+                body: {
+                    suggest: {
+                        text: term,
+                        label_suggestion: {
+                            prefix: term,
+                            completion: {
+                                field: suggestField,
+                            },
+                        },
+                    },
+                },
+            });
+            return response.body.suggest.label_suggestion[0].options.map(option => ({
+                id: option._id,
+                ...option._source
+            }));
+        } catch (error) {
+            console.error('Error during autocomplete:', error);
+            throw error;
+        }
+    }
 
-//     async suggestLabels(index: string, prefix: string) {
-//         const response = await this.elasticsearchService.search({
-//             index,
-//             body: {
-//                 suggest: {
-//                     label_suggestion: {
-//                         prefix,
-//                         completion: {
-//                             field: 'label',
-//                         },
-//                     },
-//                 },
-//             },
-//         });
+    async autocompleteBothFields(index: string, term: string) {
+        try {
+            const categoryResponse = await this.elasticsearchService.search({
+                index,
+                _source: ["category", "value", "level"],
+                body: {
+                    suggest: {
+                        text: term,
+                        label_suggestion: {
+                            prefix: term,
+                            completion: {
+                                field: 'category_suggest',
+                            },
+                        },
+                    },
+                },
+            });
 
-//         const suggestions = response.body.suggest.label_suggestion[0].options.map(option => ({
-//             value: option._source.id,
-//             label: option._source.label,
-//         }));
+            const valueResponse = await this.elasticsearchService.search({
+                index,
+                _source: ["category", "value", "level"],
+                body: {
+                    suggest: {
+                        text: term,
+                        label_suggestion: {
+                            prefix: term,
+                            completion: {
+                                field: 'value_suggest',
+                            },
+                        },
+                    },
+                },
+            });
 
-//         return suggestions;
-//     }
+            const categorySuggestions = categoryResponse.body.suggest.label_suggestion[0].options.map(option => ({
+                id: option._id,
+                ...option._source
+            }));
+            const valueSuggestions = valueResponse.body.suggest.label_suggestion[0].options.map(option => ({
+                id: option._id,
+                ...option._source
+            }));
 
-//     async create(index: string, id: string, body: Record<string, any>) {
-//         return await this.elasticsearchService.index({
-//             index,
-//             id,
-//             body,
-//         });
-//     }
-
-//     async search(index: string, query: string) {
-//         return await this.elasticsearchService.search({
-//             index,
-//             body: {
-//                 query: {
-//                     match: {
-//                         message: query,
-//                     },
-//                 },
-//             },
-//         });
-//     }
-
-//     async getById(index: string, id: string) {
-//         return await this.elasticsearchService.get({ index, id });
-//     }
-
-//     async update(index: string, id: string, body: Record<string, any>) {
-//         return await this.elasticsearchService.update({
-//             index,
-//             id,
-//             body: {
-//                 doc: body,
-//             },
-//         });
-//     }
-
-//     async delete(index: string, id: string) {
-//         return await this.elasticsearchService.delete({ index, id });
-//     }
-
-//     async deleteIndex(index: string) {
-//         return await this.elasticsearchService.indices.delete({ index });
-//     }
-// }
+            // Merging and deduplicating results
+            const combined = [...categorySuggestions, ...valueSuggestions];
+            return Array.from(new Set(combined.map(item => JSON.stringify(item)))).map(item => JSON.parse(item));
+        } catch (error) {
+            console.error('Error during autocomplete for both fields:', error);
+            throw error;
+        }
+    }
+}

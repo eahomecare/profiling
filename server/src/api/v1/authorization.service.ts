@@ -30,4 +30,16 @@ export class AuthorizationService {
 
         return crmName;
     }
+
+    decodeAuthorizationToken(request: Request): string {
+        const authorizationHeader = request.headers.authorization;
+        if (!authorizationHeader)
+            throw new HttpException('No Authorization Header Present', HttpStatus.UNAUTHORIZED);
+
+        const encodedToken = authorizationHeader.split(' ')[1];
+        if (!encodedToken)
+            throw new HttpException('Invalid Authorization Format', HttpStatus.UNAUTHORIZED);
+
+        return Buffer.from(encodedToken, 'base64').toString();
+    }
 }
