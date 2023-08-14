@@ -3,7 +3,6 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthDto } from './dto';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
@@ -17,40 +16,62 @@ export class AuthService {
     private config: ConfigService,
   ) { }
 
-  async signup(dto: AuthDto) {
-    // generate the password hash
-    const hash = await argon.hash(dto.password);
-    // save the new user in the db
+  async signup(email: string, password: string, roleName: string) {
+    const hash = await argon.hash(password);
+    const role = await this.prisma.role.findUnique({
+      where: {
+        name: roleName,
+      },
+      include: {
+        defaultPermissions: true,
+      },
+    });
+
+    if (!role) {
+      throw new ForbiddenException('Role not found');
+    }
+
     try {
       const user = await this.prisma.user.create({
         data: {
-          email: dto.email,
+          email,
           hash,
+          role: {
+            connect: { id: role.id },
+          },
         },
       });
 
+      const permissionRoleMappingPromises = role.defaultPermissions.map(async (permission) => {
+        await this.prisma.userRolePermissionMapping.create({
+          data: {
+            roleId: role.id,
+            userId: user.id,
+            permissionId: permission.id,
+          },
+        });
+      });
+
+      await Promise.all(permissionRoleMappingPromises);
+
       return this.signToken(user.id, user.email);
     } catch (error) {
-      if (
-        error instanceof
-        PrismaClientKnownRequestError
-      ) {
+      if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new ForbiddenException(
-            'Credentials taken',
-          );
+          throw new ForbiddenException('Credentials taken');
         }
       }
       throw error;
     }
   }
 
-  async signin(dto: AuthDto) {
+
+  async signin(email: string, password: string) {
     // find the user by email
     const user =
       await this.prisma.user.findUnique({
         where: {
-          email: dto.email,
+          email,
         },
       });
     // if user does not exist throw exception
@@ -62,7 +83,7 @@ export class AuthService {
     // compare password
     const pwMatches = await argon.verify(
       user.hash,
-      dto.password,
+      password,
     );
     // if password incorrect throw exception
     if (!pwMatches)
