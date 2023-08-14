@@ -42,7 +42,7 @@ export const getProfile = createAsyncThunk("auth/getProfile", async (id) => {
 });
 
 export const getUsers = createAsyncThunk("auth/getUsers", async () => {
-  const { data } = await axios.get("/auth/users/");
+  const { data } = await axios.get("/users/all");
   return data;
 });
 
@@ -129,7 +129,8 @@ export const authSlice = createSlice({
     },
     [getUsers.fulfilled]: (state, action) => {
       state.userStatus = "success";
-      state.users = action.payload.response.users;
+      console.log(action.payload);
+      state.users = action.payload;
     },
     [getUsers.rejected]: (state, action) => {
       state.userStatus = "failed";
