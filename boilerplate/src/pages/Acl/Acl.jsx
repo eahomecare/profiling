@@ -6,7 +6,8 @@ import { getCustomers, getCustomersProfileCompleteness } from "../../redux/custo
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay"
 import { EditableTable } from "../../components/EditableTable/EditableTable"
-import { getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping, getAllPermissionsByRole } from "../../redux/rolesPermissionSlice"
+import { getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping, 
+    getAllPermissionsByRole ,getAllPermissions,createRolesPermissionMapping} from "../../redux/rolesPermissionSlice"
 import { Table } from "@mantine/core";
 import { createStyles, ScrollArea, rem } from '@mantine/core';
 import { Select } from '@mantine/core';
@@ -52,12 +53,13 @@ const Acl = () => {
     const dispatch = useDispatch();
 
     const { rolesPermissionsStatus, rolesPermissions,userPermissions,
-        permissionsByRole,permissionsByRoleStatus } = useSelector(state => state.rolePermission);
+        permissionsByRole,permissionsByRoleStatus ,permissions} = useSelector(state => state.rolePermission);
     const { user, users } = useSelector(state => state.auth)
 
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
         dispatch(getUsers())
+        dispatch(getAllPermissions())
     }, []);
 
     useEffect(() => {
@@ -65,6 +67,7 @@ const Acl = () => {
             dispatch(getUserRolesPermissionsByMapping(selectedUser))
             const userBySelectedId = users.find(x => x.id === selectedUser);
             if(userBySelectedId.role) setUserRoles(userBySelectedId.role)
+            setSelectedRole(null)
         }
     }, [selectedUser])
 
@@ -73,6 +76,7 @@ const Acl = () => {
         if (selectedRole !== null) {
             dispatch(getAllPermissionsByRole(selectedRole));
         }
+        setSelectedPermission(null)
     }, [selectedRole])
 
 
@@ -99,6 +103,25 @@ const Acl = () => {
     const handleAddRoleClick = () => {
         setIsModalOpen(true);
     };
+
+
+    const handleModalClose = () => {
+        setIsModalOpen(false)
+        setSelectedUser(null)
+        setSelectedRole(null)
+        setSelectedPermission(null)
+    } 
+
+    const handleAssignPermission = () => {
+        dispatch(createRolesPermissionMapping({
+                "roleId":selectedRole,
+                "permissionId":selectedPermission,
+                "userId":selectedUser
+        }))
+        dispatch(getAllRolesPermissionsMappings())
+        handleModalClose()
+
+    }
 
 
     if (rolesPermissionsStatus === 'loading') {
@@ -176,11 +199,14 @@ const Acl = () => {
                                                 </Button>
                                                 <Modal
                                                     opened={isModalOpen}
-                                                    onClose={() => setIsModalOpen(false)}
+                                                    onClose={handleModalClose}
                                                     title="Assign permissions"
-
+                                                    size="lg"
+                                                    style={{ content: { maxHeight: '80vh' } }}
+                                                
                                                 >
-                                                    <br />
+                                                    <Text fz="xl">Lorem ipsum fesfa Lorem ipsum fesfa</Text>
+                                                    <br /><br />
                                                     <Select
                                                         label="Select user"
                                                         placeholder="Pick one"
@@ -190,6 +216,8 @@ const Acl = () => {
                                                         }))}
                                                         value={selectedUser}
                                                         onChange={setSelectedUser}
+                                                        
+                                                        
                                                     />
                                                     <Select
                                                         label="Select role"
@@ -205,15 +233,15 @@ const Acl = () => {
                                                     <Select
                                                         label="Select permission"
                                                         placeholder="Pick one"
-                                                        
                                                         disabled={selectedRole === null}
-                                                        data={permissionsByRole.map((permission) => ({
+                                                        data={permissions.map((permission) => ({
                                                             value:permission.id,
                                                             label:permission.name,
                                                             disabled: userPermissions.some(userPermission => userPermission.id === permission.id)
                                                         }))}
                                                         value={selectedPermission}
                                                         onChange={setSelectedPermission}
+                                                        dropdownComponent="div"
                                                     />
 
                                                     <br />
@@ -221,9 +249,10 @@ const Acl = () => {
                                                     <Button
                                                         variant="gradient" gradient={{ from: 'indigo', to: 'red' }}
                                                         className="mt-4"
-                                                        onClick={handleAddRoleClick}
+                                                        onClick={handleAssignPermission}
+                                                        disabled={selectedRole === null || selectedPermission === null || selectedRole === null}
                                                     >
-                                                        Create
+                                                        Assign
                                                     </Button>
 
                                                 </Modal>
