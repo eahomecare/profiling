@@ -10,6 +10,7 @@ const initialState = {
   getAllRolesStatus: "idle",
   getAllPermissionsStatus: "idle",
   permissionsByRoleStatus:"idle",
+  createRolesPermissionMappingStatus:"idle",
   roles: [],
   permissions: [],
   userRoles:[],
@@ -51,6 +52,14 @@ export const createPermission = createAsyncThunk(
     const { data } = await axios.post("/permissions", {
       name: name,
     });
+    return data;
+  }
+);
+
+export const createRolesPermissionMapping = createAsyncThunk(
+  "rolesPermissions/createPermissionRolesMapping",
+  async (payload) => {
+    const { data } = await axios.post("/user-role-permission-mappings", payload);
     return data;
   }
 );
@@ -99,8 +108,6 @@ export const rolesPermissionSlice = createSlice({
     [getAllRolesPermissionsMappings.fulfilled]: (state, action) => {
       state.rolesPermissionsStatus = "success";
       state.rolesPermissions = action.payload;
-      
-     
     },
     [getAllRolesPermissionsMappings.rejected]: (state, action) => {
       state.rolesPermissionsStatus = "failed";
@@ -147,7 +154,7 @@ export const rolesPermissionSlice = createSlice({
     },
     [getAllPermissions.fulfilled]: (state, action) => {
       state.getAllPermissionsStatus = "success";
-      state.permissions = action.payload.data;
+      state.permissions = action.payload;
     },
     [getAllPermissions.rejected]: (state, action) => {
       state.getAllPermissionsStatus = "failed";
@@ -161,6 +168,17 @@ export const rolesPermissionSlice = createSlice({
     },
     [getAllPermissionsByRole.rejected]: (state, action) => {
       state.permissionsByRoleStatus = "failed";
+    },
+    [createRolesPermissionMapping.pending]: (state, action) => {
+      state.createRolesPermissionMappingStatus = "loading";
+    },
+    [createRolesPermissionMapping.fulfilled]: (state, action) => {
+      state.createPermissionStatus = "success"
+      state.rolesPermissions = [...state.rolesPermissions,action.payload]
+  
+    },
+    [createRolesPermissionMapping.rejected]: (state, action) => {
+      state.createRolesPermissionMappingStatus = "failed";
     },
   },
 });

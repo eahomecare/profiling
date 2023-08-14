@@ -30,12 +30,10 @@ export class RegisterAgentService {
 
             if (existingUser) {
                 let isAgent = false;
-                for (const userRole of existingUser.role) {
-                    if (userRole.name === 'agent') {
-                        isAgent = true;
-                        break;
-                    }
+                if (existingUser.role.name == 'agent') {
+                    isAgent = true;
                 }
+
 
 
 
@@ -115,7 +113,7 @@ export class RegisterAgentService {
                         agentName: name,
                         email,
                         mobile,
-                        roleIds: agentRole.id,
+                        roleId: agentRole.id,
                         agentCRM: {
                             set: [crmName],
                         },
