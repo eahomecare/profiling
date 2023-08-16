@@ -11,11 +11,22 @@ export class UserRolePermissionMappingService {
             const createdMapping = await this.prisma.userRolePermissionMapping.create({
                 data,
             });
-            return createdMapping;
+
+            const foundMapping = await this.prisma.userRolePermissionMapping.findUnique({
+                where: { id: createdMapping.id },
+                include: {
+                    role: true,
+                    user: true,
+                    permission: true,
+                },
+            });
+
+            return foundMapping;
         } catch (error) {
             throw new Error('Failed to create userRolePermissionMapping');
         }
     }
+
 
     async findAll(): Promise<userRolePermissionMapping[]> {
         try {

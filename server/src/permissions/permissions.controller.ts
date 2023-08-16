@@ -33,4 +33,10 @@ export class PermissionsController {
     ): Promise<Permission> {
         return this.permissionsService.updateDefaultRoles(permissionId, roleIds);
     }
+
+    @Get('roles/:roleId')
+    async getPermissionsByRoleId(@Param('roleId') roleId: string): Promise<Permission[]> {
+        return this.permissionsService.findPermissionsByRoleId(roleId);
+    }
+
 }
