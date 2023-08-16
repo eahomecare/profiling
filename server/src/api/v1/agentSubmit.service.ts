@@ -27,12 +27,11 @@ export class SubmitService {
         let createdKeywordIds = [];
         try {
             for (const keyword of keywords) {
-                const createdKeyword = await this.prisma.createdKeywords.create({
+                const createdKeyword = await this.prisma.keyword.create({
                     data: {
-                        keyword: keyword,
-                        customerID: customerId,
-                        agentID: agentId,
-                        submitID: '64773d52c2f9d843b9393939'
+                        value: keyword,
+                        category: 'unknown',
+                        customers: { connect: { id: customerId } }
                     }
                 });
                 createdKeywordIds.push(createdKeyword.id);
@@ -40,7 +39,7 @@ export class SubmitService {
             return createdKeywordIds;
         } catch (error) {
             console.error("Error in handleCreatedKeywords:", error);
-            throw new UnprocessableEntityException('createdKeywords is not structured properly, check and try again.')
+            throw new UnprocessableEntityException('Keywords is not structured properly, check and try again.')
         }
     }
 
@@ -137,29 +136,33 @@ export class SubmitService {
         }
     }
 
-    async createAgentSubmit(data: any,): Promise<void> {
+    async createAgentSubmit(data: any): Promise<void> {
         try {
-            const { createdKeywords, questions, Keywords, ...otherData } = data;
+            const { keywords, questions, ...otherData } = data;
 
-            const createdAgentSubmit = await this.prisma.agentSubmits.create({
+            const newAgentSubmit = await this.prisma.agentSubmits.create({
                 data: {
-                    ...otherData,
-                    createdKeywords: { connect: createdKeywords.map(id => ({ id })) },
-                    questions: { connect: questions.map(id => ({ id })) },
-                    Keywords: { connect: Keywords.map(id => ({ id })) },
+                    ...otherData
                 }
             });
 
-            // Update the createdKeywords with the submitID
-            for (const keywordId of data.createdKeywords) {
-                await this.prisma.createdKeywords.update({
-                    where: { id: keywordId },
-                    data: { submitID: createdAgentSubmit.id }
-                });
-            }
+            await this.prisma.agentSubmitKeywordsMapping.createMany({
+                data: keywords.map(keywordId => ({
+                    agentSubmitId: newAgentSubmit.id,
+                    keywordId: keywordId
+                }))
+            });
+
+            await this.prisma.agentSubmitQuestionsMapping.createMany({
+                data: questions.map(questionId => ({
+                    agentSubmitId: newAgentSubmit.id,
+                    questionId: questionId
+                }))
+            });
+
         } catch (error) {
             console.error("Error in createAgentSubmit:", error);
-            throw new UnprocessableEntityException('Something went wrong in processing the data. Please check the request and try again')
+            throw new UnprocessableEntityException('Something went wrong in processing the data. Please check the request and try again');
         }
     }
 }
