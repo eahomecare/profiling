@@ -9,8 +9,13 @@ const initialState = {
   createPermissionStatus: "idle",
   getAllRolesStatus: "idle",
   getAllPermissionsStatus: "idle",
+  permissionsByRoleStatus:"idle",
+  createRolesPermissionMappingStatus:"idle",
   roles: [],
   permissions: [],
+  userRoles:[],
+  userPermissions :[],
+  permissionsByRole:[]
 };
 
 export const getAllRolesPermissionsMappings = createAsyncThunk(
@@ -51,6 +56,14 @@ export const createPermission = createAsyncThunk(
   }
 );
 
+export const createRolesPermissionMapping = createAsyncThunk(
+  "rolesPermissions/createPermissionRolesMapping",
+  async (payload) => {
+    const { data } = await axios.post("/user-role-permission-mappings", payload);
+    return data;
+  }
+);
+
 export const getAllRoles = createAsyncThunk("rolesPermissions/getAllRoles", async () => {
   const { data } = await axios.get("/roles");
   return data;
@@ -64,10 +77,30 @@ export const getAllPermissions = createAsyncThunk(
   }
 );
 
+
+export const getAllPermissionsByRole = createAsyncThunk(
+  "permissions/byRoleId",
+  async(roleid) => {
+    const {data} = await axios.get("/permissions/roles/"+roleid)
+    return data
+  }
+)
+
 export const rolesPermissionSlice = createSlice({
   name: "rolesPermission",
   initialState,
-  reducers: {},
+  reducers: {
+    getUserRolesPermissionsByMapping:(state,action) => {
+      state.userRoles = []
+      state.userPermissions = []
+      state.rolesPermissions.map(e=>{
+        if(e.userId === action.payload){
+          if (e.role ) state.userRoles.push(e.role)
+          if (e.permission) state.userPermissions.push(e.permission)
+        }
+      })
+    }
+  },
   extraReducers: {
     [getAllRolesPermissionsMappings.pending]: (state, action) => {
       state.rolesPermissionsStatus = "loading";
@@ -121,12 +154,36 @@ export const rolesPermissionSlice = createSlice({
     },
     [getAllPermissions.fulfilled]: (state, action) => {
       state.getAllPermissionsStatus = "success";
-      state.permissions = action.payload.data;
+      state.permissions = action.payload;
     },
     [getAllPermissions.rejected]: (state, action) => {
       state.getAllPermissionsStatus = "failed";
     },
+    [getAllPermissionsByRole.pending]: (state, action) => {
+      state.permissionsByRoleStatus = "loading";
+    },
+    [getAllPermissionsByRole.fulfilled]: (state, action) => {
+      state.permissionsByRoleStatus = "success";
+      state.permissionsByRole = action.payload;
+    },
+    [getAllPermissionsByRole.rejected]: (state, action) => {
+      state.permissionsByRoleStatus = "failed";
+    },
+    [createRolesPermissionMapping.pending]: (state, action) => {
+      state.createRolesPermissionMappingStatus = "loading";
+    },
+    [createRolesPermissionMapping.fulfilled]: (state, action) => {
+      state.createPermissionStatus = "success"
+      state.rolesPermissions = [...state.rolesPermissions,action.payload]
+  
+    },
+    [createRolesPermissionMapping.rejected]: (state, action) => {
+      state.createRolesPermissionMappingStatus = "failed";
+    },
   },
 });
+
+export const { getUserRolesPermissionsByMapping } = rolesPermissionSlice.actions;
+
 
 export default rolesPermissionSlice.reducer;

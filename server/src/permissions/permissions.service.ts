@@ -92,7 +92,27 @@ export class PermissionsService {
     }
   }
 
+  async findPermissionsByRoleId(roleId: string): Promise<Permission[]> {
+    try {
+      const permissions = await this.prisma.permission.findMany({
+        where: {
+          defaultRolesIDs: {
+            has: roleId,
+          },
+        },
+      });
+      return permissions;
+    } catch (error) {
+      throw new Error('Failed to fetch permissions by roleId');
+    }
+  }
+
+
 }
+
+
+
+
 
 
 
