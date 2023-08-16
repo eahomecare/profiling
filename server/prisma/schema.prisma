@@ -27,7 +27,6 @@ model User {
   UserAgentSessionMapping   UserAgentSessionMapping[]
   roleIds                   String[]                    @db.ObjectId
   role                      Role[]                      @relation(fields: [roleIds], references: [id])
-  createdKeywords           createdKeywords[]
   agentSubmits              agentSubmits[]
 
   @@map("users")
@@ -56,7 +55,6 @@ model Customer {
   questions                   Question[]                    @relation(fields: [questionsIDs], references: [id])
   ProfileTypeCustomerMapping  ProfileTypeCustomerMapping[]
   ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
-  createdKeywords             createdKeywords[]
   agentSubmits                agentSubmits[]
 
   @@map("customers")
@@ -77,20 +75,19 @@ model Personal_Details {
 }
 
 model Keyword {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  id             String                       @id @default(auto()) @map("_id") @db.ObjectId
   category       String
   value          String
   level          Int?
-  customerIDs    String[]      @db.ObjectId
-  customers      Customer[]    @relation(fields: [customerIDs], references: [id])
-  questionIDs    String[]      @db.ObjectId
-  questions      Question[]    @relation(fields: [questionIDs], references: [id])
-  profileTypeIDs String[]      @db.ObjectId
-  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
+  customerIDs    String[]                     @db.ObjectId
+  customers      Customer[]                   @relation(fields: [customerIDs], references: [id])
+  questionIDs    String[]                     @db.ObjectId
+  questions      Question[]                   @relation(fields: [questionIDs], references: [id])
+  profileTypeIDs String[]                     @db.ObjectId
+  profile_types  ProfileType[]                @relation(fields: [profileTypeIDs], references: [id])
   // created_at     DateTime      @default(now())
   // updated_at     DateTime      @updatedAt
-  agentSubmits   agentSubmits? @relation(fields: [agentSubmitsId], references: [id])
-  agentSubmitsId String?       @db.ObjectId
+  agentSubmits   AgentSubmitKeywordsMapping[]
 
   @@unique([value, category])
   @@map("keywords")
@@ -146,22 +143,21 @@ model VehicleCustomerMapping {
 }
 
 model Question {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  id             String                        @id @default(auto()) @map("_id") @db.ObjectId
   question       String
   category       String
   level          Int
   type           String
   options        String[]
-  customerIDs    String[]      @db.ObjectId
-  customers      Customer[]    @relation(fields: [customerIDs], references: [id])
-  keywordIDs     String[]      @db.ObjectId
-  keywords       Keyword[]     @relation(fields: [keywordIDs], references: [id])
-  profileTypeIDs String[]      @db.ObjectId
-  profile_types  ProfileType[] @relation(fields: [profileTypeIDs], references: [id])
+  customerIDs    String[]                      @db.ObjectId
+  customers      Customer[]                    @relation(fields: [customerIDs], references: [id])
+  keywordIDs     String[]                      @db.ObjectId
+  keywords       Keyword[]                     @relation(fields: [keywordIDs], references: [id])
+  profileTypeIDs String[]                      @db.ObjectId
+  profile_types  ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
   // created_at     DateTime      @default(now())
   // updated_at     DateTime      @updatedAt
-  agentSubmits   agentSubmits? @relation(fields: [agentSubmitsId], references: [id])
-  agentSubmitsId String?       @db.ObjectId
+  agentSubmits   AgentSubmitQuestionsMapping[]
 
   @@unique([question])
   @@map("questions")
@@ -294,30 +290,38 @@ model UserAgentSessionMapping {
   @@map("userAgentSessionMappings")
 }
 
-model createdKeywords {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  keyword    String
-  customerID String       @db.ObjectId
-  customer   Customer     @relation(fields: [customerID], references: [id])
-  agentID    String
-  agent      User         @relation(fields: [agentID], references: [agentID])
-  submitID   String       @db.ObjectId
-  submits    agentSubmits @relation(fields: [submitID], references: [id])
-
-  @@map("createdKeywords")
-}
-
 model agentSubmits {
-  id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  CRM             String
-  customerID      String            @db.ObjectId
-  customer        Customer          @relation(fields: [customerID], references: [id])
-  agentID         String
-  agent           User              @relation(fields: [agentID], references: [agentID])
-  remarks         String?
-  createdKeywords createdKeywords[]
-  questions       Question[]
-  Keywords        Keyword[]
+  id         String                        @id @default(auto()) @map("_id") @db.ObjectId
+  CRM        String
+  customerID String                        @db.ObjectId
+  customer   Customer                      @relation(fields: [customerID], references: [id])
+  agentID    String
+  agent      User                          @relation(fields: [agentID], references: [agentID])
+  remarks    String?
+  keywords   AgentSubmitKeywordsMapping[]
+  questions  AgentSubmitQuestionsMapping[]
 
   @@map("agentSubmits")
+}
+
+model AgentSubmitKeywordsMapping {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  agentSubmitId String       @map("agent_submit_id") @db.ObjectId
+  keywordId     String       @map("keyword_id") @db.ObjectId
+  agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
+  keyword       Keyword      @relation(fields: [keywordId], references: [id])
+
+  @@unique([agentSubmitId, keywordId])
+  @@map("agentSubmitKeywordsMapping")
+}
+
+model AgentSubmitQuestionsMapping {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  agentSubmitId String       @map("agent_submit_id") @db.ObjectId
+  questionId    String       @map("question_id") @db.ObjectId
+  agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
+  question      Question     @relation(fields: [questionId], references: [id])
+
+  @@unique([agentSubmitId, questionId])
+  @@map("agentSubmitQuestionsMapping")
 }

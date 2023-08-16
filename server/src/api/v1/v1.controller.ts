@@ -220,25 +220,23 @@ export class V1Controller {
                 customerID: customer.id,
                 agentID,
                 remarks: submitDataDto.remarks || '',
-                createdKeywords: [],
                 questions: [],
-                Keywords: [],
+                keywords: [],
             };
-
 
             if (submitDataDto.selectedKeywords && submitDataDto.selectedKeywords.length) {
                 const connectedKeywords = await this.submitService.connectCustomerToKeywords(customer.id, submitDataDto.selectedKeywords);
-                agentSubmitData.Keywords = connectedKeywords.map(keyword => keyword.id);
+                agentSubmitData.keywords = connectedKeywords.map(keyword => keyword.id);
             }
 
             if (submitDataDto.questionResponses && submitDataDto.questionResponses.length) {
                 const questionsData = await this.submitService.handleQuestionResponses(submitDataDto.questionResponses, customer.id);
                 agentSubmitData.questions = questionsData.questions;
-                agentSubmitData.Keywords = [...agentSubmitData.Keywords, ...questionsData.keywords];
+                agentSubmitData.keywords = [...agentSubmitData.keywords, ...questionsData.keywords];
             }
 
             if (submitDataDto.createdKeywords && submitDataDto.createdKeywords.length) {
-                agentSubmitData.createdKeywords = await this.submitService.handleCreatedKeywords(customer.id, agentID, submitDataDto.createdKeywords);
+                agentSubmitData.keywords = [...agentSubmitData.keywords, ...await this.submitService.handleCreatedKeywords(customer.id, agentID, submitDataDto.createdKeywords)];
             }
 
             await this.submitService.createAgentSubmit(agentSubmitData);
