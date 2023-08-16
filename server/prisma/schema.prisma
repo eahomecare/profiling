@@ -27,7 +27,6 @@ model User {
   UserAgentSessionMapping   UserAgentSessionMapping[]
   roleId                    String                      @db.ObjectId
   role                      Role                        @relation(fields: [roleId], references: [id])
-  createdKeywords           createdKeywords[]
   agentSubmits              agentSubmits[]
 
   @@map("users")
