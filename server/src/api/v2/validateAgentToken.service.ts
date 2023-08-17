@@ -23,7 +23,6 @@ export class ValidateAgentTokenService {
             if (error instanceof UnauthorizedException) {
                 throw error;
             }
-            // Handle unexpected errors like database connection problems
             throw new InternalServerErrorException('Failed to validate agent token due to internal server error');
         }
     }

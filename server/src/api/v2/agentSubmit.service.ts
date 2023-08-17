@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, PreconditionFailedException, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UserAgentSessionMapping } from '@prisma/client';
+import { AgentSession, User } from '@prisma/client';
 
 @Injectable()
 export class SubmitService {
@@ -112,27 +112,19 @@ export class SubmitService {
         }
     }
 
-    async findUserByAgentSession(sessionID: string): Promise<UserAgentSessionMapping> {
-        try {
-            const userAgentMapping = await this.prisma.userAgentSessionMapping.findFirst({
-                where: { sessionId: sessionID }
-            });
-            return userAgentMapping;
-        } catch (error) {
-            console.error("Error in findUserByAgentSession:", error);
-            throw new NotFoundException('Agent session not found')
-        }
-    }
 
-    async getAgentIDFromSession(agentSession: UserAgentSessionMapping): Promise<any> {
+    async getAgentIDFromSession(agentSessionID: string): Promise<string | null> {
         try {
-            const user = await this.prisma.user.findUnique({
-                where: { id: agentSession.userId }
-            })
-            return user.agentID
+            const agentSessionInstance = await this.prisma.agentSession.findUnique({
+                where: { id: agentSessionID },
+                include: { user: true }
+            });
+
+            console.log('user', agentSessionInstance.user)
+            return agentSessionInstance?.user?.agentID || null;
         } catch (error) {
             console.error("Error in getAgentIDFromSession:", error);
-            throw new NotFoundException('Agent ID missing')
+            throw new NotFoundException('Agent ID missing');
         }
     }
 

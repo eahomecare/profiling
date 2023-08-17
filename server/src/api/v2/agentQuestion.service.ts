@@ -7,7 +7,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { LangchainService } from '../../langchain/langchain.service';
-import { examples } from '../../langchain/plainStringExamples';  // Update this path as necessary
+import { examples } from '../../langchain/plainStringExamples';
 import { Customer } from '@prisma/client';
 
 const _ = require('lodash');
@@ -20,7 +20,7 @@ export class AgentQuestionService {
         private readonly langchainService: LangchainService
     ) { }
 
-    async getQuestionsForCustomer(customer: Customer) {  // Using the Customer model type here
+    async getQuestionsForCustomer(customer: Customer) {
         if (!customer) {
             throw new UnauthorizedException('No customer provided');
         }

@@ -24,24 +24,18 @@ export class CreateAgentSessionService {
             throw new UnauthorizedException('Invalid agent authentication key');
         }
 
-        // Fetch existing session mappings for the given CRM and user.
-        const existingSessions = await this.prisma.userAgentSessionMapping.findMany({
+        const existingSessions = await this.prisma.agentSession.findMany({
             where: {
-                user: { id: user.id },
-                session: { CRM: crmName }
+                userId: user.id,
+                CRM: crmName
             },
-            select: { sessionId: true }
+            select: { id: true }
         });
 
-        // If any existing sessions found, delete them.
         if (existingSessions.length > 0) {
             for (let existingSession of existingSessions) {
-                await this.prisma.userAgentSessionMapping.delete({
-                    where: { userId_sessionId: { userId: user.id, sessionId: existingSession.sessionId } },
-                });
-
                 await this.prisma.agentSession.delete({
-                    where: { id: existingSession.sessionId },
+                    where: { id: existingSession.id },
                 });
             }
         }
@@ -58,9 +52,7 @@ export class CreateAgentSessionService {
             data: {
                 CRM: crmName,
                 authorizationToken,
-                userAgentSessionMapping: {
-                    create: { user: { connect: { id: user.id } } },
-                },
+                userId: user.id,
             },
         });
 
