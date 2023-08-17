@@ -20,6 +20,7 @@ import { V1Controller } from './api/v1/v1.controller';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
+import { V2Module } from './api/v2/v2.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UserRolePermissionMappingModule } from './user-role-permission-mapping/
     ProfileMappingModule,
     LangchainModule,
     V1Module,
+    V2Module,
     RolesModule,
     PermissionsModule,
     UserRolePermissionMappingModule,
