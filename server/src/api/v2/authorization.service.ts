@@ -1,0 +1,72 @@
+import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma/prisma.service';
+
+@Injectable()
+export class AuthorizationService {
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly prisma: PrismaService,
+    ) { }
+
+    validateAndDecodeStaticKey(request: Request): string {
+        const authorizationHeader = request.headers.authorization;
+        if (!authorizationHeader)
+            throw new HttpException('No Authorization Header Present', HttpStatus.UNAUTHORIZED)
+
+        const encodedStaticKey = authorizationHeader.split(' ')[1];
+        if (!encodedStaticKey)
+            throw new HttpException('Invalid Authorization Format', HttpStatus.UNAUTHORIZED)
+
+        return Buffer.from(encodedStaticKey, 'base64').toString();
+    }
+
+    validateCrm(staticKey: string): string {
+        const crmNames = ['HC', 'CRM2', 'CRM3']; // update this with the actual CRM names
+        const crmName = crmNames.find(
+            (crm) => this.configService.get(crm + '_STATIC_KEY') === staticKey
+        );
+
+        if (!crmName) {
+            throw new UnauthorizedException('Invalid Static Key');
+        }
+
+        return crmName;
+    }
+
+    decodeAuthorizationToken(request: Request): string {
+        const authorizationHeader = request.headers.authorization;
+        if (!authorizationHeader)
+            throw new HttpException('No Authorization Header Present', HttpStatus.UNAUTHORIZED);
+
+        const encodedToken = authorizationHeader.split(' ')[1];
+        if (!encodedToken)
+            throw new HttpException('Invalid Authorization Format', HttpStatus.UNAUTHORIZED);
+
+        return Buffer.from(encodedToken, 'base64').toString();
+    }
+
+    async getCRMNameFromAuthorizationToken(authorizationToken: string): Promise<string> {
+        let decodedToken;
+        try {
+            decodedToken = Buffer.from(authorizationToken, 'base64').toString();
+        } catch (error) {
+            throw new HttpException('Invalid Base64 Encoding', HttpStatus.BAD_REQUEST);
+        }
+
+        // Query the AgentSession model to find a session with the given authorization token
+        const session = await this.prisma.agentSession.findUnique({
+            where: {
+                authorizationToken: decodedToken
+            }
+        });
+
+        if (!session) {
+            throw new HttpException('Authorization Token Not Found', HttpStatus.UNAUTHORIZED);
+        }
+
+        // Return the associated CRM name
+        return session.CRM;
+    }
+}

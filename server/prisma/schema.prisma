@@ -34,6 +34,7 @@ model User {
 
 model Customer {
   id                          String                        @id @default(auto()) @map("_id") @db.ObjectId
+  crmMappings                 CustomerCRMMapping[]
   mobile                      String                        @unique
   other_mobile                Json?
   email                       String?
@@ -323,4 +324,17 @@ model AgentSubmitQuestionsMapping {
 
   @@unique([agentSubmitId, questionId])
   @@map("agentSubmitQuestionsMapping")
+}
+
+model CustomerCRMMapping {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerCrmId String
+  crmName       String
+  customerId    String   @db.ObjectId
+  customer      Customer @relation(fields: [customerId], references: [id])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@unique([customerCrmId, crmName])
+  @@map("customer_crm_mappings")
 }
