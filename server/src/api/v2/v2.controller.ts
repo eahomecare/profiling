@@ -218,8 +218,7 @@ export class V2Controller {
                 throw new UnauthorizedException('No customer found with provided mobile number.');
             }
 
-            const userAgentMapping = await this.submitService.findUserByAgentSession(agentSession.id);
-            const agentID = await this.submitService.getAgentIDFromSession(userAgentMapping)
+            const agentID = await this.submitService.getAgentIDFromSession(agentSession.id)
 
 
             let agentSubmitData = {

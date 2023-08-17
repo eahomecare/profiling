@@ -46,27 +46,4 @@ export class AuthorizationService {
 
         return Buffer.from(encodedToken, 'base64').toString();
     }
-
-    async getCRMNameFromAuthorizationToken(authorizationToken: string): Promise<string> {
-        let decodedToken;
-        try {
-            decodedToken = Buffer.from(authorizationToken, 'base64').toString();
-        } catch (error) {
-            throw new HttpException('Invalid Base64 Encoding', HttpStatus.BAD_REQUEST);
-        }
-
-        // Query the AgentSession model to find a session with the given authorization token
-        const session = await this.prisma.agentSession.findUnique({
-            where: {
-                authorizationToken: decodedToken
-            }
-        });
-
-        if (!session) {
-            throw new HttpException('Authorization Token Not Found', HttpStatus.UNAUTHORIZED);
-        }
-
-        // Return the associated CRM name
-        return session.CRM;
-    }
 }

@@ -10,16 +10,11 @@ export class LogoutAgentService {
     async logout(authorizationToken: string, crmName: string) {
         const existingSession = await this.prisma.agentSession.findUnique({
             where: { authorizationToken },
-            include: { userAgentSessionMapping: true },
         });
 
         if (!existingSession || existingSession.CRM !== crmName) {
             throw new UnauthorizedException('Session not found');
         }
-
-        await this.prisma.userAgentSessionMapping.deleteMany({
-            where: { sessionId: existingSession.id },
-        });
 
         await this.prisma.agentSession.delete({
             where: { id: existingSession.id },
