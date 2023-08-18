@@ -14,6 +14,7 @@ import Login from "./pages/Login/Login";
 import SimulateCall from "./components/AgentPages/MobileSimulation";
 import AgentEntry from "./components/AgentPages/AgentEntry";
 import Acl from "./pages/Acl/Acl";
+import PermissionDenied from "./pages/PermissionDenied";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -22,6 +23,9 @@ function App() {
 
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
+  const { rolesPermissionsStatus, rolesPermissions, userPermissions, getAllRolesPermissionsMappingsByUserStatus } = useSelector(state => state.rolePermission);
+
+  if (getAllRolesPermissionsMappingsByUserStatus === "success") console.log(userPermissions);
 
   useEffect(() => {
     if ("login" in localStorage) {
@@ -31,6 +35,10 @@ function App() {
   }, [isLoggedIn]);
 
   const navigate = useNavigate();
+
+  function hasPermission(userPermissions, permissionName) {
+    return userPermissions.some(permission => permission.name === permissionName);
+  }
 
   // useEffect(() => {
   //   if (!isLoggedIn) {
@@ -44,9 +52,21 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
-          <PrivateRoute path="/" element={<Customers />} />
-          <PrivateRoute path="/acl" element={<Acl/>}/>
+          {hasPermission(userPermissions, "customer dashboard") ? (
+            <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
+          ) : (
+            <PrivateRoute path="/dashboard/*" element={<PermissionDenied/>} />
+          )}
+          {hasPermission(userPermissions, "user view") ? (
+            <PrivateRoute path="/" element={<Customers />} />
+          ) : (
+            <PrivateRoute path="/" element={<PermissionDenied/>} />
+          )}
+          {hasPermission(userPermissions, "acl") ? (
+            <PrivateRoute path="/acl" element={<Acl />} />
+          ) : (
+            <PrivateRoute path="/acl" element={<PermissionDenied/>} />
+          )}
           <Route path="/mobileSimulation" element={<SimulateCall />} />
           <Route path="/agent" element={<AgentEntry />} />
         </Routes>
@@ -56,3 +76,5 @@ function App() {
 }
 
 export default App;
+
+

@@ -1,13 +1,14 @@
-import { Modal,MultiSelect, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { Modal, MultiSelect, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
 import { getCustomers, getCustomersProfileCompleteness } from "../../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
-import TableDisplay from "../../components/TableDisplay"
-import { EditableTable } from "../../components/EditableTable/EditableTable"
-import { getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping, 
-    getAllPermissionsByRole ,getAllPermissions,createRolesPermissionMapping} from "../../redux/rolesPermissionSlice"
+
+import {
+    getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping,
+    getAllPermissionsByRole, getAllPermissions, createRolesPermissionMapping, getAllRolesPermissionsMappingsByUser
+} from "../../redux/rolesPermissionSlice"
 import { Table } from "@mantine/core";
 import { createStyles, ScrollArea, rem } from '@mantine/core';
 import { Select } from '@mantine/core';
@@ -47,13 +48,13 @@ const Acl = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null)
     const [selectedRole, setSelectedRole] = useState(null)
-    const [selectedPermission,setSelectedPermission] = useState(null)
-    const [userRoles,setUserRoles] = useState([])
+    const [selectedPermission, setSelectedPermission] = useState(null)
+    const [selectedUserRoleName, setSelectedUserRoleName] = useState(null)
 
     const dispatch = useDispatch();
 
-    const { rolesPermissionsStatus, rolesPermissions,userPermissions,
-        permissionsByRole,permissionsByRoleStatus ,permissions} = useSelector(state => state.rolePermission);
+    const { rolesPermissionsStatus, rolesPermissions, userPermissions,
+        permissionsByRole, permissionsByRoleStatus, permissions } = useSelector(state => state.rolePermission);
     const { user, users } = useSelector(state => state.auth)
 
     useEffect(() => {
@@ -64,10 +65,11 @@ const Acl = () => {
 
     useEffect(() => {
         if (selectedUser !== null) {
-            dispatch(getUserRolesPermissionsByMapping(selectedUser))
             const userBySelectedId = users.find(x => x.id === selectedUser);
-            if(userBySelectedId.role) setUserRoles(userBySelectedId.role)
-            setSelectedRole(null)
+            if (userBySelectedId.role) {
+                setSelectedRole(userBySelectedId.role.id)
+                setSelectedUserRoleName(userBySelectedId.role.name)
+            }
         }
     }, [selectedUser])
 
@@ -110,13 +112,13 @@ const Acl = () => {
         setSelectedUser(null)
         setSelectedRole(null)
         setSelectedPermission(null)
-    } 
+    }
 
     const handleAssignPermission = () => {
         dispatch(createRolesPermissionMapping({
-                "roleId":selectedRole,
-                "permissionId":selectedPermission,
-                "userId":selectedUser
+            "roleId": selectedRole,
+            "permissionId": selectedPermission,
+            "userId": selectedUser
         }))
         dispatch(getAllRolesPermissionsMappings())
         handleModalClose()
@@ -203,9 +205,10 @@ const Acl = () => {
                                                     title="Assign permissions"
                                                     size="lg"
                                                     style={{ content: { maxHeight: '80vh' } }}
-                                                
+
                                                 >
-                                                    <Text fz="xl">Lorem ipsum fesfa Lorem ipsum fesfa</Text>
+                                                    <Text fz="xl">Select user below assigning new permission</Text>
+                                                    {selectedUserRoleName && <Text> ROLE : {selectedUserRoleName}</Text>}
                                                     <br /><br />
                                                     <Select
                                                         label="Select user"
@@ -216,33 +219,27 @@ const Acl = () => {
                                                         }))}
                                                         value={selectedUser}
                                                         onChange={setSelectedUser}
-                                                        
-                                                        
+
+
                                                     />
-                                                    <Select
-                                                        label="Select role"
-                                                        placeholder="Pick one"
-                                                        disabled={selectedUser === null}
-                                                        data={userRoles.map((role) => ({
-                                                            value: role.id,
-                                                            label: role.name
-                                                        }))}
-                                                        value={selectedRole}
-                                                        onChange={setSelectedRole}
-                                                    />
-                                                    <Select
-                                                        label="Select permission"
-                                                        placeholder="Pick one"
-                                                        disabled={selectedRole === null}
-                                                        data={permissions.map((permission) => ({
-                                                            value:permission.id,
-                                                            label:permission.name,
-                                                            disabled: userPermissions.some(userPermission => userPermission.id === permission.id)
-                                                        }))}
-                                                        value={selectedPermission}
-                                                        onChange={setSelectedPermission}
-                                                        dropdownComponent="div"
-                                                    />
+
+
+                                                    {Array.isArray(permissions) && permissions.length > 0 ? (
+                                                        <Select
+                                                            label="Select permission"
+                                                            placeholder="Pick one"
+                                                            disabled={selectedRole === null}
+                                                            data={permissions?.map((permission) => ({
+                                                                value: permission.id,
+                                                                label: permission.name,
+                                                                disabled: rolesPermissions.some(rolesPermission => (rolesPermission.permissionId === permission.id && rolesPermission.userId === selectedUser))
+                                                            }))}
+                                                            value={selectedPermission}
+                                                            onChange={setSelectedPermission}
+                                                            dropdownComponent="div"
+                                                        />
+                                                    ) : (<Text>Loading permissions</Text>)}
+
 
                                                     <br />
 
@@ -275,7 +272,7 @@ const Acl = () => {
                             <div>
 
 
-                                <ScrollArea h={300} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                                <ScrollArea h={600} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
                                     <Table miw={700}>
                                         <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
                                             <tr>
