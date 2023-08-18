@@ -25,6 +25,7 @@ import eaLogo from './assets/eaLogo.png'
 import { loginUser } from "../../redux/authSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { getAllRolesPermissionsMappings ,getAllRolesPermissionsMappingsByUser} from "../../redux/rolesPermissionSlice";
 
 
 
@@ -38,20 +39,26 @@ export default function Login() {
 
 
 
-    const { status, isLoggedIn } = useSelector((state) => state.auth);
+    const { status, isLoggedIn,user } = useSelector((state) => state.auth);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         dispatch(loginUser({ email, password }));
     };
 
-
+    // useEffect(() => {
+    //     if(status === "success" && isLoggedIn){
+    //         dispatch(getAllRolesPermissionsMappings())
+    //     }
+    // },[status,isLoggedIn])
 
     useEffect(() => {
-        if (isLoggedIn) {
+        if(status === "success" && isLoggedIn){
+            dispatch(getAllRolesPermissionsMappingsByUser(user._id))
             navigate("/")
         }
-    }, [isLoggedIn, navigate]);
+    },[status,navigate])
 
     return (
         <>
