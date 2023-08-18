@@ -5,7 +5,7 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async editUser(
     userId: string,
@@ -27,13 +27,15 @@ export class UserService {
 
   async getAllUsers(): Promise<User[]> {
     try {
-      const users = await this.prisma.user.findMany({
-        include: { role: true }
-      });
+      const users =
+        await this.prisma.user.findMany({
+          include: { role: true },
+        });
       return users;
     } catch (error) {
+      console.log(error);
+
       throw new Error('Failed to fetch users');
     }
   }
-
 }

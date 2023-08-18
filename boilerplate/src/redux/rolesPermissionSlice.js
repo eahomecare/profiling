@@ -11,6 +11,7 @@ const initialState = {
   getAllPermissionsStatus: "idle",
   permissionsByRoleStatus:"idle",
   createRolesPermissionMappingStatus:"idle",
+  getAllRolesPermissionsMappingsByUserStatus:"idle",
   roles: [],
   permissions: [],
   userRoles:[],
@@ -82,6 +83,14 @@ export const getAllPermissionsByRole = createAsyncThunk(
   "permissions/byRoleId",
   async(roleid) => {
     const {data} = await axios.get("/permissions/roles/"+roleid)
+    return data
+  }
+)
+
+export const getAllRolesPermissionsMappingsByUser =  createAsyncThunk(
+  "rolesPermissions/byUserId",
+  async(userId) => {
+    const {data} = await axios.get("/user-role-permission-mappings/users/"+userId)
     return data
   }
 )
@@ -179,6 +188,21 @@ export const rolesPermissionSlice = createSlice({
     },
     [createRolesPermissionMapping.rejected]: (state, action) => {
       state.createRolesPermissionMappingStatus = "failed";
+    },
+    [getAllRolesPermissionsMappingsByUser.pending]: (state, action) => {
+      state.getAllRolesPermissionsMappingsByUserStatus = "loading";
+    },
+    [getAllRolesPermissionsMappingsByUser.fulfilled]: (state, action) => {
+      state.getAllRolesPermissionsMappingsByUserStatus = "success"
+      console.log(action.payload);
+      action.payload.map(e => {
+          if (e.role ) state.userRoles.push(e.role)
+          if (e.permission) state.userPermissions.push(e.permission)
+      })
+  
+    },
+    [getAllRolesPermissionsMappingsByUser.rejected]: (state, action) => {
+      state.getAllRolesPermissionsMappingsByUserStatus = "failed";
     },
   },
 });
