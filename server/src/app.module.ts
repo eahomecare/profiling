@@ -20,6 +20,7 @@ import { V1Controller } from './api/v1/v1.controller';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
+import { CampaignModule } from './campaign/campaign.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UserRolePermissionMappingModule } from './user-role-permission-mapping/
     RolesModule,
     PermissionsModule,
     UserRolePermissionMappingModule,
+    CampaignModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
