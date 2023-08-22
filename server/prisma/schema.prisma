@@ -327,10 +327,12 @@ model Campaign {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
   name           String
   eventBased     Boolean         @default(false)
+  triggerTime    DateTime
   start          DateTime
   end            DateTime
   isActive       Boolean         @default(true)
   type           CampaignType
+  recurrenceType RecurrenceType
   customerIDs    String[]        @db.ObjectId
   customers      Customer[]      @relation(fields: [customerIDs], references: [id])
   createdBy      String          @db.ObjectId
@@ -349,6 +351,14 @@ enum CampaignType {
   SMS
   EMAIL
   NOTIFICATION
+}
+
+enum RecurrenceType {
+  DAILY
+  WEEKLY
+  MONHTLY
+  ANNUALLY
+  CUSTOM
 }
 
 model Template {
