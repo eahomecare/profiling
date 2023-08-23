@@ -21,6 +21,8 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
 import { CampaignModule } from './campaign/campaign.module';
+import { TemplateModule } from './template/template.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -42,6 +44,8 @@ import { CampaignModule } from './campaign/campaign.module';
     PermissionsModule,
     UserRolePermissionMappingModule,
     CampaignModule,
+    TemplateModule,
+    EventModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
