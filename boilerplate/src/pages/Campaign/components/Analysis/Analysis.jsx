@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import DropdownRow from './DropdownRow';
 import ButtonGroup from './ButtonGroup';
 import '../../_customer-Profile.scss';
@@ -11,22 +11,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getKeywords } from '../../../../redux/keywordSlice';
 import { IconPlus } from '@tabler/icons-react';
 import { ActionIcon } from '@mantine/core';
+import { toggleModal, updateDropdownData, updateRows, updateSelectedCombinations } from '../../../../redux/campaignManagementSlice';
 
 const Analysis = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const initialDropdownData = {
-        "Personal Information": {
-            "Date of Birth": ["25 - 30 years", "31 - 35 years"],
-            "Gender": ["Male", "Female"]
-        },
-        "Interests": {}
-    };
-
-    const [dropdownData, setDropdownData] = useState(initialDropdownData);
-    const [selectedCombinations, setSelectedCombinations] = useState([]);
-
     const dispatch = useDispatch();
+
+    const {
+        isModalOpen,
+        dropdownData,
+        rows,
+        selectedCombinations
+    } = useSelector(state => state.campaignManagement);
+
     useEffect(() => {
         dispatch(getKeywords());
     }, [dispatch]);
@@ -58,19 +54,9 @@ const Analysis = () => {
                 Interests: updatedDropdownData
             };
 
-            setDropdownData(finalDropdownData);
+            dispatch(updateDropdownData(finalDropdownData));
         }
     }, [keywordsStatus, keywords]);
-
-    const generateRowID = () => Date.now().toString();
-
-    const initialRow = {
-        first: "",
-        second: "",
-        third: "",
-    };
-
-    const [rows, setRows] = useState({ [generateRowID()]: initialRow });
 
     const handleDropdownChange = (rowId, dropdown, value) => {
         const updatedRows = { ...rows };
@@ -94,7 +80,6 @@ const Analysis = () => {
                 thirdValue = value;
             }
 
-            // Remove any previous selection for this row in selectedCombinations
             updatedCombinations = updatedCombinations.filter(combination => combination.rowId !== rowId);
 
             updatedCombinations.push({
@@ -105,15 +90,19 @@ const Analysis = () => {
             });
         }
 
-        setRows(updatedRows);
-        setSelectedCombinations(updatedCombinations);
+        dispatch(updateRows(updatedRows));
+        dispatch(updateSelectedCombinations(updatedCombinations));
     };
 
     const addRow = () => {
-        setRows(prevRows => ({
-            ...prevRows,
-            [generateRowID()]: initialRow
-        }));
+        const newRow = {
+            [Date.now().toString()]: {
+                first: "",
+                second: "",
+                third: ""
+            }
+        };
+        dispatch(updateRows({ ...rows, ...newRow }));
     };
 
     const deleteRow = (rowId) => {
@@ -122,8 +111,12 @@ const Analysis = () => {
 
         const updatedSelectedCombinations = selectedCombinations.filter(combination => combination.rowId !== rowId);
 
-        setRows(updatedRows);
-        setSelectedCombinations(updatedSelectedCombinations); // Update the selectedCombinations state
+        dispatch(updateRows(updatedRows));
+        dispatch(updateSelectedCombinations(updatedSelectedCombinations));
+    };
+
+    const handleModalToggle = (status) => {
+        dispatch(toggleModal(status));
     };
 
     return (
@@ -179,7 +172,8 @@ const Analysis = () => {
                         </div>
                         <ButtonGroup
                             isModalOpen={isModalOpen}
-                            setIsModalOpen={setIsModalOpen} />
+                            setIsModalOpen={handleModalToggle}
+                        />
                     </div>
                     <div className='col-12 col-lg-4'>
                         <div className='dem-grapic clearfix'>

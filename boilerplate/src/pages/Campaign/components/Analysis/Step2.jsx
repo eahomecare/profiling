@@ -1,74 +1,38 @@
-import React, { useState } from "react";
-// import editicon from '../../img/edit-icon.png';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Timeline from "./Timeline";
 import FileUploader from './FileUploader';
+import {
+    setActiveTab,
+    updateTabData
+} from '../../../../redux/campaignManagementSlice';
 
 const Step2 = () => {
-    const [activeTab, setActiveTab] = useState('Email');
-
-    const [tabData, setTabData] = useState({
-        Email: {
-            content: '',
-            timelineState: {},
-            file: null
-        },
-        SMS: {
-            content: '',
-            timelineState: {},
-            file: null
-        },
-        Notification: {
-            content: '',
-            timelineState: {},
-            file: null
-        },
-        Whatsapp: {
-            content: '',
-            timelineState: {},
-            file: null
-        }
-    });
+    const dispatch = useDispatch();
+    const activeTab = useSelector(state => state.campaignManagement.activeTab);
+    const tabData = useSelector(state => state.campaignManagement.tabData);
 
     const handleTextInput = (event) => {
         const value = event.target.value;
-        setTabData(prevData => ({
-            ...prevData,
+        const updatedTabData = {
+            ...tabData,
             [activeTab]: {
-                ...prevData[activeTab],
+                ...tabData[activeTab],
                 content: value
             }
-        }));
-    };
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        setTabData(prevData => ({
-            ...prevData,
-            [activeTab]: {
-                ...prevData[activeTab],
-                file
-            }
-        }));
-    };
-
-    const handleFileContent = (content) => {
-        setTabData(prevData => ({
-            ...prevData,
-            [activeTab]: {
-                ...prevData[activeTab],
-                content
-            }
-        }));
+        };
+        dispatch(updateTabData(updatedTabData));
     };
 
     const handleTimelineUpdate = (newState) => {
-        setTabData(prevData => ({
-            ...prevData,
+        const updatedTabData = {
+            ...tabData,
             [activeTab]: {
-                ...prevData[activeTab],
+                ...tabData[activeTab],
                 timelineState: newState
             }
-        }));
+        };
+        dispatch(updateTabData(updatedTabData));
     };
 
     return (
@@ -82,7 +46,7 @@ const Step2 = () => {
                                     <button
                                         key={tab}
                                         className={`nav-link d-block mb-2 ${activeTab === tab ? 'active' : ''}`}
-                                        onClick={() => setActiveTab(tab)}
+                                        onClick={() => dispatch(setActiveTab(tab))}
                                     >
                                         {tab}
                                     </button>
@@ -102,23 +66,19 @@ const Step2 = () => {
                                         <div className='clearfix'>
                                             <textarea
                                                 className="full-width-textarea"
-                                                value={tabData[tab].content}
+                                                value={tabData[tab]?.content || ''}
                                                 onChange={handleTextInput}
                                             ></textarea>
-                                            {/* Uncomment if you need the button */}
-                                            {/* <button type='button' className='btn edit-btn'>
-                                            <div><img src={editicon} alt="" className='img-fluid' /></div><div className='edit-title'>Edit</div>
-                                        </button> */}
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <FileUploader onFileContent={handleFileContent} />
+                        <FileUploader />
                         <Timeline
                             key={activeTab}
                             onUpdate={handleTimelineUpdate}
-                            initialState={tabData[activeTab].timelineState}
+                            initialState={tabData[activeTab]?.timelineState || {}}
                         />
                     </div>
                 </div>
