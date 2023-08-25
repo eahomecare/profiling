@@ -1,0 +1,1026 @@
+@import '././scss/variables';
+
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #252D3B;
+    text-align: left;
+    background-color: #fff;
+
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mt-25 {
+    margin-top: 25px;
+}
+
+.mt-25 {
+    margin-top: 25px;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.mt-35 {
+    margin-top: 35px;
+}
+
+.mt-40 {
+    margin-top: 40px;
+}
+
+.mt-45 {
+    margin-top: 45px;
+}
+
+.mt-50 {
+    margin-top: 50px;
+}
+
+.mb-0 {
+    margin-top: 0;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.mb-35 {
+    margin-top: 35px;
+}
+
+.mb-40 {
+    margin-bottom: 40px;
+}
+
+.mb-45 {
+    margin-top: 45px;
+}
+
+.mb-50 {
+    margin-bottom: 50px;
+}
+
+.chart-bx {
+    position: relative;
+    background: $chartbg;
+    border-radius: $radius13;
+    padding: $padding20;
+}
+
+.fullwidth {
+    width: $fullwidth;
+    height: 180px;
+}
+
+.bx-title h1 {
+    font-size: $font20;
+    font-weight: $weight500;
+    color: $colormain;
+}
+
+.arrow {
+    color: $colorblue;
+    font-size: $font38;
+}
+
+.bx-no-act {
+    color: $colorblue;
+    font-size: $font14;
+}
+
+.bx-no-inact {
+    color: $gery;
+    font-size: $font14;
+}
+
+.mrg-auto {
+    margin: $marginauto;
+
+}
+
+.poly-count {
+    transform: rotate(270deg);
+    text-align: center;
+    width: 150px;
+    font-size: $font11;
+    margin: 0 auto;
+    float: left;
+    position: relative;
+    top: 90px;
+    left: -66px;
+}
+
+.month-x {
+    font-size: $font11;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.total-numb {
+    font-size: $font34;
+    color: $colorblue;
+}
+
+.total-users {
+    font-size: $font24;
+    color: $colorblue;
+}
+
+.countG {
+    color: $Gcolor;
+    font-size: $font11;
+}
+
+.countR {
+    color: $Rcolor;
+    font-size: $font11;
+}
+
+.countS {
+    color: $Scolor;
+    font-size: $font11;
+}
+
+.countH {
+    color: $Hcolor;
+    font-size: $font11;
+}
+
+.c-circle {
+    position: relative;
+    font-size: 6px;
+    top: -2px;
+}
+
+.pt-30 {
+    padding-top: 30px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.row {
+    &.equal-cols {
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+
+        &>[class*='col-'] {
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+
+            &>* {
+                -webkit-flex: 1 1 auto;
+                -ms-flex: 1 1 auto;
+                flex: 1 1 auto;
+            }
+        }
+    }
+}
+
+.row.equal-cols:before,
+.row.equal-cols:after {
+    display: block;
+}
+
+.numb-circle {
+    background: rgb(85, 111, 226);
+    background: linear-gradient(180deg, rgba(85, 111, 226, 1) 0%, rgba(36, 64, 203, 1) 100%);
+    border-radius: 100%;
+    text-align: center;
+    color: #fff;
+    height: 38px;
+    width: 32px;
+    font-size: $font14;
+    height: 32px;
+    line-height: 32px;
+}
+
+.camp-title h1 {
+    margin: 0;
+    padding: 0;
+    font-size: $font16;
+    font-weight: $weight500;
+    color: $colormain;
+}
+
+.camp-title h2 {
+    margin: 0;
+    padding: 0;
+    font-weight: $weight500;
+    font-size: $font14;
+    color: $colormain;
+}
+
+.dis-inline {
+    display: inline-flex;
+}
+
+.dis-block {
+    display: inline-block;
+}
+
+.sm-arrow {
+    font-size: $font24;
+    color: $colorblue;
+}
+
+.form-select.droparrow {
+    color: $dropbg;
+    font-size: $font11;
+    background: $dropcolor url(./img/downarrow.png) no-repeat 90% center !important;
+    height: 38px;
+    border: none;
+    outline: none;
+}
+
+.select-title h1 {
+    color: $gery;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-select:focus.droparrow:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0) !important;
+}
+
+.dem-grapic {
+    background: $dmgbg;
+    border-radius: $radius13;
+    padding: $padding20;
+}
+
+.dem-title h1 {
+    color: $colorblue;
+    font-size: $font24;
+    font-weight: $weight7;
+}
+
+.btn.datebtn {
+    width: $fullwidth;
+    padding: 10px;
+    background: $white;
+    font-size: $font16;
+    font-weight: $weight6;
+    color: $colorblue;
+    border: solid 1px $border;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.20);
+}
+
+.btn.runcamp {
+    width: $fullwidth;
+    padding: 10px;
+    background: $white;
+    font-size: $font16;
+    font-weight: $weight6;
+    color: $colorblue;
+    border: solid 1px $border;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.20);
+}
+
+.btn.filtrsbtn {
+    width: $fullwidth;
+    padding: 10px;
+    background: $btnbg;
+    font-size: $font16;
+    font-weight: $weight6;
+    color: $colorblue;
+    border: solid 1px $border;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.20);
+}
+
+.btn.fatchbtn {
+    width: $fullwidth;
+    padding: 10px;
+    background: $colorblue;
+    font-size: $font16;
+    font-weight: $weight6;
+    color: $colorblue;
+    border: solid 1px $border;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.20);
+}
+
+.model-form-wrap {
+    padding: 10px 10px;
+
+}
+
+.modal-header.modal-header-wrap {
+    padding: 20px 30px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0);
+}
+
+.form-floating>label {
+    padding-left: 0rem;
+    color: $colormain !important;
+    margin-left: 0px;
+}
+
+.form-control.inputs-control {
+    border: none;
+    border-radius: 0;
+    border-bottom: solid 1px $lineinput;
+    font-size: $font16;
+    color: $gery;
+    padding-left: 6px;
+}
+
+.date-inputs-control {
+    font-size: $font12;
+    color: $colormain;
+    font-weight: $weight4;
+    padding-left: 6px;
+}
+
+.modeltitle {
+    h1 {
+        font-size: $font20;
+        font-weight: $weight7;
+        color: $colormain;
+        padding: 0;
+        margin: 0;
+    }
+
+    h2 {
+        font-size: $font14;
+        font-weight: $weight4;
+        color: $gery;
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+    }
+}
+
+.form-floating>.form-control:focus,
+.form-floating>.form-control:not(:placeholder-shown),
+.form-floating>.form-control-plaintext:focus,
+.form-floating>.form-control-plaintext:not(:placeholder-shown) {
+    padding-top: 2.5rem;
+
+}
+
+.floating-label input,
+.floating-label textarea {
+    font-family: 'Lato', sans-serif !important;
+    padding-left: 6px;
+    color: $gery;
+    font-size: $font20;
+    font-weight: $weight500;
+    border-radius: 0;
+    border: none;
+    border-bottom: solid 1px $lineinput;
+    outline: none;
+}
+
+.floating-label span {
+    padding-left: 6px !important;
+    font-size: $font12 !important;
+    color: $colormain;
+    font-weight: $weight4;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+.date-icon {
+    background: url(img/date-icon.png) no-repeat 98% center;
+}
+
+.react-datepicker {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
+    border: none;
+    width: 100%;
+    border-radius: 0;
+}
+
+.react-datepicker-popper {
+    width: 44%;
+}
+
+.react-datepicker__month-container {
+    width: 100%;
+}
+
+.react-datepicker__month {
+    width: 100%;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border: solid 1px $white;
+}
+
+.react-datepicker__header {
+    background: $white;
+    border-bottom: 1px solid $white;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+    height: 55px;
+    line-height: 52px;
+}
+
+.react-datepicker__navigation--previous {
+    left: 10px;
+    background: $btnbg;
+    border-radius: 4px;
+    top: 18px;
+}
+
+.react-datepicker__navigation-icon--previous {
+    right: 0;
+    top: 12px;
+    background: $btnbg;
+    border-radius: 4px;
+}
+
+.react-datepicker__navigation-icon--next {
+    left: 0px;
+}
+
+.react-datepicker__navigation-icon {
+    position: relative;
+    top: 5px;
+    font-size: 20px;
+    width: 0;
+}
+
+.react-datepicker__navigation--next {
+    right: 10px;
+    top: 18px;
+    background: $btnbg;
+    border-radius: 4px;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+    background: $white;
+    border: solid 1px $bluecircle;
+    color: $bluecircle;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+    background: $bgcolor;
+    border: solid 1px $bluecircle;
+}
+
+.react-datepicker-popper[data-placement^=top] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^=top] .react-datepicker__triangle::after,
+.react-datepicker-popper[data-placement^=bottom] .react-datepicker__triangle::after {
+    left: -150px;
+}
+
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+    border-radius: 0.3rem;
+    background-color: $btnbg;
+    color: $fntcolor;
+}
+
+.react-datepicker__year-read-view--down-arrow,
+.react-datepicker__month-read-view--down-arrow,
+.react-datepicker__month-year-read-view--down-arrow,
+.react-datepicker__navigation-icon::before {
+    border-color: $fntcolor;
+}
+
+.time-title h1 {
+    color: $border;
+    font-size: $font16;
+    font-weight: $weight500;
+}
+
+.spc-bg {
+    background: $spbg;
+    width: 2px;
+    margin: 0 auto;
+    height: 150px;
+}
+
+.form-check-input.check-recu {
+    width: 24px;
+    height: 24px;
+    margin-top: 0;
+}
+
+.form-check-input:checked {
+    background-color: $checkcolor;
+    border: 2px solid $checkcolor !important;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0);
+}
+
+.form-check-label.check-label {
+    color: $colormain;
+    font-size: $font16;
+    font-weight: $weight4;
+    padding-left: 15px;
+}
+
+.form-check-input {
+    border: 2px solid $checkcolor !important;
+}
+
+.chkinput {
+    display: inline-flex;
+    position: absolute;
+}
+
+.day-no {
+    border: solid 1px $chkinput;
+    width: 40px;
+    margin: 0px 10px;
+    border-radius: 4px;
+    height: 30px;
+    outline: none;
+}
+
+.btn.model-submit-btn {
+    color: $white;
+    padding: 12px 24px;
+    background: $bgcolor;
+    font-size: $font16;
+    font-weight: $weight500;
+    box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.20);
+}
+
+.dis-initial {
+    display: initial;
+    border: $borderN;
+}
+
+.btn-close {
+    opacity: 1;
+}
+
+.recu-cvy {
+    color: $colormain;
+    font-size: $font16;
+    font-weight: $weight4;
+}
+
+.from-mrg-rtl {
+    margin-right: 10px;
+    width: 140px;
+}
+
+.form-select.dropday {
+    color: $dropday;
+    font-size: $font11;
+    background: $white url(./img/grey-icon.png) no-repeat 90% center !important;
+    border: solid 1px $lineinput !important;
+    border-radius: 2px;
+    line-height: 18px;
+    height: 30px;
+    outline: none !important;
+}
+
+.mrg-ltr {
+    margin-left: 10px;
+}
+
+.mrg-rtl {
+    margin-right: 10px;
+}
+
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0);
+}
+
+@media (max-width: 991px) {
+    .tab-content>.tab-pane {
+        display: block;
+        opacity: 1;
+    }
+
+}
+
+.nav-shadow {
+    box-shadow: 0 2px 15px rgb(0 0 0 / 5%) !important;
+}
+
+.nav-border {
+    border-right: 3px solid #fc4a1a;
+}
+
+.nav-pills .nav-link {
+    padding: 20px;
+    width: auto;
+    height: 100%;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: #fff;
+    color: #333;
+    transition: all 0.3s;
+}
+
+.nav-pills .nav-link.active {
+    background: $tabbg;
+    color: $colorblue;
+}
+
+.nav-pills .nav-link.active {
+    border-radius: 4px;
+    padding: 12px 8px;
+    width: fit-content;
+}
+
+.nav-pills .nav-link {
+    border-radius: 4px;
+    padding: 12px 8px;
+    width: fit-content;
+    margin: 10px 0;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0px;
+    color: $gery;
+    font-family: 'Lato', sans-serif;
+}
+
+.nav-link .circle-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    border: 2px solid #f7b733;
+    background: #fff;
+    color: #fc4a1a;
+    font-size: 22px;
+}
+
+.modal-lg.modal-lg-width {
+    min-width: 930px;
+}
+
+.tab-content-bg {
+    width: $fullwidth;
+    height: 300px;
+    margin-bottom: 50px;
+    border-radius: 13px;
+    padding: 30px;
+    background: $tabcntbg;
+    box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.04), 0px 20px 25px -5px rgba(0, 0, 0, 0.10);
+}
+
+.modal-body.modal-pad {
+    padding: 30px;
+}
+
+input[type="file"] {
+    position: relative;
+    width: 100%;
+}
+
+input[type="file"]::file-selector-button {
+    width: 139;
+    color: transparent;
+}
+
+input[type="file"]::before {
+    position: absolute;
+    pointer-events: none;
+    top: 8px;
+    left: 12px;
+    height: 24px;
+    width: 24px;
+    content: "";
+    background: url(img/upload-img.png) no-repeat 0 0;
+}
+
+input[type="file"]::after {
+    position: absolute;
+    pointer-events: none;
+    top: 10px;
+    left: 50px;
+    color: $colorblue;
+    font-weight: $weight6;
+    content: "Upload template";
+    font-family: 'Lato', sans-serif;
+}
+
+
+input[type="file"]::file-selector-button {
+    border-radius: 4px;
+    padding: 0 16px;
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    background-color: $dmgbg;
+    border: 2px solid $border;
+    margin-right: 16px;
+    transition: background-color 200ms;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #DDE5FF;
+}
+
+input[type="file"]::file-selector-button:active {
+    background-color: #DDE5FF;
+}
+
+.btn.edit-btn {
+    border: solid 2px $colorblue !important;
+    color: $colorblue !important;
+    background: #DDE5FF !important;
+    font-size: $font16;
+    float: right;
+    line-height: 23px;
+    display: inline-flex;
+}
+
+.edit-title {
+    padding: 3px;
+    padding-left: 6px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.pad-ltr {
+    padding-left: 100px;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.align-cl {
+    text-align: right;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 980px) {}
+
+@media only screen and (max-width : 767px) {
+    .humb-icon {
+        border-radius: 4px;
+        padding: 6px 8px;
+        background: #4e70ea;
+        color: #fff;
+    }
+
+    #content {
+        padding: 1rem !important;
+    }
+
+    .mweb-center {
+        text-align: center;
+    }
+
+    .web-pad-ltr {
+        padding-left: 50px;
+    }
+
+    .web-mt-0 {
+        margin-top: 0px;
+    }
+
+    .web-mt-5 {
+        margin-top: 5px;
+    }
+
+    .web-mt-10 {
+        margin-top: 10px;
+    }
+
+    .web-mt-15 {
+        margin-top: 15px;
+    }
+
+    .web-mt-20 {
+        margin-top: 20px;
+    }
+
+    .web-mt-25 {
+        margin-top: 25px;
+    }
+
+    .web-mt-30 {
+        margin-top: 30px;
+    }
+
+    .web-mb-0 {
+        margin-bottom: 0px !important;
+    }
+
+    .web-mb-5 {
+        margin-bottom: 5px !important;
+    }
+
+    .web-mb-10 {
+        margin-bottom: 10px !important;
+    }
+
+    .web-mb-15 {
+        margin-bottom: 15px !important;
+    }
+
+    .web-mb-20 {
+        margin-bottom: 20px !important;
+    }
+
+    .web-mb-25 {
+        margin-bottom: 25px !important;
+    }
+
+    .web-mb-30 {
+        margin-bottom: 30px !important;
+    }
+
+    .web-pt-0 {
+        padding-top: 0px !important;
+    }
+
+    .web-pt-5 {
+        padding-top: 5px !important;
+    }
+
+    .web-pt-10 {
+        padding-top: 10px !important;
+    }
+
+    .web-pt-15 {
+        padding-top: 15px !important;
+    }
+
+    .web-pt-20 {
+        padding-top: 20px !important;
+    }
+
+    .web-pt-25 {
+        padding-top: 25px !important;
+    }
+
+    .web-mt-30 {
+        padding-top: 30px !important;
+    }
+
+    .web-pb-0 {
+        padding-bottom: 0px !important;
+    }
+
+    .web-pb-5 {
+        padding-bottom: 5px !important;
+    }
+
+    .web-pb-10 {
+        padding-bottom: 10px !important;
+    }
+
+    .web-pb-15 {
+        padding-bottom: 15px !important;
+    }
+
+    .web-pb-20 {
+        padding-bottom: 20px !important;
+    }
+
+    .web-pb-25 {
+        padding-bottom: 25px !important;
+    }
+
+    .web-pb-30 {
+        padding-bottom: 30px !important;
+    }
+
+
+    #sidebar.active {
+        margin-left: -80px !important;
+    }
+
+    #sidebar {
+        margin-left: 0px !important;
+    }
+
+    .side-humber {
+        z-index: 99;
+        left: 80%;
+        top: 25px;
+    }
+
+    .hdr-pad {
+        padding: 0px 20px;
+    }
+
+    .modal-lg.modal-lg-width {
+        min-width: auto;
+    }
+
+    .modal-header.modal-header-wrap {
+        padding: 20px 15px;
+    }
+
+    .modal-body.modal-pad {
+        padding: 30px 15px;
+    }
+
+    .model-form-wrap {
+        padding: 10px 0px;
+    }
+
+    .spc-bg {
+        width: 100%;
+        height: 2px;
+    }
+
+    .web-dis-inline {
+        display: inline-block;
+    }
+
+    .pad-ltr {
+        padding-left: 0;
+    }
+
+    .align-cl {
+        text-align: center;
+    }
+}
