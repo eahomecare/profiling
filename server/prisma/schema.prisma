@@ -327,7 +327,7 @@ model Campaign {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
   name           String
   eventBased     Boolean         @default(false)
-  triggerTime    DateTime
+  triggerTime    String
   start          DateTime
   end            DateTime
   isActive       Boolean         @default(true)
@@ -335,8 +335,8 @@ model Campaign {
   recurrenceType RecurrenceType
   customerIDs    String[]        @db.ObjectId
   customers      Customer[]      @relation(fields: [customerIDs], references: [id])
-  createdBy      String          @db.ObjectId
-  updatedBy      String          @db.ObjectId
+  createdBy      String?         @db.ObjectId
+  updatedBy      String?         @db.ObjectId
   created_at     DateTime        @default(now())
   updated_at     DateTime        @updatedAt
   eventIDs       String[]        @db.ObjectId
@@ -367,8 +367,8 @@ model Template {
   name       String
   type       String
   content    String
-  createdBy  String     @db.ObjectId
-  updatedBy  String     @db.ObjectId
+  createdBy  String?    @db.ObjectId
+  updatedBy  String?    @db.ObjectId
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
 }
@@ -378,12 +378,12 @@ model Event {
   campaignIDs String[]   @db.ObjectId
   campaigns   Campaign[] @relation(fields: [campaignIDs], references: [id])
   name        String
-  eventType   String
-  isActive    String
+  type        String
+  isActive    Boolean    @default(true)
   start       DateTime
   end         DateTime
-  createdBy   String     @db.ObjectId
-  updatedBy   String     @db.ObjectId
+  createdBy   String?    @db.ObjectId
+  updatedBy   String?    @db.ObjectId
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 }

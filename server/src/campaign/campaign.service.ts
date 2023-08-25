@@ -9,7 +9,9 @@ export class CampaignService {
   ) {}
 
   async findAll(): Promise<Campaign[]> {
-    return this.prisma.campaign.findMany();
+    return this.prisma.campaign.findMany({
+      include: { events: true, template: true },
+    });
   }
 
   async findOne(
@@ -24,6 +26,8 @@ export class CampaignService {
     data: Prisma.CampaignCreateInput,
   ): Promise<Campaign> {
     try {
+      data.start = new Date(data.start);
+      data.end = new Date(data.end);
       const createdCampaign =
         await this.prisma.campaign.create({
           data,
