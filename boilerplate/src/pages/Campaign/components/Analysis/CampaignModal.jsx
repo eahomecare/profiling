@@ -5,6 +5,7 @@ import { Modal } from "@mantine/core";
 import './CampaignModal.css'
 import { toggleModal, setStep, setCampaignName, setEventName } from "../../../../redux/campaignManagementSlice";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { showNotification } from "@mantine/notifications";
 
 const CampaignModal = () => {
     const dispatch = useDispatch();
@@ -20,12 +21,18 @@ const CampaignModal = () => {
             });
     };
 
+    const handleClose = () => {
+        showNotification({
+            type: 'default',
+            title: `Campaign ${campaignManagementState.eventName} has been Cancelled`,
+            message: `Click Run campaign to run the campaign again`,
+        })
+        dispatch(toggleModal(false))
+    }
+
     return (
         <Modal
             opened={isModalOpen}
-            onClose={() => {
-                dispatch(toggleModal(false));
-            }}
             withCloseButton={false}
             closeOnClickOutside={false}
             size={'xl'}
@@ -37,7 +44,7 @@ const CampaignModal = () => {
                         <h2>Step: {step}/2</h2>
                         {step === 2 && <IconArrowLeft cursor={'pointer'} onClick={() => dispatch(setStep(1))} />}
                     </div>
-                    <button type="button" className="btn-close" onClick={() => dispatch(toggleModal(false))} aria-label="Close"></button>
+                    <button type="button" className="btn-close" onClick={() => handleClose()} aria-label="Close"></button>
                 </div>
 
                 <div >

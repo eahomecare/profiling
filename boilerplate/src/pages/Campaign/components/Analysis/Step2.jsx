@@ -7,6 +7,7 @@ import {
 } from '../../../../redux/campaignManagementSlice';
 import { useState, useEffect } from "react";
 import { Box, Flex } from "@mantine/core";
+import { notifications, showNotification } from "@mantine/notifications";
 
 const Step2 = () => {
     const dispatch = useDispatch();
@@ -44,6 +45,22 @@ const Step2 = () => {
             }
         };
         dispatch(updateTabData(updatedTabData));
+    };
+
+    const handleApplyForAll = (currentTimelineState) => {
+        const updatedTabData = { ...tabData };
+        ['Email', 'SMS', 'Notification', 'Whatsapp'].forEach(tab => {
+            updatedTabData[tab] = {
+                ...tabData[tab],
+                timelineState: currentTimelineState
+            };
+        });
+        dispatch(updateTabData(updatedTabData));
+        showNotification({
+            type: 'default',
+            title: 'Timelines applied',
+            message: 'Timelines have been added for all modes',
+        })
     };
     return (
         <>
@@ -115,13 +132,14 @@ const Step2 = () => {
                                 <Timeline
                                     key={activeTab}
                                     onUpdate={handleTimelineUpdate}
+                                    onApplyForAll={handleApplyForAll}  // Passing the new function
                                     initialState={tabData[activeTab]?.timelineState || {}}
                                 />
                             </>
                         )}
                     </Box>
                 </div>
-            </div>
+            </div >
         </>
     );
 };

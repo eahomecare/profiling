@@ -1,4 +1,4 @@
-import React,{Suspense} from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -18,9 +18,9 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-        <Suspense fallback="...loading">
+          <Suspense fallback="...loading">
             <App />
-        </Suspense>
+          </Suspense>
         </ThemeProvider>
       </BrowserRouter>
     </Provider>

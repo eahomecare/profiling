@@ -13,6 +13,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { ActionIcon, Flex, Group, Text } from '@mantine/core';
 import { toggleModal, updateDropdownData, updateRows, updateSelectedCombinations } from '../../../../redux/campaignManagementSlice';
 import Demographic from './Demographic';
+import { Notifications } from '@mantine/notifications';
 
 const Analysis = () => {
     const dispatch = useDispatch();
