@@ -1,4 +1,4 @@
-import { Button, Flex } from "@mantine/core";
+import { Badge, Button, Divider, Flex } from "@mantine/core";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,8 @@ import { setEventDate } from '../../../../redux/campaignManagementSlice';
 import CustomDate from "./CustomTimelineComponents/CustomDate";
 import CustomTime from "./CustomTimelineComponents/CustomTime";
 
-const Timeline = ({ initialState, onUpdate }) => {
+const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
+
     const dispatch = useDispatch();
     const eventDate = useSelector(state => state.campaignManagement.eventDate);
 
@@ -100,11 +101,17 @@ const Timeline = ({ initialState, onUpdate }) => {
 
     return (
         <div>
+            <Divider mb={10} />
             <div className='col-12 col-lg-12'>
                 <div className='time-title mb-20'>
-                    <h1>
-                        Timeline
-                    </h1>
+                    <Flex justify={'space-between'}>
+                        <h1>
+                            Timeline
+                        </h1>
+                        <Badge
+                            styles={{ root: { cursor: 'pointer' } }}
+                            onClick={() => onApplyForAll(results)}>Apply For All</Badge>
+                    </Flex>
                 </div>
             </div>
 
