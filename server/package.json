@@ -6,6 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "view-customer-crm-id-mappings": "node db-scripts/view-customer-crm-ids.js",
+    "customer-crm-id-mappings-generate": "node db-scripts/customer-crm-ids-generate.js",
+    "delete-customer-crm-id-mappings": "node db-scripts/delete-customer-crm-ids.js",
     "view-keywords": "node db-scripts/view-keywords.js",
     "transfer-keywords": "node db-scripts/transfer-keywords.js",
     "delete-keywords": "node db-scripts/delete-keywords.js",

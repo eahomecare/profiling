@@ -1,0 +1,70 @@
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.modal-content {
+    width: 80%;
+    height: 80vh;
+    /* This makes the modal take 80% of the viewport height */
+    max-width: 1000px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    overflow-y: auto;
+    /* make the modal scrollable */
+}
+
+.modal-header,
+.modal-footer {
+    position: sticky;
+    top: 0;
+    background: white;
+    /* To ensure the background remains solid */
+    z-index: 2;
+}
+
+.modal-footer {
+    top: unset;
+    bottom: 0;
+}
+
+.full-width-textarea {
+    width: 100%;
+    /* Take the full width */
+    height: 250px;
+    /* Take the full height */
+    border: none;
+    /* Remove border */
+    outline: none;
+    /* Remove focus outline */
+    resize: none;
+    /* Prevent resizing */
+    background-color: transparent;
+    /* Transparent background */
+    padding: 0;
+    /* Remove default padding */
+    margin: 0;
+    /* Remove default margin */
+    overflow: auto;
+    /* Enable scroll if content exceeds the area */
+}
+
+.character-count {
+    text-align: right;
+    color: grey;
+}
+
+.character-limit-error {
+    text-align: right;
+    color: red;
+    font-weight: bold;
+}

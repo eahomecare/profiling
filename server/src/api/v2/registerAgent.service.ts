@@ -3,24 +3,20 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { AuthorizationService } from './authorization.service';
-
-
+import { CryptoService } from './crypto.service'
 
 @Injectable()
 export class RegisterAgentService {
     constructor(
         private prisma: PrismaService,
         private configService: ConfigService,
-        private authorizationService: AuthorizationService
+        private authorizationService: AuthorizationService,
+        private cryptoService: CryptoService
     ) { }
-
-
 
     async registerAgent(data) {
         const { staticKey, ID, name, email, mobile } = data;
         const crmName = this.authorizationService.validateCrm(staticKey);
-
-
 
         try {
             const existingUser = await this.prisma.user.findUnique({
@@ -29,13 +25,7 @@ export class RegisterAgentService {
             });
 
             if (existingUser) {
-                let isAgent = false;
-                if (existingUser.role.name == 'agent') {
-                    isAgent = true;
-                }
-
-
-
+                let isAgent = existingUser.role && existingUser.role.name == 'agent';
 
                 if (isAgent) {
                     if (!existingUser.agentCRM.includes(crmName)) {
@@ -49,8 +39,6 @@ export class RegisterAgentService {
                         });
                     }
 
-
-
                     return {
                         status: 200,
                         message: 'Agent already exists',
@@ -61,22 +49,16 @@ export class RegisterAgentService {
                         where: { name: 'agent' },
                     });
 
-
-
                     if (!agentRole) {
-                        await this.prisma.role.create({
-                            data: {
-                                name: 'agent'
-                            }
-                        })
+                        throw new NotFoundException("Agent role not found in the system.");
                     }
 
-
-
                     const JWT_SECRET = this.configService.get('JWT_SECRET');
-                    const agentJWT = jwt.sign(data, JWT_SECRET);
+                    if (!JWT_SECRET) {
+                        throw new InternalServerErrorException('Configuration error.');
+                    }
 
-
+                    const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
 
                     await this.prisma.user.update({
                         where: { id: existingUser.id },
@@ -88,8 +70,6 @@ export class RegisterAgentService {
                         },
                     });
 
-
-
                     return {
                         status: 201,
                         message: "Agent role added to an existing user",
@@ -98,13 +78,20 @@ export class RegisterAgentService {
                 }
             } else {
                 const agentRole = await this.prisma.role.findUnique({
-                    where: { name: 'agent' }, include: { defaultPermissions: true },
+                    where: { name: 'agent' },
+                    include: { defaultPermissions: true },
                 });
 
+                if (!agentRole) {
+                    throw new NotFoundException("Agent role not found in the system.");
+                }
+
                 const JWT_SECRET = this.configService.get('JWT_SECRET');
-                const agentJWT = jwt.sign(data, JWT_SECRET);
+                if (!JWT_SECRET) {
+                    throw new InternalServerErrorException('Configuration error.');
+                }
 
-
+                const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
 
                 const newUser = await this.prisma.user.create({
                     data: {
@@ -117,8 +104,7 @@ export class RegisterAgentService {
                         agentCRM: {
                             set: [crmName],
                         },
-                        hash: '', // Hash needs to be generated when upgrading agent to other roles
-
+                        hash: '',
                     },
                 });
 
@@ -128,12 +114,16 @@ export class RegisterAgentService {
                     permissionId: permission.id
                 }));
 
-                await this.prisma.userRolePermissionMapping.createMany({
-                    data: userRolePermissionMappingData,
-                });
-
-
-
+                try {
+                    if (userRolePermissionMappingData.length > 0) {
+                        await this.prisma.userRolePermissionMapping.createMany({
+                            data: userRolePermissionMappingData,
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error creating many userRolePermissionMappings:", error);
+                    throw new InternalServerErrorException('An error occurred while processing your request.');
+                }
 
                 return {
                     status: 201,
@@ -142,10 +132,11 @@ export class RegisterAgentService {
                 }
             }
         } catch (error) {
+            console.error("Error occurred:", error);
             if (error instanceof BadRequestException || error instanceof NotFoundException) {
                 throw error;
             }
-            throw new InternalServerErrorException('Database error');
+            throw new InternalServerErrorException('An error occurred while processing your request.');
         }
     }
 }

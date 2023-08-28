@@ -15,6 +15,8 @@ import SimulateCall from "./components/AgentPages/MobileSimulation";
 import AgentEntry from "./components/AgentPages/AgentEntry";
 import Acl from "./pages/Acl/Acl";
 import PermissionDenied from "./pages/PermissionDenied";
+import Analysis from "./pages/Campaign/components/Analysis/Analysis";
+import { Notifications } from "@mantine/notifications";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");
@@ -49,24 +51,26 @@ function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <Notifications />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           {hasPermission(userPermissions, "customer dashboard") ? (
             <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
           ) : (
-            <PrivateRoute path="/dashboard/*" element={<PermissionDenied/>} />
+            <PrivateRoute path="/dashboard/*" element={<PermissionDenied />} />
           )}
           {hasPermission(userPermissions, "user view") ? (
             <PrivateRoute path="/" element={<Customers />} />
           ) : (
-            <PrivateRoute path="/" element={<PermissionDenied/>} />
+            <PrivateRoute path="/" element={<PermissionDenied />} />
           )}
           {hasPermission(userPermissions, "acl") ? (
             <PrivateRoute path="/acl" element={<Acl />} />
           ) : (
-            <PrivateRoute path="/acl" element={<PermissionDenied/>} />
+            <PrivateRoute path="/acl" element={<PermissionDenied />} />
           )}
+          <Route path="/campaign" element={<Analysis />} />
           <Route path="/mobileSimulation" element={<SimulateCall />} />
           <Route path="/agent" element={<AgentEntry />} />
         </Routes>

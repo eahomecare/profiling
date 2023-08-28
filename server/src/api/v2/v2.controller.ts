@@ -28,9 +28,10 @@ import { SearchService } from 'src/search/search.service';
 import { AgentQuestionService } from './agentQuestion.service';
 import { SubmitService } from './agentSubmit.service';
 import { SubmitDataDto } from './dto/agent-submit.dto';
+import { CustomerLookupService } from './customerLookup.service';
 
-@Controller('api/v1')
-export class V1Controller {
+@Controller('api/v2')
+export class V2Controller {
     constructor(
         private readonly registerAgentService: RegisterAgentService,
         private readonly createAgentSessionService: CreateAgentSessionService,
@@ -42,6 +43,7 @@ export class V1Controller {
         private readonly searchService: SearchService,
         private readonly agentQuestionService: AgentQuestionService,
         private readonly submitService: SubmitService,
+        private readonly customerLookupService: CustomerLookupService,
     ) { }
 
     @Post('/register')
@@ -131,8 +133,9 @@ export class V1Controller {
                 throw new UnauthorizedException('Invalid authorization token');
             }
 
-            const mobileNumber = keywordsDto.mobile;
-            const keywords = await this.keywordsService.getKeywordsForMobile(mobileNumber);
+            const crmName = agentSession.CRM
+            const customer = await this.customerLookupService.findCustomerByCRMIdAndName(keywordsDto.customerCRMId, crmName);
+            const keywords = await this.keywordsService.getKeywordsForCustomer(customer);
 
             res.status(HttpStatus.OK).json({ success: true, ...keywords });
         } catch (error) {
@@ -177,8 +180,10 @@ export class V1Controller {
                 throw new UnauthorizedException('Invalid authorization token');
             }
 
-            const mobileNumber = questionsDto.mobile;
-            const questions = await this.agentQuestionService.getQuestionsForMobile(mobileNumber);
+            const crmName = agentSession.CRM
+            const customer = await this.customerLookupService.findCustomerByCRMIdAndName(questionsDto.customerCRMId, crmName);
+            const questions = await this.agentQuestionService.getQuestionsForCustomer(customer);
+
 
             res.status(HttpStatus.OK).json({ success: true, ...questions });
         } catch (error) {
@@ -205,14 +210,15 @@ export class V1Controller {
             if (!agentSession) {
                 throw new UnauthorizedException('Invalid authorization token');
             }
-            const customer = await this.submitService.findCustomerByMobile(submitDataDto.mobile);
+
+            const crmName = agentSession.CRM
+            const customer = await this.customerLookupService.findCustomerByCRMIdAndName(submitDataDto.customerCRMId, crmName);
 
             if (!customer) {
                 throw new UnauthorizedException('No customer found with provided mobile number.');
             }
 
-            const userAgentMapping = await this.submitService.findUserByAgentSession(agentSession.id);
-            const agentID = await this.submitService.getAgentIDFromSession(userAgentMapping)
+            const agentID = await this.submitService.getAgentIDFromSession(agentSession.id)
 
 
             let agentSubmitData = {
@@ -220,25 +226,23 @@ export class V1Controller {
                 customerID: customer.id,
                 agentID,
                 remarks: submitDataDto.remarks || '',
-                createdKeywords: [],
                 questions: [],
-                Keywords: [],
+                keywords: [],
             };
-
 
             if (submitDataDto.selectedKeywords && submitDataDto.selectedKeywords.length) {
                 const connectedKeywords = await this.submitService.connectCustomerToKeywords(customer.id, submitDataDto.selectedKeywords);
-                agentSubmitData.Keywords = connectedKeywords.map(keyword => keyword.id);
+                agentSubmitData.keywords = connectedKeywords.map(keyword => keyword.id);
             }
 
             if (submitDataDto.questionResponses && submitDataDto.questionResponses.length) {
                 const questionsData = await this.submitService.handleQuestionResponses(submitDataDto.questionResponses, customer.id);
                 agentSubmitData.questions = questionsData.questions;
-                agentSubmitData.Keywords = [...agentSubmitData.Keywords, ...questionsData.keywords];
+                agentSubmitData.keywords = [...agentSubmitData.keywords, ...questionsData.keywords];
             }
 
             if (submitDataDto.createdKeywords && submitDataDto.createdKeywords.length) {
-                agentSubmitData.createdKeywords = await this.submitService.handleCreatedKeywords(customer.id, agentID, submitDataDto.createdKeywords);
+                agentSubmitData.keywords = [...agentSubmitData.keywords, ...await this.submitService.handleCreatedKeywords(customer.id, agentID, submitDataDto.createdKeywords)];
             }
 
             await this.submitService.createAgentSubmit(agentSubmitData);
