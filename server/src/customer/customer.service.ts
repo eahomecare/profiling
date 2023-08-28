@@ -112,34 +112,37 @@ export class CustomerService {
   //   return customerDetails;
   // }
 
-
   async fetchCustomerDetails() {
-    const customerDetails = await this.prisma.customer.findMany({
-      include: {
-        personal_details: true,
-      },
-    });
-
-    const formattedCustomerDetails = customerDetails.map((customer) => {
-      const { personal_details, ...rest } = customer;
-      return {
-        ...rest,
-        profiling: {
-          personal_details,
+    const customerDetails =
+      await this.prisma.customer.findMany({
+        include: {
+          personal_details: true,
         },
-      };
-    });
+      });
 
-    return { customer_details: formattedCustomerDetails }
+    const formattedCustomerDetails =
+      customerDetails.map((customer) => {
+        const { personal_details, ...rest } =
+          customer;
+        return {
+          ...rest,
+          profiling: {
+            personal_details,
+          },
+        };
+      });
+
+    return {
+      customer_details: formattedCustomerDetails,
+    };
   }
-
 
   async fetchCustomerInfo(customerId: string) {
     const customerDetails = {
       customer_details:
         await this.prisma.customer.findUnique({
           where: { id: customerId },
-          include: { personal_details: true }
+          include: { personal_details: true },
         }),
     };
     return customerDetails;
@@ -247,6 +250,94 @@ export class CustomerService {
       throw new Error(
         `Could not update keywords for customer with id ${customerId}: ${error.message}`,
       );
+    }
+  }
+
+  async getCustomersByAgeRange(ageRange: string) {
+    try {
+      const currentDate = new Date();
+      const minAge = parseInt(ageRange.split('-')[0]);
+      const maxAge = parseInt(ageRange.split('-')[1]);
+
+      const minDOB = new Date(
+        currentDate.getFullYear() - maxAge,
+        currentDate.getMonth(),
+        currentDate.getDate(),
+      );
+      const maxDOB = new Date(
+        currentDate.getFullYear() - minAge,
+        currentDate.getMonth(),
+        currentDate.getDate(),
+      );
+
+      const formatDate = (date: Date) => {
+        return date.toISOString(); // Convert Date to "YYYY-MM-DDTHH:mm:ss.sssZ" format
+      };
+
+      const customers = await this.prisma.customer.findMany({
+        where: {
+          personal_details: {
+            date_of_birth: {
+              gte: formatDate(minDOB),
+              lte: formatDate(maxDOB),
+            },
+          },
+        },
+      });
+
+      return customers;
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      throw error;
+    } finally {
+      await this.prisma.$disconnect();
+    }
+  }
+
+
+  async getCustomersByGender(gender: string) {
+    try {
+      const customers = await this.prisma.customer.findMany({
+        where: {
+          personal_details: {
+            gender: {
+              equals: gender,
+            },
+          },
+        },
+        include: { personal_details: true }
+      });
+
+      return customers;
+    } catch (error) {
+      console.error('Error fetching customers by gender:', error);
+      throw error;
+    } finally {
+      await this.prisma.$disconnect();
+    }
+  }
+
+
+  async getCustomersByKeywordCategories(keywordCategories: string[]) {
+    try {
+      const customers = await this.prisma.customer.findMany({
+        where: {
+          keywords: {
+            every: {
+              category: {
+                in: keywordCategories,
+              },
+            },
+          },
+        },
+      });
+
+      return customers;
+    } catch (error) {
+      console.error('Error fetching customers by keyword categories:', error);
+      throw error;
+    } finally {
+      await this.prisma.$disconnect();
     }
   }
 }
