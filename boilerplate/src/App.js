@@ -16,6 +16,7 @@ import AgentEntry from "./components/AgentPages/AgentEntry";
 import Acl from "./pages/Acl/Acl";
 import PermissionDenied from "./pages/PermissionDenied";
 import Analysis from "./pages/Campaign/components/Analysis/Analysis";
+import { Notifications } from "@mantine/notifications";
 
 function App() {
   const [colorScheme, setColorScheme] = useState("light");

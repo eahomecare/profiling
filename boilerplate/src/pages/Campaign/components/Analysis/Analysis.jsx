@@ -10,8 +10,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getKeywords } from '../../../../redux/keywordSlice';
 import { IconPlus } from '@tabler/icons-react';
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Flex, Group, Text } from '@mantine/core';
 import { toggleModal, updateDropdownData, updateRows, updateSelectedCombinations } from '../../../../redux/campaignManagementSlice';
+import Demographic from './Demographic';
 
 const Analysis = () => {
     const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const Analysis = () => {
     }, [dispatch]);
 
     const keywords = useSelector(state => state.keyword.keywords);
+    console.log(keywords, keywords)
     const keywordsStatus = useSelector(state => state.keyword.keywordsStatus);
 
     if (keywordsStatus === 'loading') {
@@ -125,12 +127,19 @@ const Analysis = () => {
                 <div className='row'>
                     <div className='col-12 col-lg-8'>
                         <div className='col-12 col-lg-12 mb-3'>
-                            <div className='bx-title mb-2 dis-inline'>
-                                <h1>Customer Profile Analysis</h1>
-                                <ActionIcon onClick={addRow} color='blue' variant='subtle' size={'sm'}>
-                                    <IconPlus />
-                                </ActionIcon>
-                            </div>
+                            <Flex justify={'space-between'}>
+                                <div className='bx-title mb-2 dis-inline'>
+                                    <h1>Customer Profile Analysis</h1>
+                                </div>
+                                <div className='pl-90'>
+                                    <Group onClick={addRow} style={{ cursor: 'pointer' }}>
+                                        <ActionIcon color='blue' variant='subtle' size={'sm'}>
+                                            <IconPlus color='#4E70EA' />
+                                        </ActionIcon>
+                                        <Text ml={-18} color='#4E70EA' size={'sm'}>Add More</Text>
+                                    </Group>
+                                </div>
+                            </Flex>
                         </div>
                         <div className='row' style={{ maxHeight: '250px', overflowY: 'scroll' }}>
                             <div className='col-12 col-lg-3'>
@@ -175,28 +184,7 @@ const Analysis = () => {
                             setIsModalOpen={handleModalToggle}
                         />
                     </div>
-                    <div className='col-12 col-lg-4'>
-                        <div className='dem-grapic clearfix'>
-                            <div className='dem-title mb-4'>
-                                <h1>Total Demographic</h1>
-                            </div>
-                            <div className='fullwidth mb-2'>
-                                {/* <Pie className='mrg-auto' data={data} /> */}
-                            </div>
-                            <div className='row mt-2'>
-                                <div className='col-12 col-lg-12 text-center mb-2'>
-                                    <span className='total-numb pe-2'>18,24,7,000</span>
-                                    <span className='total-users'> Users matching your criteria</span>
-                                </div>
-                                <div className='col-12 col-lg-6 web-mb-20'>
-                                    <button type='button' className='btn datebtn'>Download Data</button>
-                                </div>
-                                <div className='col-12 col-lg-6'>
-                                    <button type='button' className='btn runcamp'>Run Campaing</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Demographic />
                 </div>
             </div>
         </div>

@@ -1,35 +1,62 @@
-import { useEffect, useState } from "react";
+import { Button, Flex } from "@mantine/core";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
+import { useDispatch, useSelector } from 'react-redux';
+import { setEventDate } from '../../../../redux/campaignManagementSlice';
+import CustomDate from "./CustomTimelineComponents/CustomDate";
+import CustomTime from "./CustomTimelineComponents/CustomTime";
 
-const Timeline = ({ initialState = {}, onUpdate }) => {
+const Timeline = ({ initialState, onUpdate }) => {
+    const dispatch = useDispatch();
+    const eventDate = useSelector(state => state.campaignManagement.eventDate);
+
     const defaultStartDate = new Date();
-    const defaultEndDate = new Date();
-    defaultEndDate.setDate(defaultEndDate.getDate() + 7);
 
     const defaultResults = {
         startDate: defaultStartDate,
-        endDate: defaultEndDate,
+        endDate: null,
         recurrence: {
             type: '',
             dailyFrequency: 1,
             weeklyDays: [],
             monthlyDay: '',
             monthlyFrequency: '',
-            monthlyWeekday: ''
+            monthlyWeekday: '',
+            customDateTimes: []
         }
     };
 
     const [startDate, setStartDate] = useState(initialState.startDate || defaultStartDate);
-    const [endDate, setEndDate] = useState(initialState.endDate || defaultEndDate);
     const [results, setResults] = useState(initialState.recurrence ? initialState : defaultResults);
-
 
     const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const monthlyFrequencies = ['first', 'second', 'third', 'fourth'];
 
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [customDateTimes, setCustomDateTimes] = useState(results.recurrence.customDateTimes || []);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
+
+    const addCustomDate = () => {
+        if (selectedDate && selectedTime) {
+            const newCustomDateTime = { date: selectedDate, time: selectedTime };
+            setCustomDateTimes([...customDateTimes, newCustomDateTime]);
+            setResults(prevState => ({
+                ...prevState,
+                recurrence: {
+                    ...prevState.recurrence,
+                    customDateTimes: [...prevState.recurrence.customDateTimes, newCustomDateTime]
+                }
+            }));
+            setSelectedDate(null);
+            setSelectedTime(null);
+            setShowDropdown(false);
+        }
+    };
+
     useEffect(() => {
-        onUpdate(results)
-    }, [results])
+        onUpdate(results);
+    }, [results]);
 
     const handleDateChange = (field, date) => {
         setResults(prevState => ({
@@ -40,7 +67,7 @@ const Timeline = ({ initialState = {}, onUpdate }) => {
         if (field === "startDate") {
             setStartDate(date);
         } else if (field === "endDate") {
-            setEndDate(date);
+            dispatch(setEventDate(date));
         }
     };
 
@@ -55,40 +82,20 @@ const Timeline = ({ initialState = {}, onUpdate }) => {
     };
 
     const handleDailyFrequencyChange = (value) => {
-        let updatedValue = value;
-        if (value !== 'Everyday') {
-            updatedValue = parseInt(value, 10);
-        }
-
-        setResults(prevState => ({
-            ...prevState,
-            recurrence: {
-                ...prevState.recurrence,
-                dailyFrequency: updatedValue,
-            },
-        }));
+        let updatedValue = value !== 'Everyday' ? parseInt(value, 10) : 'Everyday';
+        handleRecurrenceChange('dailyFrequency', updatedValue);
     };
 
     const handleWeeklyDaysChange = (day) => {
-        setResults(prevState => ({
-            ...prevState,
-            recurrence: {
-                ...prevState.recurrence,
-                weeklyDays: prevState.recurrence.weeklyDays.includes(day)
-                    ? prevState.recurrence.weeklyDays.filter(d => d !== day)
-                    : [...prevState.recurrence.weeklyDays, day],
-            },
-        }));
+        const updatedDays = results.recurrence.weeklyDays.includes(day)
+            ? results.recurrence.weeklyDays.filter(d => d !== day)
+            : [...results.recurrence.weeklyDays, day];
+
+        handleRecurrenceChange('weeklyDays', updatedDays);
     };
 
     const handleMonthlyDayAndFrequencyChange = (field, value) => {
-        setResults(prevState => ({
-            ...prevState,
-            recurrence: {
-                ...prevState.recurrence,
-                [field]: parseInt(value, 10),
-            },
-        }));
+        handleRecurrenceChange(field, parseInt(value, 10));
     };
 
     return (
@@ -101,27 +108,29 @@ const Timeline = ({ initialState = {}, onUpdate }) => {
                 </div>
             </div>
 
-            <div className='col-6 col-lg-6'>
-                <div className='mb-40'>
-                    <label htmlFor="startDate" className='date-inputs-control'>Start date</label>
-                    <DatePicker className='form-control  inputs-control form-floating date-icon'
-                        dateFormat="yyyy/MM/dd"
-                        selected={startDate}
-                        onChange={(date) => handleDateChange("startDate", date)}
-                        minDate={new Date()} />
+            <Flex>
+                <div className='col-6 col-lg-6'>
+                    <div className='mb-40'>
+                        <label htmlFor="startDate" className='date-inputs-control'>Start date</label>
+                        <DatePicker className='form-control  inputs-control form-floating date-icon'
+                            dateFormat="yyyy/MM/dd"
+                            selected={startDate}
+                            onChange={(date) => handleDateChange("startDate", date)}
+                            minDate={new Date()} />
+                    </div>
                 </div>
-            </div>
 
-            <div className='col-6 col-lg-6'>
-                <div className='mb-40'>
-                    <label htmlFor="endDate" className='date-inputs-control'>End date</label>
-                    <DatePicker className='form-control  inputs-control form-floating date-icon'
-                        dateFormat="yyyy/MM/dd"
-                        selected={endDate}
-                        onChange={(date) => handleDateChange("endDate", date)}
-                        minDate={new Date()} />
+                <div className='col-6 col-lg-6'>
+                    <div className='mb-40'>
+                        <label htmlFor="endDate" className='date-inputs-control'>End date</label>
+                        <DatePicker className='form-control  inputs-control form-floating date-icon'
+                            dateFormat="yyyy/MM/dd"
+                            selected={eventDate}
+                            onChange={(date) => handleDateChange("endDate", date)}
+                            minDate={new Date()} />
+                    </div>
                 </div>
-            </div>
+            </Flex>
             <div className='col-12 col-lg-12'>
                 <div className='time-title mb-20'>
                     <h1>Recurrence</h1>
@@ -148,6 +157,13 @@ const Timeline = ({ initialState = {}, onUpdate }) => {
                             <input className="form-check-input check-recu" type="radio" name="recurrence" id="monthly" value="Monthly"
                                 checked={results.recurrence.type === 'Monthly'} onChange={e => handleRecurrenceChange('type', e.target.value)} />
                             <label className="form-check-label check-label" htmlFor="monthly">Monthly</label>
+                        </div>
+                    </div>
+                    <div className='mb-25'>
+                        <div className="form-check">
+                            <input className="form-check-input check-recu" type="radio" name="recurrence" id="custom" value="Custom"
+                                checked={results.recurrence.type === 'Custom'} onChange={e => handleRecurrenceChange('type', e.target.value)} />
+                            <label className="form-check-label check-label" htmlFor="custom">Custom</label>
                         </div>
                     </div>
                 </div>
@@ -236,6 +252,25 @@ const Timeline = ({ initialState = {}, onUpdate }) => {
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+                    {results.recurrence.type === 'Custom' && (
+                        <div>
+                            <Button onClick={() => setShowDropdown(!showDropdown)}>Add More</Button>
+                            {showDropdown && (
+                                <div>
+                                    <CustomDate setSelectedDate={setSelectedDate} />
+                                    <CustomTime setSelectedTime={setSelectedTime} />
+                                    <Button onClick={addCustomDate}>Add</Button>
+                                </div>
+                            )}
+                            <div>
+                                {customDateTimes.map((item, index) => (
+                                    <div key={index}>
+                                        {item.date.toLocaleDateString()} {item.time}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
