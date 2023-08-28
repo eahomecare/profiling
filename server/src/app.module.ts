@@ -14,15 +14,19 @@ import { ServiceCustomerController } from './service-customer/service-customer.c
 import { QuestionModule } from './question/question.module';
 import { ProfileMappingModule } from './profile_mapping/profile_mapping.module';
 import { LangchainModule } from './langchain/langchain.module';
-import { V1Module } from './api/v1/v1.module';
-import { MulterMiddleware } from './api/v1/middleware/multer';
-import { V1Controller } from './api/v1/v1.controller';
+// import { V1Module } from './api/v1/v1.module';
+// import { MulterMiddleware } from './api/v1/middleware/multer';
+// import { V1Controller } from './api/v1/v1.controller';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
+<<<<<<< HEAD
 import { CampaignModule } from './campaign/campaign.module';
 import { TemplateModule } from './template/template.module';
 import { EventModule } from './event/event.module';
+=======
+import { V2Module } from './api/v2/v2.module';
+>>>>>>> dev
 
 @Module({
   imports: [
@@ -39,7 +43,8 @@ import { EventModule } from './event/event.module';
     QuestionModule,
     ProfileMappingModule,
     LangchainModule,
-    V1Module,
+    // V1Module,
+    V2Module,
     RolesModule,
     PermissionsModule,
     UserRolePermissionMappingModule,
@@ -52,8 +57,8 @@ import { EventModule } from './event/event.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(MulterMiddleware)
-      .forRoutes(V1Controller);
+    // consumer
+    //   .apply(MulterMiddleware)
+    //   .forRoutes(V1Controller);
   }
 }

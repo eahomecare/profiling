@@ -1,13 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Customer } from '@prisma/client';
 
 @Injectable()
 export class KeywordsService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async getKeywordsForMobile(mobile: string) {
-        const customer = await this.prisma.customer.findUnique({
-            where: { mobile: mobile },
+    async getKeywordsForCustomer(customer: Customer) {
+        if (!customer) {
+            throw new UnauthorizedException('No customer provided');
+        }
+
+        const customerWithKeywords = await this.prisma.customer.findUnique({
+            where: { id: customer.id },
             include: {
                 keywords: {
                     select: {
@@ -23,12 +28,12 @@ export class KeywordsService {
             }
         });
 
-        if (!customer) {
-            throw new UnauthorizedException('No customer found with provided mobile number');
+        if (!customerWithKeywords) {
+            throw new UnauthorizedException('No customer found with provided ID');
         }
 
         return {
-            customerKeywords: customer.keywords
+            customerKeywords: customerWithKeywords.keywords
         };
     }
 }

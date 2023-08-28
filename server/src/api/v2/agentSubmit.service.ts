@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, PreconditionFailedException, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { UserAgentSessionMapping } from '@prisma/client';
+import { AgentSession, User } from '@prisma/client';
 
 @Injectable()
 export class SubmitService {
@@ -27,12 +27,11 @@ export class SubmitService {
         let createdKeywordIds = [];
         try {
             for (const keyword of keywords) {
-                const createdKeyword = await this.prisma.createdKeywords.create({
+                const createdKeyword = await this.prisma.keyword.create({
                     data: {
-                        keyword: keyword,
-                        customerID: customerId,
-                        agentID: agentId,
-                        submitID: '64773d52c2f9d843b9393939'
+                        value: keyword,
+                        category: 'unknown',
+                        customers: { connect: { id: customerId } }
                     }
                 });
                 createdKeywordIds.push(createdKeyword.id);
@@ -40,7 +39,7 @@ export class SubmitService {
             return createdKeywordIds;
         } catch (error) {
             console.error("Error in handleCreatedKeywords:", error);
-            throw new UnprocessableEntityException('createdKeywords is not structured properly, check and try again.')
+            throw new UnprocessableEntityException('Keywords is not structured properly, check and try again.')
         }
     }
 
@@ -113,53 +112,49 @@ export class SubmitService {
         }
     }
 
-    async findUserByAgentSession(sessionID: string): Promise<UserAgentSessionMapping> {
-        try {
-            const userAgentMapping = await this.prisma.userAgentSessionMapping.findFirst({
-                where: { sessionId: sessionID }
-            });
-            return userAgentMapping;
-        } catch (error) {
-            console.error("Error in findUserByAgentSession:", error);
-            throw new NotFoundException('Agent session not found')
-        }
-    }
 
-    async getAgentIDFromSession(agentSession: UserAgentSessionMapping): Promise<any> {
+    async getAgentIDFromSession(agentSessionID: string): Promise<string | null> {
         try {
-            const user = await this.prisma.user.findUnique({
-                where: { id: agentSession.userId }
-            })
-            return user.agentID
+            const agentSessionInstance = await this.prisma.agentSession.findUnique({
+                where: { id: agentSessionID },
+                include: { user: true }
+            });
+
+            console.log('user', agentSessionInstance.user)
+            return agentSessionInstance?.user?.agentID || null;
         } catch (error) {
             console.error("Error in getAgentIDFromSession:", error);
-            throw new NotFoundException('Agent ID missing')
+            throw new NotFoundException('Agent ID missing');
         }
     }
 
-    async createAgentSubmit(data: any,): Promise<void> {
+    async createAgentSubmit(data: any): Promise<void> {
         try {
-            const { createdKeywords, questions, Keywords, ...otherData } = data;
+            const { keywords, questions, ...otherData } = data;
 
-            const createdAgentSubmit = await this.prisma.agentSubmits.create({
+            const newAgentSubmit = await this.prisma.agentSubmits.create({
                 data: {
-                    ...otherData,
-                    createdKeywords: { connect: createdKeywords.map(id => ({ id })) },
-                    questions: { connect: questions.map(id => ({ id })) },
-                    Keywords: { connect: Keywords.map(id => ({ id })) },
+                    ...otherData
                 }
             });
 
-            // Update the createdKeywords with the submitID
-            for (const keywordId of data.createdKeywords) {
-                await this.prisma.createdKeywords.update({
-                    where: { id: keywordId },
-                    data: { submitID: createdAgentSubmit.id }
-                });
-            }
+            await this.prisma.agentSubmitKeywordsMapping.createMany({
+                data: keywords.map(keywordId => ({
+                    agentSubmitId: newAgentSubmit.id,
+                    keywordId: keywordId
+                }))
+            });
+
+            await this.prisma.agentSubmitQuestionsMapping.createMany({
+                data: questions.map(questionId => ({
+                    agentSubmitId: newAgentSubmit.id,
+                    questionId: questionId
+                }))
+            });
+
         } catch (error) {
             console.error("Error in createAgentSubmit:", error);
-            throw new UnprocessableEntityException('Something went wrong in processing the data. Please check the request and try again')
+            throw new UnprocessableEntityException('Something went wrong in processing the data. Please check the request and try again');
         }
     }
 }
