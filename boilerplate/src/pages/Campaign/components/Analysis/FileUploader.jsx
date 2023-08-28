@@ -16,7 +16,8 @@ const FileUploader = () => {
                 [activeTab]: {
                     ...tabData[activeTab],
                     content: fileContent,
-                    file
+                    file,
+                    fileName: file.name
                 }
             };
             dispatch(updateTabData(updatedTabData));
@@ -27,6 +28,11 @@ const FileUploader = () => {
 
     return (
         <div className="mb-15">
+            {tabData[activeTab]?.fileName && (
+                <p className="file-name-display">
+                    Uploaded: {tabData[activeTab].fileName}
+                </p>
+            )}
             <input type="file" accept=".txt" onChange={handleFileChange} />
         </div>
     );

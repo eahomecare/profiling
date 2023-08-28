@@ -17,30 +17,44 @@ const initialState = {
         }
     },
     selectedCombinations: [],
-    campaignName: "",
     eventName: "",
+    eventDate: null,
     step: 1,
     activeTab: 'Email',
+    startDate: null,
+    endDate: null,
     tabData: {
         Email: {
             content: '',
             timelineState: {},
-            file: null
+            fileName: null,
+            file: null,
+            characterCount: 0,
+            charLimit: 500
         },
         SMS: {
             content: '',
             timelineState: {},
-            file: null
+            fileName: null,
+            file: null,
+            characterCount: 0,
+            charLimit: 160
         },
         Notification: {
             content: '',
             timelineState: {},
-            file: null
+            fileName: null,
+            file: null,
+            characterCount: 0,
+            charLimit: 250
         },
         Whatsapp: {
             content: '',
             timelineState: {},
-            file: null
+            fileName: null,
+            file: null,
+            characterCount: 0,
+            charLimit: 2000
         }
     }
 };
@@ -67,8 +81,18 @@ const campaignManagementSlice = createSlice({
         setEventName: (state, action) => {
             state.eventName = action.payload;
         },
+        setEventDate: (state, action) => {
+            state.eventDate = action.payload;
+        },
         setStep: (state, action) => {
             state.step = action.payload;
+        },
+        setStartDate: (state, action) => {
+            state.startDate = action.payload;
+        },
+        setEndDate: (state, action) => {
+            state.endDate = action.payload;
+            state.eventDate = action.payload;
         },
         setActiveTab: (state, action) => {
             state.activeTab = action.payload;
@@ -93,10 +117,13 @@ export const {
     updateSelectedCombinations,
     setCampaignName,
     setEventName,
+    setEventDate,
+    setStartDate,
+    setEndDate,
     setStep,
     setActiveTab,
     updateTabData,
-    resetModal
+    resetModal,
 } = campaignManagementSlice.actions;
 
 export default campaignManagementSlice.reducer;

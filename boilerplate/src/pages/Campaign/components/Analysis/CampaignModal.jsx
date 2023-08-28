@@ -4,14 +4,15 @@ import Step2 from './Step2';
 import { Modal } from "@mantine/core";
 import './CampaignModal.css'
 import { toggleModal, setStep, setCampaignName, setEventName } from "../../../../redux/campaignManagementSlice";
+import { IconArrowLeft } from "@tabler/icons-react";
 
 const CampaignModal = () => {
     const dispatch = useDispatch();
-    const { isModalOpen, campaignName, eventName, step } = useSelector(state => state.campaignManagement);
+    const { isModalOpen, eventName, step } = useSelector(state => state.campaignManagement);
     const campaignManagementState = useSelector(state => state.campaignManagement);
 
     const handlePublish = () => {
-        console.log('Campaign Management Slice', campaignManagementState)
+        console.log('Campaign Management Slice', campaignManagementState);
         // Simulate an API request
         new Promise((resolve) => setTimeout(resolve, 1000))
             .then(() => {
@@ -19,22 +20,12 @@ const CampaignModal = () => {
             });
     };
 
-    const handleStepChange = (step) => {
-        dispatch(setStep(step));
-    };
-
-    const handleNameChange = (name) => {
-        dispatch(setCampaignName(name));
-    };
-
-    const handleEventChange = (event) => {
-        dispatch(setEventName(event));
-    };
-
     return (
         <Modal
             opened={isModalOpen}
-            onClose={() => dispatch(toggleModal(false))}
+            onClose={() => {
+                dispatch(toggleModal(false));
+            }}
             withCloseButton={false}
             closeOnClickOutside={false}
             size={'xl'}
@@ -44,6 +35,7 @@ const CampaignModal = () => {
                     <div className='modeltitle'>
                         <h1>{step === 1 ? "Create a new Campaign" : "Preview Campaign"}</h1>
                         <h2>Step: {step}/2</h2>
+                        {step === 2 && <IconArrowLeft cursor={'pointer'} onClick={() => dispatch(setStep(1))} />}
                     </div>
                     <button type="button" className="btn-close" onClick={() => dispatch(toggleModal(false))} aria-label="Close"></button>
                 </div>
@@ -51,10 +43,8 @@ const CampaignModal = () => {
                 <div >
                     {step === 1 ? (
                         <Step1
-                            campaignName={campaignName}
-                            setCampaignName={handleNameChange}
                             eventName={eventName}
-                            setEventName={handleEventChange}
+                            setEventName={event => dispatch(setEventName(event))}
                         />
                     ) : (
                         <div>
@@ -65,7 +55,7 @@ const CampaignModal = () => {
 
                 <div className="modal-footer text-center dis-initial mb-30">
                     {step === 1 ? (
-                        <button className="btn model-submit-btn" onClick={() => handleStepChange(2)}>Submit</button>
+                        <button className="btn model-submit-btn" onClick={() => dispatch(setStep(2))}>Next</button>
                     ) : (
                         <button className="btn model-submit-btn" onClick={handlePublish}>Publish</button>
                     )}

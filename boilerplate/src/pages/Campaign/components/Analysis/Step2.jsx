@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Timeline from "./Timeline";
 import FileUploader from './FileUploader';
@@ -6,11 +5,22 @@ import {
     setActiveTab,
     updateTabData
 } from '../../../../redux/campaignManagementSlice';
+import { useState, useEffect } from "react";
+import { Box, Flex } from "@mantine/core";
 
 const Step2 = () => {
     const dispatch = useDispatch();
     const activeTab = useSelector(state => state.campaignManagement.activeTab);
     const tabData = useSelector(state => state.campaignManagement.tabData);
+    const [previewMode, setPreviewMode] = useState(false);
+
+    const enterPreviewMode = () => {
+        setPreviewMode(true);
+    };
+
+    const exitPreviewMode = () => {
+        setPreviewMode(false);
+    };
 
     const handleTextInput = (event) => {
         const value = event.target.value;
@@ -18,7 +28,8 @@ const Step2 = () => {
             ...tabData,
             [activeTab]: {
                 ...tabData[activeTab],
-                content: value
+                content: value,
+                characterCount: value.length
             }
         };
         dispatch(updateTabData(updatedTabData));
@@ -34,7 +45,6 @@ const Step2 = () => {
         };
         dispatch(updateTabData(updatedTabData));
     };
-
     return (
         <>
             <div className="modal-body modal-pad">
@@ -63,24 +73,53 @@ const Step2 = () => {
                                         id={`v-pills-${tab}`}
                                         role="tabpanel"
                                     >
-                                        <div className='clearfix'>
+                                        <Box>
                                             <textarea
                                                 className="full-width-textarea"
                                                 value={tabData[tab]?.content || ''}
                                                 onChange={handleTextInput}
+                                                readOnly={previewMode}  // Set to readonly in preview mode
                                             ></textarea>
-                                        </div>
+                                        </Box>
+                                        <Flex direction={"row-reverse"} mt={10}>
+                                            <div className="character-count">
+                                                {tabData[activeTab].characterCount}/{tabData[activeTab].charLimit}
+                                            </div>
+                                            {!previewMode && (
+                                                <Box ml={5}>
+                                                    {tabData[activeTab].characterCount > tabData[activeTab].charLimit &&
+                                                        <div className="character-limit-error">Character limit exceeded!</div>
+                                                    }
+                                                </Box>
+                                            )}
+                                        </Flex>
+                                        <Box>
+                                            {!previewMode ? (
+                                                <button className="btn model-submit-btn" onClick={enterPreviewMode}>Preview</button>
+                                            ) : (
+                                                <button className="btn model-submit-btn" onClick={exitPreviewMode}>OK</button>
+                                            )}
+                                        </Box>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <FileUploader />
-                        <Timeline
-                            key={activeTab}
-                            onUpdate={handleTimelineUpdate}
-                            initialState={tabData[activeTab]?.timelineState || {}}
-                        />
                     </div>
+
+                    <Box >
+                        {!previewMode && (
+                            <>
+                                <Flex direction={'row-reverse'} mr={-100} mt={-20} >
+                                    <FileUploader />
+                                </Flex>
+                                <Timeline
+                                    key={activeTab}
+                                    onUpdate={handleTimelineUpdate}
+                                    initialState={tabData[activeTab]?.timelineState || {}}
+                                />
+                            </>
+                        )}
+                    </Box>
                 </div>
             </div>
         </>

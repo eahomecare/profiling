@@ -57,3 +57,14 @@
     overflow: auto;
     /* Enable scroll if content exceeds the area */
 }
+
+.character-count {
+    text-align: right;
+    color: grey;
+}
+
+.character-limit-error {
+    text-align: right;
+    color: red;
+    font-weight: bold;
+}
