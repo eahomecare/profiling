@@ -3,13 +3,15 @@ import { PrismaService } from '../../prisma/prisma.service';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { AuthorizationService } from './authorization.service';
+import { CryptoService } from './crypto.service'
 
 @Injectable()
 export class RegisterAgentService {
     constructor(
         private prisma: PrismaService,
         private configService: ConfigService,
-        private authorizationService: AuthorizationService
+        private authorizationService: AuthorizationService,
+        private cryptoService: CryptoService
     ) { }
 
     async registerAgent(data) {
@@ -56,7 +58,7 @@ export class RegisterAgentService {
                         throw new InternalServerErrorException('Configuration error.');
                     }
 
-                    const agentJWT = jwt.sign(data, JWT_SECRET);
+                    const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
 
                     await this.prisma.user.update({
                         where: { id: existingUser.id },
@@ -89,7 +91,7 @@ export class RegisterAgentService {
                     throw new InternalServerErrorException('Configuration error.');
                 }
 
-                const agentJWT = jwt.sign(data, JWT_SECRET);
+                const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
 
                 const newUser = await this.prisma.user.create({
                     data: {

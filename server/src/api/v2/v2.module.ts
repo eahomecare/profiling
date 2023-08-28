@@ -13,10 +13,11 @@ import { AgentQuestionService } from './agentQuestion.service';
 import { LangchainService } from 'src/langchain/langchain.service';
 import { SubmitService } from './agentSubmit.service';
 import { CustomerLookupService } from './customerLookup.service';
+import { CryptoService } from './crypto.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
   controllers: [V2Controller],
-  providers: [RegisterAgentService, CreateAgentSessionService, PrismaService, AuthorizationService, LogoutAgentService, ValidateAgentTokenService, KeywordsService, AgentQuestionService, LangchainService, SubmitService, CustomerLookupService],
+  providers: [RegisterAgentService, CreateAgentSessionService, PrismaService, AuthorizationService, LogoutAgentService, ValidateAgentTokenService, KeywordsService, AgentQuestionService, LangchainService, SubmitService, CustomerLookupService, CryptoService],
 })
 export class V2Module { }

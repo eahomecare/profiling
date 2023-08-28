@@ -4,12 +4,14 @@ import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { CreateAgentSessionDto } from './dto/agent-session.dto';
 import { sign } from 'jsonwebtoken';
+import { CryptoService } from './crypto.service';
 
 @Injectable()
 export class CreateAgentSessionService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly configService: ConfigService,
+        private readonly cryptoService: CryptoService,
     ) { }
 
     async create(
@@ -40,11 +42,10 @@ export class CreateAgentSessionService {
             }
         }
 
-        const randomValue = randomBytes(16).toString('hex');
         const secret = this.configService.get('JWT_SECRET');
 
         const authorizationToken = sign(
-            { agentAuthenticationKey: createAgentSessionDto.agentAuthenticationKey, randomValue },
+            this.cryptoService.encrypt(JSON.stringify({ agentAuthenticationKey: createAgentSessionDto.agentAuthenticationKey })),
             secret,
         );
 
