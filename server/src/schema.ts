@@ -32,7 +32,7 @@ export interface Personal_Details {
   address?: string;
   phone_number?: string;
   email_address?: string;
-  date_of_birth?: string;
+  date_of_birth?: Date;
   employment?: string;
   location?: string;
   anniversary?: string;
