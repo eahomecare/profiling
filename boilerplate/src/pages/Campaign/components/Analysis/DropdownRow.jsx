@@ -4,24 +4,9 @@ import { IconChevronDown, IconTrash, IconX } from '@tabler/icons-react';
 
 const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedCombinations, deleteRow }) => {
 
+    const figures = row.figures
     const secondDropdownOptions = row.first ? Object.keys(dropdownData[row.first]) : [];
 
-    // const thirdDropdownOptions = row.second
-    //     ? dropdownData[row.first][row.second].filter(option => {
-    //         const currentCombination = {
-    //             first: row.first,
-    //             second: row.second,
-    //             third: row.first === "Interests" ? option.value : option
-    //         };
-    //         const isSelected = selectedCombinations.some(selected =>
-    //             selected.first === currentCombination.first &&
-    //             selected.second === currentCombination.second &&
-    //             (row.first === "Interests" ? selected.third.value : selected.third) === currentCombination.third
-    //         );
-
-    //         return !isSelected || selectedCombinations.some(selected => selected.rowId === rowId && selected.third.value === currentCombination.third);
-    //     })
-    //     : [];
     const thirdDropdownOptions = row.second
         ? dropdownData[row.first][row.second].filter(option => {
             const currentCombination = {
@@ -91,7 +76,7 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                         data={thirdDropdownOptions.map(option =>
                             typeof option === 'string'
                                 ? { value: option, label: option }
-                                : option // for interests, it's already an object with value and label properties
+                                : option // interests already is an object with value and label
                         )}
                         searchable
                         rightSection={<IconChevronDown size="1rem" />}
@@ -109,7 +94,7 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                 </ActionIcon>
             </div>
             <div className='col-12 col-lg-2'>
-                -
+                {figures !== null ? figures : '-'}
             </div>
         </React.Fragment>
     );

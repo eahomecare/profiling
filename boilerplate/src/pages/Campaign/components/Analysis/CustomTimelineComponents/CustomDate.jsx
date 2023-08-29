@@ -1,4 +1,4 @@
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Text } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
 
@@ -7,8 +7,8 @@ function CustomDate({ setSelectedDate }) {
     return (
         <DatePickerInput
             rightSection={<ActionIcon variant="subtle"><IconCalendar size="1.1rem" stroke={1.5} /></ActionIcon>}
-            label="Pick date"
-            placeholder="Select Date"
+            label={<Text fw={'light'}>Date</Text>}
+            placeholder={<Text>Select Date</Text>}
             onChange={(e) => setSelectedDate(e)}
             mx="auto"
             maw={400}

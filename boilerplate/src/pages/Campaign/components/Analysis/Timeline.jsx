@@ -1,10 +1,12 @@
-import { Badge, Button, Divider, Flex } from "@mantine/core";
+import { ActionIcon, Badge, Box, Button, Card, Divider, Flex, Stack, rem } from "@mantine/core";
 import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEventDate } from '../../../../redux/campaignManagementSlice';
 import CustomDate from "./CustomTimelineComponents/CustomDate";
 import CustomTime from "./CustomTimelineComponents/CustomTime";
+import { IconChevronDown, IconPlus, IconX } from "@tabler/icons-react";
+import { formatDateTime } from "./CustomTimelineComponents/DateFormatter";
 
 const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
 
@@ -56,6 +58,12 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
     };
 
     useEffect(() => {
+        if (selectedDate && selectedTime) {
+            addCustomDate();
+        }
+    }, [selectedDate, selectedTime]);
+
+    useEffect(() => {
         onUpdate(results);
     }, [results]);
 
@@ -70,6 +78,19 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
         } else if (field === "endDate") {
             dispatch(setEventDate(date));
         }
+    };
+
+    const removeCustomDate = (indexToRemove) => {
+        const updatedCustomDateTimes = customDateTimes.filter((_, index) => index !== indexToRemove);
+        setCustomDateTimes(updatedCustomDateTimes);
+
+        setResults(prevState => ({
+            ...prevState,
+            recurrence: {
+                ...prevState.recurrence,
+                customDateTimes: updatedCustomDateTimes
+            }
+        }));
     };
 
     const handleRecurrenceChange = (field, value) => {
@@ -264,26 +285,53 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
                     )}
                     {results.recurrence.type === 'Custom' && (
                         <div>
-                            <Button onClick={() => setShowDropdown(!showDropdown)}>Add More</Button>
-                            {showDropdown && (
-                                <div>
-                                    <CustomDate setSelectedDate={setSelectedDate} />
-                                    <CustomTime setSelectedTime={setSelectedTime} />
-                                    <Button onClick={addCustomDate}>Add</Button>
-                                </div>
-                            )}
-                            <div>
-                                {customDateTimes.map((item, index) => (
-                                    <div key={index}>
-                                        {item.date.toLocaleDateString()} {item.time}
-                                    </div>
-                                ))}
-                            </div>
+                            <Flex wrap={"wrap"}>
+                                <Flex mr={5} wrap={'wrap'}>
+                                    {customDateTimes.map((item, index) => (
+                                        <Badge
+                                            rightSection={
+                                                <ActionIcon
+                                                    size="xs"
+                                                    color="blue"
+                                                    radius="xl"
+                                                    variant="transparent"
+                                                    onClick={() => removeCustomDate(index)} // Add this onClick event here
+                                                >
+                                                    <IconX size={rem(10)} />
+                                                </ActionIcon>
+                                            }
+                                            size="lg"
+                                            mr={5}
+                                            mb={5}
+                                            key={index}
+                                        >
+                                            {formatDateTime(item.date, item.time)}
+                                        </Badge>
+                                    ))}
+                                </Flex>
+                                <Stack>
+                                    <Badge
+                                        bg={'white'}
+                                        c={'gray'}
+                                        styles={{ root: { borderWidth: '1px', borderColor: 'gray', } }}
+                                        leftSection={<ActionIcon size={rem(20)}><IconPlus /></ActionIcon>}
+                                        rightSection={<ActionIcon><IconChevronDown /></ActionIcon>}
+                                        onClick={() => setShowDropdown(!showDropdown)}>Add More</Badge>
+                                    {showDropdown && (
+                                        <Box>
+                                            <Box shadow="lg" w={200}>
+                                                <CustomDate setSelectedDate={setSelectedDate} />
+                                                <CustomTime setSelectedTime={setSelectedTime} />
+                                            </Box>
+                                        </Box>
+                                    )}
+                                </Stack>
+                            </Flex>
                         </div>
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
