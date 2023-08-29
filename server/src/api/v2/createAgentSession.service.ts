@@ -44,8 +44,9 @@ export class CreateAgentSessionService {
 
         const secret = this.configService.get('JWT_SECRET');
 
+        const toBeEncrypted = JSON.stringify({ agentAuthenticationKey: createAgentSessionDto.agentAuthenticationKey })
         const authorizationToken = sign(
-            this.cryptoService.encrypt(JSON.stringify({ agentAuthenticationKey: createAgentSessionDto.agentAuthenticationKey })),
+            this.cryptoService.encrypt(toBeEncrypted),
             secret,
         );
 

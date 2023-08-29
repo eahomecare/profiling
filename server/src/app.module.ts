@@ -20,13 +20,10 @@ import { LangchainModule } from './langchain/langchain.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UserRolePermissionMappingModule } from './user-role-permission-mapping/user-role-permission-mapping.module';
-<<<<<<< HEAD
 import { CampaignModule } from './campaign/campaign.module';
 import { TemplateModule } from './template/template.module';
 import { EventModule } from './event/event.module';
-=======
 import { V2Module } from './api/v2/v2.module';
->>>>>>> dev
 
 @Module({
   imports: [

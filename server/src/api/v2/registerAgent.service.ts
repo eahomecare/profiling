@@ -58,7 +58,8 @@ export class RegisterAgentService {
                         throw new InternalServerErrorException('Configuration error.');
                     }
 
-                    const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
+                    const toBeEncrypted = JSON.stringify(data)
+                    const agentJWT = jwt.sign(this.cryptoService.encrypt(toBeEncrypted), JWT_SECRET);
 
                     await this.prisma.user.update({
                         where: { id: existingUser.id },
@@ -91,7 +92,8 @@ export class RegisterAgentService {
                     throw new InternalServerErrorException('Configuration error.');
                 }
 
-                const agentJWT = jwt.sign(this.cryptoService.encrypt(data), JWT_SECRET);
+                const toBeEncrypted = JSON.stringify(data)
+                const agentJWT = jwt.sign(this.cryptoService.encrypt(toBeEncrypted), JWT_SECRET);
 
                 const newUser = await this.prisma.user.create({
                     data: {
