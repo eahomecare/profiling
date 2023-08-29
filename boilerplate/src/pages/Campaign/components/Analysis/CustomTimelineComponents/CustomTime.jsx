@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { TimeInput } from '@mantine/dates'
-import { ActionIcon, rem } from "@mantine/core";
+import { ActionIcon, Text, rem } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 
 function CustomTime({ setSelectedTime }) {
@@ -15,7 +15,7 @@ function CustomTime({ setSelectedTime }) {
     return (
         <TimeInput
             placeholder="Select Time"
-            label="Click icon to show browser picker"
+            label={<Text fw={'light'}>Time</Text>}
             ref={ref}
             rightSection={pickerControl}
             onChange={(e) => setSelectedTime(e.target.value)} />

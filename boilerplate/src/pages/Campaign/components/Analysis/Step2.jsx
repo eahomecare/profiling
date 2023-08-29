@@ -7,7 +7,7 @@ import {
 } from '../../../../redux/campaignManagementSlice';
 import { useState, useEffect } from "react";
 import { Box, Flex } from "@mantine/core";
-import { notifications, showNotification } from "@mantine/notifications";
+import { showNotification } from "@mantine/notifications";
 
 const Step2 = () => {
     const dispatch = useDispatch();

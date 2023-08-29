@@ -1,4 +1,42 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+export const fetchRowData = createAsyncThunk(
+    'campaignManagement/fetchRowData',
+    async (_, { getState }) => {
+        const state = getState().campaignManagement;
+        const endpoint = `${process.env.REACT_APP_API_URL}/customers/search_customers_by_attr`;
+        const responses = [];
+
+        for (const rowKey of Object.keys(state.rows)) {
+            const row = state.rows[rowKey];
+            if (!row.first || !row.second || !row.third) {
+                throw new Error("Row has empty/default values. Fetching aborted.");
+            }
+
+            const body = {
+                information_type: row.first.toLowerCase().split(' ').join('_'),
+                category: row.second.toLowerCase().split(' ').join('_'),
+                value: row.third.toLowerCase().split(' ').join('_')
+            };
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            const data = await response.json();
+            const figures = data.length;
+            responses.push({
+                rowKey,
+                figures
+            });
+        }
+        return responses;
+    }
+);
 
 const initialState = {
     isModalOpen: false,
@@ -14,6 +52,7 @@ const initialState = {
             first: "",
             second: "",
             third: "",
+            figures: null
         }
     },
     selectedCombinations: [],
@@ -56,7 +95,17 @@ const initialState = {
             characterCount: 0,
             charLimit: 2000
         }
-    }
+    },
+    radarData: [
+        { count: 120, subject: 'EZ-Auto' },
+        { count: 98, subject: 'Cyberior' },
+        { count: 86, subject: 'Homecare' },
+        { count: 99, subject: 'E-Portal 2.0' },
+        { count: 85, subject: 'EZ-Travel' },
+    ],
+    downloadDataStatus: null,
+    error: null,
+    rowIdsArray: [],  // Changed from Set to Array
 };
 
 const campaignManagementSlice = createSlice({
@@ -71,6 +120,7 @@ const campaignManagementSlice = createSlice({
         },
         updateRows: (state, action) => {
             state.rows = action.payload;
+            state.rowIdsArray = [];  // Updated reference from Set to Array
         },
         updateSelectedCombinations: (state, action) => {
             state.selectedCombinations = action.payload;
@@ -100,14 +150,37 @@ const campaignManagementSlice = createSlice({
         updateTabData: (state, action) => {
             state.tabData = action.payload;
         },
+        setRadarData: (state, action) => {
+            state.radarData = action.payload;
+        },
         resetModal: (state) => {
             state.step = initialState.step;
             state.campaignName = initialState.campaignName;
             state.eventName = initialState.eventName;
             state.activeTab = initialState.activeTab;
-            state.tabData = initialState.tabData
+            state.tabData = initialState.tabData;
+            state.eventDate = initialState.eventDate
         },
     },
+    extraReducers: {
+        [fetchRowData.pending]: (state) => {
+            state.downloadDataStatus = 'loading';
+        },
+        [fetchRowData.fulfilled]: (state, action) => {
+            state.downloadDataStatus = 'success';
+
+            action.payload.forEach(item => {
+                state.rows[item.rowKey].figures = item.figures;
+            });
+
+            // Handling uniqueness with an array
+            state.rowIdsArray = [...new Set([...state.rowIdsArray, ...action.payload.map(item => item.rowKey)])];
+        },
+        [fetchRowData.rejected]: (state, action) => {
+            state.downloadDataStatus = 'failed';
+            state.error = action.error.message;
+        },
+    }
 });
 
 export const {
@@ -123,7 +196,10 @@ export const {
     setStep,
     setActiveTab,
     updateTabData,
+    setRadarData,
     resetModal,
 } = campaignManagementSlice.actions;
+
+export const selectRadarData = (state) => state.campaignManagement.radarData;
 
 export default campaignManagementSlice.reducer;
