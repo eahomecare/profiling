@@ -119,11 +119,16 @@ export class AgentQuestionService {
             const inputString = categories[category].map(c => `key: ${c.key}, level: ${c.level}`).join(', ');
             try {
                 let response = await this.langchainService.process(inputString);
+                const question = response.split(',')[0].split(': ')[1];
+                const level = response.split(',')[1].split(': ')[1];
+                const answersSection = response.split('Answers: ')[1];
+                const answers = answersSection ? answersSection.split(', ').concat('None') : ['None'];
+
                 responses.push({
                     Category: category,
-                    Question: response.split(',')[0].split(': ')[1],
-                    level: response.split(',')[1].split(': ')[1],
-                    Answers: response.split(',')[2].slice(9).split(', ').concat('None')
+                    Question: question,
+                    level: level,
+                    Answers: answers
                 });
             } catch (error) {
                 throw new InternalServerErrorException(`Failed to process category: ${category}. Error: ${error.message}`);
@@ -141,11 +146,16 @@ export class AgentQuestionService {
             const inputString = categories[category].map(c => `key: ${c.key}, level: ${c.level}`).join(', ');
             const response = this.findQuestionFromExamples(inputString);
             if (response) {
+                const question = response.split(',')[0].split(': ')[1];
+                const level = response.split(',')[1].split(': ')[1];
+                const answersSection = response.split('Answers: ')[1];
+                const answers = answersSection ? answersSection.split(', ').concat('None') : ['None'];
+
                 responses.push({
                     Category: category,
-                    Question: response.split(',')[0].split(': ')[1],
-                    level: response.split(',')[1].split(': ')[1],
-                    Answers: response.split(',')[2].slice(9).split(', ').concat('None')
+                    Question: question,
+                    level: level,
+                    Answers: answers
                 });
             } else {
                 throw new NotFoundException(`No fallback question found for category: ${category}.`);
