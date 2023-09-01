@@ -36,4 +36,9 @@ export class CampaignController {
   ): Promise<Campaign> {
     return this.campaignService.create(data);
   }
+
+  @Get('reports/all')
+  async getCampaignReports(): Promise<any[]> {
+    return this.campaignService.getCampaignReports();
+  }
 }

@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Campaign, Prisma } from '@prisma/client';
+import {
+  Campaign,
+  Prisma,
+  CampaignReport,
+} from '@prisma/client';
 import * as nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -17,8 +21,40 @@ type CustomCampaignReportCreateInput = {
       id: string;
     };
   };
-  emailLogs: string[]; // Add the emailLogs field with the correct type
+  emailLogs: string[];
 };
+
+// custom-types.ts
+
+// interface EmailLog {
+//   status: string;
+//   customer_id: string;
+//   customer_email: string;
+//   exception: string;
+//   log_time: Date;
+// }
+
+interface EmailLog {
+  status: string;
+  exception?: {
+    code: string;
+    response: string;
+    responseCode: number;
+    command: string;
+  };
+  customer_id: string;
+  customer_email: string;
+  log_time: number;
+}
+
+function isEmailLog(log: any): log is EmailLog {
+  return (
+    log.status !== undefined &&
+    log.customer_id !== undefined &&
+    log.customer_email !== undefined &&
+    log.log_time !== undefined
+  );
+}
 
 @Injectable()
 export class CampaignService {
@@ -128,7 +164,6 @@ export class CampaignService {
 
       const emailLogs = [];
 
-      // Define a function to send emails and populate emailLogs
       async function sendEmailAndPopulateLogs(
         customer,
       ) {
@@ -202,6 +237,53 @@ export class CampaignService {
 
       throw new Error(
         'Failed to create campaign',
+      );
+    }
+  }
+
+  async getCampaignReports(): Promise<any[]> {
+    try {
+      const campaignReports =
+        await this.prisma.campaignReport.findMany(
+          {
+            include: {
+              campaign: true,
+            },
+          },
+        );
+
+      const modifiedCampaignReports =
+        campaignReports.map((report) => {
+          const totalSent =
+            report.emailLogs.length;
+          const success = report.emailLogs.filter(
+            (log) =>
+              isEmailLog(log) &&
+              log.status === 'success',
+          ).length;
+          const failed = report.emailLogs.filter(
+            (log) =>
+              isEmailLog(log) &&
+              log.status === 'failed',
+          ).length;
+
+          return {
+            campaignid: report.campaign_id,
+            campaignName: report.campaign.name,
+            totalSent,
+            success,
+            failed,
+          };
+        });
+
+      return modifiedCampaignReports;
+    } catch (error) {
+      console.error(
+        'Error retrieving campaign reports:',
+        error,
+      );
+      throw new Error(
+        'Failed to retrieve campaign reports',
       );
     }
   }
