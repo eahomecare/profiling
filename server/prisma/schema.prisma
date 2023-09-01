@@ -384,9 +384,14 @@ model Event {
 }
 
 model CampaignReport {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  campaign    Campaign @relation(fields: [campaign_id], references: [id])
-  campaign_id String   @unique @db.ObjectId
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  campaign         Campaign @relation(fields: [campaign_id], references: [id])
+  campaign_id      String   @unique @db.ObjectId
+  emailLogs        Json[]
+  whatsappLogs     Json[]
+  notificationLogs Json[]
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
 }
 
 model AgentSubmitKeywordsMapping {
