@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setEventName, setEventDate } from "../../../../redux/campaignManagementSlice"; // Import the necessary action
-import { Group, Text, TextInput } from "@mantine/core";
+import { Flex, Group, Stack, Text, TextInput } from "@mantine/core";
 import DatePicker from "react-datepicker";
 
 const Step1 = () => {
@@ -10,9 +10,10 @@ const Step1 = () => {
 
     return (
         <>
-            <div className='mb-30 mt-5' style={{ minHeight: '500px' }}>
-                <Group>
+            <div className='' style={{ minHeight: '300px' }}>
+                <Flex justify={'space-around'}>
                     <TextInput
+                        mt={40}
                         id="eventName"
                         name="eventName"
                         placeholder="Event Name"
@@ -21,23 +22,19 @@ const Step1 = () => {
                         value={eventName}
                         onChange={evt => dispatch(setEventName(evt.currentTarget.value))}
                     />
-                </Group>
-                <Group>
-                    <div className='col-6 col-lg-6 mt-5'>
-                        <div className='mb-40'>
-                            <label className='date-inputs-control'>Event date</label>
-                            <DatePicker className='form-control  inputs-control form-floating date-icon'
-                                dateFormat="yyyy/MM/dd"
-                                selected={eventDate}
-                                onChange={(date) => {
-                                    console.log("Selected Date:", date);
-                                    dispatch(setEventDate(date));
-                                }}
-                                minDate={new Date()}
-                            />
-                        </div>
-                    </div>
-                </Group>
+                    <Stack >
+                        <label className='date-inputs-control'>Event date</label>
+                        <DatePicker className='form-control  inputs-control form-floating date-icon'
+                            dateFormat="yyyy/MM/dd"
+                            selected={eventDate}
+                            onChange={(date) => {
+                                console.log("Selected Date:", date);
+                                dispatch(setEventDate(date));
+                            }}
+                            minDate={new Date()}
+                        />
+                    </Stack>
+                </Flex>
             </div>
         </>
     );

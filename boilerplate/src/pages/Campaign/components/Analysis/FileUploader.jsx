@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTabData } from '../../../../redux/campaignManagementSlice';
+import { Text } from '@mantine/core';
 
 const FileUploader = () => {
     const dispatch = useDispatch();
@@ -29,9 +30,9 @@ const FileUploader = () => {
     return (
         <div className="mb-15">
             {tabData[activeTab]?.fileName && (
-                <p className="file-name-display">
-                    Uploaded: {tabData[activeTab].fileName}
-                </p>
+                <Text variant='text' fw={'bold'} fz={'xs'}>
+                    {tabData[activeTab].fileName}
+                </Text>
             )}
             <input type="file" accept=".txt" onChange={handleFileChange} />
         </div>

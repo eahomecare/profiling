@@ -5,9 +5,12 @@ import {
     setActiveTab,
     updateTabData
 } from '../../../../redux/campaignManagementSlice';
-import { useState, useEffect } from "react";
-import { Box, Flex } from "@mantine/core";
+import { useState } from "react";
+import { Box, Button, Flex } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import WysiwygEditor from "./WysiwygEditor";
+import Preview from "./Preview";
+import './Step2.css'
 
 const Step2 = () => {
     const dispatch = useDispatch();
@@ -23,14 +26,13 @@ const Step2 = () => {
         setPreviewMode(false);
     };
 
-    const handleTextInput = (event) => {
-        const value = event.target.value;
+    const handleTextInputWysiwyg = (content) => {
         const updatedTabData = {
             ...tabData,
             [activeTab]: {
                 ...tabData[activeTab],
-                content: value,
-                characterCount: value.length
+                content: content,
+                characterCount: content.length
             }
         };
         dispatch(updateTabData(updatedTabData));
@@ -60,11 +62,13 @@ const Step2 = () => {
             type: 'default',
             title: 'Timelines applied',
             message: 'Timelines have been added for all modes',
-        })
+        });
     };
+
     return (
         <>
-            <div className="modal-body modal-pad">
+            {previewMode && <div className="overlay"></div>}
+            <div className={`modal-body modal-pad`}>
                 <div>
                     <div className="row">
                         <div className="col-md-2">
@@ -72,7 +76,7 @@ const Step2 = () => {
                                 {['Email', 'SMS', 'Notification', 'Whatsapp'].map(tab => (
                                     <button
                                         key={tab}
-                                        className={`nav-link d-block mb-2 ${activeTab === tab ? 'active' : ''}`}
+                                        className={`nav-link d-block mb-2 ${previewMode && activeTab !== tab ? 'tab-preview-container' : 'preview-container'} ${activeTab === tab ? 'active' : ''}`}
                                         onClick={() => dispatch(setActiveTab(tab))}
                                     >
                                         {tab}
@@ -82,23 +86,32 @@ const Step2 = () => {
                         </div>
 
                         <div className="col-md-10">
-                            <div className="tab-content tab-content-bg">
+                            <div className="preview-container tab-content tab-content-bg">
                                 {['Email', 'SMS', 'Notification', 'Whatsapp'].map(tab => (
                                     <div
                                         key={tab}
-                                        className={`tab-pane fade ${activeTab === tab ? 'show active' : ''}`}
+                                        className={` tab-pane fade ${activeTab === tab ? 'show active' : ''}`}
                                         id={`v-pills-${tab}`}
                                         role="tabpanel"
                                     >
-                                        <Box>
-                                            <textarea
-                                                className="full-width-textarea"
-                                                value={tabData[tab]?.content || ''}
-                                                onChange={handleTextInput}
-                                                readOnly={previewMode}  // Set to readonly in preview mode
-                                            ></textarea>
+                                        <Box >
+                                            {
+                                                previewMode ? (
+                                                    <Box h={250} >
+                                                        <Preview content={tabData[tab]?.content} tab={tab} />
+                                                    </Box>
+                                                ) : (
+                                                    <Box h={290} mt={-40}>
+                                                        <WysiwygEditor
+                                                            key={activeTab}
+                                                            initialContent={tabData[tab]}
+                                                            onChange={handleTextInputWysiwyg}
+                                                        />
+                                                    </Box>
+                                                )
+                                            }
                                         </Box>
-                                        <Flex direction={"row-reverse"} mt={10}>
+                                        <Flex direction={"row-reverse"} mt={20}>
                                             <div className="character-count">
                                                 {tabData[activeTab].characterCount}/{tabData[activeTab].charLimit}
                                             </div>
@@ -110,11 +123,21 @@ const Step2 = () => {
                                                 </Box>
                                             )}
                                         </Flex>
-                                        <Box>
+                                        <Box mt={'-4%'} >
                                             {!previewMode ? (
-                                                <button className="btn model-submit-btn" onClick={enterPreviewMode}>Preview</button>
+                                                <Button
+                                                    bg={'#524EE1'}
+                                                    sx={{ '&:hover': { backgroundColor: 'white', color: '#524EE1' } }}
+                                                    onClick={enterPreviewMode}>
+                                                    Preview
+                                                </Button>
                                             ) : (
-                                                <button className="btn model-submit-btn" onClick={exitPreviewMode}>OK</button>
+                                                <Button
+                                                    bg={'#524EE1'}
+                                                    sx={{ '&:hover': { backgroundColor: 'white', color: '#524EE1' } }}
+                                                    onClick={exitPreviewMode}>
+                                                    OK
+                                                </Button>
                                             )}
                                         </Box>
                                     </div>
@@ -123,23 +146,23 @@ const Step2 = () => {
                         </div>
                     </div>
 
-                    <Box >
+                    <Box className={`${!previewMode ? 'tab-preview-container' : ''}`}>
                         {!previewMode && (
                             <>
-                                <Flex direction={'row-reverse'} mr={-100} mt={-20} >
-                                    <FileUploader />
+                                <Flex direction={'row-reverse'} mr={-100} mt={-20}>
+                                    <FileUploader key={activeTab} />
                                 </Flex>
                                 <Timeline
                                     key={activeTab}
                                     onUpdate={handleTimelineUpdate}
-                                    onApplyForAll={handleApplyForAll}  // Passing the new function
+                                    onApplyForAll={handleApplyForAll}
                                     initialState={tabData[activeTab]?.timelineState || {}}
                                 />
                             </>
                         )}
                     </Box>
                 </div>
-            </div >
+            </div>
         </>
     );
 };

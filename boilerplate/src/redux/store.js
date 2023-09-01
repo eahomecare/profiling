@@ -4,6 +4,7 @@ import customerSlice from "./customerSlice";
 import keywordSlice from "./keywordSlice";
 import rolesPermissionSlice from "./rolesPermissionSlice";
 import campaignManagementReducer from "./campaignManagementSlice";
+import campaignReducer from "./campaignSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     customer: customerSlice,
     keyword: keywordSlice,
     rolePermission: rolesPermissionSlice,
-    campaignManagement: campaignManagementReducer
+    campaignManagement: campaignManagementReducer,
+    campaign: campaignReducer,
   },
 });
