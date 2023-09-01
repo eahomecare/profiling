@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setRadarData, selectRadarData } from '../../../../redux/campaignManagementSlice';
 import RadarLinear from './RadarLinear';
+import ButtonGroup from './ButtonGroup';
 
 const Demographic = () => {
     const dispatch = useDispatch();
@@ -39,15 +40,20 @@ const Demographic = () => {
                 </div>
                 <div className='row mt-2'>
                     <div className='col-12 col-lg-12 text-center mb-2'>
-                        <span className='total-numb pe-2'>{totalCount.toLocaleString('en-IN')}</span>
+                        <span className='total-numb pe-2'>
+                            {/* {totalCount.toLocaleString('en-IN')} */}
+                        </span>
                         <span className='total-users'> Users matching your criteria</span>
                     </div>
-                    <div className='col-12 col-lg-6 web-mb-20'>
+                    {/* <div className='col-12 col-lg-6 web-mb-20'>
                         <button type='button' className='btn datebtn' onClick={handleDownload}>Download Data</button>
+
                     </div>
                     <div className='col-12 col-lg-6'>
                         <button type='button' className='btn runcamp'>Run Campaing</button>
-                    </div>
+
+                    </div> */}
+                    <ButtonGroup />
                 </div>
             </div>
         </div>

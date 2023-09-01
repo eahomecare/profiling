@@ -1,0 +1,292 @@
+.europ-assistance {
+    /* background-image: url(./europ-assistance-india.png); */
+    background-image: url(https://s3-alpha-sig.figma.com/img/1eb4/3728/f22ca4adfacab76009e48bcb428e2182?Expires=1694390400&Signature=Tj8ekcfM~TcanqdaQk4rgFxrkB9xhAUUE51PDueAyD3Plc8qBzU9BwcQ0oEUhYIXKoJ4UAAf2wqLh~j3zpMO3GUfiLofL0WHOVGN3pY5sNbwg2ISWp1jQhlhvFunwgMPy8HsXRaRksQz6Md~g12mBnMbqNnZFc67abYbnDG2MZVBydDpiEF0OZxAYWWGnpvQTwWeB5iMiK-PyL9CQLthdcb5YH9XNlptuOHwbOLyRmsjjIaZKPYIdynCAT95GYEZxZrJNHS-m1JQLJ-FqL8rKsJ7DbACz0KUndpaVrq0WAqV9paDT9ua-cWGTXMX7Zid-KfwYuM55EENQtxud5Zr8w__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4);
+    background-position: 50% 50%;
+    background-size: cover;
+    height: 364px;
+    position: relative;
+    width: 164px;
+}
+
+.europ-assistance .frame {
+    align-items: flex-end;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3.64px;
+    left: 9px;
+    position: absolute;
+    top: 47px;
+}
+
+.europ-assistance .be-a-part-of-IPL-wrapper {
+    align-items: flex-start;
+    background-color: #ffffff;
+    border-radius: 0px 5.46px 5.46px 5.46px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 4.55px;
+    padding: 4.55px;
+    position: relative;
+}
+
+.europ-assistance .be-a-part-of-IPL {
+    color: #202124;
+    font-family: "Roboto Flex-Regular", Helvetica;
+    font-size: 6.4px;
+    font-weight: 400;
+    letter-spacing: 0.05px;
+    line-height: 8.9px;
+    position: relative;
+    width: 120.05px;
+}
+
+.europ-assistance .text-wrapper {
+    color: #202124;
+    font-family: "Roboto Flex-Regular", Helvetica;
+    font-size: 6.4px;
+    font-weight: 400;
+    letter-spacing: 0.05px;
+    line-height: 8.9px;
+}
+
+.europ-assistance .span {
+    font-family: "Roboto Flex-SemiBold", Helvetica;
+    font-weight: 600;
+}
+
+.europ-assistance .group {
+    height: 16.37px;
+    margin-right: -2px;
+    position: relative;
+    width: 130.69px;
+}
+
+.europ-assistance .overlap-group {
+    background-color: #ffffff;
+    border-radius: 5.46px;
+    height: 16px;
+    position: relative;
+    width: 129px;
+}
+
+.europ-assistance .div {
+    color: #0a7aac;
+    font-family: "Roboto Flex-Medium", Helvetica;
+    font-size: 6.4px;
+    font-weight: 500;
+    left: 50px;
+    letter-spacing: 0.05px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    white-space: nowrap;
+}
+
+.europ-assistance .overlap {
+    background-color: #075e55;
+    height: 38px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 164px;
+}
+
+.europ-assistance .text-wrapper-2 {
+    color: #ffffff;
+    font-family: "Roboto Flex-Medium", Helvetica;
+    font-size: 8.6px;
+    font-weight: 500;
+    left: 35px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 19px;
+    white-space: nowrap;
+    width: 75px;
+}
+
+.europ-assistance .arrow {
+    height: 8px;
+    left: 5px;
+    position: absolute;
+    top: 21px;
+    width: 8px;
+}
+
+.europ-assistance .img-wrapper {
+    background-color: #ffffff;
+    border-radius: 8.18px;
+    height: 16px;
+    left: 15px;
+    position: absolute;
+    top: 16px;
+    width: 16px;
+}
+
+.europ-assistance .img {
+    height: 9px;
+    left: 2px;
+    position: absolute;
+    top: 4px;
+    width: 12px;
+}
+
+.europ-assistance .div-wrapper {
+    background-color: #054c44;
+    height: 11px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 164px;
+}
+
+.europ-assistance .text-wrapper-3 {
+    color: #ffffff;
+    font-family: "Roboto-Bold", Helvetica;
+    font-size: 5.5px;
+    font-weight: 700;
+    left: 10px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 2px;
+    white-space: nowrap;
+}
+
+.europ-assistance .group-2 {
+    height: 11px;
+    left: 116px;
+    position: absolute;
+    top: 19px;
+    width: 42px;
+}
+
+.europ-assistance .heroicons-outline {
+    height: 11px;
+    left: 20px;
+    position: absolute;
+    top: 0;
+    width: 11px;
+}
+
+.europ-assistance .eva-video-fill {
+    height: 11px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 11px;
+}
+
+.europ-assistance .three-dots {
+    height: 7px;
+    left: 40px;
+    position: absolute;
+    top: 2px;
+    width: 2px;
+}
+
+.europ-assistance .ellipse {
+    background-color: #ffffff;
+    border-radius: 0.91px;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 2px;
+}
+
+.europ-assistance .ellipse-2 {
+    background-color: #ffffff;
+    border-radius: 0.91px;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: 3px;
+    width: 2px;
+}
+
+.europ-assistance .ellipse-3 {
+    background-color: #ffffff;
+    border-radius: 0.91px;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: 6px;
+    width: 2px;
+}
+
+.europ-assistance .group-3 {
+    height: 23px;
+    left: 2px;
+    position: absolute;
+    top: 339px;
+    width: 162px;
+}
+
+.europ-assistance .overlap-2 {
+    background-color: #ffffff;
+    border-radius: 15.92px;
+    box-shadow: 0px 0.45px 0.45px #00000026;
+    height: 22px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 136px;
+}
+
+.europ-assistance .ic-baseline-attach {
+    height: 17px;
+    left: 96px;
+    position: absolute;
+    top: 3px;
+    width: 17px;
+}
+
+.europ-assistance .bx-bxs-camera {
+    height: 11px;
+    left: 120px;
+    position: absolute;
+    top: 5px;
+    width: 11px;
+}
+
+.europ-assistance .gg-smile-mouth-open {
+    height: 13px;
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    width: 13px;
+}
+
+.europ-assistance .text-wrapper-4 {
+    color: #00000052;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 8.6px;
+    font-weight: 400;
+    left: 22px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 6px;
+    white-space: nowrap;
+}
+
+.europ-assistance .imagevector-wrapper {
+    background-color: #00887a;
+    border-radius: 11.37px;
+    box-shadow: 0px 1.36px 1.36px #00000026;
+    height: 23px;
+    left: 137px;
+    position: absolute;
+    top: 0;
+    width: 23px;
+}
+
+.europ-assistance .imagevector {
+    height: 9px;
+    left: 8px;
+    position: absolute;
+    top: 7px;
+    width: 9px;
+}

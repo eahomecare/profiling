@@ -1,10 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchFiguresForRow } from '../../../../redux/campaignManagementSlice';
 import { ActionIcon, Select } from '@mantine/core';
 import { IconChevronDown, IconTrash, IconX } from '@tabler/icons-react';
 
 const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedCombinations, deleteRow }) => {
 
-    const figures = row.figures
+    const figures = row.figures;
     const secondDropdownOptions = row.first ? Object.keys(dropdownData[row.first]) : [];
 
     const thirdDropdownOptions = row.second
@@ -15,14 +17,12 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                 third: row.first === "Interests" ? option.value : option
             };
 
-            // Check if the current combination is already selected
             const isSelectedCombination = selectedCombinations.some(selected =>
                 selected.first === currentCombination.first &&
                 selected.second === currentCombination.second &&
                 (row.first === "Interests" ? selected.third.value : selected.third) === currentCombination.third
             );
 
-            // Check if the current combination is selected in this row
             const isSelectedInCurrentRow = selectedCombinations.some(selected =>
                 selected.rowId === rowId &&
                 selected.first === currentCombination.first &&
@@ -34,10 +34,18 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
         })
         : [];
 
+    const dispatch = useDispatch();
+
+    const handleThirdDropdownChange = (value) => {
+        handleDropdownChange(rowId, "third", value);
+
+        dispatch(fetchFiguresForRow(rowId, value));
+    };
+
     return (
         <React.Fragment>
             <div className='col-12 col-lg-3'>
-                <div className='mb-4 col-6 col-lg-12' >
+                <div className='mb-4 col-6 col-lg-12'>
                     <Select
                         data={Object.keys(dropdownData).map(option => ({
                             value: option,
@@ -76,7 +84,7 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                         data={thirdDropdownOptions.map(option =>
                             typeof option === 'string'
                                 ? { value: option, label: option }
-                                : option // interests already is an object with value and label
+                                : option
                         )}
                         searchable
                         rightSection={<IconChevronDown size="1rem" />}
@@ -84,7 +92,7 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                         styles={{ rightSection: { pointerEvents: 'none' }, input: { cursor: 'pointer' } }}
                         value={row.third}
                         placeholder="Select Sub-category"
-                        onChange={(value) => handleDropdownChange(rowId, "third", value)}
+                        onChange={handleThirdDropdownChange}
                     />
                 </div>
             </div>

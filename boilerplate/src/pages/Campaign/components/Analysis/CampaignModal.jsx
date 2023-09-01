@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import Step1 from './Step1';
 import Step2 from './Step2';
-import { Modal } from "@mantine/core";
+import { Button, Center, Modal } from "@mantine/core";
 import './CampaignModal.css'
 import { toggleModal, setStep, setEventName } from "../../../../redux/campaignManagementSlice";
 import { IconArrowLeft } from "@tabler/icons-react";
@@ -11,6 +11,7 @@ const CampaignModal = () => {
     const dispatch = useDispatch();
     const { isModalOpen, eventName, step } = useSelector(state => state.campaignManagement);
     const campaignManagementState = useSelector(state => state.campaignManagement);
+    console.log('Request', campaignManagementState)
 
     const handlePublish = () => {
         console.log('Campaign Management Slice', campaignManagementState);
@@ -78,16 +79,25 @@ const CampaignModal = () => {
                     )}
                 </div>
 
-                <div className="modal-footer text-center dis-initial mb-30">
+                <div className="">
                     {step === 1 ? (
-                        <button
-                            className="btn model-submit-btn"
-                            onClick={handleNext}
-                        >
-                            Next
-                        </button>
+                        <Center>
+                            <Button
+                                bg={'#524EE1'}
+                                sx={{ '&:hover': { backgroundColor: 'white', color: '#524EE1' }, }}
+                                onClick={handleNext}>
+                                Next
+                            </Button>
+                        </Center>
                     ) : (
-                        <button className="btn model-submit-btn" onClick={handlePublish}>Publish</button>
+                        <Center>
+                            <Button
+                                bg={'#524EE1'}
+                                sx={{ '&:hover': { backgroundColor: 'white', color: '#524EE1' }, }}
+                                onClick={handlePublish}>
+                                Publish
+                            </Button>
+                        </Center>
                     )}
                 </div>
             </div>

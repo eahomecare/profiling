@@ -36,6 +36,39 @@ export const fetchRowData = createAsyncThunk(
         }
         return responses;
     }
+
+);
+
+export const fetchFiguresForRow = createAsyncThunk(
+    'campaignManagement/fetchFiguresForRow',
+    async (rowId, { getState }) => {
+        const state = getState().campaignManagement;
+        const row = state.rows[rowId];
+        if (!row || !row.first || !row.second || !row.third) {
+            throw new Error("Row data is missing or incomplete. Fetching aborted.");
+        }
+
+        const endpoint = `${process.env.REACT_APP_API_URL}/customers/search_customers_by_attr`;
+
+        const body = {
+            information_type: row.first.toLowerCase().split(' ').join('_'),
+            category: row.second.toLowerCase().split(' ').join('_'),
+            value: row.third.toLowerCase().split(' ').join('_')
+        };
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+        const figures = data.length;
+
+        return { rowId, figures };
+    }
 );
 
 const initialState = {
@@ -173,10 +206,21 @@ const campaignManagementSlice = createSlice({
                 state.rows[item.rowKey].figures = item.figures;
             });
 
-            // Handling uniqueness with an array
             state.rowIdsArray = [...new Set([...state.rowIdsArray, ...action.payload.map(item => item.rowKey)])];
         },
         [fetchRowData.rejected]: (state, action) => {
+            state.downloadDataStatus = 'failed';
+            state.error = action.error.message;
+        },
+        [fetchFiguresForRow.pending]: (state) => {
+            state.downloadDataStatus = 'loading';
+        },
+        [fetchFiguresForRow.fulfilled]: (state, action) => {
+            const { rowId, figures } = action.payload;
+            state.rows[rowId].figures = figures;
+            state.downloadDataStatus = 'success';
+        },
+        [fetchFiguresForRow.rejected]: (state, action) => {
             state.downloadDataStatus = 'failed';
             state.error = action.error.message;
         },

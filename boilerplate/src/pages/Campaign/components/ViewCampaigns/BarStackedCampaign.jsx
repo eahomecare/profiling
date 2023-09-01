@@ -1,78 +1,84 @@
-import React, { PureComponent } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ActionIcon, Box, Flex, Select, Text, Title } from '@mantine/core';
+import { IconChevronDown } from '@tabler/icons-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchData, fetchSources, fetchCampaignNames } from '../../../../redux/campaignSlice';
 
-const data = [
-    {
-        name: 'Page A',
-        uv: 4000,
-        pv: 2400,
-        amt: 2400,
-    },
-    {
-        name: 'Page B',
-        uv: 3000,
-        pv: 1398,
-        amt: 2210,
-    },
-    {
-        name: 'Page C',
-        uv: 2000,
-        pv: 9800,
-        amt: 2290,
-    },
-    {
-        name: 'Page D',
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
-    },
-    {
-        name: 'Page E',
-        uv: 1890,
-        pv: 4800,
-        amt: 2181,
-    },
-    {
-        name: 'Page F',
-        uv: 2390,
-        pv: 3800,
-        amt: 2500,
-    },
-    {
-        name: 'Page G',
-        uv: 3490,
-        pv: 4300,
-        amt: 2100,
-    },
-];
+const BarStackedView = () => {
+    const dispatch = useDispatch();
 
-export default class Example extends PureComponent {
-    static demoUrl = 'https://codesandbox.io/s/mixed-bar-chart-q4hgc';
+    const data = useSelector((state) => state.campaign.data);
+    const sources = useSelector((state) => state.campaign.sources);
+    const campaignNames = useSelector((state) => state.campaign.campaignNames);
+    const status = useSelector((state) => state.campaign.status);
+    const error = useSelector((state) => state.campaign.error);
 
-    render() {
-        return (
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-                    <Bar dataKey="amt" stackId="a" fill="#82ca9d" />
-                    <Bar dataKey="uv" fill="#ffc658" />
-                </BarChart>
-            </ResponsiveContainer>
-        );
-    }
-}
+    useEffect(() => {
+        if (status === 'idle') {
+            dispatch(fetchData());
+            dispatch(fetchSources());
+            dispatch(fetchCampaignNames());
+        }
+    }, [status, dispatch]);
+
+    return (
+        <>
+            <Box p={30} h={500} w={'100%'} >
+                <Title c={'#4e70ea'}>Other Campaign Comparison</Title>
+                <Box>
+                    <Flex>
+                        <Select
+                            maw={320}
+                            mx="auto"
+                            label={<Text c={'dimmed'}>Campaign(s)</Text>}
+                            data={['All', ...campaignNames]}
+                            transitionProps={{ transition: 'pop-top-left', duration: 80, timingFunction: 'ease' }}
+                            withinPortal
+                            rightSection={<ActionIcon><IconChevronDown /></ActionIcon>}
+                        />
+                        <Select
+                            maw={320}
+                            mx="auto"
+                            label={<Text c={'dimmed'}>Source(s)</Text>}
+                            data={sources}
+                            transitionProps={{ transition: 'pop-top-left', duration: 80, timingFunction: 'ease' }}
+                            withinPortal
+                            rightSection={<ActionIcon><IconChevronDown /></ActionIcon>}
+                        />
+                    </Flex>
+                </Box>
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                        width={500}
+                        height={300}
+                        data={data}
+                        margin={{
+                            top: 20,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeLinecap="3" horizontalCoordinatesGenerator={(props) => props.height > 250 ? [75, 150, 225] : [100, 200]} vertical={false} />
+                        <XAxis dataKey="name" />
+                        <YAxis
+                            label={{ value: 'No. of Customers', angle: -90, position: 'insideLeft', offset: -4 }}
+                        />
+                        <Tooltip />
+                        <Legend iconType='circle' verticalAlign='top' align='right' offset={-10} />
+                        <Bar dataKey="contactability" stackId="a" fill="#8334f8" />
+                        <Bar dataKey="interested" stackId="a" fill="#883538" />
+                        <Bar dataKey="converted" stackId="a" fill="#8884d8" />
+                        <Bar dataKey="over" stackId="a" fill="#82ca9d">
+                            <LabelList dataKey={"total"} position={'top'} />
+                        </Bar>
+
+                    </BarChart>
+                </ResponsiveContainer>
+            </Box>
+        </>
+    );
+};
+
+export default BarStackedView;
