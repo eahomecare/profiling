@@ -38,7 +38,7 @@ async function createRandomCustomer() {
         full_name: randomFullName,
         phone_number: randomPhoneNumber,
         email_address: randomEmail,
-        date_of_birth: randomDateOfBirth, // Pass Date object instead of string
+        date_of_birth: randomDateOfBirth,
         gender: randomGender,
       },
     });
@@ -47,14 +47,10 @@ async function createRandomCustomer() {
 }
 
 async function main() {
-  const no_of_customer_to_add =
+  const loopLimit =
     parseInt(process.argv[2], 10) || 2;
 
-  for (
-    let i = 0;
-    i < no_of_customer_to_add;
-    i++
-  ) {
+  for (let i = 0; i < loopLimit; i++) {
     const { customer, personalDetails } =
       await createRandomCustomer();
     console.log(
