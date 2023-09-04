@@ -317,14 +317,15 @@ export class CustomerService {
     }
   }
 
-
   async getCustomersByKeywordCategories(keywordCategories: string[]) {
     try {
+      console.log(keywordCategories);
+
       const customers = await this.prisma.customer.findMany({
         where: {
           keywords: {
-            every: {
-              category: {
+            some: {
+              value: {
                 in: keywordCategories,
               },
             },
