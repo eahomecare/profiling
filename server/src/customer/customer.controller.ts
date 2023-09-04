@@ -78,8 +78,7 @@ export class CustomerController {
             }
 
         } else if (informationType === "interest") {
-            if (value.split(",").length == 0) return []
-            return this.customerService.getCustomersByKeywordCategories(value.split(","))
+            return this.customerService.getCustomersByKeyword(value)
         }
 
         return []
