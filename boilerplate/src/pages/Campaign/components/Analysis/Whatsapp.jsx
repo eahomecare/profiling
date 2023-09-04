@@ -1,5 +1,7 @@
 import "./Whatsapp.css";
 import eaLogo from '../../../Login/assets/eaLogo.png'
+import { ActionIcon, Flex, rem } from "@mantine/core";
+import { IconArrowAutofitLeft, IconArrowLeft, IconPhone, IconSend, IconSendOff, IconVideo } from "@tabler/icons-react";
 
 export const Whatsapp = ({ previewStyles, sanitizedContent }) => {
     console.log('Sanitized', sanitizedContent)
@@ -18,6 +20,7 @@ export const Whatsapp = ({ previewStyles, sanitizedContent }) => {
             <div className="overlap">
                 <div className="text-wrapper-2">Europ Assistance India</div>
                 {/* <img className="arrow" alt="Arrow" src="arrow-3.svg" /> */}
+                <ActionIcon size={rem(13)} mt={17} c={'white'}><IconArrowLeft /></ActionIcon>
                 <div className="img-wrapper">
                     <img className="img" alt="Img" src={eaLogo} />
                 </div>
@@ -25,8 +28,12 @@ export const Whatsapp = ({ previewStyles, sanitizedContent }) => {
                     <div className="text-wrapper-3">7:01 PM</div>
                 </div>
                 <div className="group-2">
-                    {/* <img className="heroicons-outline" alt="Heroicons outline" src="heroicons-outline-search.svg" />
-                    <img className="eva-video-fill" alt="Eva video fill" src="eva-video-fill.svg" /> */}
+                    {/* <div className="heroicons-outline" alt="Heroicons outline" />
+                    <div className="eva-video-fill" alt="Eva video fill" /> */}
+                    <Flex ml={10} mt={-1} >
+                        <ActionIcon size={rem(13)} c={'white'}><IconVideo /></ActionIcon>
+                        <ActionIcon size={rem(13)} c={'white'}><IconPhone /></ActionIcon>
+                    </Flex>
                     <div className="three-dots">
                         <div className="ellipse" />
                         <div className="ellipse-2" />

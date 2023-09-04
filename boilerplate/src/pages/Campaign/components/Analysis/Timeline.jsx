@@ -31,6 +31,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
 
     const [startDate, setStartDate] = useState(initialState.startDate || defaultStartDate);
     const [results, setResults] = useState(initialState.recurrence ? initialState : defaultResults);
+    console.log('results', results)
 
     const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const monthlyFrequencies = ['first', 'second', 'third', 'fourth'];

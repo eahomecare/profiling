@@ -29,14 +29,16 @@ export const fetchRowData = createAsyncThunk(
 
             const data = await response.json();
             const figures = data.length;
+            const customerIDsForThisRow = data.map(customer => customer.id);
+
             responses.push({
                 rowKey,
-                figures
+                figures,
+                customerIDs: customerIDsForThisRow
             });
         }
         return responses;
     }
-
 );
 
 export const fetchFiguresForRow = createAsyncThunk(
@@ -66,8 +68,51 @@ export const fetchFiguresForRow = createAsyncThunk(
 
         const data = await response.json();
         const figures = data.length;
+        const customerIDsForThisRow = data.map(customer => customer.id);
 
-        return { rowId, figures };
+        return { rowId, figures, customerIDs: customerIDsForThisRow };
+    }
+);
+
+export const createCampaign = createAsyncThunk(
+    'campaignManagement/createCampaign',
+    async (_, { getState, rejectWithValue }) => {
+        const state = getState().campaignManagement;
+        const endpoint = `${process.env.REACT_APP_API_URL}/campaign`;
+
+        const body = {
+            name: state.eventName,
+            eventBased: true,
+            triggerTime: new Date(),
+            type: "EMAIL",
+            recurrenceType: state.tabData.Email.timelineState.recurrenceType,
+            start: state.tabData.Email.timelineState.startDate,
+            end: state.tabData.Email.timelineState.endDate,
+            templateText: state.tabData.Email.content,
+            customerIDs: state.allCustomerIDs
+        };
+
+        console.log('Publish body', body)
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            console.log('response', response)
+
+            if (!response.ok) {
+                throw new Error('Failed to create campaign');
+            }
+
+            return response.json();
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
     }
 );
 
@@ -85,9 +130,11 @@ const initialState = {
             first: "",
             second: "",
             third: "",
-            figures: null
+            figures: null,
+            customerIDs: []
         }
     },
+    allCustomerIDs: [],
     selectedCombinations: [],
     eventName: "",
     eventDate: null,
@@ -138,7 +185,9 @@ const initialState = {
     ],
     downloadDataStatus: null,
     error: null,
-    rowIdsArray: [],  // Changed from Set to Array
+    rowIdsArray: [],
+    loadingStates: {},
+    errors: {},
 };
 
 const campaignManagementSlice = createSlice({
@@ -153,7 +202,8 @@ const campaignManagementSlice = createSlice({
         },
         updateRows: (state, action) => {
             state.rows = action.payload;
-            state.rowIdsArray = [];  // Updated reference from Set to Array
+            state.rowIdsArray = [];
+            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
         },
         updateSelectedCombinations: (state, action) => {
             state.selectedCombinations = action.payload;
@@ -204,26 +254,34 @@ const campaignManagementSlice = createSlice({
 
             action.payload.forEach(item => {
                 state.rows[item.rowKey].figures = item.figures;
+                state.rows[item.rowKey].customerIDs = item.customerIDs;
             });
 
             state.rowIdsArray = [...new Set([...state.rowIdsArray, ...action.payload.map(item => item.rowKey)])];
+            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
         },
         [fetchRowData.rejected]: (state, action) => {
             state.downloadDataStatus = 'failed';
             state.error = action.error.message;
         },
-        [fetchFiguresForRow.pending]: (state) => {
-            state.downloadDataStatus = 'loading';
+        [fetchFiguresForRow.pending]: (state, action) => {
+            const rowId = action.meta.arg;
+            state.loadingStates[rowId] = 'loading';
+            state.errors[rowId] = null;
         },
         [fetchFiguresForRow.fulfilled]: (state, action) => {
-            const { rowId, figures } = action.payload;
+            const { rowId, figures, customerIDs } = action.payload;
             state.rows[rowId].figures = figures;
-            state.downloadDataStatus = 'success';
+            state.rows[rowId].customerIDs = customerIDs;
+            state.loadingStates[rowId] = 'loaded';
+
+            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
         },
         [fetchFiguresForRow.rejected]: (state, action) => {
-            state.downloadDataStatus = 'failed';
-            state.error = action.error.message;
-        },
+            const rowId = action.meta.arg;
+            state.loadingStates[rowId] = 'error';
+            state.errors[rowId] = action.error.message;
+        }
     }
 });
 
@@ -235,9 +293,9 @@ export const {
     setCampaignName,
     setEventName,
     setEventDate,
+    setStep,
     setStartDate,
     setEndDate,
-    setStep,
     setActiveTab,
     updateTabData,
     setRadarData,

@@ -71,7 +71,7 @@ const BarStackedView = () => {
                         <Bar dataKey="interested" stackId="a" fill="#883538" />
                         <Bar dataKey="converted" stackId="a" fill="#8884d8" />
                         <Bar dataKey="over" stackId="a" fill="#82ca9d">
-                            <LabelList dataKey={"total"} position={'top'} />
+                            <LabelList position={'top'} />
                         </Bar>
 
                     </BarChart>
