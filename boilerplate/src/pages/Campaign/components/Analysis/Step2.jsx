@@ -46,6 +46,7 @@ const Step2 = () => {
                 timelineState: newState
             }
         };
+        console.log('updatedTabData', updateTabData)
         dispatch(updateTabData(updatedTabData));
     };
 
