@@ -317,17 +317,16 @@ export class CustomerService {
     }
   }
 
-  async getCustomersByKeywordCategories(keywordCategories: string[]) {
+
+  async getCustomersByKeyword(keywordCategoryId: string) {
     try {
-      console.log(keywordCategories);
+      console.log(keywordCategoryId);
 
       const customers = await this.prisma.customer.findMany({
         where: {
           keywords: {
             some: {
-              value: {
-                in: keywordCategories,
-              },
+              id: keywordCategoryId,
             },
           },
         },
@@ -335,10 +334,12 @@ export class CustomerService {
 
       return customers;
     } catch (error) {
-      console.error('Error fetching customers by keyword categories:', error);
+      console.error('Error fetching customers by keyword category:', error);
       throw error;
     } finally {
       await this.prisma.$disconnect();
     }
   }
+
 }
+
