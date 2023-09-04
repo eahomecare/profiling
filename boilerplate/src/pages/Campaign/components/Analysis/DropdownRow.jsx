@@ -1,8 +1,8 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchFiguresForRow } from '../../../../redux/campaignManagementSlice';
-import { ActionIcon, Select } from '@mantine/core';
-import { IconChevronDown, IconTrash, IconX } from '@tabler/icons-react';
+import { ActionIcon, Flex, Loader, Select } from '@mantine/core';
+import { IconChevronDown, IconExclamationMark, IconRefresh, IconTrash, IconX } from '@tabler/icons-react';
 
 const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedCombinations, deleteRow }) => {
 
@@ -35,6 +35,12 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
         : [];
 
     const dispatch = useDispatch();
+    const loadingState = useSelector(state => state.campaignManagement.loadingStates[rowId]);
+    const error = useSelector(state => state.campaignManagement.errors[rowId]);
+
+    const handleRefresh = () => {
+        dispatch(fetchFiguresForRow(rowId));
+    };
 
     const handleThirdDropdownChange = (value) => {
         handleDropdownChange(rowId, "third", value);
@@ -102,7 +108,23 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                 </ActionIcon>
             </div>
             <div className='col-12 col-lg-2'>
-                {figures !== null ? figures : '-'}
+                {loadingState === 'loading' && <Loader />}
+                {loadingState === 'error' &&
+                    <Flex>
+                        <ActionIcon c={'red'}><IconExclamationMark /></ActionIcon>
+                        <ActionIcon c={'blue'} onClick={handleRefresh}><IconRefresh /></ActionIcon>
+                    </Flex>
+                }
+                {loadingState !== 'loading' && loadingState !== 'error' && (
+                    <>
+                        <Flex>
+                            <ActionIcon>
+                                {figures !== null ? figures : '-'}
+                            </ActionIcon>
+                            <ActionIcon c={'blue'} onClick={handleRefresh}><IconRefresh /></ActionIcon>
+                        </Flex>
+                    </>
+                )}
             </div>
         </React.Fragment>
     );

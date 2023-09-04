@@ -3,7 +3,7 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import { Button, Center, Modal } from "@mantine/core";
 import './CampaignModal.css'
-import { toggleModal, setStep, setEventName } from "../../../../redux/campaignManagementSlice";
+import { toggleModal, setStep, setEventName, createCampaign } from "../../../../redux/campaignManagementSlice";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { showNotification } from "@mantine/notifications";
 
@@ -14,17 +14,24 @@ const CampaignModal = () => {
     console.log('Request', campaignManagementState)
 
     const handlePublish = () => {
-        console.log('Campaign Management Slice', campaignManagementState);
-        showNotification({
-            type: 'default',
-            title: `Campaign Published`,
-            message: `The campaign has been published successfully`,
-            color: 'green'
-        });
-        // Simulate an API request
-        new Promise((resolve) => setTimeout(resolve, 1000))
-            .then(() => {
-                dispatch(toggleModal(false));
+        dispatch(createCampaign())
+            .then(res => {
+                if (createCampaign.fulfilled.match(res)) {
+                    showNotification({
+                        type: 'default',
+                        title: `Campaign Published`,
+                        message: `The campaign has been published successfully`,
+                        color: 'green'
+                    });
+                    dispatch(toggleModal(false));
+                } else {
+                    showNotification({
+                        type: 'error',
+                        title: `Campaign Failed`,
+                        message: res.error.message,
+                        color: 'red'
+                    });
+                }
             });
     };
 

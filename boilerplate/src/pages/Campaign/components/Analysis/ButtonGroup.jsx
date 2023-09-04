@@ -1,15 +1,30 @@
 import { useDispatch, useSelector } from 'react-redux';
 import CampaignModal from './CampaignModal';
-import { resetModal, fetchRowData } from '../../../../redux/campaignManagementSlice';
+import { resetModal, fetchRowData, toggleModal } from '../../../../redux/campaignManagementSlice';
 import { showNotification } from '@mantine/notifications';
 
-const ButtonGroup = ({ isModalOpen, setIsModalOpen }) => {
+const ButtonGroup = () => {
     const dispatch = useDispatch();
     const downloadDataStatus = useSelector(state => state.campaignManagement.downloadDataStatus);
+    const isModalOpen = useSelector(state => state.campaignManagement.isModalOpen);
+    const allCustomerIDs = useSelector(state => state.campaignManagement.allCustomerIDs); // <-- Add this line
 
     const handleOpenModal = () => {
-        setIsModalOpen(true);
+        if (allCustomerIDs.length === 0) {
+            showNotification({
+                title: `Error!`,
+                message: `No customers have been selected. Please ensure atleast one customer`,
+                color: 'red'
+            });
+            return;
+        }
+        dispatch(toggleModal(true));
         dispatch(resetModal());
+        showNotification({
+            title: `Success!`,
+            message: `Campaign initiated against customers in pool.`,
+            color: 'green',
+        });
     };
 
     const handleDownloadData = () => {
@@ -54,7 +69,7 @@ const ButtonGroup = ({ isModalOpen, setIsModalOpen }) => {
                 >
                     Run Campaign
                 </button>
-                {isModalOpen && <CampaignModal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />}
+                {isModalOpen && <CampaignModal isOpen={isModalOpen} closeModal={() => toggleModal(false)} />}
             </div>
         </div>
     );

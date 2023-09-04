@@ -6,7 +6,7 @@ import {
     updateTabData
 } from '../../../../redux/campaignManagementSlice';
 import { useState } from "react";
-import { Box, Button, Flex } from "@mantine/core";
+import { Box, Button, Flex, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import WysiwygEditor from "./WysiwygEditor";
 import Preview from "./Preview";
@@ -72,15 +72,33 @@ const Step2 = () => {
                 <div>
                     <div className="row">
                         <div className="col-md-2">
-                            <div className="nav dis-block nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <div className="dis-block nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                 {['Email', 'SMS', 'Notification', 'Whatsapp'].map(tab => (
-                                    <button
-                                        key={tab}
-                                        className={`nav-link d-block mb-2 ${previewMode && activeTab !== tab ? 'tab-preview-container' : 'preview-container'} ${activeTab === tab ? 'active' : ''}`}
-                                        onClick={() => dispatch(setActiveTab(tab))}
-                                    >
-                                        {tab}
-                                    </button>
+                                    previewMode ? (
+                                        <Box ml={-15}>
+                                            <Button
+                                                className="preview-container"
+                                                key={tab}
+                                                onClick={() => dispatch(setActiveTab(tab))}
+                                                c={activeTab === tab ? "#524EE1" : "white"}
+                                                bg={activeTab === tab ? "white" : "#524EE1"}
+                                                sx={{ '&:hover': { backgroundColor: 'white', color: '#524EE1' } }}
+                                                size="lg"
+                                                fullWidth
+                                                style={{ marginBottom: '10px' }}
+                                            >
+                                                <Text size={'xs'}>{tab}</Text>
+                                            </Button>
+                                        </Box>
+                                    ) : (
+                                        <button
+                                            key={tab}
+                                            className={`nav-link d-block mb-2 ${previewMode && activeTab !== tab ? 'tab-preview-container' : 'preview-container'} ${activeTab === tab ? 'active' : ''}`}
+                                            onClick={() => dispatch(setActiveTab(tab))}
+                                        >
+                                            {tab}
+                                        </button>
+                                    )
                                 ))}
                             </div>
                         </div>
