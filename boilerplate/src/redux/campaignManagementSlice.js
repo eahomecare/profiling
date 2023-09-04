@@ -85,7 +85,7 @@ export const createCampaign = createAsyncThunk(
             eventBased: true,
             triggerTime: new Date(),
             type: "EMAIL",
-            recurrenceType: state.tabData.Email.timelineState.recurrenceType,
+            recurrenceType: state.tabData.Email.timelineState.recurrence.type.toUpperCase(),
             start: state.tabData.Email.timelineState.startDate,
             end: state.tabData.Email.timelineState.endDate,
             templateText: state.tabData.Email.content,
@@ -120,7 +120,7 @@ const initialState = {
     isModalOpen: false,
     dropdownData: {
         "Personal Information": {
-            "Date of Birth": ["25 - 30 years", "31 - 35 years"],
+            "Date of Birth": ["25-30", "31-35"],
             "Gender": ["Male", "Female"]
         },
         "Interests": {}
