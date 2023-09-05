@@ -3,7 +3,7 @@ import { TimeInput } from '@mantine/dates'
 import { ActionIcon, Text, rem } from "@mantine/core";
 import { IconClock } from "@tabler/icons-react";
 
-function CustomTime({ setSelectedTime }) {
+function CustomTime({ setSelectedTime, timeSelected }) {
     const ref = useRef(null);
 
     const pickerControl = (
@@ -14,6 +14,7 @@ function CustomTime({ setSelectedTime }) {
 
     return (
         <TimeInput
+            value={(timeSelected ? timeSelected : '')}
             placeholder="Select Time"
             label={<Text fw={'light'}>Time</Text>}
             ref={ref}

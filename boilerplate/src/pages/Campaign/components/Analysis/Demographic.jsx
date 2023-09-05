@@ -6,6 +6,7 @@ import ButtonGroup from './ButtonGroup';
 const Demographic = () => {
     const dispatch = useDispatch();
     const radarData = useSelector(selectRadarData);
+    const allCustomerIDs = useSelector(state => state.campaignManagement.allCustomerIDs);
 
     const totalCount = radarData.reduce((acc, curr) => acc + curr.count, 0);
 
@@ -43,7 +44,7 @@ const Demographic = () => {
                         <span className='total-numb pe-2'>
                             {/* {totalCount.toLocaleString('en-IN')} */}
                         </span>
-                        <span className='total-users'> Users matching your criteria</span>
+                        <span className='total-users'>{allCustomerIDs.length} Users matching your criteria</span>
                     </div>
                     {/* <div className='col-12 col-lg-6 web-mb-20'>
                         <button type='button' className='btn datebtn' onClick={handleDownload}>Download Data</button>

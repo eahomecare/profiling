@@ -6,6 +6,7 @@ function CustomDate({ setSelectedDate }) {
 
     return (
         <DatePickerInput
+            popoverProps={{ withinPortal: true }}
             rightSection={<ActionIcon variant="subtle"><IconCalendar size="1.1rem" stroke={1.5} /></ActionIcon>}
             label={<Text fw={'light'}>Date</Text>}
             placeholder={<Text>Select Date</Text>}

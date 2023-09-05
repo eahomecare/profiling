@@ -20,6 +20,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
         endDate: null,
         recurrence: {
             type: '',
+            recurrenceTime: '',
             dailyFrequency: 1,
             weeklyDays: [],
             monthlyDay: '',
@@ -40,6 +41,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
     const [customDateTimes, setCustomDateTimes] = useState(results.recurrence.customDateTimes || []);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
+    const [recurrenceTime, setRecurrenceTime] = useState(results.recurrence.recurrenceTime || '');
 
     const addCustomDate = () => {
         if (selectedDate && selectedTime) {
@@ -57,6 +59,18 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
             setShowDropdown(false);
         }
     };
+
+    useEffect(() => {
+        if (recurrenceTime) {
+            setResults(prevState => ({
+                ...prevState,
+                recurrence: {
+                    ...prevState.recurrence,
+                    recurrenceTime: recurrenceTime
+                }
+            }));
+        }
+    }, [recurrenceTime]);
 
     useEffect(() => {
         if (selectedDate && selectedTime) {
@@ -284,6 +298,20 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
                             </div>
                         </div>
                     )}
+                    {
+                        results.recurrence.type !== 'Custom' &&
+                        (
+                            results.recurrence.type === 'Daily'
+                            || results.recurrence.type === 'Weekly'
+                            || results.recurrence.type === 'Monthly'
+                        )
+                        &&
+                        (
+                            <Box w={100}>
+                                <CustomTime setSelectedTime={setRecurrenceTime} timeSelected={recurrenceTime} />
+                            </Box>
+                        )
+                    }
                     {results.recurrence.type === 'Custom' && (
                         <div>
                             <Flex wrap={"wrap"}>
@@ -322,7 +350,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
                                         <Box>
                                             <Box shadow="lg" w={200}>
                                                 <CustomDate setSelectedDate={setSelectedDate} />
-                                                <CustomTime setSelectedTime={setSelectedTime} />
+                                                <CustomTime setSelectedTime={setSelectedTime} timeSelected={selectedTime} />
                                             </Box>
                                         </Box>
                                     )}
