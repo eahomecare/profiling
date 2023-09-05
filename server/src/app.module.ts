@@ -24,12 +24,15 @@ import { CampaignModule } from './campaign/campaign.module';
 import { TemplateModule } from './template/template.module';
 import { EventModule } from './event/event.module';
 import { V2Module } from './api/v2/v2.module';
+import { QueueModule } from './queue/queue.module';
+import { QueueApiModule } from './queue-api/queue-api.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    QueueModule,
     AuthModule,
     UserModule,
     PrismaModule,
@@ -48,6 +51,7 @@ import { V2Module } from './api/v2/v2.module';
     CampaignModule,
     TemplateModule,
     EventModule,
+    QueueApiModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],
