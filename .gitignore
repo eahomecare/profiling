@@ -4,3 +4,4 @@ frontend/node_modules
 boilerplate/node_modules
 server/node_modules
 client/node_modules
+queue_server/node_modules
