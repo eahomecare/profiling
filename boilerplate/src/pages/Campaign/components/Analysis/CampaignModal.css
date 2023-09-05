@@ -8,6 +8,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: visible;
 }
 
 .modal-content {
@@ -20,6 +21,7 @@
     border-radius: 10px;
     position: relative;
     overflow-y: auto;
+    overflow: visible;
     /* make the modal scrollable */
 }
 

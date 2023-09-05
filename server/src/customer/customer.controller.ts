@@ -77,7 +77,7 @@ export class CustomerController {
                 );
             }
 
-        } else if (informationType === "interest") {
+        } else if (informationType === "interests") {
             return this.customerService.getCustomersByKeyword(value)
         }
 

@@ -83,7 +83,7 @@ export const createCampaign = createAsyncThunk(
         const body = {
             name: state.eventName,
             eventBased: true,
-            triggerTime: new Date(),
+            triggerTime: state.tabData.Email.timelineState.recurrence.recurrenceTime,
             type: "EMAIL",
             recurrenceType: state.tabData.Email.timelineState.recurrence.type.toUpperCase(),
             start: state.tabData.Email.timelineState.startDate,
@@ -120,10 +120,19 @@ const initialState = {
     isModalOpen: false,
     dropdownData: {
         "Personal Information": {
-            "Date of Birth": ["25-30", "31-35"],
-            "Gender": ["Male", "Female"]
+            "Age": ["25-30", "31-35"],
+            "Gender": ["Male", "Female"],
+            "Marital Status": ["Single", "Married"],
+            "Location": ["Delhi", "Mumbai"],
         },
-        "Interests": {}
+        "Interests": {},
+        "Occupation": '',
+        "Activity": '',
+        "Family Details": '',
+        "Financial Information": '',
+        "Insurance Details": '',
+        "Vehicle": '',
+        "Health": '',
     },
     rows: {
         [Date.now().toString()]: {
@@ -203,7 +212,7 @@ const campaignManagementSlice = createSlice({
         updateRows: (state, action) => {
             state.rows = action.payload;
             state.rowIdsArray = [];
-            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
+            state.allCustomerIDs = [...new Set(Object.values(state.rows).filter(row => row.customerIDs && row.customerIDs.length).flatMap(row => row.customerIDs))];
         },
         updateSelectedCombinations: (state, action) => {
             state.selectedCombinations = action.payload;
@@ -258,7 +267,7 @@ const campaignManagementSlice = createSlice({
             });
 
             state.rowIdsArray = [...new Set([...state.rowIdsArray, ...action.payload.map(item => item.rowKey)])];
-            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
+            state.allCustomerIDs = [...new Set(Object.values(state.rows).filter(row => row.customerIDs && row.customerIDs.length).flatMap(row => row.customerIDs))];
         },
         [fetchRowData.rejected]: (state, action) => {
             state.downloadDataStatus = 'failed';
@@ -275,7 +284,7 @@ const campaignManagementSlice = createSlice({
             state.rows[rowId].customerIDs = customerIDs;
             state.loadingStates[rowId] = 'loaded';
 
-            state.allCustomerIDs = Object.values(state.rows).flatMap(row => row.customerIDs);
+            state.allCustomerIDs = [...new Set(Object.values(state.rows).filter(row => row.customerIDs && row.customerIDs.length).flatMap(row => row.customerIDs))];
         },
         [fetchFiguresForRow.rejected]: (state, action) => {
             const rowId = action.meta.arg;

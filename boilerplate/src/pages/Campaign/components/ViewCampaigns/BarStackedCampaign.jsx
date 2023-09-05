@@ -59,6 +59,7 @@ const BarStackedView = () => {
                             left: 20,
                             bottom: 5,
                         }}
+                        maxBarSize={60}
                     >
                         <CartesianGrid strokeLinecap="3" horizontalCoordinatesGenerator={(props) => props.height > 250 ? [75, 150, 225] : [100, 200]} vertical={false} />
                         <XAxis dataKey="name" />
