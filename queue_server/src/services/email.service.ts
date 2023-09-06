@@ -15,7 +15,7 @@ class EmailQueue {
         });
     }
 
-    async addEmailToQueue(emailData: { name: string; email: string }) {
+    async addEmailToQueue(emailData: { from: string; to: string; subject: string; text: string }) {
         await this.queueServices.addToQueue('email_notification', emailData);
         console.log('The email has been added to the queue...');
     }

@@ -20,13 +20,28 @@ const queueOpts = {
 
 app.use(bodyParser.json());
 
-app.post('/email', async (req, res) => {
-  const { name, email } = req.body;
-  const queueServices = new QueueServices(queueOpts);
-  const emailQueue = new EmailQueue(queueServices);
-  await emailQueue.addEmailToQueue({ name, email });
 
-  res.send('done');
+app.post('/process', async (req, res) => {
+  const { service_type, execution_type, payload } = req.body;
+
+  if (service_type === "email") {
+    const { email_details } = payload;
+    const queueServices = new QueueServices(queueOpts);
+    const emailQueue = new EmailQueue(queueServices);
+
+    await emailQueue.addEmailToQueue(email_details);
+
+    res.status(200).json({ message: 'Email task added to the queue.' });
+  } else if (service_type === "sms") {
+    //TODO
+    // Handle SMS service here
+    // Enqueue SMS task
+
+    res.status(200).json({ message: 'SMS task added to the queue.' });
+  } else {
+    res.status(400).json({ message: 'Unsupported service_type.' });
+  }
 });
+
 
 app.listen(5001, () => console.log('Started queue server on port 5001'));
