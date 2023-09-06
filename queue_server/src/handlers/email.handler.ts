@@ -11,13 +11,13 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (emailJob: Job) => {
   try {
-    const { name, email } = emailJob.data;
+    const { from, to, subject, text } = emailJob.data;
 
     const mailDetails = {
-      from: 'sp241930@outlook.com',
-      to: 'sp241930@gmail.com',
-      subject: 'Test mail',
-      text: `Hello ${name}, welcome to MUO`,
+      from,
+      to,
+      subject,
+      text
     };
 
     await transporter.sendMail(mailDetails);
@@ -29,5 +29,6 @@ const sendEmail = async (emailJob: Job) => {
     console.error(error);
   }
 };
+
 
 export default sendEmail;
