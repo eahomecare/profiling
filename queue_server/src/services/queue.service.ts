@@ -20,14 +20,15 @@ class QueueServices {
         });
     }
 
-    async addToQueue(queueName: string, data: any, delay?: number) {
+    async addToQueue(queueName: string, data: any, delay?: number): Promise<Queue.Job> {
+        let job: Queue.Job;
         if (delay) {
-            await this.emailQueue.add(queueName, data, { delay });
+            job = await this.emailQueue.add(queueName, data, { delay });
         } else {
-            await this.emailQueue.add(queueName, data);
+            job = await this.emailQueue.add(queueName, data);
         }
+        return job;
     }
-
     async processQueue(queueName: string, handler: Queue.ProcessCallbackFunction<any>) {
         this.emailQueue.process(queueName, handler);
     }
