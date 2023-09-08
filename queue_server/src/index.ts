@@ -29,7 +29,7 @@ app.post('/process', async (req, res) => {
     const queueServices = new QueueServices(queueOpts);
     const emailQueue = new EmailQueue(queueServices);
 
-    await emailQueue.addEmailToQueue(email_details);
+    await emailQueue.addEmailToQueue(req.body);
 
     res.status(200).json({ message: 'Email task added to the queue.' });
   } else if (service_type === "sms") {
