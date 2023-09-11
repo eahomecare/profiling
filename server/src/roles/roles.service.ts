@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class RolesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(
     data: Prisma.RoleCreateInput,
@@ -23,7 +23,9 @@ export class RolesService {
   async findAll(): Promise<Role[]> {
     try {
       const roles =
-        await this.prisma.role.findMany();
+        await this.prisma.role.findMany({
+          include: { defaultPermissions: true }
+        });
       return roles;
     } catch (error) {
       throw new Error('Failed to fetch roles');
