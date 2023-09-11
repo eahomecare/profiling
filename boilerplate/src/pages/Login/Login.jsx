@@ -25,7 +25,7 @@ import eaLogo from './assets/eaLogo.png'
 import { loginUser } from "../../redux/authSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllRolesPermissionsMappings ,getAllRolesPermissionsMappingsByUser} from "../../redux/rolesPermissionSlice";
+import { getAllRolesPermissionsMappings, getAllRolesPermissionsMappingsByUser } from "../../redux/rolesPermissionSlice";
 
 
 
@@ -39,7 +39,7 @@ export default function Login() {
 
 
 
-    const { status, isLoggedIn,user } = useSelector((state) => state.auth);
+    const { status, isLoggedIn, user } = useSelector((state) => state.auth);
 
 
     const handleSubmit = (e) => {
@@ -54,11 +54,11 @@ export default function Login() {
     // },[status,isLoggedIn])
 
     useEffect(() => {
-        if(status === "success" && isLoggedIn){
+        if (status === "success" && isLoggedIn) {
             dispatch(getAllRolesPermissionsMappingsByUser(user._id))
             navigate("/")
         }
-    },[status,navigate])
+    }, [status, navigate])
 
     return (
         <>
@@ -140,8 +140,8 @@ export default function Login() {
                                         <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
                                             {status === "loading" ? <>Signing in</> : <>Sign in</>}
                                         </Button>
-                                        
-                                        {status === "failed" && <Text style={{color:"red",padding:"10px"}}>Incorrect credentials !</Text>}
+
+                                        {status === "failed" && <Text style={{ color: "red", padding: "10px" }}>Incorrect credentials !</Text>}
 
                                     </Card>
                                 </Stack>

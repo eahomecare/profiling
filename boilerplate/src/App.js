@@ -66,9 +66,9 @@ function App() {
             <PrivateRoute path="/" element={<PermissionDenied />} />
           )}
           {hasPermission(userPermissions, "acl") ? (
-            <PrivateRoute path="/acl" element={<Acl />} />
+            <PrivateRoute path="/acl/*" element={<Acl />} />
           ) : (
-            <PrivateRoute path="/acl" element={<PermissionDenied />} />
+            <PrivateRoute path="/acl/*" element={<PermissionDenied />} />
           )}
           <Route path="/campaign" element={<Analysis />} />
           <Route path="/mobileSimulation" element={<SimulateCall />} />
