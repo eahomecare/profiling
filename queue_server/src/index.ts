@@ -14,7 +14,7 @@ const queueOpts = {
   prefix: 'EMAIL-TASK',
   defaultJobOptions: {
     attempts: 3,
-    removeOnComplete: true,
+    removeOnComplete: false,
   },
 };
 

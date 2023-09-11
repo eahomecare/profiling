@@ -26,13 +26,13 @@ class EmailQueue {
         const job: Job = await this.queueServices.addToQueue('email_notification', requestObject);
         const task = await prisma.task.create({
             data: {
-                jobId: String(job.id), // assuming the job object has an id property
+                jobId: String(job.id),
                 type: 'EMAIL',
                 status: 'PENDING',
                 requestPayload: requestObject,
-                source: 'source', // replace with actual source
-                batch: 'batch' // replace with actual batch
-                // fill other fields as necessary
+                source: '',
+                batch: ''
+
             }
         });
         console.log('The email has been added to the queue...');
