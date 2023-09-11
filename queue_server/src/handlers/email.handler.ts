@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (emailJob: Job) => {
   try {
-    const { from, to, subject, text } = emailJob.data;
+    const { from, to, subject, text } = emailJob.data.payload.email_details;
 
     const mailDetails = {
       from,

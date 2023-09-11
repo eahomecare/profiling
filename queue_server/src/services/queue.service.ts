@@ -1,6 +1,8 @@
 // QueueServices.ts
 import Queue from 'bull';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 const REDIS_URL = 'redis://127.0.0.1:6379';
 
 interface QueueServiceOptions {
@@ -17,6 +19,19 @@ class QueueServices {
             limiter: options.limiter,
             prefix: options.prefix,
             defaultJobOptions: options.defaultJobOptions,
+        });
+
+        this.emailQueue.on('failed', async (job, err) => {
+            console.log(`Job ${job.id} failed with error ${err.message}`);
+
+            await prisma.task.update({
+                where: {
+                    jobId: job.id.toString()
+                },
+                data: {
+                    status: 'FAILED',
+                },
+            });
         });
     }
 

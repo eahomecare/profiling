@@ -23,6 +23,8 @@ model Task {
   updated_at     DateTime   @updatedAt
   created_by     String?
   updated_by     String?
+
+  @@unique([jobId])
 }
 
 enum StatusType {
