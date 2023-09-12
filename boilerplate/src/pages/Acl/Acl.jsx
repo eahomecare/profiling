@@ -17,8 +17,9 @@ import CustomNavbar from "../../components/CustomNavbar/CustomNavbar"
 import AssignPermissionModal from "./AssignPermissionModal"
 import PermissionRoleMappings from "./PermissionRoleMapping"
 import MainHeader from "../../components/MainHeader/MainHeader"
+import Users from "./Users"
 import { MainLinks } from "./_mainLink"
-import { User } from "./_user"
+
 
 
 
@@ -52,6 +53,7 @@ const Acl = () => {
     const [selectedRole, setSelectedRole] = useState(null)
     const [selectedPermission, setSelectedPermission] = useState(null)
     const [selectedUserRoleName, setSelectedUserRoleName] = useState(null)
+    const [selectedLink, setSelectedLink] = useState(null)
 
     const dispatch = useDispatch();
 
@@ -84,7 +86,7 @@ const Acl = () => {
     }, [selectedRole])
 
 
-    const initialData = rolesPermissions.map((data) => ({
+    const rolesPermissionsMapping_initialData = rolesPermissions.map((data) => ({
         id: data.id,
         rolename: data.role.name,
         permissionname: data.permission.name,
@@ -92,6 +94,15 @@ const Acl = () => {
         isactive: data.isActive ? "active" : "inactive",
         created_at: data.created_at,
     }));
+
+    const users_initialData = users.map((data) => ({
+        id: data.id,
+        email: data.email,
+        isactive: "active",
+        role: data.role.name,
+        permissions: "",
+        created_at: data.created_at
+    }))
 
 
 
@@ -137,16 +148,12 @@ const Acl = () => {
                     padding="md"
                     header={<MainHeader />}
                 >
-
                     <div style={{ display: 'flex', }}>
                         <span>
                             <CustomNavbar />
                         </span>
-
                         <span style={{ flexGrow: '1', width: '100px' }}>
-
                             <div style={{ padding: '10px' }}>
-
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
                                     <span>
                                         <Title pl={5}>ACL</Title>
@@ -162,7 +169,7 @@ const Acl = () => {
                                                     <MainLinks />
                                                 </Navbar.Section>
                                                 <Navbar.Section style={{ textAlign: "center" }}>
-                                                    <Button>Back</Button>
+                                                    <Button variant="light" size="xl">Back</Button>
                                                 </Navbar.Section>
                                             </Navbar>
                                             <Center>
@@ -204,15 +211,33 @@ const Acl = () => {
                                     </span>
                                 </div>
                                 <div>
-
-                                    <PermissionRoleMappings useStyles={useStyles} initialData={initialData} />
-
+                                    <Routes>
+                                        <Route>
+                                            <Route
+                                                index
+                                                element={
+                                                    <PermissionRoleMappings useStyles={useStyles} initialData={rolesPermissionsMapping_initialData} />
+                                                }
+                                            />
+                                            <Route
+                                                path="/permissionrolemappings"
+                                                element={
+                                                    <PermissionRoleMappings useStyles={useStyles} initialData={rolesPermissionsMapping_initialData} />
+                                                }
+                                            />
+                                            <Route
+                                                path="/users"
+                                                element={
+                                                    <Users useStyles={useStyles} initialData={users_initialData} />
+                                                }
+                                            />
+                                        </Route>
+                                    </Routes>
                                 </div>
                             </div>
                         </span>
                     </div>
                 </AppShell>
-
             </>
         )
     }
