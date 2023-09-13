@@ -34,6 +34,7 @@ const CampaignModal = () => {
                         message: res.error.message,
                         color: 'red'
                     });
+          setLoading(false)
                 }
             });
     };
@@ -65,7 +66,7 @@ const CampaignModal = () => {
 
     const handleConfirmedPublish = () => {
         setLoading(true);
-        setShowConfirmation(false);
+        // setShowConfirmation(false);
         handlePublish();
     };
 

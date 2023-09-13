@@ -8,7 +8,7 @@ const { RegExp } = require('mongodb');
 
 @Injectable()
 export class KeywordService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(data: Keyword): Promise<Keyword> {
     try {

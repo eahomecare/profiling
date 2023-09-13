@@ -85,8 +85,9 @@ const DashboardNavbar = ({ opened, setOpened }) => {
         <Navbar
             height={700}
             // width={{ sm: 300 }}
+            ml={40}
             p="md"
-            className={classes.navbar}
+            // className={classes.navbar}
             hiddenBreakpoint="sm"
             hidden={!opened}
             width={{ sm: 200, lg: 300 }}

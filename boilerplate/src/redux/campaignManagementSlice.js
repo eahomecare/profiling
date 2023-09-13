@@ -6,6 +6,7 @@ export const fetchRowData = createAsyncThunk(
         const state = getState().campaignManagement;
         const endpoint = `${process.env.REACT_APP_API_URL}/customers/search_customers_by_attr`;
         const responses = [];
+        let commonCustomerIDs = null; // To keep track of common customer IDs across rows
 
         for (const rowKey of Object.keys(state.rows)) {
             const row = state.rows[rowKey];
@@ -28,13 +29,18 @@ export const fetchRowData = createAsyncThunk(
             });
 
             const data = await response.json();
-            const figures = data.length;
             const customerIDsForThisRow = data.map(customer => customer.id);
+
+            if (commonCustomerIDs === null) {
+                commonCustomerIDs = new Set(customerIDsForThisRow);
+            } else {
+                commonCustomerIDs = new Set([...commonCustomerIDs].filter(id => customerIDsForThisRow.includes(id)));
+            }
 
             responses.push({
                 rowKey,
-                figures,
-                customerIDs: customerIDsForThisRow
+                figures: commonCustomerIDs.size,
+                customerIDs: [...commonCustomerIDs]
             });
         }
         return responses;
@@ -67,10 +73,18 @@ export const fetchFiguresForRow = createAsyncThunk(
         });
 
         const data = await response.json();
-        const figures = data.length;
         const customerIDsForThisRow = data.map(customer => customer.id);
 
-        return { rowId, figures, customerIDs: customerIDsForThisRow };
+        // Retrieve customer IDs from all preceding rows
+        let commonCustomerIDs = customerIDsForThisRow;
+        for (const otherRowId of Object.keys(state.rows)) {
+            if (Number(otherRowId) < Number(rowId)) {
+                const otherRow = state.rows[otherRowId];
+                commonCustomerIDs = commonCustomerIDs.filter(id => otherRow.customerIDs.includes(id));
+            }
+        }
+
+        return { rowId, figures: commonCustomerIDs.length, customerIDs: commonCustomerIDs };
     }
 );
 
@@ -267,7 +281,9 @@ const campaignManagementSlice = createSlice({
             });
 
             state.rowIdsArray = [...new Set([...state.rowIdsArray, ...action.payload.map(item => item.rowKey)])];
-            state.allCustomerIDs = [...new Set(Object.values(state.rows).filter(row => row.customerIDs && row.customerIDs.length).flatMap(row => row.customerIDs))];
+
+            const lastRowId = Math.max(...state.rowIdsArray.map(Number));
+            state.allCustomerIDs = [...state.rows[lastRowId].customerIDs];
         },
         [fetchRowData.rejected]: (state, action) => {
             state.downloadDataStatus = 'failed';
@@ -284,7 +300,10 @@ const campaignManagementSlice = createSlice({
             state.rows[rowId].customerIDs = customerIDs;
             state.loadingStates[rowId] = 'loaded';
 
-            state.allCustomerIDs = [...new Set(Object.values(state.rows).filter(row => row.customerIDs && row.customerIDs.length).flatMap(row => row.customerIDs))];
+            const lastRowId = Math.max(...Object.keys(state.rows).map(Number));
+            if (Number(rowId) === lastRowId) {
+                state.allCustomerIDs = [...customerIDs];
+            }
         },
         [fetchFiguresForRow.rejected]: (state, action) => {
             const rowId = action.meta.arg;
