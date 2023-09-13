@@ -49,10 +49,9 @@ export const createRoles = createAsyncThunk(
 
 export const createPermission = createAsyncThunk(
   "rolesPermissions/createPermission",
-  async ({ name }) => {
-    const { data } = await axios.post("/permissions", {
-      name: name,
-    });
+  async (payload) => {
+    console.log(payload, "------->");
+    const { data } = await axios.post("/permissions", payload);
     return data;
   }
 );
