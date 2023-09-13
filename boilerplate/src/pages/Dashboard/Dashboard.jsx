@@ -53,11 +53,11 @@ import { Activity } from "../../components/Activity/Activity";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
-  const {updateKeywordsStatus} = useSelector((state) => state.keyword)
+  const { updateKeywordsStatus } = useSelector((state) => state.keyword)
   const [submitKeywords, setSubmitKeywords] = useState(false);
   const [routesClicked, setRoutesClicked] = useState("");
   const [keywordValues, setKeywordValues] = useState([]);
-  const [showNotification,setNotification] = useState(false)
+  const [showNotification, setNotification] = useState(false)
 
   const { isLoggedIn } = useSelector((state) => state.auth);
 
@@ -89,21 +89,21 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (routesClicked.at(-2) && routesClicked.at(-2) === "/dashboard/keywords") {
-      
+
 
       const updateKeywordPayload = {
-        "customerId":customerDetails.id,
-        "keywordsPayload":keywordValues
+        "customerId": customerDetails.id,
+        "keywordsPayload": keywordValues
+      }
+
+      setNotification(true)
+      sleep(5000).then(data => setNotification(false))
+
+      dispatch(updateKeywords(updateKeywordPayload))
+
+
     }
-
-    setNotification(true)
-    sleep(5000).then(data => setNotification(false))
-
-    dispatch(updateKeywords(updateKeywordPayload))
-
-    
-    }
-  }, [routesClicked,dispatch]);
+  }, [routesClicked, dispatch]);
 
   if (status == "loading") {
     return (
@@ -127,7 +127,7 @@ const Dashboard = () => {
         }}
         navbarOffsetBreakpoint="sm"
         asideOffsetBreakpoint="sm"
-        fixed
+        // fixed
         navbar={<DashboardNavbar opened={opened} setOpened={setOpened} />}
         header={
           <Header
@@ -166,7 +166,7 @@ const Dashboard = () => {
                 EAI CRM
               </Text>
               <TextInput
-                placeholder="Search"
+                placeholder="Search1"
                 mb="md"
                 icon={<IconSearch size="0.9rem" stroke={1.5} />}
                 radius="md"
@@ -175,8 +175,8 @@ const Dashboard = () => {
                     <IconAdjustmentsHorizontal />
                   </ActionIcon>
                 }
-                // value={}
-                // onChange={}
+              // value={}
+              // onChange={}
               />
               <div>
                 <LightDarkButton />
@@ -228,20 +228,20 @@ const Dashboard = () => {
             </Routes>
           </Card>
           {showNotification && <>
-          <Notification
-          loading
-          title="Background Syncing"
-          withCloseButton={true}
-          style={{backgroundColor:"red !important"}}
-        >
-          <p style={{color:"red"}}> Uploading latest keywords data onto server</p>
-          
-        </Notification>
+            <Notification
+              loading
+              title="Background Syncing"
+              withCloseButton={true}
+              style={{ backgroundColor: "red !important" }}
+            >
+              <p style={{ color: "red" }}> Uploading latest keywords data onto server</p>
 
-        </>}
+            </Notification>
+
+          </>}
         </Container>
-        
-        
+
+
       </AppShell>
     );
   }

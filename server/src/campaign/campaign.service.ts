@@ -10,8 +10,8 @@ import * as nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'hotmail',
   auth: {
-    user: 'sp241930@outlook.com',
-    pass: 'pqudyvmdbitagqnb',
+    user: 'europeassistance@hotmail.com',
+    pass: 'europe@2022',
   },
 });
 
@@ -169,7 +169,7 @@ export class CampaignService {
       ) {
         return new Promise((resolve) => {
           const mailOptions = {
-            from: 'sp241930@outlook.com',
+            from: 'europeassistance@hotmail.com',
             to: [
               customer.personal_details
                 .email_address,
