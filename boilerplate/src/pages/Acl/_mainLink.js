@@ -51,6 +51,7 @@ const data = [
     { icon: <IconUsersGroup size="1rem" />, color: 'blue', label: 'Users', link: "users" },
     { icon: <IconDatabase size="1rem" />, color: 'grape', label: 'Roles vs Permission', link: "rolesvspermissions" },
     { icon: <IconDatabase size="1rem" />, color: 'green', label: 'Permission vs Users', link: "permissionrolemappings" },
+    { icon: <IconDatabase size="1rem" />, color: 'teal', label: 'Permissions', link: "permissions" },
 ];
 
 export function MainLinks({ onLinkSelect }) {

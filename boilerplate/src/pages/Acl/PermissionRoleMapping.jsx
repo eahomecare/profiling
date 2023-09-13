@@ -13,7 +13,7 @@ const PermissionRoleMappings = ({ useStyles, initialData, title }) => {
             <td>{row.rolename}</td>
             <td>{row.permissionname}</td>
             <td>{row.username}</td>
-            <td><Button color='green' size="xs">{row.isactive}</Button></td>
+            <td><Button color='green' size="xs" compact>{row.isactive}</Button></td>
             <td>{row.created_at}</td>
             <td><ActionIcon variant="light"><IconSettings size="1rem" /></ActionIcon></td>
         </tr>

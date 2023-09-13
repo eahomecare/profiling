@@ -21,6 +21,9 @@ import Users from "./Users"
 import { MainLinks } from "./_mainLink"
 import RolesVsPermissions from "./RolesVsPermissions"
 import { useLocation } from "react-router-dom"
+import CreatePermissionModal from "./CreatePermissionModal"
+import Permissions from "./Permissions"
+import { createPermission } from "../../redux/rolesPermissionSlice"
 
 
 function formatDate(dateString) {
@@ -54,12 +57,14 @@ const Acl = () => {
     }));
 
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAssignPermissionModalOpen, setIsAssignPermissionModalOpen] = useState(false);
+    const [isCreatePermissionModalOpen, setCreatePermissionModalOpen] = useState(false);
+
     const [selectedUser, setSelectedUser] = useState(null)
     const [selectedRole, setSelectedRole] = useState(null)
     const [selectedPermission, setSelectedPermission] = useState(null)
     const [selectedUserRoleName, setSelectedUserRoleName] = useState(null)
-    const [selectedLink, setSelectedLink] = useState(null)
+    const [permissionName, setPermissionName] = useState("")
     const location = useLocation();
 
     const dispatch = useDispatch();
@@ -146,18 +151,37 @@ const Acl = () => {
         created_at: formatDate(data.created_at)
     }))
 
+    const permissions_initialData = permissions.map((data) => ({
+        id: data.id,
+        name: data.name,
+        isactive: "active",
+        created_at: formatDate(data.created_at)
+    }))
+
 
     const handleAddRoleClick = () => {
-        setIsModalOpen(true);
+        setIsAssignPermissionModalOpen(true);
     };
+
+    const handleAddPermissionModal = () => {
+        setCreatePermissionModalOpen(true)
+    }
 
 
     const handleModalClose = () => {
-        setIsModalOpen(false)
-        setSelectedUser(null)
-        setSelectedRole(null)
-        setSelectedPermission(null)
+        if (isAssignPermissionModalOpen) {
+            setIsAssignPermissionModalOpen(false)
+            setSelectedUser(null)
+            setSelectedRole(null)
+            setSelectedPermission(null)
+
+        }
+        if (isCreatePermissionModalOpen) {
+            setCreatePermissionModalOpen(false)
+        }
+
     }
+
 
     const handleAssignPermission = () => {
         dispatch(createRolesPermissionMapping({
@@ -169,6 +193,16 @@ const Acl = () => {
         handleModalClose()
 
     }
+
+    const handleCreatePermission = () => {
+        dispatch(createPermission({
+            "name": permissionName
+        }))
+        dispatch(getAllPermissions())
+        handleModalClose()
+    }
+
+
 
 
     if (rolesPermissionsStatus === 'loading' || !users || users.length === 0) {
@@ -195,7 +229,7 @@ const Acl = () => {
 
                         <span style={{ flexGrow: '1', width: '100px' }}>
                             <div style={{ padding: '10px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '-65px' }}>
                                     <span>
                                         <Title pl={5}>ACL</Title>
                                     </span>
@@ -209,24 +243,22 @@ const Acl = () => {
                                                 <Navbar.Section grow mt="md">
                                                     <MainLinks />
                                                 </Navbar.Section>
-                                                <Navbar.Section style={{ textAlign: "center" }}>
-                                                    <Button variant="light" size="xl">Back</Button>
-                                                </Navbar.Section>
+
                                             </Navbar>
                                             <Center>
                                                 <Flex mt={5}>
                                                     {location.pathname === "/acl/permissionrolemappings" && (
                                                         <>
                                                             <Button
-                                                                variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
                                                                 className="mt-4"
                                                                 onClick={handleAddRoleClick}
+                                                                compact
                                                             >
                                                                 Assign permissions
                                                             </Button>
 
                                                             <AssignPermissionModal
-                                                                isModalOpen={isModalOpen}
+                                                                isModalOpen={isAssignPermissionModalOpen}
                                                                 handleModalClose={handleModalClose}
                                                                 selectedUserRoleName={selectedUserRoleName}
                                                                 selectedUser={selectedUser}
@@ -239,21 +271,34 @@ const Acl = () => {
                                                                 users={users}
                                                                 selectedRole={selectedRole}
                                                             />
+
                                                         </>
 
                                                     )
                                                     }
 
-                                                    {/* <Container mt={5}>
-                                                        <Flex>
-                                                            <ActionIcon>
-                                                                <IconChevronLeft />
-                                                            </ActionIcon>
-                                                            <ActionIcon>
-                                                                <IconChevronRight />
-                                                            </ActionIcon>
-                                                        </Flex>
-                                                    </Container> */}
+                                                    {location.pathname === "/acl/permissions" && (
+                                                        <>
+                                                            <Button
+                                                                className="mt-4"
+                                                                onClick={handleAddPermissionModal}
+                                                                compact
+                                                            >
+                                                                Create permissions
+                                                            </Button>
+
+                                                            <CreatePermissionModal
+                                                                isModalOpen={isCreatePermissionModalOpen}
+                                                                handleCreatePermission={handleCreatePermission}
+                                                                handleModalClose={handleModalClose}
+                                                                permissionName={permissionName}
+                                                                setPermissionName={setPermissionName}
+                                                            />
+                                                        </>
+                                                    )}
+
+
+
                                                 </Flex>
                                             </Center>
                                         </Container>
@@ -265,7 +310,7 @@ const Acl = () => {
                                             <Route
                                                 index
                                                 element={
-                                                    <PermissionRoleMappings useStyles={useStyles} initialData={rolesPermissionsMapping_initialData} />
+                                                    <>Default page</>
                                                 }
                                             />
                                             <Route
@@ -288,6 +333,13 @@ const Acl = () => {
                                                 element={
                                                     <RolesVsPermissions title={"acl/roles vs permissions"}
                                                         useStyles={useStyles} initialData={roles_initialData} />
+                                                }
+                                            />
+                                            <Route
+                                                path="/permissions"
+                                                element={
+                                                    <Permissions title={"acl/all permissions"}
+                                                        useStyles={useStyles} initialData={permissions_initialData} />
                                                 }
                                             />
                                         </Route>
