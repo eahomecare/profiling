@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import {
     getAllRolesPermissionsMappings, getUserRolesPermissionsByMapping,
-    getAllPermissionsByRole, getAllPermissions, createRolesPermissionMapping, getAllRolesPermissionsMappingsByUser
+    getAllPermissionsByRole, getAllPermissions, createRolesPermissionMapping, getAllRolesPermissionsMappingsByUser, getAllRoles
 } from "../../redux/rolesPermissionSlice"
 import { Table } from "@mantine/core";
 import { createStyles, ScrollArea, rem } from '@mantine/core';
@@ -19,8 +19,14 @@ import PermissionRoleMappings from "./PermissionRoleMapping"
 import MainHeader from "../../components/MainHeader/MainHeader"
 import Users from "./Users"
 import { MainLinks } from "./_mainLink"
+import RolesVsPermissions from "./RolesVsPermissions"
+import { useLocation } from "react-router-dom"
 
 
+function formatDate(dateString) {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
 
 
 const Acl = () => {
@@ -28,7 +34,7 @@ const Acl = () => {
         header: {
             position: 'sticky',
             top: 0,
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white,
+            backgroundColor: "#c2c2c2",
             transition: 'box-shadow 150ms ease',
 
             '&::after': {
@@ -54,17 +60,41 @@ const Acl = () => {
     const [selectedPermission, setSelectedPermission] = useState(null)
     const [selectedUserRoleName, setSelectedUserRoleName] = useState(null)
     const [selectedLink, setSelectedLink] = useState(null)
+    const location = useLocation();
 
     const dispatch = useDispatch();
 
     const { rolesPermissionsStatus, rolesPermissions, userPermissions,
-        permissionsByRole, permissionsByRoleStatus, permissions } = useSelector(state => state.rolePermission);
+        permissionsByRole, permissionsByRoleStatus, permissions, roles } = useSelector(state => state.rolePermission);
     const { user, users } = useSelector(state => state.auth)
+
+    const userPermissionsDict = {};
+
+    for (const permission of rolesPermissions) {
+        const { userId, permission: { name } } = permission;
+
+        if (userPermissionsDict.hasOwnProperty(userId)) {
+            userPermissionsDict[userId].push(name);
+        } else {
+            userPermissionsDict[userId] = [name];
+        }
+    }
+
+    const allUserIds = users.map(user => user.id);
+
+    for (const userId of allUserIds) {
+        if (!userPermissionsDict.hasOwnProperty(userId)) {
+            userPermissionsDict[userId] = [];
+        }
+    }
+
+    console.log(location.pathname);
 
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
         dispatch(getUsers())
         dispatch(getAllPermissions())
+        dispatch(getAllRoles())
     }, []);
 
     useEffect(() => {
@@ -92,19 +122,29 @@ const Acl = () => {
         permissionname: data.permission.name,
         username: data.user.email,
         isactive: data.isActive ? "active" : "inactive",
-        created_at: data.created_at,
+        created_at: formatDate(data.created_at),
     }));
 
-    const users_initialData = users.map((data) => ({
+    const users_initialData = Object.keys(userPermissionsDict).length > 0 && users.map((data) => ({
         id: data.id,
         email: data.email,
         isactive: "active",
         role: data.role.name,
-        permissions: "",
-        created_at: data.created_at
+        permissions: userPermissionsDict[data.id].join(" / "),
+        created_at: formatDate(data.created_at)
     }))
 
 
+    users.map(d => {
+        console.log(userPermissionsDict[d.id]);
+    })
+
+    const roles_initialData = roles.map((data) => ({
+        id: data.id,
+        name: data.name,
+        permissions: (data.defaultPermissions.map((permission) => permission.name)).join(" / "),
+        created_at: formatDate(data.created_at)
+    }))
 
 
     const handleAddRoleClick = () => {
@@ -131,7 +171,7 @@ const Acl = () => {
     }
 
 
-    if (rolesPermissionsStatus === 'loading') {
+    if (rolesPermissionsStatus === 'loading' || !users || users.length === 0) {
         return (
             <LoadingOverlay visible overlayBlur={2}
                 loaderProps={{
@@ -175,28 +215,36 @@ const Acl = () => {
                                             </Navbar>
                                             <Center>
                                                 <Flex mt={5}>
-                                                    <Button
-                                                        variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
-                                                        className="mt-4"
-                                                        onClick={handleAddRoleClick}
-                                                    >
-                                                        Assign permissions
-                                                    </Button>
-                                                    <AssignPermissionModal
-                                                        isModalOpen={isModalOpen}
-                                                        handleModalClose={handleModalClose}
-                                                        selectedUserRoleName={selectedUserRoleName}
-                                                        selectedUser={selectedUser}
-                                                        setSelectedUser={setSelectedUser}
-                                                        permissions={permissions}
-                                                        selectedPermission={selectedPermission}
-                                                        setSelectedPermission={setSelectedPermission}
-                                                        rolesPermissions={rolesPermissions}
-                                                        handleAssignPermission={handleAssignPermission}
-                                                        users={users}
-                                                        selectedRole={selectedRole}
-                                                    />
-                                                    <Container mt={5}>
+                                                    {location.pathname === "/acl/permissionrolemappings" && (
+                                                        <>
+                                                            <Button
+                                                                variant="gradient" gradient={{ from: 'indigo', to: 'cyan' }}
+                                                                className="mt-4"
+                                                                onClick={handleAddRoleClick}
+                                                            >
+                                                                Assign permissions
+                                                            </Button>
+
+                                                            <AssignPermissionModal
+                                                                isModalOpen={isModalOpen}
+                                                                handleModalClose={handleModalClose}
+                                                                selectedUserRoleName={selectedUserRoleName}
+                                                                selectedUser={selectedUser}
+                                                                setSelectedUser={setSelectedUser}
+                                                                permissions={permissions}
+                                                                selectedPermission={selectedPermission}
+                                                                setSelectedPermission={setSelectedPermission}
+                                                                rolesPermissions={rolesPermissions}
+                                                                handleAssignPermission={handleAssignPermission}
+                                                                users={users}
+                                                                selectedRole={selectedRole}
+                                                            />
+                                                        </>
+
+                                                    )
+                                                    }
+
+                                                    {/* <Container mt={5}>
                                                         <Flex>
                                                             <ActionIcon>
                                                                 <IconChevronLeft />
@@ -205,7 +253,7 @@ const Acl = () => {
                                                                 <IconChevronRight />
                                                             </ActionIcon>
                                                         </Flex>
-                                                    </Container>
+                                                    </Container> */}
                                                 </Flex>
                                             </Center>
                                         </Container>
@@ -223,13 +271,23 @@ const Acl = () => {
                                             <Route
                                                 path="/permissionrolemappings"
                                                 element={
-                                                    <PermissionRoleMappings useStyles={useStyles} initialData={rolesPermissionsMapping_initialData} />
+                                                    <PermissionRoleMappings
+                                                        title={"acl/permissions vs users"}
+                                                        useStyles={useStyles}
+                                                        initialData={rolesPermissionsMapping_initialData} />
                                                 }
                                             />
                                             <Route
                                                 path="/users"
                                                 element={
-                                                    <Users useStyles={useStyles} initialData={users_initialData} />
+                                                    <Users title={"acl/users"} useStyles={useStyles} initialData={users_initialData} />
+                                                }
+                                            />
+                                            <Route
+                                                path="/rolesvspermissions"
+                                                element={
+                                                    <RolesVsPermissions title={"acl/roles vs permissions"}
+                                                        useStyles={useStyles} initialData={roles_initialData} />
                                                 }
                                             />
                                         </Route>
