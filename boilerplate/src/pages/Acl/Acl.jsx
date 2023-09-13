@@ -135,13 +135,13 @@ const Acl = () => {
             <>
                 <AppShell
                     padding="md"
-                    header={<MainHeader />}
+                // header={<MainHeader />}
                 >
 
                     <div style={{ display: 'flex', }}>
-                        <span>
+                        {/* <span>
                             <CustomNavbar />
-                        </span>
+                        </span> */}
 
                         <span style={{ flexGrow: '1', width: '100px' }}>
 
@@ -153,7 +153,7 @@ const Acl = () => {
                                     </span>
                                     <span>
                                         <Container>
-                                            <Navbar height={600} p="xs" width={{ base: 300 }}>
+                                            <Navbar height={600} p="xs" width={{ base: 300 }} ml={40}>
 
                                                 <Navbar.Section mt="xs">
                                                     {/* <User /> */}
