@@ -9,14 +9,14 @@ const initialState = {
   createPermissionStatus: "idle",
   getAllRolesStatus: "idle",
   getAllPermissionsStatus: "idle",
-  permissionsByRoleStatus:"idle",
-  createRolesPermissionMappingStatus:"idle",
-  getAllRolesPermissionsMappingsByUserStatus:"idle",
+  permissionsByRoleStatus: "idle",
+  createRolesPermissionMappingStatus: "idle",
+  getAllRolesPermissionsMappingsByUserStatus: "idle",
   roles: [],
   permissions: [],
-  userRoles:[],
-  userPermissions :[],
-  permissionsByRole:[]
+  userRoles: [],
+  userPermissions: [],
+  permissionsByRole: []
 };
 
 export const getAllRolesPermissionsMappings = createAsyncThunk(
@@ -81,16 +81,16 @@ export const getAllPermissions = createAsyncThunk(
 
 export const getAllPermissionsByRole = createAsyncThunk(
   "permissions/byRoleId",
-  async(roleid) => {
-    const {data} = await axios.get("/permissions/roles/"+roleid)
+  async (roleid) => {
+    const { data } = await axios.get("/permissions/roles/" + roleid)
     return data
   }
 )
 
-export const getAllRolesPermissionsMappingsByUser =  createAsyncThunk(
+export const getAllRolesPermissionsMappingsByUser = createAsyncThunk(
   "rolesPermissions/byUserId",
-  async(userId) => {
-    const {data} = await axios.get("/user-role-permission-mappings/users/"+userId)
+  async (userId) => {
+    const { data } = await axios.get("/user-role-permission-mappings/users/" + userId)
     return data
   }
 )
@@ -99,12 +99,12 @@ export const rolesPermissionSlice = createSlice({
   name: "rolesPermission",
   initialState,
   reducers: {
-    getUserRolesPermissionsByMapping:(state,action) => {
+    getUserRolesPermissionsByMapping: (state, action) => {
       state.userRoles = []
       state.userPermissions = []
-      state.rolesPermissions.map(e=>{
-        if(e.userId === action.payload){
-          if (e.role ) state.userRoles.push(e.role)
+      state.rolesPermissions.map(e => {
+        if (e.userId === action.payload) {
+          if (e.role) state.userRoles.push(e.role)
           if (e.permission) state.userPermissions.push(e.permission)
         }
       })
@@ -153,7 +153,7 @@ export const rolesPermissionSlice = createSlice({
     },
     [getAllRoles.fulfilled]: (state, action) => {
       state.getAllRolesStatus = "success";
-      state.roles = action.payload.data;
+      state.roles = action.payload;
     },
     [getAllRoles.rejected]: (state, action) => {
       state.getAllRolesStatus = "failed";
@@ -183,8 +183,8 @@ export const rolesPermissionSlice = createSlice({
     },
     [createRolesPermissionMapping.fulfilled]: (state, action) => {
       state.createPermissionStatus = "success"
-      state.rolesPermissions = [...state.rolesPermissions,action.payload]
-  
+      state.rolesPermissions = [...state.rolesPermissions, action.payload]
+
     },
     [createRolesPermissionMapping.rejected]: (state, action) => {
       state.createRolesPermissionMappingStatus = "failed";
@@ -196,10 +196,10 @@ export const rolesPermissionSlice = createSlice({
       state.getAllRolesPermissionsMappingsByUserStatus = "success"
       console.log(action.payload);
       action.payload.map(e => {
-          if (e.role ) state.userRoles.push(e.role)
-          if (e.permission) state.userPermissions.push(e.permission)
+        if (e.role) state.userRoles.push(e.role)
+        if (e.permission) state.userPermissions.push(e.permission)
       })
-  
+
     },
     [getAllRolesPermissionsMappingsByUser.rejected]: (state, action) => {
       state.getAllRolesPermissionsMappingsByUserStatus = "failed";
