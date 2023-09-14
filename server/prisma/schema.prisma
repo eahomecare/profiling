@@ -36,7 +36,7 @@ model User {
 model Customer {
   id                          String                        @id @default(auto()) @map("_id") @db.ObjectId
   crmMappings                 CustomerCRMMapping[]
-  mobile                      String                        @unique
+  mobile                      String?                       @unique
   other_mobile                Json?
   email                       String?
   other_email                 Json?
