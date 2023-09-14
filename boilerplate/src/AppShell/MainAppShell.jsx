@@ -1,10 +1,11 @@
-import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { ActionIcon, Avatar, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../components/LightDarkButton"
 import { getCustomers, getCustomersProfileCompleteness } from "../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Logo from '../components/assets/logo.svg';
 
 
 
@@ -14,31 +15,13 @@ const MainAppShell = ({ children }) => {
         <>
             <Header height={{ base: 50, md: 70 }} p="md" withBorder={false} m={'md'}>
                 <div style={{ display: 'flex', alignItems: 'center', height: '100%', justifyContent: 'space-between' }}>
-                    <Text
-                        variant="gradient"
-                        gradient={{ from: 'indigo', to: 'cyan', deg: 45 }}
-                        sx={{ fontFamily: 'Greycliff CF, sans-serif' }}
-                        ta="center"
-                        fz="xl"
-                        fw={700}
-                        mt={-20}
-                    >EAI CRM</Text>
-                    <TextInput
-                        placeholder="Search"
-                        mb="md"
-                        icon={<IconSearch size="0.9rem" stroke={1.5} />}
-                        radius='md'
-                        rightSection={
-                            <ActionIcon variant={'subtle'}>
-                                <IconAdjustmentsHorizontal />
-                            </ActionIcon>
-                        }
-                    // value={}
-                    // onChange={}
-                    />
-                    <div>
-                        <LightDarkButton />
-                    </div>
+                    <Avatar radius="xl" src={Logo} />
+                    <Flex justify={'space-between'}>
+                        <Center>
+                            <LightDarkButton />
+                            <Avatar ml={10} radius={'xl'} src={null} alt="no image here" color="indigo" />
+                        </Center>
+                    </Flex>
                 </div>
             </Header>
             <div style={{ display: 'flex', }}>
@@ -54,10 +37,12 @@ const MainAppShell = ({ children }) => {
                             <Link to="/campaign">
                                 <ActionIcon variant="subtle" c='cyan'><Icon3dCubeSphere size="1rem" /></ActionIcon>
                             </Link>
-                            <Link to="/">
-                            <ActionIcon variant="subtle" c='cyan'><IconAccessible size="1rem" /></ActionIcon>
+                            <Link to="/customers">
+                                <ActionIcon variant="subtle" c='cyan'><IconAccessible size="1rem" /></ActionIcon>
                             </Link>
-                            <ActionIcon variant="subtle" c='cyan'><IconLayoutAlignBottom size="1rem" /></ActionIcon>
+                            <Link to="/">
+                                <ActionIcon variant="subtle" c='cyan'><IconLayoutAlignBottom size="1rem" /></ActionIcon>
+                            </Link>
                             <ActionIcon variant="subtle" c='cyan'><IconAnalyze size="1rem" /></ActionIcon>
                             <ActionIcon variant="gradient" gradient={{ from: 'black', to: 'indigo' }}><IconArrowBadgeDown size="1rem" /></ActionIcon>
                         </Stack>
