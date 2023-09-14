@@ -43,13 +43,17 @@ const Analysis = () => {
 
     useEffect(() => {
         if (keywordsStatus === 'success') {
-            const updatedDropdownData = { ...dropdownData.Interests };
+            let updatedDropdownData = { ...dropdownData.Interests };
 
             keywords.forEach(keyword => {
-                if (!updatedDropdownData[keyword.category]) {
-                    updatedDropdownData[keyword.category] = [];
-                }
-                updatedDropdownData[keyword.category].push({ label: keyword.value, value: keyword.id });
+                const updatedCategory = updatedDropdownData[keyword.category]
+                    ? [...updatedDropdownData[keyword.category], { label: keyword.value, value: keyword.id }]
+                    : [{ label: keyword.value, value: keyword.id }];
+
+                updatedDropdownData = {
+                    ...updatedDropdownData,
+                    [keyword.category]: updatedCategory
+                };
             });
 
             const finalDropdownData = {
