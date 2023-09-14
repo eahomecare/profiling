@@ -50,7 +50,6 @@ export const createRoles = createAsyncThunk(
 export const createPermission = createAsyncThunk(
   "rolesPermissions/createPermission",
   async (payload) => {
-    console.log(payload, "------->");
     const { data } = await axios.post("/permissions", payload);
     return data;
   }
@@ -143,6 +142,7 @@ export const rolesPermissionSlice = createSlice({
     },
     [createPermission.fulfilled]: (state, action) => {
       state.createPermissionStatus = "success";
+      state.permissions = [...state.permissions, action.payload]
     },
     [createPermission.rejected]: (state, action) => {
       state.createPermissionStatus = "failed";
