@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import DropdownRow from './DropdownRow';
-import ButtonGroup from './ButtonGroup';
 import '../../_customer-Profile.scss';
 import "../../scss/_variables.scss";
 import "../../scss/_mixins.scss";
@@ -13,7 +12,6 @@ import { IconPlus } from '@tabler/icons-react';
 import { ActionIcon, Box, Flex, Group, Text } from '@mantine/core';
 import { toggleModal, updateDropdownData, updateRows, updateSelectedCombinations } from '../../../../redux/campaignManagementSlice';
 import Demographic from './Demographic';
-import BarStackedView from '../ViewCampaigns/BarStackedCampaign';
 
 const Analysis = () => {
     const dispatch = useDispatch();
@@ -194,9 +192,6 @@ const Analysis = () => {
                     </div>
                 </div>
             </div>
-            <Box h={1000} w={'100%'}>
-                <BarStackedView />
-            </Box>
         </>
     );
 }
