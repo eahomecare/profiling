@@ -17,7 +17,6 @@ import CustomNavbar from "../../components/CustomNavbar/CustomNavbar"
 import AssignPermissionModal from "./AssignPermissionModal"
 import PermissionRoleMappings from "./PermissionRoleMapping"
 import MainHeader from "../../components/MainHeader/MainHeader"
-import Users from "./Users"
 import { MainLinks } from "./_mainLink"
 import RolesVsPermissions from "./RolesVsPermissions"
 import { useLocation } from "react-router-dom"
@@ -92,8 +91,6 @@ const Acl = () => {
             userPermissionsDict[userId] = [];
         }
     }
-
-    console.log(location.pathname);
 
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
@@ -235,16 +232,7 @@ const Acl = () => {
                                     </span>
                                     <span>
                                         <Container>
-                                            <Navbar height={600} p="xs" width={{ base: 300 }} ml={40}>
 
-                                                <Navbar.Section mt="xs">
-                                                    {/* <User /> */}
-                                                </Navbar.Section>
-                                                <Navbar.Section grow mt="md">
-                                                    <MainLinks />
-                                                </Navbar.Section>
-
-                                            </Navbar>
                                             <Center>
                                                 <Flex mt={5}>
                                                     {location.pathname === "/acl/permissionrolemappings" && (
@@ -320,12 +308,6 @@ const Acl = () => {
                                                         title={"acl/permissions vs users"}
                                                         useStyles={useStyles}
                                                         initialData={rolesPermissionsMapping_initialData} />
-                                                }
-                                            />
-                                            <Route
-                                                path="/users"
-                                                element={
-                                                    <Users title={"acl/users"} useStyles={useStyles} initialData={users_initialData} />
                                                 }
                                             />
                                             <Route

@@ -1,11 +1,12 @@
 import { ActionIcon, Avatar, Button, Center, Container, Flex, Group, Header, NavLink, Box, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
-import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconSettingsAutomation, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
+import { Icon3dCubeSphere, IconUsersGroup, IconAccessible, IconStar, IconSettingsAutomation, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../components/LightDarkButton"
 import { getCustomers, getCustomersProfileCompleteness } from "../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Logo from '../components/assets/logo.svg';
+import User from './_user'
 
 
 
@@ -13,6 +14,7 @@ const MainAppShell = ({ children }) => {
 
     const location = useLocation();
     const [activeNavLink, setActiveNavLink] = useState("")
+    const { user } = useSelector(state => state.auth)
 
 
     useEffect(() => {
@@ -38,16 +40,52 @@ const MainAppShell = ({ children }) => {
                 <span>
                     <Navbar height={500} p="xs" withBorder={false}>
                         <Space h={5} />
+                        <Navbar.Section>
+                            <User user={user} />
+                        </Navbar.Section>
+                        <Space h={2} />
                         <Stack>
-                            <Link to="/acl" style={{ textDecoration: "none", fontWeight: "900" }}>
+                            <Link to="/" style={{ textDecoration: "none" }}>
                                 <NavLink
-                                    label="Acl"
-                                    icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
-                                    active={activeNavLink === "/acl"}
+                                    label="Dashboard"
+                                    icon={<IconAnalyze size="2rem" stroke={2} />}
+                                    active={activeNavLink === "/"}
 
                                 >
                                 </NavLink>
                             </Link>
+                            <Link to="/users" style={{ textDecoration: "none" }}>
+                                <NavLink
+                                    label="Users"
+                                    icon={<IconUsersGroup size="2rem" stroke={2} />}
+                                    active={activeNavLink === "/users"}
+                                >
+                                </NavLink>
+                            </Link>
+
+
+                            <NavLink
+                                label="ACL"
+                                icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
+                                active={activeNavLink === "/acl"}
+                            >
+                                <Link to="/acl/rolesvspermissions" style={{ textDecoration: "none" }}>
+                                    <NavLink
+                                        label="Roles vs Permission"
+                                        icon={<IconSettings size="1rem" stroke={2} />}
+                                        active={activeNavLink === "/acl/rolesvspermissions"}
+                                    >
+                                    </NavLink>
+                                </Link>
+                                <Link to="/acl/permissions" style={{ textDecoration: "none" }}>
+                                    <NavLink
+                                        label="Permissions"
+                                        icon={<IconSettings size="1rem" stroke={2} />}
+                                        active={activeNavLink === "/acl/permissions"}
+                                    >
+                                    </NavLink>
+                                </Link>
+                            </NavLink>
                             <Link to="/campaign" style={{ textDecoration: "none" }}>
                                 <NavLink
                                     label="Campaign"
@@ -65,16 +103,9 @@ const MainAppShell = ({ children }) => {
                                 >
                                 </NavLink>
                             </Link>
-                            <Link to="/" style={{ textDecoration: "none" }}>
-                                <NavLink
-                                    label="Dashboard"
-                                    icon={<IconAnalyze size="2rem" stroke={2} />}
-                                    active={activeNavLink === "/"}
 
-                                >
-                                </NavLink>
-                            </Link>
                         </Stack>
+
                     </Navbar>
                 </span>
                 <span style={{ flexGrow: '1', width: '100px' }}>
