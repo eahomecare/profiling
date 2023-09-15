@@ -3,7 +3,7 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchData, fetchSources, fetchCampaignNames } from '../../../../redux/campaignSlice';
+import { fetchData, fetchSources, fetchCampaignNames } from '../../redux/campaignSlice';
 
 const BarStackedView = () => {
     const dispatch = useDispatch();
@@ -68,10 +68,10 @@ const BarStackedView = () => {
                         />
                         <Tooltip />
                         <Legend iconType='circle' verticalAlign='top' align='right' offset={-10} />
-                        <Bar dataKey="contactability" stackId="a" fill="#8334f8" />
+                        <Bar dataKey="delivered" stackId="a" fill="#8334f8" />
+                        <Bar dataKey="failure" stackId="a" fill="#8884d8" />
                         <Bar dataKey="interested" stackId="a" fill="#883538" />
-                        <Bar dataKey="converted" stackId="a" fill="#8884d8" />
-                        <Bar dataKey="over" stackId="a" fill="#82ca9d">
+                        <Bar dataKey="converted" stackId="a" fill="#82ca9d" >
                             <LabelList position={'top'} />
                         </Bar>
 

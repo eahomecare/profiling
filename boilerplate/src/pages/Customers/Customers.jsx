@@ -31,7 +31,7 @@ const Customers = () => {
             <LoadingOverlay visible overlayBlur={2}
                 loaderProps={{
                     size: 'xl',
-                    variant: 'dots'
+                    variant: 'dots',
                 }}
             />
         )
@@ -45,26 +45,6 @@ const Customers = () => {
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
                                 <span>
                                     <Title pl={5}>Customers</Title>
-                                </span>
-                                <span>
-                                    <Container>
-                                        <Center>
-                                            <Flex mt={5}>
-                                                <TextInput w={30} />
-                                                <Text mt={5} ml={5} fw={20}>Items per page</Text>
-                                                <Container mt={5}>
-                                                    <Flex>
-                                                        <ActionIcon>
-                                                            <IconChevronLeft />
-                                                        </ActionIcon>
-                                                        <ActionIcon>
-                                                            <IconChevronRight />
-                                                        </ActionIcon>
-                                                    </Flex>
-                                                </Container>
-                                            </Flex>
-                                        </Center>
-                                    </Container>
                                 </span>
                             </div>
                             <TableDisplay customerList={customers} fetchedPofileCompleteness={fetchedPofileCompleteness} />

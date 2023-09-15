@@ -4,6 +4,7 @@ import React from 'react'
 import CustomPieChart from './PieChart'
 import VerticalBarChart from './VerticalBarChart'
 import TopPanelCards from './TopPanelCards'
+import BarStackedView from './BarStackedCampaign'
 
 const BoardStats = () => {
     return (
@@ -99,6 +100,9 @@ const BoardStats = () => {
                         {/* Mid Pannel Right End */}
                     </Grid.Col>
                 </Grid>
+                <Box h={1000} w={'100%'}>
+                    <BarStackedView />
+                </Box>
             </Stack>
         </>
     )

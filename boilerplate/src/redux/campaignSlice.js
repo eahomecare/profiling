@@ -33,59 +33,59 @@ export const fetchCampaignNames = createAsyncThunk(
 const initialState = {
     data: [{
         name: 'Campaign Name 1',
-        contactability: 4000,
+        delivered: 4000,
         interested: 3000,
         converted: 2000,
-        over: 100,
-        total: 7100
+        failure: 100,
+        // total: 7100
     },
     {
         name: 'Campaign Name 2',
-        contactability: 9000,
+        delivered: 9000,
         interested: 6500,
         converted: 4500,
-        over: 300,
-        total: 20300
+        failure: 300,
+        // total: 20300
     },
     {
         name: 'Campaign Name 3',
-        contactability: 5000,
+        delivered: 5000,
         interested: 3700,
         converted: 2500,
-        over: 150,
-        total: 11350
+        failure: 150,
+        // total: 11350
     },
     {
         name: 'Campaign Name 4',
-        contactability: 5500,
+        delivered: 5500,
         interested: 4000,
         converted: 2700,
-        over: 180,
-        total: 12380
+        failure: 180,
+        // total: 12380
     },
     {
         name: 'Campaign Name 5',
-        contactability: 4800,
+        delivered: 4800,
         interested: 3400,
         converted: 2300,
-        over: 120,
-        total: 10620
+        failure: 120,
+        // total: 10620
     },
     {
         name: 'Campaign Name 6',
-        contactability: 4700,
+        delivered: 4700,
         interested: 3300,
         converted: 2200,
-        over: 110,
-        total: 10310
+        failure: 110,
+        // total: 10310
     },
     {
         name: 'Campaign Name 7',
-        contactability: 4600,
+        delivered: 4600,
         interested: 3200,
         converted: 2100,
-        over: 100,
-        total: 10000
+        failure: 100,
+        // total: 10000
     },
     ],
     sources: ['Homecare', 'Cyberior', 'EZ-Auto', 'EZ-Travel', 'E-Portal 2.0'],
