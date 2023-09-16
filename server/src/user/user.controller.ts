@@ -3,9 +3,10 @@ import {
   Controller,
   Get,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { GetUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
@@ -15,6 +16,13 @@ import { UserService } from './user.service';
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) { }
+
+  @Post('create')
+  createUser(@Body() data :Prisma.UserCreateInput) : Promise<User>{
+    return this.userService.createUser(data)
+  }
+
+
   @Get('me')
   getMe(@GetUser() user: User) {
     return user;

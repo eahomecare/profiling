@@ -2,7 +2,7 @@ import React from 'react';
 import { IconChevronRight, IconChevronLeft } from '@tabler/icons-react';
 import { UnstyledButton, Group, Avatar, Text, Box, useMantineTheme, rem } from '@mantine/core';
 
-const User = ({ user }) => {
+const User = ({ user,roleName }) => {
     const theme = useMantineTheme();
 
     return (
@@ -37,7 +37,7 @@ const User = ({ user }) => {
                             {user?.email?.split("@")[0]}
                         </Text>
                         <Text color="dimmed" size="xs">
-                            {user.email}
+                            {roleName}
                         </Text>
                     </Box>
 
