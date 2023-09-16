@@ -14,13 +14,25 @@ const MainAppShell = ({ children }) => {
 
     const location = useLocation();
     const [activeNavLink, setActiveNavLink] = useState("")
-    const { user } = useSelector(state => state.auth)
+    const { user,users } = useSelector(state => state.auth)
 
+    function findUserRoleNameById(userId) {
+        const user = users.find(user => user.id === userId);
+      
+        if (user) {
+          return user.role.name;
+        } else {
+          return 'User not found';
+        }
+      }
 
     useEffect(() => {
         const pathname = location.pathname;
         setActiveNavLink(pathname);
     }, [location.pathname]);
+
+
+
 
 
     return (
@@ -41,7 +53,7 @@ const MainAppShell = ({ children }) => {
                     <Navbar height={500} p="xs" withBorder={false}>
                         <Space h={5} />
                         <Navbar.Section>
-                            <User user={user} />
+                            <User user={user} roleName={findUserRoleNameById(user._id)}/>
                         </Navbar.Section>
                         <Space h={2} />
                         <Stack>
