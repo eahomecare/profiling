@@ -46,6 +46,16 @@ export const getUsers = createAsyncThunk("auth/getUsers", async () => {
   return data;
 });
 
+export const addUser = createAsyncThunk("auth/addUser", async (userData) => {
+  try {
+    const {data} = await axios.post("/users/create", userData);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -135,6 +145,17 @@ export const authSlice = createSlice({
     [getUsers.rejected]: (state, action) => {
       state.userStatus = "failed";
     },
+    [addUser.pending]: (state, action) => {
+      state.status = "loading";
+    },
+    [addUser.fulfilled]: (state, action) => {
+      state.status = "success";
+      state.users = [...state.users, action.payload];
+    },
+    [addUser.rejected]: (state, action) => {
+      state.status = "failed";
+    },
+    
   },
 });
 

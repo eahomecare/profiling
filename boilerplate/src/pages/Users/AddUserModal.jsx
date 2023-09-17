@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Text, Select, Button, TextInput, SimpleGrid } from "@mantine/core";
 
-const AddUserModal = ({ isModalOpen, handleModalClose, handleAddUser, userDetails, setUserDetails }) => {
+const AddUserModal = ({ isModalOpen, handleModalClose, handleAddUser, userDetails, setUserDetails ,rolesData}) => {
     return (
         <Modal
             opened={isModalOpen}
@@ -49,7 +49,7 @@ const AddUserModal = ({ isModalOpen, handleModalClose, handleAddUser, userDetail
             <Select
                 label="Role"
                 placeholder="Select Role"
-                data={['Role1', 'Role2', 'Role3']}
+                data={rolesData}
                 value={userDetails.role}
                 onChange={(value) => setUserDetails({ ...userDetails, role: value })}
                 withAsterisk
