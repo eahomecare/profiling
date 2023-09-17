@@ -12,13 +12,13 @@ import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
 import { UserService } from './user.service';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) { }
 
   @Post('create')
-  createUser(@Body() data :Prisma.UserCreateInput) : Promise<User>{
+  createUser(@Body() data: Prisma.UserCreateInput): Promise<User> {
     return this.userService.createUser(data)
   }
 

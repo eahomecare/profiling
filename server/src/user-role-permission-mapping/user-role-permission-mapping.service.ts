@@ -54,8 +54,10 @@ export class UserRolePermissionMappingService {
             },
           },
         );
-      return mappings;
+        return mappings.filter(mapping => mapping.user && mapping.role && mapping.permission);
     } catch (error) {
+      console.log(error);
+      
       throw new Error(
         'Failed to fetch userRolePermissionMappings',
       );
