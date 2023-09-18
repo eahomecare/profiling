@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Center, Flex, Select, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Center, Flex, Group, Select, Stack, Text } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -54,47 +54,46 @@ const VerticalBarChart = () => {
     const campaignNames = useSelector((state) => state.campaign.campaignNames);
 
     return (
-    <Stack>
-<Flex justify={'start'}>
-                        <Select
-                            maw={320}
-                            mx="auto"
-                            label={<Text c={'dimmed'}>Campaign(s)</Text>}
-                            data={['All', ...campaignNames]}
-                            transitionProps={{ transition: 'pop-top-left', duration: 80, timingFunction: 'ease' }}
-                            withinPortal
-                            rightSection={<ActionIcon><IconChevronDown /></ActionIcon>}
-                        />
-</Flex>
-        <Center>
-            <Box h={400} w={800} p={20} >
-                <ResponsiveContainer height={'100%'} width={"100%"}>
-                    <BarChart
-                        layout="vertical"
-                        data={data}
-                    >
-                        <XAxis label={{ value: 'Campaigns', offset: 0 }} type="number" height={55} />
-                        <YAxis
-                            label={{ value: 'Communication Formats', angle: -90, position: 'left', offset: '-15' }}
-                            type="category"
-                            dataKey="name"
-                            width={150}
-                        />
-                        <Tooltip />
-                        <Legend iconType='circle' verticalAlign='top' align='right' offset={-10} />
-                        <Bar dataKey="Delivered" fill="#82ca9d" stackId="a"/>
-                        <Bar dataKey="Failure" fill="#883538" stackId="a"/>
-                        <Bar dataKey="Interested" fill="#8884d8" stackId="a"/>
-                        <Bar dataKey="Converted" fill="#8334f8"  stackId="a">
-                            <LabelList
-                                position="right"
-                            />
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+        <Stack>
+            <Box>
+                <Select
+                    maw={320}
+                    label={<Text c={'dimmed'}>Campaign(s)</Text>}
+                    data={['All', ...campaignNames]}
+                    transitionProps={{ transition: 'pop-top-left', duration: 80, timingFunction: 'ease' }}
+                    withinPortal
+                    rightSection={<ActionIcon><IconChevronDown /></ActionIcon>}
+                />
             </Box>
-        </Center>
-</Stack>
+            <Center>
+                <Box h={400} w={800} p={20} >
+                    <ResponsiveContainer height={'100%'} width={"100%"}>
+                        <BarChart
+                            layout="vertical"
+                            data={data}
+                        >
+                            <XAxis label={{ value: 'Campaigns', offset: 0 }} type="number" height={55} />
+                            <YAxis
+                                label={{ value: 'Communication Formats', angle: -90, position: 'left', offset: '-15' }}
+                                type="category"
+                                dataKey="name"
+                                width={150}
+                            />
+                            <Tooltip />
+                            <Legend iconType='circle' verticalAlign='top' align='right' offset={-10} />
+                            <Bar dataKey="Delivered" fill="#82ca9d" stackId="a" />
+                            <Bar dataKey="Failure" fill="#883538" stackId="a" />
+                            <Bar dataKey="Interested" fill="#8884d8" stackId="a" />
+                            <Bar dataKey="Converted" fill="#8334f8" stackId="a">
+                                <LabelList
+                                    position="right"
+                                />
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Box>
+            </Center>
+        </Stack>
     );
 }
 

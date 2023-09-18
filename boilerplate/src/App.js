@@ -24,6 +24,8 @@ import { Notifications } from "@mantine/notifications";
 import MainAppShell from "./AppShell/MainAppShell";
 import BoardStats from "./pages/HomeDashBoard/BoardStats";
 import Users from "./pages/Users/Users";
+import MyAccount from "./AppShell/UserMenuItems/MyAccount/MyAccount";
+import Security from "./AppShell/UserMenuItems/SecuritySettings/Security";
 // const Analysis = lazy(() =>
 //   import("./pages/Campaign/components/Analysis/Analysis"),
 // );
@@ -96,6 +98,8 @@ function App() {
                 <PrivateRoute path="/customers" element={<PermissionDenied />} />
               )}
               <PrivateRoute path="/campaign" element={<Analysis />} />
+              <PrivateRoute path="/myAccount" element={<MyAccount />} />
+              <PrivateRoute path="/securitySettings" element={<Security />} />
               <PrivateRoute path="/users" element={<Users />} />
               {hasPermission(userPermissions, "customer dashboard") ? (
                 <PrivateRoute path="/dashboard/*" element={<Dashboard />} />

@@ -26,7 +26,7 @@ const BoardStats = () => {
                 </Card>
                 {/* Pannel 1 End */}
                 <Grid grow>
-                    <Grid.Col span={1}>
+                    <Grid.Col span={4}>
                         {/* Mid Pannel Left Start */}
                         <Card shadow='lg' radius={'lg'} h={'100%'}>
                             <Stack>
@@ -81,7 +81,7 @@ const BoardStats = () => {
                         </Card>
                         {/* Mid Pannel Left End */}
                     </Grid.Col>
-                    <Grid.Col span={3}>
+                    <Grid.Col span={8}>
                         {/* Mid Pannel Right Start */}
                         <Card shadow='lg' radius={'lg'}>
                             <Stack>

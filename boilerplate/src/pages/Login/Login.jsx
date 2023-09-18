@@ -26,6 +26,7 @@ import { loginUser } from "../../redux/authSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllRolesPermissionsMappings, getAllRolesPermissionsMappingsByUser } from "../../redux/rolesPermissionSlice";
+import Recaptcha from "./Recaptcha";
 
 
 
@@ -135,7 +136,9 @@ export default function Login() {
 
                                                 Forgot password?
                                             </Anchor> */}
+                                            <Text size={'sm'} c={'blue'}>Forgot Password</Text>
                                         </Group>
+                                        <Recaptcha />
 
                                         <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
                                             {status === "loading" ? <>Signing in</> : <>Sign in</>}
