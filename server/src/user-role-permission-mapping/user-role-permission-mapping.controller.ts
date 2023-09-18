@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { UserRolePermissionMappingService } from './user-role-permission-mapping.service';
 import { userRolePermissionMapping, Prisma } from '@prisma/client';
 
@@ -24,5 +24,10 @@ export class UserRolePermissionMappingController {
     @Get('roles/:roleId')
     async getMappingsByRoleId(@Param('roleId') roleId: string): Promise<userRolePermissionMapping[]> {
         return this.userRolePermissionMappingService.findMappingsByRoleId(roleId);
+    }
+
+    @Get('deactivate/:id')
+    async deactivateMapping(@Param('id') id: string): Promise<userRolePermissionMapping | null> {
+        return this.userRolePermissionMappingService.deactivateMapping(id);
     }
 }
