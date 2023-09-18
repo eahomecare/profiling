@@ -9,9 +9,10 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { getKeywords } from '../../../../redux/keywordSlice';
 import { IconPlus } from '@tabler/icons-react';
-import { ActionIcon, Box, Flex, Group, Text } from '@mantine/core';
+import { ActionIcon, Box, Card, Flex, Group, Text } from '@mantine/core';
 import { toggleModal, updateDropdownData, updateRows, updateSelectedCombinations } from '../../../../redux/campaignManagementSlice';
 import Demographic from './Demographic';
+import BarStackedView from '../../../HomeDashBoard/BarStackedCampaign';
 
 const Analysis = () => {
     const dispatch = useDispatch();
@@ -192,6 +193,9 @@ const Analysis = () => {
                     </div>
                 </div>
             </div>
+            <Card shadow='md' bg={'#F1F5F9'} radius={'md'}>
+                <BarStackedView />
+            </Card>
         </>
     );
 }
