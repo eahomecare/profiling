@@ -235,7 +235,7 @@ model ServiceCustomerUsageMapping {
 
 model Role {
   id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
-  name                      String
+  name                      RoleNames
   defaultPermissionsIDs     String[]                    @db.ObjectId
   defaultPermissions        Permission[]                @relation(fields: [defaultPermissionsIDs], references: [id])
   userRolePermissionMapping userRolePermissionMapping[]
@@ -246,9 +246,30 @@ model Role {
   @@unique([name])
 }
 
+
+enum RoleNames {
+  admin
+  agent
+  campaign_manager
+  team_lead  
+}
+
+enum PermissionNames {
+  customer_dashboard
+  profile_dashboard
+  campaign_dashoard
+  user_create
+  user_view
+  user_read
+  user_delete
+  user_edit
+  customer_details
+  acl
+}
+
 model Permission {
   id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
-  name                      String
+  name                      PermissionNames
   defaultRolesIDs           String[]                    @db.ObjectId
   defaultRoles              Role[]                      @relation(fields: [defaultRolesIDs], references: [id])
   userRolePermissionMapping userRolePermissionMapping[]

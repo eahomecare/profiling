@@ -8,7 +8,7 @@ import {
 } from "../../redux/rolesPermissionSlice"
 import { Table } from "@mantine/core";
 import { createStyles, ScrollArea, rem } from '@mantine/core';
-import { getUsers,addUser } from "../../redux/authSlice"
+import { getUsers, addUser } from "../../redux/authSlice"
 import { useLocation } from "react-router-dom"
 import AddUserModal from "./AddUserModal";
 import UserActionModal from "./UserActionModal";
@@ -49,20 +49,20 @@ const Users = () => {
     const { classes, cx } = useStyles();
     const [scrolled, setScrolled] = useState(false);
     const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
-    const [isUserActionModalOpen,setUserActionModalOpen] = useState(false)
+    const [isUserActionModalOpen, setUserActionModalOpen] = useState(false)
     const location = useLocation();
     const dispatch = useDispatch();
-    const { rolesPermissions,roles } = useSelector(state => state.rolePermission);
+    const { rolesPermissions, roles } = useSelector(state => state.rolePermission);
     const { users } = useSelector(state => state.auth)
     const userPermissionsDict = {};
-    const [userDetails,setUserDetails] = useState({
-        "firstname":null,
-        "lastname":null,
-        "email":null,
-        "role":null,
-        "mobile":null
+    const [userDetails, setUserDetails] = useState({
+        "firstname": null,
+        "lastname": null,
+        "email": null,
+        "role": null,
+        "mobile": null
     })
-    const [curr_user,setCurrUser] = useState(null) 
+    const [curr_user, setCurrUser] = useState(null)
 
     for (const permission of rolesPermissions) {
         const { userId, permission: { name } } = permission;
@@ -86,7 +86,7 @@ const Users = () => {
         setCurrUser(selected_user)
         setUserActionModalOpen(true)
     }
- 
+
 
 
 
@@ -96,6 +96,8 @@ const Users = () => {
         dispatch(getAllPermissions())
         dispatch(getAllRoles())
     }, []);
+
+    const userRolesPermissions = curr_user && rolesPermissions.filter(item => item.userId === curr_user.id);
 
 
 
@@ -126,13 +128,13 @@ const Users = () => {
     const rolesData = roles && Array.isArray(roles) && roles.map((role) => ({
         value: role.id,
         label: role.name,
-        }));
-        
+    }));
+
 
     const handleModalClose = () => {
         if (isAddUserModalOpen) setAddUserModalOpen(false)
-        if(isUserActionModalOpen) setUserActionModalOpen(false)
-        
+        if (isUserActionModalOpen) setUserActionModalOpen(false)
+
     }
 
 
@@ -149,12 +151,12 @@ const Users = () => {
                 "fullname": `${userDetails.firstname} ${userDetails.lastname}`,
                 "roleId": userDetails.role
             }
-          await dispatch(addUser(userData));
-          setAddUserModalOpen(false)
+            await dispatch(addUser(userData));
+            setAddUserModalOpen(false)
         } catch (error) {
             console.log(error);
         }
-      };
+    };
 
 
     if (!users || users.length === 0) {
@@ -189,7 +191,7 @@ const Users = () => {
                                                         onClick={handleAddUserModal}
                                                         compact
                                                     >
-                                                        + Add User 
+                                                        + Add User
                                                     </Button>
                                                     <AddUserModal
                                                         isModalOpen={isAddUserModalOpen}
@@ -197,7 +199,7 @@ const Users = () => {
                                                         handleModalClose={handleModalClose}
                                                         userDetails={userDetails}
                                                         setUserDetails={setUserDetails}
-                                                        rolesData = {rolesData}
+                                                        rolesData={rolesData}
                                                     />
 
                                                 </Flex>
@@ -207,14 +209,17 @@ const Users = () => {
                                 </div>
                                 <div>
 
-                                    {isUserActionModalOpen && 
-                                    <UserActionModal
-                                     isModalOpen={isUserActionModalOpen}
-                                     handleModalClose={handleModalClose}
-                                     curr_user={curr_user}
-                                     />
-                                     
-                                     }
+                                    {isUserActionModalOpen &&
+                                        <UserActionModal
+                                            isModalOpen={isUserActionModalOpen}
+                                            handleModalClose={handleModalClose}
+                                            curr_user={curr_user}
+                                            userRolesPermissions={userRolesPermissions}
+                                            classes={classes}
+                                            cx={cx}
+                                        />
+
+                                    }
 
                                     <ScrollArea h={600} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
                                         <Table miw={700} striped withBorder highlightOnHover withColumnBorders>

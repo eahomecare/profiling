@@ -5,11 +5,11 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) { }
 
-  @Post('signup')
-  @HttpCode(HttpStatus.OK)
-  async signup(@Body('email') email: string, @Body('password') password: string, @Body('roleName') roleName: string) {
-    return this.authService.signup(email, password, roleName);
-  }
+  // @Post('signup')
+  // @HttpCode(HttpStatus.OK)
+  // async signup(@Body('email') email: string, @Body('password') password: string, @Body('roleName') roleName: string) {
+  //   return this.authService.signup(email, password, roleName);
+  // }
 
   @Post('signin')
   @HttpCode(HttpStatus.OK)
