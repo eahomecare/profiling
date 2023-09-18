@@ -1,5 +1,5 @@
 import { IconArrowNarrowLeft, IconBriefcase, IconCar, IconCarCrash, IconCircleKey, IconComet, IconFriends, IconHealthRecognition, IconPalette, IconReportMoney, IconSocial, IconTimeline, IconUser } from '@tabler/icons-react';
-import { createStyles, Navbar, Group, Code, getStylesRef, rem, NavLink, Card, useMantineTheme, Stack } from '@mantine/core';
+import { createStyles, Navbar, Group, Code, getStylesRef, rem, NavLink, Card, useMantineTheme, Stack, Box } from '@mantine/core';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -61,7 +61,7 @@ const data = [
     { link: 'Social Media', label: 'Social Media', icon: <IconSocial /> },
 ];
 
-const DashboardNavbar = ({ opened, setOpened }) => {
+const DashboardNavbar = () => {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Personal Information');
     const theme = useMantineTheme();
@@ -82,21 +82,15 @@ const DashboardNavbar = ({ opened, setOpened }) => {
     ));
 
     return (
-        <Navbar
+        <Box
             height={700}
-            // width={{ sm: 300 }}
-            ml={40}
             p="md"
-            // className={classes.navbar}
-            hiddenBreakpoint="sm"
-            hidden={!opened}
             width={{ sm: 200, lg: 300 }}
             withBorder={false}
         >
             <Stack>
                 <Card
                     bg={theme.colorScheme == 'light' ? '#DDE5FF' : ''}
-                    mt={20}
                 >
                     <Navbar.Section grow>
                         {links}
@@ -104,10 +98,10 @@ const DashboardNavbar = ({ opened, setOpened }) => {
                 </Card>
 
                 <Navbar.Section>
-                    <NavLink icon={<IconArrowNarrowLeft />} component={Link} variant="subtle" to='/' label={'Go Back'} rightSection />
+                    <NavLink icon={<IconArrowNarrowLeft />} component={Link} variant="subtle" to='/customers' label={'Go Back'} rightSection />
                 </Navbar.Section>
             </Stack>
-        </Navbar >
+        </Box>
     );
 }
 
