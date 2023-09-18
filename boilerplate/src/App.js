@@ -46,8 +46,8 @@ function App() {
     getAllRolesPermissionsMappingsByUserStatus,
   } = useSelector((state) => state.rolePermission);
 
-  // if (getAllRolesPermissionsMappingsByUserStatus === "success")
-  //   console.log(userPermissions,"--------------------MY PERMISSIONS");
+  if (getAllRolesPermissionsMappingsByUserStatus === "success")
+    console.log(userPermissions,"--------------------MY PERMISSIONS");
 
   useEffect(() => {
     if ("login" in localStorage) {
