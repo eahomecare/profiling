@@ -39,24 +39,12 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-
 const MainAppShell = ({ children }) => {
     const { classes, cx } = useStyles();
     const location = useLocation();
     const [activeNavLink, setActiveNavLink] = useState("");
     const { user, users } = useSelector(state => state.auth);
     const theme = useMantineTheme();
-
-    const {
-        userPermissions,
-        getAllRolesPermissionsMappingsByUserStatus,
-    } = useSelector((state) => state.rolePermission);
-
-    function hasPermission(userPermissions, permissionName) {
-        return userPermissions.some(
-            (permission) => permission.name === permissionName,
-        );
-    }
 
     function findUserRoleNameById(userId) {
         const user = users.find(user => user.id === userId);
@@ -99,78 +87,67 @@ const MainAppShell = ({ children }) => {
                             </Navbar.Section>
                             <Space h={2} />
                             <Stack>
-                                {hasPermission(userPermissions, "customer_dashboard") && (
-                                    <Link to="/" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/" })}>
-                                        <NavLink
-                                            label="Dashboard"
-                                            icon={<IconAnalyze size="2rem" stroke={2} />}
-                                            className={classes.link}
-                                        >
-                                        </NavLink>
-                                    </Link>
-                                )}
-                                {hasPermission(userPermissions, "user_view") && (
-                                    <Link to="/users" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/users" })}>
-                                        <NavLink
-                                            label="Users"
-                                            icon={<IconUsersGroup size="2rem" stroke={2} />}
-                                            className={classes.link}
-                                        >
-                                        </NavLink>
-                                    </Link>
-                                )}
-
-                                {hasPermission(userPermissions, "acl") && (
+                                <Link to="/" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/" })}>
                                     <NavLink
-                                        label="ACL"
-                                        icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
-                                        active={activeNavLink === "/acl"}
+                                        label="Dashboard"
+                                        icon={<IconAnalyze size="2rem" stroke={2} />}
                                         className={classes.link}
                                     >
-                                        <Link to="/acl/rolesvspermissions" style={{ textDecoration: "none" }}>
-                                            <NavLink
-                                                label="Roles vs Permission"
-                                                icon={<IconSettings size="1rem" stroke={2} />}
-                                                active={activeNavLink === "/acl/rolesvspermissions"}
-                                                className={classes.link}
-                                            >
-                                            </NavLink>
-                                        </Link>
-
-                                        <Link to="/acl/permissions" style={{ textDecoration: "none" }}>
-                                            <NavLink
-                                                label="Permissions"
-                                                icon={<IconSettings size="1rem" stroke={2} />}
-                                                active={activeNavLink === "/acl/permissions"}
-                                                className={classes.link}
-                                            >
-                                            </NavLink>
-                                        </Link>
-
                                     </NavLink>
-                                )}
+                                </Link>
+                                <Link to="/users" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/users" })}>
+                                    <NavLink
+                                        label="Users"
+                                        icon={<IconUsersGroup size="2rem" stroke={2} />}
+                                        className={classes.link}
+                                    >
+                                    </NavLink>
+                                </Link>
 
-                                {hasPermission(userPermissions, "campaign_dashoard") && (
-                                    <Link to="/campaign" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/campaign" })}>
+                                <NavLink
+                                    label="ACL"
+                                    icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
+                                    active={activeNavLink === "/acl"}
+                                    className={classes.link}
+                                >
+                                    <Link to="/acl/rolesvspermissions" style={{ textDecoration: "none" }}>
                                         <NavLink
-                                            label="Campaign"
-                                            icon={<Icon3dCubeSphere size="2rem" stroke={2} />}
+                                            label="Roles vs Permission"
+                                            icon={<IconSettings size="1rem" stroke={2} />}
+                                            active={activeNavLink === "/acl/rolesvspermissions"}
                                             className={classes.link}
                                         >
                                         </NavLink>
                                     </Link>
-                                )}
-
-                                {hasPermission(userPermissions, "customer_dashboard") && (
-                                    <Link to="/customers" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/customers" })}>
+                                    <Link to="/acl/permissions" style={{ textDecoration: "none" }}>
                                         <NavLink
-                                            label="Customers"
-                                            icon={<IconAccessible size="2rem" stroke={2} />}
+                                            label="Permissions"
+                                            icon={<IconSettings size="1rem" stroke={2} />}
+                                            active={activeNavLink === "/acl/permissions"}
                                             className={classes.link}
                                         >
                                         </NavLink>
                                     </Link>
-                                )}
+                                </NavLink>
+
+                                <Link to="/campaign" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/campaign" })}>
+                                    <NavLink
+                                        label="Campaign"
+                                        icon={<Icon3dCubeSphere size="2rem" stroke={2} />}
+                                        className={classes.link}
+                                    >
+                                    </NavLink>
+                                </Link>
+
+                                <Link to="/customers" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/customers" })}>
+                                    <NavLink
+                                        label="Customers"
+                                        icon={<IconAccessible size="2rem" stroke={2} />}
+                                        className={classes.link}
+                                    >
+                                    </NavLink>
+                                </Link>
+
                             </Stack>
                         </Navbar>
                     </Card>

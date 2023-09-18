@@ -1,5 +1,5 @@
 
-import { Modal, Navbar, AppShell, MultiSelect, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Space, Stack, Text, TextInput, Title, Box } from "@mantine/core"
+import { Modal, Navbar, AppShell, MultiSelect, Button, ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
@@ -12,8 +12,6 @@ import { getUsers, addUser } from "../../redux/authSlice"
 import { useLocation } from "react-router-dom"
 import AddUserModal from "./AddUserModal";
 import UserActionModal from "./UserActionModal";
-import { notifications } from '@mantine/notifications';
-
 
 
 
@@ -24,37 +22,12 @@ function formatDate(dateString) {
 }
 
 
-
-function showNotification(prop){
-    notifications.show({
-        title: 'Success',
-        message: prop,
-        styles: (theme) => ({
-          root: {
-            backgroundColor: "#4E70EA",
-            borderColor: theme.colors.blue[6],
-
-            '&::before': { backgroundColor: theme.white },
-          },
-
-          title: { color: theme.white },
-          description: { color: theme.white },
-          closeButton: {
-            color: theme.white,
-            '&:hover': { backgroundColor: theme.colors.blue[7] },
-          },
-        }),
-      })
-}
-
-
 const Users = () => {
     const useStyles = createStyles((theme) => ({
         header: {
             position: 'sticky',
             top: 0,
-            backgroundColor: "#4E70EA",
-            fontColor: "red",
+            backgroundColor: "#c2c2c2",
             transition: 'box-shadow 150ms ease',
 
             '&::after': {
@@ -79,7 +52,7 @@ const Users = () => {
     const [isUserActionModalOpen, setUserActionModalOpen] = useState(false)
     const location = useLocation();
     const dispatch = useDispatch();
-    const { rolesPermissions, roles, permissions } = useSelector(state => state.rolePermission);
+    const { rolesPermissions, roles } = useSelector(state => state.rolePermission);
     const { users } = useSelector(state => state.auth)
     const userPermissionsDict = {};
     const [userDetails, setUserDetails] = useState({
@@ -116,6 +89,7 @@ const Users = () => {
 
 
 
+
     useEffect(() => {
         dispatch(getAllRolesPermissionsMappings());
         dispatch(getUsers())
@@ -126,21 +100,10 @@ const Users = () => {
     const userRolesPermissions = curr_user && rolesPermissions.filter(item => item.userId === curr_user.id);
 
 
-    const userPermissionsOptions = []
-    if (curr_user) {
-        permissions.map((data) => {
-            if (!userPermissionsDict[curr_user.id].includes(data.name)) {
-                userPermissionsOptions.push({ value: data.id, label: data.name })
-            }
-        })
-    }
-
-
 
     const initialData = Object.keys(userPermissionsDict).length > 0
         ? users.map((data) => ({
             id: data.id,
-            roleId:data.roleId,
             email: data.email,
             isactive: "active",
             role: data.role.name,
@@ -155,7 +118,7 @@ const Users = () => {
                 <td>{row.email}</td>
                 <td>{row.role}</td>
                 <td>{row.permissions}</td>
-                <td><Button color='teal' size="xs" compact>{row.isactive}</Button></td>
+                <td><Button color='green' size="xs" compact>{row.isactive}</Button></td>
                 <td>{row.created_at}</td>
                 <td onClick={() => (handleUserActionModal(row))}><ActionIcon variant="light"><IconSettings size="1rem" /></ActionIcon></td>
             </tr>
@@ -180,7 +143,7 @@ const Users = () => {
     }
 
 
-    const handleAddUser =  async() => {
+    const handleAddUser = async () => {
         try {
             const userData = {
                 "email": userDetails.email,
@@ -189,9 +152,7 @@ const Users = () => {
                 "roleId": userDetails.role
             }
             await dispatch(addUser(userData));
-            await dispatch(getAllRolesPermissionsMappings());
             setAddUserModalOpen(false)
-            showNotification("added user successfully")
         } catch (error) {
             console.log(error);
         }
@@ -214,90 +175,72 @@ const Users = () => {
                 <AppShell
                     padding="md"
                 >
-                    <Box sx={{ backgroundColor: "#DDE5FF",padding:"50px",marginTop:"-80px" }}>
-                        <div style={{ display: 'flex', }}>
-                            <span style={{ flexGrow: '1', width: '100px' }}>
-                                <div style={{ padding: '10px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '-65px'}}>
-                                        <span style={{padding:"10px"}}>
-                                            <Title pl={5}>Users</Title>
-                                        </span>
-                                        <span>
-                                            <Container>
-                                                <Center>
-                                                    <Flex mt={5}>
-                                                        <Button
-                                                            className="mt-4"
-                                                            onClick={handleAddUserModal}
-                                                            style={{backgroundColor:"black",fontColor:"white"}}
-                                                        >
-                                                            + Add User
-                                                        </Button>
-                                                        
-                                                        <AddUserModal
-                                                            isModalOpen={isAddUserModalOpen}
-                                                            handleAddUser={handleAddUser}
-                                                            handleModalClose={handleModalClose}
-                                                            userDetails={userDetails}
-                                                            setUserDetails={setUserDetails}
-                                                            rolesData={rolesData}
-                                                        />
+                    <div style={{ display: 'flex', }}>
+                        <span style={{ flexGrow: '1', width: '100px' }}>
+                            <div style={{ padding: '10px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '-65px' }}>
+                                    <span>
+                                        <Title pl={5}>Users</Title>
+                                    </span>
+                                    <span>
+                                        <Container>
+                                            <Center>
+                                                <Flex mt={5}>
+                                                    <Button
+                                                        className="mt-4"
+                                                        onClick={handleAddUserModal}
+                                                        compact
+                                                    >
+                                                        + Add User
+                                                    </Button>
+                                                    <AddUserModal
+                                                        isModalOpen={isAddUserModalOpen}
+                                                        handleAddUser={handleAddUser}
+                                                        handleModalClose={handleModalClose}
+                                                        userDetails={userDetails}
+                                                        setUserDetails={setUserDetails}
+                                                        rolesData={rolesData}
+                                                    />
 
-                                                    </Flex>
-                                                </Center>
-                                            </Container>
-                                        </span>
-                                    </div>
-                                    <div>
-
-                                        {isUserActionModalOpen &&
-                                            <UserActionModal
-                                                isModalOpen={isUserActionModalOpen}
-                                                handleModalClose={handleModalClose}
-                                                curr_user={curr_user}
-                                                userRolesPermissions={userRolesPermissions}
-                                                userPermissionsOptions={userPermissionsOptions}
-                                                classes={classes}
-                                                cx={cx}
-                                            />
-
-                                        }
-
-                                        <ScrollArea h={600} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                                            <Table miw={700} withBorder highlightOnHover withColumnBorders>
-                                                <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                                                    <tr>
-                                                        <th>
-                                                            <Text color="white">Email</Text>
-                                                        </th>
-                                                        <th>
-                                                            <Text color="white">Role</Text>
-                                                        </th>
-                                                        <th>
-                                                            <Text color="white">Permissions</Text>
-                                                        </th>
-                                                        <th>
-                                                            <Text color="white">Status</Text>
-                                                        </th>
-                                                        <th>
-                                                            <Text color="white">Created At</Text>
-                                                        </th>
-                                                        <th>
-                                                            <Text color="white">Action</Text>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>{rows}</tbody>
-                                            </Table>
-                                        </ScrollArea>
-
-                                    </div>
+                                                </Flex>
+                                            </Center>
+                                        </Container>
+                                    </span>
                                 </div>
-                            </span>
-                        </div>
+                                <div>
 
-                    </Box>
+                                    {isUserActionModalOpen &&
+                                        <UserActionModal
+                                            isModalOpen={isUserActionModalOpen}
+                                            handleModalClose={handleModalClose}
+                                            curr_user={curr_user}
+                                            userRolesPermissions={userRolesPermissions}
+                                            classes={classes}
+                                            cx={cx}
+                                        />
 
+                                    }
+
+                                    <ScrollArea h={600} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                                        <Table miw={700} striped withBorder highlightOnHover withColumnBorders>
+                                            <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+                                                <tr>
+                                                    <th>Email</th>
+                                                    <th>Role</th>
+                                                    <th>Permissions</th>
+                                                    <th>Status</th>
+                                                    <th>Created At</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>{rows}</tbody>
+                                        </Table>
+                                    </ScrollArea>
+
+                                </div>
+                            </div>
+                        </span>
+                    </div>
                 </AppShell>
             </>
         )

@@ -58,10 +58,7 @@ const AddUserModal = ({ isModalOpen, handleModalClose, handleAddUser, userDetail
 
             <Button
                 className="mt-4"
-                style={{backgroundColor:!(!userDetails.firstname || !userDetails.lastname || !userDetails.email || !userDetails.role)? "#4E70EA":"grey"}}
-                onClick={handleAddUser}
-                disabled={!userDetails.firstname || !userDetails.lastname || !userDetails.email || !userDetails.role}
-                >
+                onClick={handleAddUser}>
                 Add User
             </Button>
         </Modal>

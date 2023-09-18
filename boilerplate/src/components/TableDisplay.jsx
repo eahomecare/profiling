@@ -58,8 +58,6 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
         accessorFn: (row) => `${row.profiling?.personal_details?.full_name}`,
         id: 'name',
         header: 'Name',
-        onClick:((row) => buttonClick(row.original))
-
       },
       {
         accessorFn: (row) => `CLID${row.id.substr(0, 6)}....`,
