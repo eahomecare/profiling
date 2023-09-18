@@ -109,4 +109,31 @@ export class UserRolePermissionMappingService {
       );
     }
   }
+
+  async deactivateMapping(id: string): Promise<userRolePermissionMapping | null> {
+    try {
+      const mapping = await this.prisma.userRolePermissionMapping.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!mapping) {
+        return null;
+      }
+
+      const updatedMapping = await this.prisma.userRolePermissionMapping.update({
+        where: {
+          id,
+        },
+        data: {
+          isActive: mapping.isActive? false : true,
+        },
+      });
+
+      return updatedMapping;
+    } catch (error) {
+      throw new Error('Failed to deactivate userRolePermissionMapping');
+    }
+  }
 }

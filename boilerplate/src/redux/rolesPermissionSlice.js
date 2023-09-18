@@ -12,6 +12,7 @@ const initialState = {
   permissionsByRoleStatus: "idle",
   createRolesPermissionMappingStatus: "idle",
   getAllRolesPermissionsMappingsByUserStatus: "idle",
+  deactivateMappingStatus:"idle",
   roles: [],
   permissions: [],
   userRoles: [],
@@ -89,6 +90,14 @@ export const getAllRolesPermissionsMappingsByUser = createAsyncThunk(
   "rolesPermissions/byUserId",
   async (userId) => {
     const { data } = await axios.get("/user-role-permission-mappings/users/" + userId)
+    return data
+  }
+)
+
+export const deactivateMapping = createAsyncThunk(
+  "rolesPermissions/deactivate",
+  async (mappingId) => {
+    const { data } = await axios.get("/user-role-permission-mappings/deactivate/" + mappingId)
     return data
   }
 )
@@ -203,6 +212,17 @@ export const rolesPermissionSlice = createSlice({
     [getAllRolesPermissionsMappingsByUser.rejected]: (state, action) => {
       state.getAllRolesPermissionsMappingsByUserStatus = "failed";
     },
+
+    [deactivateMapping.pending]: (state, action) => {
+      state.deactivateMappingStatus = "loading";
+    },
+    [deactivateMapping.fulfilled]: (state, action) => {
+      state.deactivateMappingStatus = "success";
+    },
+    [deactivateMapping.rejected]: (state, action) => {
+      state.deactivateMappingStatus = "failed";
+    },
+    
   },
 });
 
