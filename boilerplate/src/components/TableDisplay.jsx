@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCurrentCustomer } from '../redux/customerSlice';
 
-import { MaterialReactTable } from 'material-react-table';
+import { MRT_FullScreenToggleButton, MRT_ShowHideColumnsButton, MRT_ToggleFiltersButton, MRT_ToggleGlobalFilterButton, MaterialReactTable } from 'material-react-table';
 import { ThemeProvider, createTheme } from '@mui/material';
-import { RingProgress, Text, Box, Button } from '@mantine/core';
+import { RingProgress, Text, Box, Button, Center, ActionIcon, Flex, Group, Stack } from '@mantine/core';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
+import { IconTableExport } from '@tabler/icons-react';
 
 const localTheme = createTheme({
   shadows: Array(25).fill('none').map((_, i) =>
@@ -107,27 +108,38 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
         <MaterialReactTable
           columns={columns}
           data={customerList}
+          defaultColumn={{
+            minSize: 50,
+            maxSize: 80
+          }}
           enableColumnActions={false}
           enableDensityToggle={false}
-          enableRowSelection
           muiTableProps={{
             sx: {
               tableLayout: 'fixed',
             },
           }}
-          renderTopToolbarCustomActions={({ table }) => (
-            <Box
-              sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
-            >
-              <Button
-                disabled={table.getRowModel().rows.length === 0}
-                onClick={() => handleExportRows(table.getRowModel().rows)}
-                startIcon={<FileDownloadIcon />}
-                variant="contained"
-              >
-                Export Page Rows
-              </Button>
-            </Box>
+          renderToolbarInternalActions={({ table }) => (
+            <Stack >
+              <Flex justify={'end'}>
+                <Box
+                  onClick={() => handleExportRows(table.getRowModel().rows)}
+                  sx={{ 'cursor': 'pointer' }}
+                  mr={'7%'}
+                >
+                  <Center >
+                    <ActionIcon c={'blue'} size={'sm'} ><IconTableExport /></ActionIcon>
+                    <Text fw={'bold'} c={'blue'} size={'sm'}>Export</Text>
+                  </Center>
+                </Box>
+              </Flex>
+              <Box mt={-22}>
+                <MRT_ToggleGlobalFilterButton table={table} />
+                <MRT_ToggleFiltersButton table={table} />
+                <MRT_ShowHideColumnsButton table={table} />
+                <MRT_FullScreenToggleButton table={table} />
+              </Box>
+            </Stack>
           )}
         />
       </ThemeProvider>
