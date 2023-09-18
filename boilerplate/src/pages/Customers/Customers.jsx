@@ -12,48 +12,48 @@ import { Link } from "react-router-dom";
 const Customers = () => {
 
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const { status, customers, fetchedPofileCompleteness } = useSelector(state => state.customer);
+  const { status, customers, fetchedPofileCompleteness } = useSelector(state => state.customer);
 
-    // if(Array.isArray(customers) && customers.length > 0) setCustomerList(customers)
+  // if(Array.isArray(customers) && customers.length > 0) setCustomerList(customers)
 
-    useEffect(() => {
-        dispatch(getCustomers());
-        dispatch(getCustomersProfileCompleteness())
-    }, []);
-
-
+  useEffect(() => {
+    dispatch(getCustomers());
+    dispatch(getCustomersProfileCompleteness())
+  }, []);
 
 
-    if (status === 'loading') {
-        return (
-            <LoadingOverlay visible overlayBlur={2}
-                loaderProps={{
-                    size: 'xl',
-                    variant: 'dots',
-                }}
-            />
-        )
-    }
-    else {
-        return (
-            <>
-                <div style={{ display: 'flex', }}>
-                    <span style={{ flexGrow: '1', width: '100px' }}>
-                        <div style={{ padding: '10px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
-                                <span>
-                                    <Title pl={5}>Customers</Title>
-                                </span>
-                            </div>
-                            <TableDisplay customerList={customers} fetchedPofileCompleteness={fetchedPofileCompleteness} />
-                        </div>
-                    </span>
-                </div>
-            </>
-        )
-    }
+
+
+  if (status === 'loading') {
+    return (
+      <LoadingOverlay visible overlayBlur={2}
+        loaderProps={{
+          size: 'xl',
+          variant: 'dots',
+        }}
+      />
+    )
+  }
+  else {
+    return (
+      <>
+        <div style={{ display: 'flex', }}>
+          <span style={{ flexGrow: '1', width: '100px' }}>
+            <div style={{ padding: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', marginTop: '5px' }}>
+                <span>
+                  <Title pl={5}>Customers</Title>
+                </span>
+              </div>
+              <TableDisplay customerList={customers} fetchedPofileCompleteness={fetchedPofileCompleteness} />
+            </div>
+          </span>
+        </div>
+      </>
+    )
+  }
 }
 
 export default Customers;

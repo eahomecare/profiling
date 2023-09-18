@@ -13,6 +13,9 @@ import {
   LoadingOverlay,
   TextInput,
   ActionIcon,
+  Group,
+  Box,
+  Grid,
 } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
@@ -118,131 +121,69 @@ const Dashboard = () => {
     );
   } else {
     return (
-      <AppShell
-        styles={{
-          main: {
-            background:
-              theme.colorScheme === "dark" ? theme.colors.dark[8] : "white",
-          },
-        }}
-        navbarOffsetBreakpoint="sm"
-        asideOffsetBreakpoint="sm"
-        // fixed
-        navbar={<DashboardNavbar opened={opened} setOpened={setOpened} />}
-        header={
-          <Header
-            height={{ base: 50, md: 70 }}
-            p="md"
-            m={"md"}
-            withBorder={false}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                height: "100%",
-                justifyContent: "space-between",
-              }}
-            >
-              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Burger
-                  opened={opened}
-                  onClick={() => setOpened((o) => !o)}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                  mr="xl"
-                />
-              </MediaQuery>
+      <Box>
+        <Grid>
+          <Grid.Col span={3}>
+            <Box>
+              <DashboardNavbar />
+            </Box>
+          </Grid.Col>
 
-              <Text
-                variant="gradient"
-                gradient={{ from: "indigo", to: "cyan", deg: 45 }}
-                sx={{ fontFamily: "Greycliff CF, sans-serif" }}
-                ta="center"
-                fz="xl"
-                fw={700}
-                mt={-20}
+          <Grid.Col span={9}>
+            <Card
+              shadow={"lg"}
+              bg={theme.colorScheme == "light" ? "#F1F5F9" : ""}
+              radius={"md"}
+            >
+              <Routes>
+                <Route>
+                  <Route
+                    index
+                    element={
+                      <PersonalInformation selectedCustomer={customerDetails} />
+                    }
+                  />
+                  <Route
+                    path="/personalInformation"
+                    element={
+                      <PersonalInformation selectedCustomer={customerDetails} />
+                    }
+                  />
+                  <Route path="/profiling" element={<Profiling />} />
+                  <Route
+                    path="/keywords"
+                    element={
+                      <KeywordsEntry
+                        submitKeywords={submitKeywords}
+                        updateKeywordValuesParent={updateKeywordValuesParent}
+                      />
+                    }
+                  />
+
+                  <Route path="/interests" element={<Interests />} />
+                  <Route path="/occupation" element={<Occupation />} />
+                  <Route path="/familydetails" element={<FamilyDetails />} />
+                  <Route path="/activity" element={<Activity />} />
+
+
+                </Route>
+              </Routes>
+            </Card>
+            {showNotification && (
+              <Notification
+                loading
+                title="Background Syncing"
+                withCloseButton={true}
+                style={{ backgroundColor: "red !important" }}
               >
-                EAI CRM
-              </Text>
-              <TextInput
-                placeholder="Search1"
-                mb="md"
-                icon={<IconSearch size="0.9rem" stroke={1.5} />}
-                radius="md"
-                rightSection={
-                  <ActionIcon variant={"subtle"}>
-                    <IconAdjustmentsHorizontal />
-                  </ActionIcon>
-                }
-              // value={}
-              // onChange={}
-              />
-              <div>
-                <LightDarkButton />
-              </div>
-            </div>
-          </Header>
-        }
-      >
-        <Container>
-          <Card
-            mt={20}
-            shadow={"lg"}
-            bg={theme.colorScheme == "light" ? "#F1F5F9" : ""}
-            radius={"md"}
-            mih={510}
-          >
-            <Routes>
-              <Route>
-                <Route
-                  index
-                  element={
-                    <PersonalInformation selectedCustomer={customerDetails} />
-                  }
-                />
-                <Route
-                  path="/personalInformation"
-                  element={
-                    <PersonalInformation selectedCustomer={customerDetails} />
-                  }
-                />
-                <Route path="/profiling" element={<Profiling />} />
-                <Route
-                  path="/keywords"
-                  element={
-                    <KeywordsEntry
-                      submitKeywords={submitKeywords}
-                      updateKeywordValuesParent={updateKeywordValuesParent}
-                    />
-                  }
-                />
-
-                <Route path="/interests" element={<Interests />} />
-                <Route path="/occupation" element={<Occupation />} />
-                <Route path="/familydetails" element={<FamilyDetails />} />
-                <Route path="/activity" element={<Activity />} />
-
-
-              </Route>
-            </Routes>
-          </Card>
-          {showNotification && <>
-            <Notification
-              loading
-              title="Background Syncing"
-              withCloseButton={true}
-              style={{ backgroundColor: "red !important" }}
-            >
-              <p style={{ color: "red" }}> Uploading latest keywords data onto server</p>
-
-            </Notification>
-
-          </>}
-        </Container>
-
-
-      </AppShell>
+                <p style={{ color: "red" }}>
+                  Uploading latest keywords data onto server
+                </p>
+              </Notification>
+            )}
+          </Grid.Col>
+        </Grid>
+      </Box>
     );
   }
 };
