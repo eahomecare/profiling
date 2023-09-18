@@ -45,7 +45,7 @@ function App() {
   } = useSelector((state) => state.rolePermission);
 
   if (getAllRolesPermissionsMappingsByUserStatus === "success")
-    console.log(userPermissions);
+    console.log(userPermissions,"--------------------MY PERMISSIONS");
 
   useEffect(() => {
     if ("login" in localStorage) {
@@ -85,19 +85,20 @@ function App() {
 
           <MainAppShell>
             <Routes>
-              {hasPermission(userPermissions, "user view") ? (
+              {/* {hasPermission(userPermissions, "user_view") ? (
                 <PrivateRoute path="/" element={<BoardStats />} />
               ) : (
                 <PrivateRoute path="/" element={<PermissionDenied />} />
-              )}
-              {hasPermission(userPermissions, "user view") ? (
+              )} */}
+               <PrivateRoute path="/" element={<BoardStats />} />
+              {hasPermission(userPermissions, "user_view") ? (
                 <PrivateRoute path="/customers" element={<Customers />} />
               ) : (
                 <PrivateRoute path="/customers" element={<PermissionDenied />} />
               )}
               <PrivateRoute path="/campaign" element={<Analysis />} />
               <PrivateRoute path="/users" element={<Users />} />
-              {hasPermission(userPermissions, "customer dashboard") ? (
+              {hasPermission(userPermissions, "customer_dashboard") ? (
                 <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
               ) : (
                 <PrivateRoute

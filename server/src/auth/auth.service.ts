@@ -16,54 +16,54 @@ export class AuthService {
     private config: ConfigService,
   ) { }
 
-  async signup(email: string, password: string, roleName: string) {
-    const hash = await argon.hash(password);
-    const role = await this.prisma.role.findUnique({
-      where: {
-        name: roleName,
-      },
-      include: {
-        defaultPermissions: true,
-      },
-    });
+  // async signup(email: string, password: string, roleName: string) {
+  //   const hash = await argon.hash(password);
+  //   const role = await this.prisma.role.findUnique({
+  //     where: {
+  //       name: roleName,
+  //     },
+  //     include: {
+  //       defaultPermissions: true,
+  //     },
+  //   });
 
-    if (!role) {
-      throw new ForbiddenException('Role not found');
-    }
+  //   if (!role) {
+  //     throw new ForbiddenException('Role not found');
+  //   }
 
-    try {
-      const user = await this.prisma.user.create({
-        data: {
-          email,
-          hash,
-          role: {
-            connect: { id: role.id },
-          },
-        },
-      });
+  //   try {
+  //     const user = await this.prisma.user.create({
+  //       data: {
+  //         email,
+  //         hash,
+  //         role: {
+  //           connect: { id: role.id },
+  //         },
+  //       },
+  //     });
 
-      const permissionRoleMappingPromises = role.defaultPermissions.map(async (permission) => {
-        await this.prisma.userRolePermissionMapping.create({
-          data: {
-            roleId: role.id,
-            userId: user.id,
-            permissionId: permission.id,
-          },
-        });
-      });
+  //     const permissionRoleMappingPromises = role.defaultPermissions.map(async (permission) => {
+  //       await this.prisma.userRolePermissionMapping.create({
+  //         data: {
+  //           roleId: role.id,
+  //           userId: user.id,
+  //           permissionId: permission.id,
+  //         },
+  //       });
+  //     });
 
-      await Promise.all(permissionRoleMappingPromises);
+  //     await Promise.all(permissionRoleMappingPromises);
 
-      return this.signToken(user.id, user.email);
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken');
-        }
-      }
-      throw error;
-    }
-  }
+  //     return this.signToken(user.id, user.email);
+  //   } catch (error) {
+  //     if (error instanceof PrismaClientKnownRequestError) {
+  //       if (error.code === 'P2002') {
+  //         throw new ForbiddenException('Credentials taken');
+  //       }
+  //     }
+  //     throw error;
+  //   }
+  // }
 
 
   async signin(email: string, password: string) {
