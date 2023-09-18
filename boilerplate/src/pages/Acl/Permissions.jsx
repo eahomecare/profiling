@@ -11,7 +11,7 @@ const Permissions = ({ useStyles, initialData, title }) => {
     const rows = initialData.map((row) => (
         <tr key={row.id}>
             <td>{row.name}</td>
-            <td><Button color='green' size="xs" compact>{row.isactive}</Button></td>
+            <td><Button color='teal' size="xs" compact>{row.isactive}</Button></td>
             <td>{row.created_at}</td>
             <td><ActionIcon variant="light"><IconSettings size="1rem" /></ActionIcon></td>
         </tr>
