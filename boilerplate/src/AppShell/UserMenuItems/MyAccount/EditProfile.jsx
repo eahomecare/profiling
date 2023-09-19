@@ -68,7 +68,7 @@ const EditProfile = () => {
                                 />
                             </Group>
 
-                            <Button w={'100%'} type="submit">Update Profile</Button>
+                            <Button bg={'#4E70EA'} w={'100%'} type="submit">Update Profile</Button>
                         </Stack>
                     </form>
                 </Stack>

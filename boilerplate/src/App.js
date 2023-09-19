@@ -92,7 +92,7 @@ function App() {
               ) : (
                 <PrivateRoute path="/" element={<PermissionDenied />} />
               )} */}
-               <PrivateRoute path="/" element={<BoardStats />} />
+              <PrivateRoute path="/" element={<BoardStats />} />
               {hasPermission(userPermissions, "user_view") ? (
                 <PrivateRoute path="/customers" element={<Customers />} />
               ) : (

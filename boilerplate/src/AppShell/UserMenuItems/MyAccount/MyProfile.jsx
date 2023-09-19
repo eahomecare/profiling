@@ -157,7 +157,7 @@ const MyProfile = () => {
                                 onChange={handleImageUpload}
                                 accept=".jpeg, .jpg, .png"
                             />
-                            <Button w={'100%'} type="submit">Save</Button>
+                            <Button bg={'#4E70EA'} w={'100%'} type="submit">Save</Button>
                         </Stack>
                     </form>
                 </Stack>

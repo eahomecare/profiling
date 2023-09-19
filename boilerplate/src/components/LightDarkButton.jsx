@@ -9,7 +9,7 @@ export default function LightDarkButton() {
     return (
         <ActionIcon
             variant="outline"
-            color={dark ? 'yellow' : 'blue'}
+            color={dark ? 'yellow' : '#4E70EA'}
             onClick={() => toggleColorScheme()}
             title="Toggle color scheme"
         >

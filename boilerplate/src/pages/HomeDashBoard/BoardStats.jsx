@@ -13,10 +13,10 @@ const BoardStats = () => {
                 <Title >Campaign</Title>
                 {/* Pannel 1 */}
                 <Card shadow='lg' radius={'lg'}>
-                    <Flex c={'blue'} justify={'space-between'}>
+                    <Flex c={'#4E70EA'} justify={'space-between'}>
                         <Text fw={'bold'}>General</Text>
                         <Center >
-                            <ActionIcon c={'blue'} ><IconTableExport /></ActionIcon>
+                            <ActionIcon c={'#4E70EA'} ><IconTableExport /></ActionIcon>
                             <Text fw={'bold'}>Export</Text>
                         </Center>
                     </Flex>
@@ -30,10 +30,10 @@ const BoardStats = () => {
                         {/* Mid Pannel Left Start */}
                         <Card shadow='lg' radius={'lg'} h={'100%'}>
                             <Stack>
-                                <Flex c={'blue'} justify={'space-between'}>
+                                <Flex c={'#4E70EA'} justify={'space-between'}>
                                     <Text fw={'bold'}>Overview</Text>
                                     <Center >
-                                        <ActionIcon c={'blue'} ><IconTableExport /></ActionIcon>
+                                        <ActionIcon c={'#4E70EA'} ><IconTableExport /></ActionIcon>
                                         <Text fw={'bold'}>Export</Text>
                                     </Center>
                                 </Flex>
@@ -85,10 +85,10 @@ const BoardStats = () => {
                         {/* Mid Pannel Right Start */}
                         <Card shadow='lg' radius={'lg'}>
                             <Stack>
-                                <Flex c={'blue'} justify={'space-between'}>
+                                <Flex c={'#4E70EA'} justify={'space-between'}>
                                     <Text fw={'bold'}>Communication Formats</Text>
                                     <Center >
-                                        <ActionIcon c={'blue'} ><IconTableExport /></ActionIcon>
+                                        <ActionIcon c={'#4E70EA'} ><IconTableExport /></ActionIcon>
                                         <Text fw={'bold'}>Export</Text>
                                     </Center>
                                 </Flex>
