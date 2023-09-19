@@ -5,7 +5,7 @@ import LightDarkButton from "../components/LightDarkButton";
 import { getCustomers, getCustomersProfileCompleteness } from "../redux/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import Logo from '../components/assets/logo.svg';
+import Logo from '../components/assets/eaLogoRotate.svg';
 import User from './_user';
 
 const useStyles = createStyles((theme) => ({
@@ -16,6 +16,7 @@ const useStyles = createStyles((theme) => ({
         textDecoration: 'none',
         fontSize: theme.fontSizes.sm,
         color: theme.colorScheme === 'dark' ? theme.colors.dark[1] : theme.colors.gray[7],
+        // padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
         borderRadius: theme.radius.sm,
         fontWeight: 500,
 
@@ -28,10 +29,19 @@ const useStyles = createStyles((theme) => ({
             },
         },
     },
+
+    linkIcon: {
+        ref: getStylesRef('icon'),
+        color: theme.colorScheme === 'dark' ? theme.colors.dark[2] : theme.colors.gray[6],
+        marginRight: theme.spacing.sm,
+    },
+
     linkActive: {
         '&, &:hover': {
-            color: theme.colorScheme === 'dark' ? '' : 'white',
+            // backgroundColor: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).background,
             backgroundColor: theme.colorScheme === 'dark' ? '#252D3B' : '#4E70EA',
+            // color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
+            color: theme.colorScheme === 'dark' ? theme.white : '#FFFFFF',
             [`& .${getStylesRef('icon')}`]: {
                 color: theme.fn.variant({ variant: 'light', color: theme.primaryColor }).color,
             },
@@ -98,13 +108,12 @@ const MainAppShell = ({ children }) => {
                                 <User user={user} roleName={findUserRoleNameById(user._id)} />
                             </Navbar.Section>
                             <Space h={2} />
-                            <Stack>
+                            {/* <Stack>
                                 {hasPermission(userPermissions, "customer_dashboard") && (
                                     <Link to="/" className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/" })}>
                                         <NavLink
                                             label="Dashboard"
                                             icon={<IconAnalyze size="2rem" stroke={2} />}
-                                            className={classes.link}
                                         >
                                         </NavLink>
                                     </Link>
@@ -170,6 +179,72 @@ const MainAppShell = ({ children }) => {
                                         >
                                         </NavLink>
                                     </Link>
+                                )}
+                            </Stack> */}
+                            <Stack>
+                                {hasPermission(userPermissions, "customer_dashboard") && (
+                                    <NavLink
+                                        component={Link}
+                                        to="/"
+                                        label="Dashboard"
+                                        icon={<IconAnalyze size="2rem" stroke={2} />}
+                                        className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/" })}
+                                    />
+                                )}
+
+                                {hasPermission(userPermissions, "user_view") && (
+                                    <NavLink
+                                        component={Link}
+                                        to="/users"
+                                        label="Users"
+                                        icon={<IconUsersGroup size="2rem" stroke={2} />}
+                                        className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/users" })}
+                                    />
+                                )}
+
+                                {hasPermission(userPermissions, "acl") && (
+                                    <NavLink
+                                        component={Link}
+                                        to="/acl"
+                                        label="ACL"
+                                        icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
+                                        className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/acl" })}
+                                    >
+                                        <NavLink
+                                            component={Link}
+                                            to="/acl/rolesvspermissions"
+                                            label="Roles vs Permission"
+                                            icon={<IconSettings size="1rem" stroke={2} />}
+                                            className={classes.link}
+                                        />
+                                        <NavLink
+                                            component={Link}
+                                            to="/acl/permissions"
+                                            label="Permissions"
+                                            icon={<IconSettings size="1rem" stroke={2} />}
+                                            className={classes.link}
+                                        />
+                                    </NavLink>
+                                )}
+
+                                {hasPermission(userPermissions, "campaign_dashoard") && (
+                                    <NavLink
+                                        component={Link}
+                                        to="/campaign"
+                                        label="Campaign"
+                                        icon={<Icon3dCubeSphere size="2rem" stroke={2} />}
+                                        className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/campaign" })}
+                                    />
+                                )}
+
+                                {hasPermission(userPermissions, "customer_dashboard") && (
+                                    <NavLink
+                                        component={Link}
+                                        to="/customers"
+                                        label="Customers"
+                                        icon={<IconAccessible size="2rem" stroke={2} />}
+                                        className={cx(classes.link, { [classes.linkActive]: activeNavLink === "/customers" || activeNavLink === "/dashboard" })}
+                                    />
                                 )}
                             </Stack>
                         </Navbar>

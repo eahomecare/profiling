@@ -1,12 +1,10 @@
-import { ActionIcon, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
+import { ActionIcon, Avatar, Card, Center, Container, Flex, Group, Header, LoadingOverlay, Navbar, Space, Stack, Text, TextInput, Title } from "@mantine/core"
 import { Icon3dCubeSphere, IconAccessible, IconAdjustmentsHorizontal, IconAnalyze, IconArrowAutofitUp, IconArrowBadgeDown, IconArrowBadgeUp, IconBlade, IconChevronLeft, IconChevronRight, IconLayoutAlignBottom, IconSearch, IconSettings } from "@tabler/icons-react"
 import { useEffect, useState } from "react"
 import LightDarkButton from "../../components/LightDarkButton"
 import { getCustomers, getCustomersProfileCompleteness } from "../../redux/customerSlice"
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay"
-import { Link } from "react-router-dom";
-
 
 
 const Customers = () => {

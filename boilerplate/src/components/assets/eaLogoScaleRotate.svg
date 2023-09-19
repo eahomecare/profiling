@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0.00 0.00 75.00 72.00" style="overflow: visible;">
+  <defs>
+    <style>
+      path {
+        transition: transform 0.3s;
+        transform-origin: 37.5px 36px; /* center of the SVG */
+      }
+
+      path:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </defs>
+
+  <path fill="#ef383d" d="... (your path data)">
+    <animateTransform 
+       attributeName="transform" 
+       type="rotate"
+       from="0 37.5 36"
+       to="360 37.5 36"
+       begin="path1.mouseover"
+       dur="10s"
+       repeatCount="indefinite"
+       id="rotateAnim1"/>
+  </path>
+
+  <path fill="#154ba1" d="... (your path data)">
+    <animateTransform 
+       attributeName="transform" 
+       type="rotate"
+       from="0 37.5 36"
+       to="360 37.5 36"
+       begin="path2.mouseover"
+       dur="10s"
+       repeatCount="indefinite"
+       id="rotateAnim2"/>
+  </path>
+</svg>

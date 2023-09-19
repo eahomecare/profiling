@@ -112,7 +112,7 @@ const DropdownRow = ({ row, rowId, handleDropdownChange, dropdownData, selectedC
                 {loadingState === 'error' &&
                     <Flex>
                         <ActionIcon c={'red'}><IconExclamationMark /></ActionIcon>
-                        <ActionIcon c={'blue'} onClick={handleRefresh}><IconRefresh /></ActionIcon>
+                        <ActionIcon c={'#4E70EA'} onClick={handleRefresh}><IconRefresh /></ActionIcon>
                     </Flex>
                 }
                 {loadingState !== 'loading' && loadingState !== 'error' && (

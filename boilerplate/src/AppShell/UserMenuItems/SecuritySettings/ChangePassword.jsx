@@ -61,7 +61,7 @@ const ChangePassword = ({ onPasswordChange, canSave }) => {
                             {...form.getInputProps('confirmPassword')}
                         />
 
-                        <Button w={'100%'} type="submit" disabled={!canSave}>Save</Button>
+                        <Button bg={'#4E70EA'} w={'100%'} type="submit" disabled={!canSave}>Save</Button>
                     </Stack>
                 </form>
             </Stack>
