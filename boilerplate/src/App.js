@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { Box, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Customers from "./pages/Customers/Customers";
 import Register from "./pages/Login/Register";

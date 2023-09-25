@@ -5,6 +5,7 @@ import keywordSlice from "./keywordSlice";
 import rolesPermissionSlice from "./rolesPermissionSlice";
 import campaignManagementReducer from "./campaignManagementSlice";
 import campaignReducer from "./campaignSlice";
+import profileDataCardSlice from "./profileDataCardSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     rolePermission: rolesPermissionSlice,
     campaignManagement: campaignManagementReducer,
     campaign: campaignReducer,
+    profileDataCard: profileDataCardSlice,
   },
 });
