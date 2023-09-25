@@ -1,17 +1,33 @@
-import React, { useMemo } from 'react';
+/* eslint-disable react/jsx-pascal-case */
+import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCurrentCustomer } from '../redux/customerSlice';
+import { setCurrentCustomer } from "../redux/customerSlice";
 
-import { MRT_FullScreenToggleButton, MRT_ShowHideColumnsButton, MRT_ToggleFiltersButton, MRT_ToggleGlobalFilterButton, MaterialReactTable } from 'material-react-table';
-import { ThemeProvider, createTheme } from '@mui/material';
-import { RingProgress, Text, Box, Button, Center, ActionIcon, Flex, Group, Stack, useMantineTheme, Loader } from '@mantine/core';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { IconTableExport } from '@tabler/icons-react';
+import {
+  MRT_FullScreenToggleButton,
+  MRT_ShowHideColumnsButton,
+  MRT_ToggleFiltersButton,
+  MRT_ToggleGlobalFilterButton,
+  MaterialReactTable,
+} from "material-react-table";
+import { ThemeProvider, createTheme } from "@mui/material";
+import {
+  RingProgress,
+  Text,
+  Box,
+  Center,
+  ActionIcon,
+  useMantineTheme,
+  Loader,
+} from "@mantine/core";
+import { mkConfig, generateCsv, download } from "export-to-csv";
+import { IconTableExport } from "@tabler/icons-react";
 
-
-export default function TableDisplay({ customerList, fetchedPofileCompleteness }) {
+export default function TableDisplay({
+  customerList,
+  fetchedPofileCompleteness,
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -21,29 +37,30 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
   });
 
   const handleExportRows = (rows) => {
-    const csv = generateCsv(csvConfig)(rows.map(row => row.original));
+    const csv = generateCsv(csvConfig)(rows.map((row) => row.original));
     download(csvConfig)(csv);
   };
 
-  const theme = useMantineTheme()
+  const theme = useMantineTheme();
 
   const localTheme = createTheme({
-    shadows: Array(25).fill('none').map((_, i) =>
-      i === 2 ? '0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)' : 'none'
-    ),
+    shadows: Array(25)
+      .fill("none")
+      .map((_, i) =>
+        i === 2
+          ? "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)"
+          : "none",
+      ),
     spacing: (factor) => `${0.25 * factor}rem`,
     palette: {
       background: {
-        default: '#00000000'
+        default: "#00000000",
         // theme.colorScheme == "light" ? "#F1F5F9" : "#25262B",
       },
       text: {
-        primary:
-          theme.colorScheme == "light" ? "#0E0E0F" : "#A6A7AB"
-
+        primary: theme.colorScheme == "light" ? "#0E0E0F" : "#A6A7AB",
       },
     },
-
   });
 
   const profileCompletion = (percentage) => {
@@ -52,7 +69,17 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
         <RingProgress
           size={45}
           thickness={3}
-          sections={[{ value: percentage, color: (percentage > 25 ? '#1D9B25' : percentage > 50 ? '#CFA400' : '#D85972') }]}
+          sections={[
+            {
+              value: percentage,
+              color:
+                percentage > 25
+                  ? "#1D9B25"
+                  : percentage > 50
+                  ? "#CFA400"
+                  : "#D85972",
+            },
+          ]}
           label={
             <Text color="" weight={20} align="center" size="xs">
               {percentage}%
@@ -64,7 +91,7 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
   };
 
   const buttonClick = (customer) => {
-    navigate('/dashboard');
+    navigate("/dashboard");
     dispatch(setCurrentCustomer(customer));
   };
 
@@ -72,31 +99,36 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
     () => [
       {
         accessorFn: (row) => `${row.profiling?.personal_details?.full_name}`,
-        id: 'name',
-        header: 'Name',
+        id: "name",
+        header: "Name",
       },
       {
         accessorFn: (row) => `CLID${row.id.substr(0, 6)}....`,
-        id: 'customerId',
-        header: 'Customer Id',
+        id: "customerId",
+        header: "Customer Id",
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
-        minSize: 400
+        accessorKey: "email",
+        header: "Email",
+        minSize: 400,
       },
       {
-        accessorKey: 'source',
-        header: 'Source',
+        accessorKey: "source",
+        header: "Source",
       },
       {
-        accessorKey: 'mobile',
-        header: 'Mobile',
+        accessorKey: "mobile",
+        header: "Mobile",
       },
       {
-        accessorFn: (row) => !fetchedPofileCompleteness ? <Loader color="#4E70EA" type="dots" /> : profileCompletion(row.profile_completion),
-        id: 'profileCompletion',
-        header: 'Profile Completion',
+        accessorFn: (row) =>
+          !fetchedPofileCompleteness ? (
+            <Loader color="#4E70EA" type="dots" />
+          ) : (
+            profileCompletion(row.profile_completion)
+          ),
+        id: "profileCompletion",
+        header: "Profile Completion",
       },
       // {
       //   id: 'action',
@@ -112,12 +144,11 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
       //   ),
       // }
     ],
-    [fetchedPofileCompleteness]
+    [fetchedPofileCompleteness],
   );
 
-
   return (
-    <Box >
+    <Box>
       <ThemeProvider theme={localTheme}>
         <MaterialReactTable
           columns={columns}
@@ -128,70 +159,83 @@ export default function TableDisplay({ customerList, fetchedPofileCompleteness }
           // }}
           enableColumnActions={false}
           enableDensityToggle={false}
-          state={{ density: 'compact' }}
-          initialState={{ density: 'compact' }}
+          state={{ density: "compact" }}
+          initialState={{ density: "compact" }}
           muiTableProps={{
             sx: {
-              tableLayout: 'fixed',
+              tableLayout: "fixed",
             },
           }}
           muiTablePaperProps={{
             sx: {
-              borderRadius: '20px',
-              backgroundColor: theme.colorScheme == "light" ? "#F1F5F9" : "#25262B",
+              borderRadius: "20px",
+              backgroundColor:
+                theme.colorScheme == "light" ? "#DDE5FF" : "#25262B",
             },
           }}
           muiTableBodyRowProps={({ row }) => ({
             onClick: () => buttonClick(row.original),
             sx: {
-              cursor: 'pointer',
-              transition: 'transform 0.3s ease, background-color 0.3s ease',
-              '&:hover': {
-                transform: 'scale(0.99)',
-                backgroundColor: '#DDE5FF'
+              cursor: "pointer",
+              transition: "transform 0.3s ease, background-color 0.3s ease",
+              "&:hover": {
+                transform: "scale(0.99)",
+                backgroundColor: "#00000010",
               },
             },
           })}
-          muiTableBodyCellProps={
-            {
-              sx: {
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }
-            }
-          }
+          muiTableBodyCellProps={{
+            sx: {
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            },
+          }}
           muiTableHeadRowProps={{
             sx: {
-              backgroundColor: '#4E70EA30'
-            }
+              backgroundColor: "#4E70EA30",
+            },
           }}
           muiTablePaginationProps={{
             sx: {
-              color: '#4E70EA'
-            }
+              color: "#4E70EA",
+            },
           }}
+          renderTopToolbarCustomActions={({ table }) => (
+            <Box
+              onClick={() => handleExportRows(table.getRowModel().rows)}
+              sx={{ cursor: "pointer" }}
+              mt={10}
+            >
+              <Center>
+                <ActionIcon c={"#4E70EA"} size={"sm"}>
+                  <IconTableExport />
+                </ActionIcon>
+                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
+                  Export
+                </Text>
+              </Center>
+            </Box>
+          )}
           renderToolbarInternalActions={({ table }) => (
-            <Stack >
-              <Flex justify={'end'}>
-                <Box
-                  onClick={() => handleExportRows(table.getRowModel().rows)}
-                  sx={{ 'cursor': 'pointer' }}
-                  mr={'7%'}
-                >
-                  <Center >
-                    <ActionIcon c={'#4E70EA'} size={'sm'} ><IconTableExport /></ActionIcon>
-                    <Text fw={'bold'} c={'#4E70EA'} size={'sm'}>Export</Text>
-                  </Center>
-                </Box>
-              </Flex>
-              <Box mt={-22}>
-                <MRT_ToggleGlobalFilterButton style={{ color: '#4E70EA' }} table={table} />
-                <MRT_ToggleFiltersButton style={{ color: '#4E70EA' }} table={table} />
-                <MRT_ShowHideColumnsButton style={{ color: '#4E70EA' }} table={table} />
-                <MRT_FullScreenToggleButton style={{ color: '#4E70EA' }} table={table} />
-              </Box>
-            </Stack>
+            <Box>
+              <MRT_ToggleGlobalFilterButton
+                style={{ color: "#4E70EA" }}
+                table={table}
+              />
+              <MRT_ToggleFiltersButton
+                style={{ color: "#4E70EA" }}
+                table={table}
+              />
+              <MRT_ShowHideColumnsButton
+                style={{ color: "#4E70EA" }}
+                table={table}
+              />
+              <MRT_FullScreenToggleButton
+                style={{ color: "#4E70EA" }}
+                table={table}
+              />
+            </Box>
           )}
         />
       </ThemeProvider>

@@ -1,19 +1,12 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setAuth } from "./redux/authSlice";
-import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-} from "@mantine/core";
+import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Customers from "./pages/Customers/Customers";
 import Register from "./pages/Login/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
-import { ThemeProvider } from "./ThemeProvider";
 import Login from "./pages/Login/Login";
 import SimulateCall from "./components/AgentPages/MobileSimulation";
 import AgentEntry from "./components/AgentPages/AgentEntry";
@@ -26,6 +19,7 @@ import BoardStats from "./pages/HomeDashBoard/BoardStats";
 import Users from "./pages/Users/Users";
 import MyAccount from "./AppShell/UserMenuItems/MyAccount/MyAccount";
 import Security from "./AppShell/UserMenuItems/SecuritySettings/Security";
+import Root from "./pages/Root/Root";
 // const Analysis = lazy(() =>
 //   import("./pages/Campaign/components/Analysis/Analysis"),
 // );
@@ -92,11 +86,14 @@ function App() {
               ) : (
                 <PrivateRoute path="/" element={<PermissionDenied />} />
               )} */}
-              <PrivateRoute path="/" element={<BoardStats />} />
+              <PrivateRoute path="/" element={<Root />} />
               {hasPermission(userPermissions, "user_view") ? (
                 <PrivateRoute path="/customers" element={<Customers />} />
               ) : (
-                <PrivateRoute path="/customers" element={<PermissionDenied />} />
+                <PrivateRoute
+                  path="/customers"
+                  element={<PermissionDenied />}
+                />
               )}
               <PrivateRoute path="/campaign" element={<Analysis />} />
               <PrivateRoute path="/myAccount" element={<MyAccount />} />
