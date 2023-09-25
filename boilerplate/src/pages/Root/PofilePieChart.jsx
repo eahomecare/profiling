@@ -2,22 +2,22 @@ import { Box } from "@mantine/core";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const data = [
-  { name: "Tech Enthusiastic", value: 1244 },
-  { name: "Foodies", value: 242 },
-  { name: "Auto Lovers", value: 2345 },
-  { name: "Gadget Freaks", value: 13123 },
+  { name: "Techies", value: 1244 },
+  { name: "Foodies", value: 2423 },
+  // { name: "Auto Lovers", value: 2345 },
+  { name: "Fitness Freaks", value: 13123 },
   { name: "Sports Fans", value: 12320 },
-  { name: "Musicophile", value: 122 },
-  { name: "Avid Traveller", value: 324 },
+  // { name: "Musicophile", value: 122 },
+  { name: "Avid Travelers", value: 3234 },
 ];
 
 const COLORS = [
   "#E38627",
   "#C13C37",
-  "#6A2135",
+  // "#6A2135",
   "#FFBB28",
   "green",
-  "blue",
+  // "blue",
   "purple",
 ];
 

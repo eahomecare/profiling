@@ -47,7 +47,7 @@ const Root = () => {
             </Flex>
           </Box>
           <Grid grow>
-            <Grid.Col span={4}>
+            <Grid.Col span={3}>
               <Stack>
                 <Select
                   label={<Text c={"dimmed"}>Profile(s)</Text>}
@@ -94,7 +94,7 @@ const Root = () => {
             <Grid.Col span={4}>
               <ProfilePieChart />
             </Grid.Col>
-            <Grid.Col span={4}>
+            <Grid.Col span={5}>
               <ProfileDataCard />
             </Grid.Col>
           </Grid>
