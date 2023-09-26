@@ -269,8 +269,7 @@ export class V2Controller {
             message = error.message;
         }
 
-        res.statusCode = 200
-        res.status(statusCode).json({
+        res.status(200).json({
             success: false,
             status: statusCode,
             message: message
