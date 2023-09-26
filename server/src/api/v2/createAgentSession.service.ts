@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { randomBytes } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { CreateAgentSessionDto } from './dto/agent-session.dto';
 import { sign } from 'jsonwebtoken';
@@ -36,6 +35,7 @@ export class CreateAgentSessionService {
 
         if (existingSessions.length > 0) {
             for (let existingSession of existingSessions) {
+                console.log(`Existing sessions deleted at ${new Date()}`, existingSession)
                 await this.prisma.agentSession.delete({
                     where: { id: existingSession.id },
                 });
@@ -50,13 +50,14 @@ export class CreateAgentSessionService {
             secret,
         );
 
-        await this.prisma.agentSession.create({
+        const newSession = await this.prisma.agentSession.create({
             data: {
                 CRM: crmName,
                 authorizationToken,
                 userId: user.id,
             },
         });
+        console.log('New session created', newSession)
 
         return { agentAuthorizationToken: authorizationToken };
     }
