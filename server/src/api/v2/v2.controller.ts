@@ -58,7 +58,7 @@ export class V2Controller {
             const data = { ...registerAgentDto, staticKey, crmName };
             const msg = await this.registerAgentService.registerAgent(data);
 
-            res.status(HttpStatus.CREATED).json({ ...msg, success: true });
+            res.status(HttpStatus.CREATED).json({ ...msg, success: true, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -77,7 +77,7 @@ export class V2Controller {
 
             const result = await this.createAgentSessionService.create(createAgentSessionDto, crmName);
 
-            res.status(HttpStatus.OK).json({ success: true, ...result });
+            res.status(HttpStatus.OK).json({ success: true, ...result, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -99,7 +99,7 @@ export class V2Controller {
 
             const result = await this.logoutAgentService.logout(authorizationToken, crmName);
 
-            res.status(HttpStatus.OK).json({ success: true, ...result });
+            res.status(HttpStatus.OK).json({ success: true, ...result, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -137,7 +137,7 @@ export class V2Controller {
             const customer = await this.customerLookupService.findCustomerByCRMIdAndName(keywordsDto.customerCRMId, crmName);
             const keywords = await this.keywordsService.getKeywordsForCustomer(customer);
 
-            res.status(HttpStatus.OK).json({ success: true, ...keywords });
+            res.status(HttpStatus.OK).json({ success: true, ...keywords, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -160,7 +160,7 @@ export class V2Controller {
 
             const results = await this.searchService.autocomplete('keywords', searchDto.term, searchDto.field);
 
-            res.status(HttpStatus.OK).json({ success: true, results });
+            res.status(HttpStatus.OK).json({ success: true, results, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -185,7 +185,7 @@ export class V2Controller {
             const questions = await this.agentQuestionService.getQuestionsForCustomer(customer);
 
 
-            res.status(HttpStatus.OK).json({ success: true, ...questions });
+            res.status(HttpStatus.OK).json({ success: true, ...questions, angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -247,7 +247,7 @@ export class V2Controller {
 
             await this.submitService.createAgentSubmit(agentSubmitData);
 
-            res.status(HttpStatus.OK).json({ success: true, message: 'Data submitted successfully' });
+            res.status(HttpStatus.OK).json({ success: true, message: 'Data submitted successfully', angularStatus: 200 });
         } catch (error) {
             this.handleException(error, res);
         }
@@ -265,7 +265,8 @@ export class V2Controller {
         res.status(statusCode).json({
             success: false,
             status: statusCode,
-            message: message
+            message: message,
+            angularStatus: 200
         });
     }
 }
