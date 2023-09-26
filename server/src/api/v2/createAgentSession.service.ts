@@ -35,7 +35,7 @@ export class CreateAgentSessionService {
 
         if (existingSessions.length > 0) {
             for (let existingSession of existingSessions) {
-                console.log(`Existing sessions deleted at ${new Date()}`, existingSession)
+                console.log(`Existing sessions deleted at ${new Date()}\n`, existingSession)
                 await this.prisma.agentSession.delete({
                     where: { id: existingSession.id },
                 });
@@ -57,7 +57,7 @@ export class CreateAgentSessionService {
                 userId: user.id,
             },
         });
-        console.log('New session created', newSession)
+        console.log('New session created\n', newSession)
 
         return { agentAuthorizationToken: authorizationToken };
     }
