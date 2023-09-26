@@ -138,19 +138,21 @@ export class SubmitService {
                 }
             });
 
-            await this.prisma.agentSubmitKeywordsMapping.createMany({
-                data: keywords.map(keywordId => ({
-                    agentSubmitId: newAgentSubmit.id,
-                    keywordId: keywordId
-                }))
-            });
+            if (keywords.length)
+                await this.prisma.agentSubmitKeywordsMapping.createMany({
+                    data: keywords.map(keywordId => ({
+                        agentSubmitId: newAgentSubmit.id,
+                        keywordId: keywordId
+                    }))
+                });
 
-            await this.prisma.agentSubmitQuestionsMapping.createMany({
-                data: questions.map(questionId => ({
-                    agentSubmitId: newAgentSubmit.id,
-                    questionId: questionId
-                }))
-            });
+            if (questions.length)
+                await this.prisma.agentSubmitQuestionsMapping.createMany({
+                    data: questions.map(questionId => ({
+                        agentSubmitId: newAgentSubmit.id,
+                        questionId: questionId
+                    }))
+                });
 
         } catch (error) {
             console.error("Error in createAgentSubmit:", error);
