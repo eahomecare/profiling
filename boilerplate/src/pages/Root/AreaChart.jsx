@@ -1,78 +1,129 @@
-import React from "react";
+import { Container } from "@mantine/core";
+import { useState } from "react";
 import {
   AreaChart,
-  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
+  Area,
+  Legend,
+  Brush,
 } from "recharts";
-import { Box, Center, Stack, Text } from "@mantine/core";
 
-const data = [
-  { name: "SMS", value: 4000 },
-  { name: "Email", value: 3000 },
-  { name: "Notification", value: -1000 },
-  { name: "Whatsapp", value: 500 },
-];
-
-const gradientOffset = () => {
-  const dataMax = Math.max(...data.map((i) => i.value));
-  const dataMin = Math.min(...data.map((i) => i.value));
-
-  if (dataMax <= 0) {
-    return 0;
-  }
-  if (dataMin >= 0) {
-    return 1;
-  }
-
-  return dataMax / (dataMax - dataMin);
+const generateRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const off = gradientOffset();
+const generateSmoothNumber = (previousValue, minDelta, maxDelta) => {
+  const delta = generateRandomNumber(minDelta, maxDelta);
+  const direction = Math.random() > 0.5 ? 1 : -1;
+
+  let newValue = previousValue + direction * delta;
+
+  if (newValue > 9000) newValue = 9000;
+  if (newValue < 1000) newValue = 1000;
+
+  return newValue;
+};
+
+const generateData = () => {
+  const months = [
+    "Apr 2022",
+    "May 2022",
+    "Jun 2022",
+    "Jul 2022",
+    "Aug 2022",
+    "Sep 2022",
+    "Oct 2022",
+    "Nov 2022",
+    "Dec 2022",
+    "Jan 2023",
+    "Feb 2023",
+    "Mar 2023",
+    "Apr 2023",
+    "May 2023",
+    "Jun 2023",
+    "Jul 2023",
+    "Aug 2023",
+    "Sep 2023",
+    "Oct 2023",
+  ];
+
+  let previousUv = generateRandomNumber(1000, 9000);
+  let previousPv = generateRandomNumber(1000, 9000);
+
+  return months.map((month) => {
+    const uv = generateSmoothNumber(previousUv, 1000, 3000);
+    const pv = generateSmoothNumber(previousPv, 100, 1000);
+
+    previousUv = uv;
+    previousPv = pv;
+
+    return {
+      name: month,
+      Customer: uv,
+      Profile: pv,
+    };
+  });
+};
 
 const AreaChartSample = () => {
+  const [data, setData] = useState(generateData());
+
   return (
-    <Stack>
-      <Center>
-        <Box h={400} w={800} p={20}>
-          <ResponsiveContainer height="100%" width="100%">
-            <AreaChart
-              width={500}
-              height={400}
-              data={data}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis
-                label={{
-                  value: "Communications",
-                  angle: -90,
-                  position: "left",
-                  offset: "-15",
-                }}
-              />
-              <Tooltip />
-              <defs>
-                <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset={off} stopColor="green" stopOpacity={1} />
-                  <stop offset={off} stopColor="red" stopOpacity={1} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#000"
-                fill="url(#splitColor)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </Box>
-      </Center>
-    </Stack>
+    <Container>
+      <AreaChart
+        onClick={() => setData(generateData())}
+        width={850}
+        height={400}
+        data={data}
+      >
+        <defs>
+          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#7366FF" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#7366FF" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#F73164" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#F73164" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <XAxis dataKey="name" />
+        <YAxis
+          label={{
+            value: "No. of Customers",
+            angle: -90,
+            position: "insideLeft",
+            offset: 0,
+          }}
+        />
+        <CartesianGrid vertical={false} strokeDasharray="1" />
+        <Tooltip />
+        <Legend
+          iconType="circle"
+          verticalAlign="top"
+          align="right"
+          offset={-10}
+        />
+        <Area
+          type="monotone"
+          dataKey="Customer"
+          stroke="#7366FF"
+          strokeWidth={2.36}
+          fillOpacity={1}
+          fill="url(#colorUv)"
+        />
+        <Area
+          type="monotone"
+          dataKey="Profile"
+          stroke="#F73164"
+          strokeWidth={2.36}
+          fillOpacity={1}
+          fill="url(#colorPv)"
+        />
+      </AreaChart>
+    </Container>
   );
 };
 

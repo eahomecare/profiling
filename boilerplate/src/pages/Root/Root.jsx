@@ -10,6 +10,7 @@ import {
   Center,
   Flex,
   Group,
+  useMantineTheme,
 } from "@mantine/core";
 import {
   IconArrowDownRight,
@@ -18,6 +19,7 @@ import {
   IconTableExport,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import StyledSelect from "../../StyledComponents/StyledSelect";
 import AreaChartSample from "./AreaChart";
 import BubbleChart from "./BubbleChart";
 import ProfilePieChart from "./PofilePieChart";
@@ -25,21 +27,22 @@ import ProfileBarChart from "./ProfileBarChart";
 import ProfileDataCard from "./ProfileDataCard";
 
 const Root = () => {
+  const theme = useMantineTheme();
   return (
     <Box>
-      <Title>Profile</Title>
       <Stack>
-        <Card shadow={"md"} bg={"#DDE5FF"} radius={"md"}>
+        {/* First Card */}
+        <Card shadow={"lg"} radius={"md"}>
           <Box>
             <Flex justify={"space-between"}>
               <Center>
-                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
+                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
                   Profile
                 </Text>
               </Center>
               <Center>
                 <Link to={"/campaign"}>
-                  <ActionIcon c={"#4E70EA"} size={"sm"}>
+                  <ActionIcon c={"#5C00F2"} size={"sm"}>
                     <IconArrowRight />
                   </ActionIcon>
                 </Link>
@@ -47,69 +50,51 @@ const Root = () => {
             </Flex>
           </Box>
           <Grid grow>
-            <Grid.Col span={2}>
+            <Grid.Col span={4}>
               <Stack>
-                <Select
-                  label={<Text c={"dimmed"}>Profile(s)</Text>}
+                <StyledSelect
+                  label={"Profile"}
                   placeholder={"Select Profile(s)"}
-                  data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
+                  data={["Test", "Hello", "World"]}
                 />
-                <Select
-                  label={<Text c={"dimmed"}>Main Demographics</Text>}
+                <StyledSelect
+                  label={"Main Demographics"}
                   placeholder={"Select Main Demographics"}
                   data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
                 />
-                <Select
-                  label={<Text c={"dimmed"}>Sub-demographic(s)</Text>}
+                <StyledSelect
+                  label={"Sub-demographic(s)"}
                   placeholder={"Select Sub-demographic(s)"}
                   data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
                 />
-                <Select
-                  label={<Text c={"dimmed"}>Status</Text>}
+                <StyledSelect
+                  label={"Status"}
                   placeholder={"All"}
                   data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
                 />
               </Stack>
             </Grid.Col>
-            <Grid.Col span={5}>
+            <Grid.Col span={4}>
               <ProfilePieChart />
             </Grid.Col>
-            <Grid.Col span={5}>
+            <Grid.Col span={3}>
               <ProfileDataCard />
             </Grid.Col>
           </Grid>
         </Card>
-        <Card shadow={"md"} bg={"#DDE5FF"} radius={"md"}>
-          <Box mb={10}>
+
+        {/* Fourth Card */}
+        <Card shadow={"md"} radius={"md"}>
+          <Box>
             <Flex justify={"space-between"}>
               <Center>
-                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
-                  Promoters vs Detractors
+                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+                  Customer vs Profile
                 </Text>
               </Center>
               <Center>
                 <Link to={"/campaign"}>
-                  <ActionIcon c={"#4E70EA"} size={"sm"}>
+                  <ActionIcon c={"#5C00F2"} size={"sm"}>
                     <IconArrowRight />
                   </ActionIcon>
                 </Link>
@@ -119,154 +104,21 @@ const Root = () => {
           <Grid grow>
             <Grid.Col span={3}>
               <Stack>
-                <Select
-                  label={<Text c={"dimmed"}>Source(s)</Text>}
+                <StyledSelect
+                  label={"Source(s)"}
                   placeholder={"All"}
                   data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
                 />
                 <Group>
-                  <Select
-                    label={<Text c={"dimmed"}>Year</Text>}
+                  <StyledSelect
+                    label={"Year"}
                     placeholder={"All"}
                     data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
                   />
-                  <Select
-                    label={<Text c={"dimmed"}>Month</Text>}
+                  <StyledSelect
+                    label={"Month"}
                     placeholder={"All"}
                     data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
-                  />
-                </Group>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={9}>
-              <ProfileBarChart />
-            </Grid.Col>
-          </Grid>
-        </Card>
-        <Card shadow={"md"} bg={"#DDE5FF"} radius={"md"}>
-          <Box mb={10}>
-            <Flex justify={"space-between"}>
-              <Center>
-                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
-                  Hourly Hits
-                </Text>
-              </Center>
-              <Center>
-                <Link to={"/campaign"}>
-                  <ActionIcon c={"#4E70EA"} size={"sm"}>
-                    <IconArrowRight />
-                  </ActionIcon>
-                </Link>
-              </Center>
-            </Flex>
-          </Box>
-          <Grid grow>
-            <Grid.Col span={3}>
-              <Stack>
-                <Select
-                  label={<Text c={"dimmed"}>Source(s)</Text>}
-                  placeholder={"All"}
-                  data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
-                />
-                <Group>
-                  <Select
-                    label={<Text c={"dimmed"}>Year</Text>}
-                    placeholder={"All"}
-                    data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
-                  />
-                  <Select
-                    label={<Text c={"dimmed"}>Month</Text>}
-                    placeholder={"All"}
-                    data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
-                  />
-                </Group>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={9}>
-              <BubbleChart />
-            </Grid.Col>
-          </Grid>
-        </Card>
-        <Card shadow={"md"} bg={"#DDE5FF"} radius={"md"}>
-          <Box mb={10}>
-            <Flex justify={"space-between"}>
-              <Center>
-                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
-                  Communication Distributions
-                </Text>
-              </Center>
-              <Center>
-                <Link to={"/campaign"}>
-                  <ActionIcon c={"#4E70EA"} size={"sm"}>
-                    <IconArrowRight />
-                  </ActionIcon>
-                </Link>
-              </Center>
-            </Flex>
-          </Box>
-          <Grid grow>
-            <Grid.Col span={3}>
-              <Stack>
-                <Select
-                  label={<Text c={"dimmed"}>Source(s)</Text>}
-                  placeholder={"All"}
-                  data={["Test"]}
-                  rightSection={
-                    <ActionIcon>
-                      <IconChevronDown />
-                    </ActionIcon>
-                  }
-                />
-                <Group>
-                  <Select
-                    label={<Text c={"dimmed"}>Year</Text>}
-                    placeholder={"All"}
-                    data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
-                  />
-                  <Select
-                    label={<Text c={"dimmed"}>Month</Text>}
-                    placeholder={"All"}
-                    data={["Test"]}
-                    rightSection={
-                      <ActionIcon>
-                        <IconChevronDown />
-                      </ActionIcon>
-                    }
                   />
                 </Group>
               </Stack>
@@ -276,6 +128,98 @@ const Root = () => {
             </Grid.Col>
           </Grid>
         </Card>
+
+        {/* Second Card */}
+        <Card shadow={"md"} radius={"md"}>
+          <Box>
+            <Flex justify={"space-between"}>
+              <Center>
+                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+                  Promoters vs Detractors
+                </Text>
+              </Center>
+              <Center>
+                <Link to={"/campaign"}>
+                  <ActionIcon c={"#5C00F2"} size={"sm"}>
+                    <IconArrowRight />
+                  </ActionIcon>
+                </Link>
+              </Center>
+            </Flex>
+          </Box>
+          <Grid grow>
+            <Grid.Col span={3}>
+              <Stack>
+                <StyledSelect
+                  label={"Source(s)"}
+                  placeholder={"All"}
+                  data={["Test"]}
+                />
+                <Group>
+                  <StyledSelect
+                    label={"Year"}
+                    placeholder={"All"}
+                    data={["Test"]}
+                  />
+                  <StyledSelect
+                    label={"Month"}
+                    placeholder={"All"}
+                    data={["Test"]}
+                  />
+                </Group>
+              </Stack>
+            </Grid.Col>
+            <Grid.Col span={9}>
+              <ProfileBarChart />
+            </Grid.Col>
+          </Grid>
+        </Card>
+
+        {/* Third Card */}
+        {/* <Card shadow={"md"} radius={"md"}> */}
+        {/*   <Box> */}
+        {/*     <Flex justify={"space-between"}> */}
+        {/*       <Center> */}
+        {/*         <Text fw={"bold"} c={"#5C00F2"} size={"sm"}> */}
+        {/*           Hourly Hits */}
+        {/*         </Text> */}
+        {/*       </Center> */}
+        {/*       <Center> */}
+        {/*         <Link to={"/campaign"}> */}
+        {/*           <ActionIcon c={"#5C00F2"} size={"sm"}> */}
+        {/*             <IconArrowRight /> */}
+        {/*           </ActionIcon> */}
+        {/*         </Link> */}
+        {/*       </Center> */}
+        {/*     </Flex> */}
+        {/*   </Box> */}
+        {/*   <Grid grow> */}
+        {/*     <Grid.Col span={3}> */}
+        {/*       <Stack> */}
+        {/*         <StyledSelect */}
+        {/*           label={"Source(s)"} */}
+        {/*           placeholder={"All"} */}
+        {/*           data={["Test"]} */}
+        {/*         /> */}
+        {/*         <Group> */}
+        {/*           <StyledSelect */}
+        {/*             label={"Year"} */}
+        {/*             placeholder={"All"} */}
+        {/*             data={["Test"]} */}
+        {/*           /> */}
+        {/*           <StyledSelect */}
+        {/*             label={"Month"} */}
+        {/*             placeholder={"All"} */}
+        {/*             data={["Test"]} */}
+        {/*           /> */}
+        {/*         </Group> */}
+        {/*       </Stack> */}
+        {/*     </Grid.Col> */}
+        {/*     <Grid.Col span={9}> */}
+        {/*       <BubbleChart /> */}
+        {/*     </Grid.Col> */}
+        {/*   </Grid> */}
+        {/* </Card> */}
       </Stack>
     </Box>
   );
