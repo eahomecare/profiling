@@ -1,26 +1,20 @@
-import { Box, Card, Grid, Title } from '@mantine/core'
-import React from 'react'
-import MyProfile from './MyProfile'
-import EditProfile from './EditProfile'
+import { Box, Grid } from "@mantine/core";
+import MyProfile from "./MyProfile";
+import EditProfile from "./EditProfile";
 
 const MyAccount = () => {
-    return (
-        <Box>
-            <Card>
-                <Title>
-                    My Account
-                </Title>
-                <Grid grow>
-                    <Grid.Col span={1}>
-                        <MyProfile />
-                    </Grid.Col>
-                    <Grid.Col span={3}>
-                        <EditProfile />
-                    </Grid.Col>
-                </Grid>
-            </Card>
-        </Box>
-    )
-}
+  return (
+    <Box>
+      <Grid>
+        <Grid.Col span={5}>
+          <MyProfile />
+        </Grid.Col>
+        <Grid.Col span={7}>
+          <EditProfile />
+        </Grid.Col>
+      </Grid>
+    </Box>
+  );
+};
 
-export default MyAccount
+export default MyAccount;

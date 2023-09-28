@@ -13,6 +13,8 @@ import {
   Card,
   Navbar,
   Menu,
+  Stack,
+  Flex,
 } from "@mantine/core";
 import {
   IconChevronRight,
@@ -31,44 +33,45 @@ const useStyles = createStyles((theme) => ({
     ...theme.fn.focusStyles(),
     display: "flex",
     alignItems: "center",
-    textDecoration: "none",
     fontSize: theme.fontSizes.sm,
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[1]
-        : theme.colors.gray[7],
+    color: theme.colorScheme === "dark" ? theme.colors.dark[1] : "#5C00F2",
     borderRadius: theme.radius.sm,
     fontWeight: 500,
 
+    "&": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
+      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+    },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#4E70EA",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
-      [`& .${getStylesRef("icon")}`]: {
-        color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-          .color,
-      },
     },
-  },
 
-  linkIcon: {
-    ref: getStylesRef("icon"),
-    color:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[2]
-        : theme.colors.gray[6],
-    marginRight: theme.spacing.sm,
-  },
-
-  linkActive: {
-    "&, &:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#4E70EA",
-      color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
-      [`& .${getStylesRef("icon")}`]: {
-        color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
-          .color,
-      },
-    },
+    //   For Dark Mode
+    //   "&": {
+    //     backgroundColor:
+    //       theme.colorScheme === "dark" ? theme.colors.dark[6] : "transparent",
+    //     color: theme.colorScheme === "dark" ? theme.white : "white",
+    //   },
+    //   "&:hover": {
+    //     backgroundColor:
+    //       theme.colorScheme === "dark" ? theme.colors.dark[6] : "transparent",
+    //     backgroundImage: "radial-gradient(#FFFFFF 1% ,#FFFFFF00)",
+    //     color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+    //     width: "110%",
+    //   },
+    // },
+    //
+    // linkActive: {
+    //   "&, &:hover": {
+    //     backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#EBDFFF",
+    //     color: theme.colorScheme === "dark" ? theme.white : "#EBDFFF",
+    //     [`& .${getStylesRef("icon")}`]: {
+    //       color: theme.fn.variant({ variant: "light", color: "#EBDFFF" }).color,
+    //     },
+    //   },
   },
 }));
 
@@ -78,28 +81,37 @@ const User = ({ user, roleName }) => {
 
   return (
     <div>
-      <Menu trigger="hover" openDelay={100} closeDelay={400}>
+      <Menu
+        trigger="hover"
+        openDelay={100}
+        closeDelay={400}
+        styles={{
+          dropdown: {
+            border: "none",
+            backgroundColor: "transparent",
+          },
+        }}
+      >
         <Menu.Target>
           <UnstyledButton
             // onClick={() => setOpened(prev => !prev)}
             sx={{
-              display: "block",
               width: "100%",
               padding: theme.spacing.xs,
               borderRadius: theme.radius.sm,
+              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
               color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.dark[0]
-                  : theme.black,
+                theme.colorScheme === "dark" ? theme.colors.dark[0] : "#5C00F2",
               "&:hover": {
                 backgroundColor:
                   theme.colorScheme === "dark"
                     ? theme.colors.dark[6]
-                    : theme.colors.gray[0],
+                    : "#EBDFFF",
+                border: "none",
               },
             }}
           >
-            <Group>
+            <Flex justify={"space-between"}>
               <Avatar
                 src={
                   user?.avatarUrl ||
@@ -107,23 +119,29 @@ const User = ({ user, roleName }) => {
                 }
                 radius="xl"
               />
-              <Box sx={{ flex: 1 }}>
-                <Text size="sm" weight={500}>
-                  {user?.email?.split("@")[0]}
-                </Text>
-                <Text color="dimmed" size="xs">
-                  {roleName}
-                </Text>
-              </Box>
-
-              <IconChevronDown size={rem(18)} />
-            </Group>
+              <Group>
+                <Stack spacing={0}>
+                  <Text size="sm" weight={500}>
+                    {user?.email?.split("@")[0]}
+                  </Text>
+                  <Text color="#5C00F2" size="xs">
+                    {roleName}
+                  </Text>
+                </Stack>
+                <IconChevronDown size={rem(18)} />
+              </Group>
+            </Flex>
           </UnstyledButton>
         </Menu.Target>
 
-        <Menu.Dropdown bg={"transparent"}>
+        <Menu.Dropdown>
           <Box>
-            <Card bg={"#FFFFFF"} shadow="xl" radius={"md"}>
+            <Card
+              bg={"#EBDFFF"}
+              shadow="xl"
+              radius={"md"}
+              sx={{ border: "1px solid #5C00F2" }}
+            >
               <NavLink
                 component={Link}
                 to="/myAccount"

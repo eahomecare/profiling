@@ -12,6 +12,9 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import StyledTextInput from "../../../StyledComponents/StyledTextInput";
+import StyledSelect from "../../../StyledComponents/StyledSelect";
+import StyledButton from "../../../StyledComponents/StyledButton";
 
 const EditProfile = () => {
   const form = useForm({
@@ -35,42 +38,42 @@ const EditProfile = () => {
 
   return (
     <Box>
-      <Card shadow="md" p={30} radius={"md"} bg={"#DDE5FF"}>
+      <Card shadow="lg" p={30} radius={"md"}>
         <Stack>
-          <Title mb={10} size={"lg"}>
+          <Title mb={10} size={"lg"} c="#5C00F2">
             Edit Profile
           </Title>
-          <Divider />
+          <Divider c="#5C00F2" />
           <form onSubmit={form.onSubmit(handleFormSubmit)}>
             <Stack mt={30}>
-              <TextInput
+              <StyledTextInput
                 label="Name"
                 placeholder="Enter your name"
                 {...form.getInputProps("name")}
               />
 
-              <TextInput
+              <StyledTextInput
                 label="Address"
                 placeholder="Enter your address"
                 {...form.getInputProps("address")}
               />
 
               <Group>
-                <TextInput
+                <StyledTextInput
                   label="Pincode"
                   placeholder="Enter your pincode"
                   {...form.getInputProps("pincode")}
                   inputMode="numeric"
                 />
 
-                <Select
+                <StyledSelect
                   placeholder="Select your state"
                   label="State"
                   data={[]}
                   {...form.getInputProps("state")}
                 />
 
-                <Select
+                <StyledSelect
                   placeholder="Select your city"
                   label="City"
                   data={[]}
@@ -78,9 +81,7 @@ const EditProfile = () => {
                 />
               </Group>
 
-              <Button bg={"#4E70EA"} w={"100%"} type="submit">
-                Update Profile
-              </Button>
+              <StyledButton type="submit">Update Profile</StyledButton>
             </Stack>
           </form>
         </Stack>

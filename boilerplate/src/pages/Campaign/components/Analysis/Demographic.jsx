@@ -5,6 +5,7 @@ import {
 } from "../../../../redux/campaignManagementSlice";
 import RadarLinear from "./RadarLinear";
 import ButtonGroup from "./ButtonGroup";
+import { Box, Card } from "@mantine/core";
 
 const Demographic = () => {
   const dispatch = useDispatch();
@@ -40,13 +41,13 @@ const Demographic = () => {
 
   return (
     <div className="col-12 col-lg-4">
-      <div className="dem-grapic clearfix">
+      <Card shadow="lg" radius="md" bg="#EBDFFF">
         <div className="dem-title mb-4">
           <h1>Total Demographic</h1>
         </div>
-        <div className="fullwidth mb-2 mt-5">
+        <Box h={200} w={350}>
           <RadarLinear />
-        </div>
+        </Box>
         <div className="row mt-2">
           <div className="col-12 col-lg-12 text-center mb-2">
             <span className="total-numb pe-2">
@@ -66,7 +67,7 @@ const Demographic = () => {
                     </div> */}
           <ButtonGroup />
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

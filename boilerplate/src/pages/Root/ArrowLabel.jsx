@@ -24,8 +24,8 @@ const Arrow = ({ bgColor = "#eee", textColor = "#333", text = "" }) => {
 
   return (
     <svg
-      width="250"
-      height="30"
+      width="150"
+      height="50"
       viewBox="0 0 250 30"
       onMouseEnter={() => dispatch(setHoveredItem(text))}
       onMouseLeave={() => dispatch(clearHoveredItem())}
@@ -53,7 +53,7 @@ const Arrow = ({ bgColor = "#eee", textColor = "#333", text = "" }) => {
         fill={isHovered ? "#fff" : textColor}
         font-family="Arial"
         font-weight="bold"
-        font-size="14px"
+        font-size="20px"
         transform={isHovered ? "scale(1.05, 1)" : ""}
         style={{ transition: "transform 0.5s" }}
       >

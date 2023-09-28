@@ -9,6 +9,8 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
+import StyledPasswordInput from "../../../StyledComponents/StyledPasswordInput";
+import StyledButton from "../../../StyledComponents/StyledButton";
 
 const ChangePassword = ({ onPasswordChange, canSave }) => {
   const form = useForm({
@@ -48,32 +50,32 @@ const ChangePassword = ({ onPasswordChange, canSave }) => {
   };
 
   return (
-    <Card shadow="md" p={30} radius={"md"} bg={"#DDE5FF"}>
+    <Card shadow="lg" p={30} radius={"md"}>
       <Stack>
-        <Title mb={10} size={"lg"}>
+        <Title mb={10} size={"lg"} c="#5C00F2">
           Change Password
         </Title>
-        <Divider />
+        <Divider c="#5C00F2" />
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack mt={30}>
-            <PasswordInput
+            <StyledPasswordInput
               label="Old Password"
               {...form.getInputProps("oldPassword")}
             />
 
-            <PasswordInput
+            <StyledPasswordInput
               label="Set New Password"
               {...form.getInputProps("newPassword")}
             />
 
-            <PasswordInput
+            <StyledPasswordInput
               label="Confirm Password"
               {...form.getInputProps("confirmPassword")}
             />
 
-            <Button bg={"#4E70EA"} w={"100%"} type="submit" disabled={!canSave}>
+            <StyledButton type="submit" disabled={!canSave}>
               Save
-            </Button>
+            </StyledButton>
           </Stack>
         </form>
       </Stack>

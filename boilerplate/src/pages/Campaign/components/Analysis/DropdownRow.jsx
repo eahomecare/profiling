@@ -9,6 +9,7 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
+import StyledSelect from "../../../../StyledComponents/StyledSelect";
 
 const DropdownRow = ({
   row,
@@ -74,18 +75,12 @@ const DropdownRow = ({
     <React.Fragment>
       <div className="col-12 col-lg-3">
         <div className="mb-4 col-6 col-lg-12">
-          <Select
+          <StyledSelect
             data={Object.keys(dropdownData).map((option) => ({
               value: option,
               label: typeof option === "string" ? option : null,
             }))}
             searchable
-            rightSection={<IconChevronDown size="1rem" />}
-            rightSectionWidth={30}
-            styles={{
-              rightSection: { pointerEvents: "none" },
-              input: { cursor: "pointer" },
-            }}
             value={row.first}
             placeholder="Select Information Type"
             onChange={(value) => handleDropdownChange(rowId, "first", value)}
@@ -94,18 +89,12 @@ const DropdownRow = ({
       </div>
       <div className="col-12 col-lg-3">
         <div className="mb-4 col-6 col-lg-12">
-          <Select
+          <StyledSelect
             data={secondDropdownOptions.map((option) => ({
               value: option,
               label: typeof option === "string" ? option : null,
             }))}
             searchable
-            rightSection={<IconChevronDown size="1rem" />}
-            rightSectionWidth={30}
-            styles={{
-              rightSection: { pointerEvents: "none" },
-              input: { cursor: "pointer" },
-            }}
             value={row.second}
             placeholder="Select Category"
             onChange={(value) => handleDropdownChange(rowId, "second", value)}
@@ -114,19 +103,13 @@ const DropdownRow = ({
       </div>
       <div className="col-12 col-lg-3">
         <div className="mb-4 col-6 col-lg-12">
-          <Select
+          <StyledSelect
             data={thirdDropdownOptions.map((option) =>
               typeof option === "string"
                 ? { value: option, label: option }
                 : option,
             )}
             searchable
-            rightSection={<IconChevronDown size="1rem" />}
-            rightSectionWidth={30}
-            styles={{
-              rightSection: { pointerEvents: "none" },
-              input: { cursor: "pointer" },
-            }}
             value={row.third}
             placeholder="Select Sub-category"
             onChange={handleThirdDropdownChange}
@@ -150,7 +133,7 @@ const DropdownRow = ({
             <ActionIcon c={"red"}>
               <IconExclamationMark />
             </ActionIcon>
-            <ActionIcon c={"#4E70EA"} onClick={handleRefresh}>
+            <ActionIcon c={"#5C00F2"} onClick={handleRefresh}>
               <IconRefresh />
             </ActionIcon>
           </Flex>
@@ -159,7 +142,7 @@ const DropdownRow = ({
           <>
             <Flex>
               <ActionIcon>{figures !== null ? figures : "-"}</ActionIcon>
-              <ActionIcon c={"#4E70EA"} onClick={handleRefresh}>
+              <ActionIcon c={"#5C00F2"} onClick={handleRefresh}>
                 <IconRefresh />
               </ActionIcon>
             </Flex>
