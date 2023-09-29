@@ -83,7 +83,7 @@ const Root = () => {
           </Grid>
         </Card>
 
-        {/* Fourth Card */}
+        {/* Second Card */}
         <Card shadow={"md"} radius={"md"}>
           <Box>
             <Flex justify={"space-between"}>
@@ -129,7 +129,7 @@ const Root = () => {
           </Grid>
         </Card>
 
-        {/* Second Card */}
+        {/* Third Card */}
         <Card shadow={"md"} radius={"md"}>
           <Box>
             <Flex justify={"space-between"}>

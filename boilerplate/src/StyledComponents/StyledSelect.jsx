@@ -46,6 +46,12 @@ const StyledSelect = (props) => {
   return (
     <Select
       {...props}
+      withinPortal
+      transitionProps={{
+        transition: "pop-top-left",
+        duration: 200,
+        timingFunction: "ease",
+      }}
       styles={{ ...defaultStyles, ...props.styles }}
       rightSection={
         props.rightSection || (
