@@ -63,7 +63,7 @@ const ProfileBarChart = () => {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid vertical={false} strokeDasharray="1" />
           <XAxis dataKey="name" />
           <YAxis
             label={{
@@ -79,9 +79,22 @@ const ProfileBarChart = () => {
             verticalAlign="top"
             align="right"
             offset={-10}
+            color={"yellow"}
           />
-          <Bar dataKey="detractors" fill="#8884d8" />
-          <Bar dataKey="promotors" fill="#82ca9d" />
+          <Bar
+            dataKey="detractors"
+            stroke="#7366FF"
+            strokeWidth={2.36}
+            fill="#7366FF"
+            fillOpacity={0.7}
+          />
+          <Bar
+            dataKey="promotors"
+            stroke="#F73164"
+            strokeWidth={2.36}
+            fill="#F73164"
+            fillOpacity={0.7}
+          />
         </BarChart>
       </ResponsiveContainer>
     </Box>

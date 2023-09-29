@@ -1,8 +1,8 @@
 import { ActionIcon, useMantineTheme } from "@mantine/core";
-import { DateInput } from "@mantine/dates";
-import { IconCalendar } from "@tabler/icons-react";
+import { TimeInput } from "@mantine/dates";
+import { IconClock } from "@tabler/icons-react";
 
-const StyledDateInput = (props) => {
+const StyledTimeInput = (props) => {
   const theme = useMantineTheme();
 
   const defaultStyles = {
@@ -58,18 +58,19 @@ const StyledDateInput = (props) => {
   };
 
   return (
-    <DateInput
+    <TimeInput
       styles={{ ...defaultStyles, ...props.styles }}
       {...props}
-      valueFormat={"DD MMM YYYY"}
+      valueFormat={"HH:MM"}
+      onClick={(e) => e.target.showPicker()}
       popoverProps={{ withinPortal: true }}
       rightSection={
-        <ActionIcon>
-          <IconCalendar color={"#5C00F2"} />
+        <ActionIcon c="#5C00F2">
+          <IconClock />
         </ActionIcon>
       }
     />
   );
 };
 
-export default StyledDateInput;
+export default StyledTimeInput;
