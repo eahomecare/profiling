@@ -236,7 +236,20 @@ const MainAppShell = ({ children }) => {
                     icon={<IconSettings size="1rem" stroke={2} />}
                     className={classes.link}
                   />
+                  <NavLink
+                    styles={{
+                      root: {
+                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      },
+                    }}
+                    component={Link}
+                    to="/acl/userpermissions"
+                    label="Users Permissions"
+                    icon={<IconSettings size="1rem" stroke={2} />}
+                    className={classes.link}
+                  />
                 </NavLink>
+                
               )}
               {hasPermission(userPermissions, "campaign_dashoard") && (
                 <NavLink
