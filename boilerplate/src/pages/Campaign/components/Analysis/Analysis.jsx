@@ -140,76 +140,72 @@ const Analysis = () => {
   return (
     <>
       <BoardStats />
-      <Box mt={5}>
-        <div className="col-xs-12 col-lg-12">
-          <div className="chart-bx mb-5">
-            <div className="row">
-              <div className="col-12 col-lg-8">
-                <div className="col-12 col-lg-12 mb-3">
-                  <Flex justify={"end"}>
-                    <div className="pl-90">
-                      <Group onClick={addRow} style={{ cursor: "pointer" }}>
-                        <ActionIcon color="blue" variant="subtle" size={"sm"}>
-                          <IconPlus color="#4E70EA" />
-                        </ActionIcon>
-                        <Text ml={-18} color="#4E70EA" size={"sm"}>
-                          Add More
-                        </Text>
-                      </Group>
-                    </div>
-                  </Flex>
+      <Card mt={20} shadow={"lg"} radius="md">
+        <div className="row">
+          <div className="col-12 col-lg-8">
+            <div className="col-12 col-lg-12 mb-3">
+              <Flex justify={"end"}>
+                <div className="pl-90">
+                  <Group onClick={addRow} style={{ cursor: "pointer" }}>
+                    <ActionIcon color="#5C00F2" variant="subtle" size={"sm"}>
+                      <IconPlus color="#5C00F2" />
+                    </ActionIcon>
+                    <Text ml={-18} color="#5C00F2" size={"sm"}>
+                      Add More
+                    </Text>
+                  </Group>
                 </div>
-                <div
-                  className="row"
-                  style={{ maxHeight: "250px", overflowY: "scroll" }}
-                >
-                  <div className="col-12 col-lg-3">
-                    <div className="select-title mb-3">
-                      <h1>Select Information Type</h1>
-                    </div>
-                  </div>
-                  <div className="col-12 col-lg-3">
-                    <div className="select-title mb-3">
-                      <h1>Select Category</h1>
-                    </div>
-                  </div>
-                  <div className="col-12 col-lg-3">
-                    <div className="select-title mb-3">
-                      <h1>Select Sub-category</h1>
-                    </div>
-                  </div>
-                  <div className="col-12 col-lg-1">
-                    <div className="select-title mb-3">
-                      <h1>Delete</h1>
-                    </div>
-                  </div>
-                  <div className="col-12 col-lg-2">
-                    <div className="select-title mb-3">
-                      <h1>Figures</h1>
-                    </div>
-                  </div>
-                  {Object.entries(rows).map(([rowId, rowData]) => (
-                    <DropdownRow
-                      key={rowId}
-                      row={rowData}
-                      rowId={rowId}
-                      handleDropdownChange={handleDropdownChange}
-                      dropdownData={dropdownData}
-                      selectedCombinations={selectedCombinations}
-                      deleteRow={deleteRow}
-                    />
-                  ))}
+              </Flex>
+            </div>
+            <div
+              className="row"
+              style={{ maxHeight: "250px", overflowY: "scroll" }}
+            >
+              <div className="col-12 col-lg-3">
+                <div className="select-title mb-3">
+                  <h1>Select Information Type</h1>
                 </div>
-                {/* <ButtonGroup
+              </div>
+              <div className="col-12 col-lg-3">
+                <div className="select-title mb-3">
+                  <h1>Select Category</h1>
+                </div>
+              </div>
+              <div className="col-12 col-lg-3">
+                <div className="select-title mb-3">
+                  <h1>Select Sub-category</h1>
+                </div>
+              </div>
+              <div className="col-12 col-lg-1">
+                <div className="select-title mb-3">
+                  <h1>Delete</h1>
+                </div>
+              </div>
+              <div className="col-12 col-lg-2">
+                <div className="select-title mb-3">
+                  <h1>Figures</h1>
+                </div>
+              </div>
+              {Object.entries(rows).map(([rowId, rowData]) => (
+                <DropdownRow
+                  key={rowId}
+                  row={rowData}
+                  rowId={rowId}
+                  handleDropdownChange={handleDropdownChange}
+                  dropdownData={dropdownData}
+                  selectedCombinations={selectedCombinations}
+                  deleteRow={deleteRow}
+                />
+              ))}
+            </div>
+            {/* <ButtonGroup
                                 isModalOpen={isModalOpen}
                                 setIsModalOpen={handleModalToggle}
                             /> */}
-              </div>
-              <Demographic />
-            </div>
           </div>
+          <Demographic />
         </div>
-      </Box>
+      </Card>
     </>
   );
 };

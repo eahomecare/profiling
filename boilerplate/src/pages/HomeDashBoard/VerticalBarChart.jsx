@@ -99,10 +99,10 @@ const VerticalBarChart = () => {
                 align="right"
                 offset={-10}
               />
-              <Bar dataKey="Delivered" fill="#82ca9d" stackId="a" />
-              <Bar dataKey="Failure" fill="#883538" stackId="a" />
-              <Bar dataKey="Interested" fill="#8884d8" stackId="a" />
-              <Bar dataKey="Converted" fill="#8334f8" stackId="a">
+              <Bar dataKey="Delivered" fill="#BB5DE4" stackId="a" />
+              <Bar dataKey="Failure" fill="#0D96F9" stackId="a" />
+              <Bar dataKey="Interested" fill="#1D9B25" stackId="a" />
+              <Bar dataKey="Converted" fill="#D85972" stackId="a">
                 <LabelList position="right" />
               </Bar>
             </BarChart>

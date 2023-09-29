@@ -25,14 +25,19 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
   }, [password, onValidationChange]);
 
   return (
-    <Card shadow="md" p={30} radius={"md"} bg={"#DDE5FF"}>
+    <Card shadow="lg" p={30} radius={"md"}>
       <Stack>
-        <Title mb={10} size={"lg"}>
+        <Title mb={10} size={"lg"} c="#5C00F2">
           Password Constraints
         </Title>
-        <Divider />
+        <Divider c="#5C00F2" />
         <Group>
           <Checkbox
+            styles={{
+              input: {
+                border: "1px solid #5C00F2",
+              },
+            }}
             color={isValid(password.length >= 8)}
             checked={password.length >= 8}
             label={
@@ -44,6 +49,11 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
         </Group>
         <Group>
           <Checkbox
+            styles={{
+              input: {
+                border: "1px solid #5C00F2",
+              },
+            }}
             color={isValid(/[A-Z]/.test(password))}
             checked={/[A-Z]/.test(password)}
             label={
@@ -55,6 +65,11 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
         </Group>
         <Group>
           <Checkbox
+            styles={{
+              input: {
+                border: "1px solid #5C00F2",
+              },
+            }}
             color={isValid(/[a-z]/.test(password))}
             checked={/[a-z]/.test(password)}
             label={
@@ -66,6 +81,11 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
         </Group>
         <Group>
           <Checkbox
+            styles={{
+              input: {
+                border: "1px solid #5C00F2",
+              },
+            }}
             color={isValid(/[0-9]/.test(password))}
             checked={/[0-9]/.test(password)}
             label={
@@ -77,6 +97,11 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
         </Group>
         <Group>
           <Checkbox
+            styles={{
+              input: {
+                border: "1px solid #5C00F2",
+              },
+            }}
             color={isValid(/[^A-Za-z0-9]/.test(password))}
             checked={/[^A-Za-z0-9]/.test(password)}
             label={

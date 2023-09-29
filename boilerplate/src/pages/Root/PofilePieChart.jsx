@@ -115,7 +115,7 @@ const ProfilePieChart = () => {
   );
 
   return (
-    <Box h={300} w={500}>
+    <Box h={300} w={450}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={300} height={400}>
           <Pie
