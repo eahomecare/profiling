@@ -23,7 +23,6 @@ import { useLocation } from "react-router-dom"
 import CreatePermissionModal from "./CreatePermissionModal"
 import Permissions from "./Permissions"
 import { createPermission } from "../../redux/rolesPermissionSlice"
-import UserPermissions from "./UserPermissions"
 
 
 function formatDate(dateString) {
@@ -136,19 +135,6 @@ const Acl = () => {
         permissions: userPermissionsDict[data.id].join(" / "),
         created_at: formatDate(data.created_at)
     }))
-
-    const userPermissionsInitialData =
-    Object.keys(userPermissionsDict).length > 0
-      ? users.map((data) => ({
-          id: data.id,
-          roleId: data.roleId,
-          email: data.email,
-          isactive: "active",
-          role: data.role.name,
-          permissions: userPermissionsDict[data.id].join(" / "),
-          created_at: formatDate(data.created_at),
-        }))
-      : [];
 
 
     users.map(d => {
@@ -336,14 +322,6 @@ const Acl = () => {
                                                 element={
                                                     <Permissions title={"acl/all permissions"}
                                                         useStyles={useStyles} initialData={permissions_initialData} />
-                                                }
-                                            />
-                                            <Route
-                                                path="/userpermissions"
-                                                element={
-                                                    <UserPermissions 
-                                                    initialData={userPermissionsInitialData} 
-                                                    />
                                                 }
                                             />
                                         </Route>
