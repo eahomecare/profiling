@@ -1,160 +1,162 @@
 import {
-    TextInput,
-    PasswordInput,
-    Checkbox,
-    Anchor,
-    Paper,
-    Title,
-    Text,
-    Container,
-    Group,
-    Button,
-    Center,
-    Box,
-    Flex,
-    Stack,
-    BackgroundImage,
-    Card,
-    Image,
+  TextInput,
+  PasswordInput,
+  Checkbox,
+  Anchor,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Group,
+  Button,
+  Center,
+  Box,
+  Flex,
+  Stack,
+  BackgroundImage,
+  Card,
+  Image,
+  Grid,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Link, redirect, useNavigate } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons-react";
-import loginImage from './assets/login.png'
-import eaLogo from './assets/eaLogo.png'
+import loginImage from "./assets/login.png";
+import eaLogo from "./assets/eaLogo.png";
 import { loginUser } from "../../redux/authSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllRolesPermissionsMappings, getAllRolesPermissionsMappingsByUser } from "../../redux/rolesPermissionSlice";
+import {
+  getAllRolesPermissionsMappings,
+  getAllRolesPermissionsMappingsByUser,
+} from "../../redux/rolesPermissionSlice";
 import Recaptcha from "./Recaptcha";
-
-
-
+import StyledPasswordInput from "../../StyledComponents/StyledPasswordInput";
+import StyledTextInput from "../../StyledComponents/StyledTextInput";
+import StyledButton from "../../StyledComponents/StyledButton";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const { status, isLoggedIn, user } = useSelector((state) => state.auth);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
 
+  // useEffect(() => {
+  //     if(status === "success" && isLoggedIn){
+  //         dispatch(getAllRolesPermissionsMappings())
+  //     }
+  // },[status,isLoggedIn])
 
-    const { status, isLoggedIn, user } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (status === "success" && isLoggedIn) {
+      dispatch(getAllRolesPermissionsMappingsByUser(user._id));
+      navigate("/");
+    }
+  }, [status, navigate]);
 
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(loginUser({ email, password }));
-    };
-
-    // useEffect(() => {
-    //     if(status === "success" && isLoggedIn){
-    //         dispatch(getAllRolesPermissionsMappings())
-    //     }
-    // },[status,isLoggedIn])
-
-    useEffect(() => {
-        if (status === "success" && isLoggedIn) {
-            dispatch(getAllRolesPermissionsMappingsByUser(user._id))
-            navigate("/")
-        }
-    }, [status, navigate])
-
-    return (
-        <>
+  return (
+    <>
+      <Box
+        h={"100vh"}
+        sx={{
+          backgroundImage: "radial-gradient(#F2F2F2 50% ,#EBDFFF)",
+        }}
+      >
+        <Grid pt={"8%"} grow>
+          <Grid.Col span={6}>
+            <Center>
+              <Box>
+                <BackgroundImage
+                  style={{ width: "500px", height: "550px" }}
+                  src={loginImage}
+                  radius={"md"}
+                >
+                  <Stack p={"5%"} h={"100%"} justify={"end"}>
+                    <Text c={"white"}>
+                      <Title>Title</Title>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Morbi auctor sagittis nunc nec sollicitudin. Duis ultrices
+                      tristique ligula ac suscipit.
+                    </Text>
+                    <StyledButton w={"30%"}>
+                      Read More
+                      <IconArrowRight />
+                    </StyledButton>
+                  </Stack>
+                </BackgroundImage>
+              </Box>
+            </Center>
+          </Grid.Col>
+          <Grid.Col span={6}>
             <Box>
-                <Stack>
-                    <Flex>
-                        <Box>
-                            <Paper>
-                                <BackgroundImage
-                                    style={{ width: '500px', height: '550px' }}
-                                    src={loginImage}
-                                    radius={'md'}
-                                    pt={300}
-                                    mt={95}
-                                    ml={69}
-                                >
-                                    <Text
-                                        c={'white'}
-                                        pl={48}
-                                        pr={56}
-                                    >
-                                        <Title>
-                                            Title
-                                        </Title>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi auctor sagittis nunc nec sollicitudin. Duis ultrices tristique ligula ac suscipit.
-                                    </Text>
-                                    <Button
-                                        ml={48}
-                                        mb={48}
-                                        mt={30}
-                                    >
-                                        Read More
-                                        <IconArrowRight />
-
-                                    </Button>
-                                </BackgroundImage>
-                            </Paper>
-                        </Box>
-                        <Box>
-                            <Center>
-                                <Stack>
-                                    <Paper>
-                                        <Image
-                                            width={150}
-                                            height={128}
-                                            src={eaLogo}
-                                            mt={95}
-                                            mr={313}
-                                            ml={288}
-                                            mb={33}
-                                        />
-                                    </Paper>
-                                    <Card
-                                        shadow={'md'}
-                                        ml={50}
-                                        mr={100}
-                                        bg={'#F1F5F9'}
-                                    >
-
-                                        <TextInput label="Email" placeholder="you@ea.in" value={email} required onChange={(e) => setEmail(e.target.value)} />
-                                        <PasswordInput
-                                            label="Password"
-                                            placeholder="Your password"
-                                            required
-                                            mt="md"
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
-                                        <Group position="apart" mt="lg">
-                                            <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
-                                            {/* <Anchor>
+              <Center>
+                <Stack w={"80%"} justify={"center"} align={"stretch"}>
+                  <Box>
+                    <Center>
+                      <Image
+                        width={150}
+                        height={128}
+                        src={eaLogo}
+                        bg={"#F2F2F2"}
+                      />
+                    </Center>
+                  </Box>
+                  <Card shadow={"lg"} radius={"md"}>
+                    <Stack>
+                      <StyledTextInput
+                        label="Email"
+                        placeholder="you@ea.in"
+                        value={email}
+                        required
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <StyledPasswordInput
+                        label="Password"
+                        placeholder="Your password"
+                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <Group position="apart">
+                        <Checkbox label="Remember me" sx={{ lineHeight: 1 }} />
+                        {/* <Anchor>
                                                 onClick={(event) => event.preventDefault()}
                                                 href="#"
                                                 size="sm"
 
                                                 Forgot password?
                                             </Anchor> */}
-                                            <Text size={'sm'} c={'blue'}>Forgot Password</Text>
-                                        </Group>
-                                        <Recaptcha />
+                        <Text size={"sm"} c={"#5C00F2"}>
+                          Forgot Password
+                        </Text>
+                      </Group>
+                      <Recaptcha />
 
-                                        <Button fullWidth mt="xl" type="submit" onClick={handleSubmit}>
-                                            {status === "loading" ? <>Signing in</> : <>Sign in</>}
-                                        </Button>
+                      <StyledButton type="submit" onClick={handleSubmit}>
+                        {status === "loading" ? <>Signing in</> : <>Sign in</>}
+                      </StyledButton>
 
-                                        {status === "failed" && <Text style={{ color: "red", padding: "10px" }}>Incorrect credentials !</Text>}
-
-                                    </Card>
-                                </Stack>
-                            </Center>
-                        </Box>
-                    </Flex>
+                      {status === "failed" && (
+                        <Text style={{ color: "red" }}>
+                          Incorrect credentials !
+                        </Text>
+                      )}
+                    </Stack>
+                  </Card>
                 </Stack>
+              </Center>
             </Box>
-        </>
-        // <div style={{ backgroundColor: '#f1f3f5', minHeight: '1000px', marginTop: '-40px' }}>
-        // </div>
-    );
+          </Grid.Col>
+        </Grid>
+      </Box>
+    </>
+    // <div style={{ backgroundColor: '#f1f3f5', minHeight: '1000px', marginTop: '-40px' }}>
+    // </div>
+  );
 }

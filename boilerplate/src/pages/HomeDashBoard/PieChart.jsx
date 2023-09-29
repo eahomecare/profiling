@@ -8,7 +8,7 @@ const data = [
   { name: "Group D", value: 200 },
 ];
 
-const COLORS = ["red", "#00C49F", "#FFBB28", "green"];
+const COLORS = ["#DE8965", "#D85972", "#2745D9", "#1D9825"];
 
 const RADIAN = Math.PI / 180;
 // const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
@@ -25,9 +25,9 @@ const RADIAN = Math.PI / 180;
 
 const CustomPieChart = () => {
   return (
-    <Box h={300} w={300} ml={-40}>
+    <Box h={200} w={200}>
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
+        <PieChart width={300} height={300}>
           <Pie
             data={data}
             cx="50%"

@@ -42,9 +42,14 @@ const useStyles = createStyles((theme) => ({
         : theme.colors.gray[7],
     borderRadius: theme.radius.sm,
     fontWeight: 500,
+    "&": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+    },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#4E70EA",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -61,7 +66,7 @@ const useStyles = createStyles((theme) => ({
   },
   linkActive: {
     "&, &:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#4E70EA",
+      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#5C00F2",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
@@ -71,6 +76,7 @@ const useStyles = createStyles((theme) => ({
   },
   stickyNavbar: {
     position: "sticky",
+    height: "100%",
     top: 0,
   },
 }));
@@ -107,122 +113,185 @@ const MainAppShell = ({ children }) => {
 
   return (
     <>
-      <Header bg={"#4E70EA"} height={{ base: 50 }} withBorder={false}>
+      <Header
+        styles={{
+          root: {
+            backgroundImage: "linear-gradient(#8C53E7,#5C00F2)",
+            paddingTop: 5,
+            paddingRight: 20,
+          },
+        }}
+        height={{ base: 50 }}
+        withBorder={false}
+      >
         <Flex justify={"flex-end"}>
           <Group>
             <LightDarkButton />
-            <ActionIcon variant="filled" color="white">
+            <ActionIcon variant="subtle" c="white">
               <IconBell />
             </ActionIcon>
-            <Avatar radius="xl" src={Logo} />
+            <Avatar
+              p={2}
+              bg={"white"}
+              // styles={{
+              //   root: {
+              //     backgroundImage: "radial-gradient(#FFFFFF 50% ,#5C0FF2)",
+              //   },
+              // }}
+              size={"2.5rem"}
+              radius="xl"
+              src={Logo}
+            />
           </Group>
         </Flex>
       </Header>
       <div style={{ display: "flex" }}>
-        <span>
-          <Card
-            shadow="md"
-            radius={"md"}
-            bg={theme.colorScheme == "dark" ? "" : "#DDE5FF"}
+        <Card
+          shadow="md"
+          radius={"md"}
+          w={"290px"}
+          bg={theme.colorScheme == "dark" ? "" : "#FFFFFF"}
+        >
+          <Navbar
+            className={classes.stickyNavbar}
+            // height={"100vh"}
+            p="xs"
+            withBorder={false}
+            bg={theme.colorScheme == "dark" ? "" : "transparent"}
           >
-            <Navbar
-              className={classes.stickyNavbar}
-              // height={"100vh"}
-              p="xs"
-              withBorder={false}
-              bg={theme.colorScheme == "dark" ? "" : "#DDE5FF"}
-            >
-              <Space h={5} />
-              <Navbar.Section>
-                <User user={user} roleName={findUserRoleNameById(user._id)} />
-              </Navbar.Section>
-              <Space h={2} />
-              <Stack>
-                {hasPermission(userPermissions, "customer_dashboard") && (
+            <Space h={5} />
+            <Navbar.Section>
+              <User user={user} roleName={findUserRoleNameById(user._id)} />
+            </Navbar.Section>
+            <Space h={2} />
+            <Stack>
+              {hasPermission(userPermissions, "customer_dashboard") && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    },
+                  }}
+                  component={Link}
+                  to="/"
+                  label="Dashboard"
+                  icon={<IconAnalyze size="2rem" stroke={2} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]: activeNavLink === "/",
+                  })}
+                />
+              )}
+              {hasPermission(userPermissions, "user_view") && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    },
+                  }}
+                  component={Link}
+                  to="/users"
+                  label="Users"
+                  icon={<IconUsersGroup size="2rem" stroke={2} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]: activeNavLink === "/users",
+                  })}
+                />
+              )}
+              {hasPermission(userPermissions, "acl") && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    },
+                  }}
+                  component={Link}
+                  to="/acl"
+                  label="ACL"
+                  icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]: activeNavLink === "/acl",
+                  })}
+                >
                   <NavLink
+                    styles={{
+                      root: {
+                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      },
+                    }}
                     component={Link}
-                    to="/"
-                    label="Dashboard"
-                    icon={<IconAnalyze size="2rem" stroke={2} />}
-                    className={cx(classes.link, {
-                      [classes.linkActive]: activeNavLink === "/",
-                    })}
+                    to="/acl/rolesvspermissions"
+                    label="Roles vs Permission"
+                    icon={<IconSettings size="1rem" stroke={2} />}
+                    className={classes.link}
                   />
-                )}
-                {hasPermission(userPermissions, "user_view") && (
                   <NavLink
+                    styles={{
+                      root: {
+                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      },
+                    }}
                     component={Link}
-                    to="/users"
-                    label="Users"
-                    icon={<IconUsersGroup size="2rem" stroke={2} />}
-                    className={cx(classes.link, {
-                      [classes.linkActive]: activeNavLink === "/users",
-                    })}
+                    to="/acl/permissions"
+                    label="Permissions"
+                    icon={<IconSettings size="1rem" stroke={2} />}
+                    className={classes.link}
                   />
-                )}
-                {hasPermission(userPermissions, "acl") && (
-                  <NavLink
-                    component={Link}
-                    to="/acl"
-                    label="ACL"
-                    icon={<IconSettingsAutomation size="2rem" stroke={2.0} />}
-                    className={cx(classes.link, {
-                      [classes.linkActive]: activeNavLink === "/acl",
-                    })}
-                  >
-                    <NavLink
-                      component={Link}
-                      to="/acl/rolesvspermissions"
-                      label="Roles vs Permission"
-                      icon={<IconSettings size="1rem" stroke={2} />}
-                      className={classes.link}
-                    />
-                    <NavLink
-                      component={Link}
-                      to="/acl/permissions"
-                      label="Permissions"
-                      icon={<IconSettings size="1rem" stroke={2} />}
-                      className={classes.link}
-                    />
-                  </NavLink>
-                )}
-                {hasPermission(userPermissions, "campaign_dashoard") && (
-                  <NavLink
-                    component={Link}
-                    to="/campaign"
-                    label="Campaign"
-                    icon={<Icon3dCubeSphere size="2rem" stroke={2} />}
-                    className={cx(classes.link, {
-                      [classes.linkActive]: activeNavLink === "/campaign",
-                    })}
-                  />
-                )}
-                {hasPermission(userPermissions, "customer_dashboard") && (
-                  <NavLink
-                    component={Link}
-                    to="/customers"
-                    label="Customers"
-                    icon={<IconAccessible size="2rem" stroke={2} />}
-                    className={cx(classes.link, {
-                      [classes.linkActive]:
-                        activeNavLink === "/customers" ||
-                        activeNavLink === "/dashboard",
-                    })}
-                  />
-                )}
-              </Stack>
-            </Navbar>
-          </Card>
-        </span>
+                </NavLink>
+              )}
+              {hasPermission(userPermissions, "campaign_dashoard") && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    },
+                  }}
+                  component={Link}
+                  to="/campaign"
+                  label="Campaign"
+                  icon={<Icon3dCubeSphere size="2rem" stroke={2} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]: activeNavLink === "/campaign",
+                  })}
+                />
+              )}
+              {hasPermission(userPermissions, "customer_dashboard") && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                    },
+                  }}
+                  component={Link}
+                  to="/customers"
+                  label="Customers"
+                  icon={<IconAccessible size="2rem" stroke={2} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]:
+                      activeNavLink === "/customers" ||
+                      activeNavLink === "/dashboard",
+                  })}
+                />
+              )}
+            </Stack>
+          </Navbar>
+        </Card>
         <span
           style={{
             flexGrow: "1",
             width: "100px",
             height: "calc(100vh - 50px)",
             overflowY: "auto",
+            // backgroundColor: "#F8F8F8",
+            backgroundImage: "radial-gradient(#F2F2F2 50% ,#EBDFFF)",
           }}
         >
-          <div style={{ paddingLeft: "10px" }}>
+          <div
+            style={{
+              paddingLeft: "10px",
+              paddingRight: "20px",
+              marginTop: "20px",
+            }}
+          >
             <div
               style={{
                 display: "flex",

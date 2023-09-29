@@ -18,6 +18,9 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { DateInput } from "@mantine/dates";
+import StyledTextInput from "../../../StyledComponents/StyledTextInput";
+import StyledDateInput from "../../../StyledComponents/StyledDateInput";
+import StyledButton from "../../../StyledComponents/StyledButton";
 
 const MyProfile = () => {
   const [imagePreview, setImagePreview] = useState(null);
@@ -112,23 +115,33 @@ const MyProfile = () => {
 
   return (
     <Box>
-      <Card shadow="md" p={30} radius={"md"} bg={"#DDE5FF"}>
+      <Card shadow="lg" p={30} radius={"md"}>
         <Stack>
-          <Title mb={10} size={"lg"}>
+          <Title mb={10} size={"lg"} c="#5C00F2">
             My Profile
           </Title>
-          <Divider />
+          <Divider c="#5C00F2" />
           <Center>
             <Stack>
               <Center>
-                <Title size={30}>Name</Title>
+                <Title size={30} c="#5C00F2">
+                  Name
+                </Title>
               </Center>
               {imagePreview && (
                 <Avatar size={"xl"} src={imagePreview} radius="xl" />
               )}
               {imagePreview && (
                 <Center>
-                  <ActionIcon onClick={handleDeleteImage}>
+                  <ActionIcon
+                    onClick={handleDeleteImage}
+                    sx={{
+                      color: "#5C00F2",
+                      "&:hover": {
+                        backgroundColor: "#EBDFFF",
+                      },
+                    }}
+                  >
                     <IconX />
                   </ActionIcon>
                 </Center>
@@ -139,16 +152,26 @@ const MyProfile = () => {
             <Button
               variant="outline"
               compact
-              c={"black"}
-              styles={{ root: { borderColor: "black" } }}
+              styles={{
+                root: {
+                  borderColor: "#5C00F2",
+                  color: "#5C00F2",
+                  "&:hover": {
+                    backgroundColor: "#EBDFFF",
+                    color: "#5C00F2",
+                  },
+                },
+              }}
               onClick={() => imageInputRef.current.click()}
             >
               <Text c={"dimmed"}>Upload Image</Text>
             </Button>
             <Stack mt={30}>
               <Group>
-                <TextInput
-                  w={"90%"}
+                <StyledTextInput
+                  sx={{
+                    flexGrow: 1,
+                  }}
                   label="Email ID"
                   placeholder="your@email.com"
                   {...form.getInputProps("emailId")}
@@ -160,8 +183,10 @@ const MyProfile = () => {
               </Group>
 
               <Group>
-                <TextInput
-                  w={"90%"}
+                <StyledTextInput
+                  sx={{
+                    flexGrow: 1,
+                  }}
                   label="Mobile No"
                   placeholder="9876543210"
                   {...form.getInputProps("mobileNo")}
@@ -173,7 +198,7 @@ const MyProfile = () => {
                 </ActionIcon>
               </Group>
 
-              <DateInput
+              <StyledDateInput
                 valueFormat="DD MMM, YYYY"
                 maxDate={new Date()}
                 label="Date of Birth"
@@ -187,9 +212,7 @@ const MyProfile = () => {
                 onChange={handleImageUpload}
                 accept=".jpeg, .jpg, .png"
               />
-              <Button bg={"#4E70EA"} w={"100%"} type="submit">
-                Save
-              </Button>
+              <StyledButton type="submit">Save</StyledButton>
             </Stack>
           </form>
         </Stack>

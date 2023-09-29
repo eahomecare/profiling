@@ -34,17 +34,17 @@ const ProfileDataCard = () => {
   const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
 
   return (
-    <Card withBorder shadow={"xl"} radius={"md"} bg={"#DDE5FF"}>
+    <Card withBorder shadow={"xl"} radius={"md"} bg={"#EBDFFF"}>
       <Stack>
         <Group spacing={"xs"}>
           <Title size={"md"}>Total</Title>
-          <Title size={"md"} c={"blue"}>
+          <Title size={"md"} c={"#5C00F2"}>
             {totalValue}
           </Title>
         </Group>
         {data.map((entry, index) => (
           <Group
-            spacing={"10%"}
+            spacing={0}
             onMouseEnter={() => handleMouseEnter(entry.name)}
             onMouseLeave={handleMouseLeave}
           >
@@ -52,6 +52,16 @@ const ProfileDataCard = () => {
               <Avatar
                 key={entry.src}
                 src={assets[entry.src]}
+                sx={{
+                  transition: "transform 0.3s ease",
+                  transform:
+                    hoveredItem === entry.name ? "scale(1.1)" : "scale(1)",
+                  backgroundImage:
+                    hoveredItem === entry.name
+                      ? "radial-gradient(#000000 20% ,#5C0FF2)"
+                      : "none",
+                  // padding: hoveredItem === entry.name ? 5 : "none",
+                }}
                 radius={"xl"}
                 size={"lg"}
               />

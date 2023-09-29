@@ -123,7 +123,7 @@ export default function TableDisplay({
       {
         accessorFn: (row) =>
           !fetchedPofileCompleteness ? (
-            <Loader color="#4E70EA" type="dots" />
+            <Loader type={"dots"} color="#5C00F2" />
           ) : (
             profileCompletion(row.profile_completion)
           ),
@@ -153,10 +153,9 @@ export default function TableDisplay({
         <MaterialReactTable
           columns={columns}
           data={customerList}
-          // defaultColumn={{
-          //   minSize: 50,
-          //   maxSize: 100
-          // }}
+          defaultColumn={{
+            maxSize: 300,
+          }}
           enableColumnActions={false}
           enableDensityToggle={false}
           state={{ density: "compact" }}
@@ -170,7 +169,8 @@ export default function TableDisplay({
             sx: {
               borderRadius: "20px",
               backgroundColor:
-                theme.colorScheme == "light" ? "#DDE5FF" : "#25262B",
+                theme.colorScheme == "dark" ? "#25262B" : "white",
+              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
             },
           }}
           muiTableBodyRowProps={({ row }) => ({
@@ -193,12 +193,12 @@ export default function TableDisplay({
           }}
           muiTableHeadRowProps={{
             sx: {
-              backgroundColor: "#4E70EA30",
+              backgroundColor: "#EBDFFF",
             },
           }}
           muiTablePaginationProps={{
             sx: {
-              color: "#4E70EA",
+              color: "#5C00F2",
             },
           }}
           renderTopToolbarCustomActions={({ table }) => (
@@ -208,10 +208,10 @@ export default function TableDisplay({
               mt={10}
             >
               <Center>
-                <ActionIcon c={"#4E70EA"} size={"sm"}>
+                <ActionIcon c={"#5C00F2"} size={"sm"}>
                   <IconTableExport />
                 </ActionIcon>
-                <Text fw={"bold"} c={"#4E70EA"} size={"sm"}>
+                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
                   Export
                 </Text>
               </Center>
@@ -220,19 +220,19 @@ export default function TableDisplay({
           renderToolbarInternalActions={({ table }) => (
             <Box>
               <MRT_ToggleGlobalFilterButton
-                style={{ color: "#4E70EA" }}
+                style={{ color: "#5C00F2" }}
                 table={table}
               />
               <MRT_ToggleFiltersButton
-                style={{ color: "#4E70EA" }}
+                style={{ color: "#5C00F2" }}
                 table={table}
               />
               <MRT_ShowHideColumnsButton
-                style={{ color: "#4E70EA" }}
+                style={{ color: "#5C00F2" }}
                 table={table}
               />
               <MRT_FullScreenToggleButton
-                style={{ color: "#4E70EA" }}
+                style={{ color: "#5C00F2" }}
                 table={table}
               />
             </Box>
