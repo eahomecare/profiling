@@ -127,7 +127,7 @@ const DropdownRow = ({
         </ActionIcon>
       </div>
       <div className="col-12 col-lg-2">
-        {loadingState === "loading" && <Loader />}
+        {loadingState === "loading" && <Loader type={"dots"} color="#5C00F2" />}
         {loadingState === "error" && (
           <Flex>
             <ActionIcon c={"red"}>

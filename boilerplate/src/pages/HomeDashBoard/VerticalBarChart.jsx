@@ -12,6 +12,7 @@ import {
   LabelList,
   Legend,
 } from "recharts";
+import StyledSelect from "../../StyledComponents/StyledSelect";
 
 const renderCustomizedLabel = (props) => {
   const { content, ...rest } = props;
@@ -55,21 +56,10 @@ const VerticalBarChart = () => {
   return (
     <Stack>
       <Box>
-        <Select
+        <StyledSelect
           maw={320}
-          label={<Text c={"dimmed"}>Campaign(s)</Text>}
+          label={"Campaign(s)"}
           data={["All", ...campaignNames]}
-          transitionProps={{
-            transition: "pop-top-left",
-            duration: 80,
-            timingFunction: "ease",
-          }}
-          withinPortal
-          rightSection={
-            <ActionIcon>
-              <IconChevronDown />
-            </ActionIcon>
-          }
         />
       </Box>
       <Center>
