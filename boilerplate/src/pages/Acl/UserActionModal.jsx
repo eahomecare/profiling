@@ -152,7 +152,7 @@ const UserActionModal = ({
           opacity: 0.55,
           blur: 3,
         }}
-        size={"lg"}
+        size={"auto"}
       >
         <Grid>
           <Grid.Col span={2}>
@@ -189,7 +189,7 @@ const UserActionModal = ({
         </Grid>
 
         <Grid>
-          {/* <Grid.Col span={8}>
+          <Grid.Col span={12}>
             <Space h="xl" />
             <Title order={4} c="#4E70EA">
               User Permissions
@@ -233,8 +233,8 @@ const UserActionModal = ({
                 Save
               </Button>
             )}
-          </Grid.Col> */}
-          <Grid.Col span={12}>
+          </Grid.Col>
+          {/* <Grid.Col span={4}>
             <Space h="xl" />
             <Title order={4} c="#4E70EA">
               User activity
@@ -280,7 +280,7 @@ const UserActionModal = ({
                 </Text>
               </Timeline.Item>
             </Timeline>
-          </Grid.Col>
+          </Grid.Col> */}
         </Grid>
       </Modal>
     </>

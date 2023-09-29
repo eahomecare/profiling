@@ -176,7 +176,7 @@ const Users = () => {
           email: data.email,
           isactive: "active",
           role: data.role.name,
-          permissions: userPermissionsDict[data.id].join(" / "),
+          // permissions: userPermissionsDict[data.id].join(" / "),
           created_at: formatDate(data.created_at),
         }))
       : [];
@@ -186,7 +186,7 @@ const Users = () => {
         <tr key={row.id}>
           <td>{row.email}</td>
           <td>{row.role}</td>
-          <td>{row.permissions}</td>
+          {/* <td>{row.permissions}</td> */}
           <td>
             <Button color="teal" size="xs" compact>
               {row.isactive}
@@ -335,9 +335,9 @@ const Users = () => {
                             <th>
                               <Text color="white">Role</Text>
                             </th>
-                            <th>
+                            {/* <th>
                               <Text color="white">Permissions</Text>
-                            </th>
+                            </th> */}
                             <th>
                               <Text color="white">Status</Text>
                             </th>
