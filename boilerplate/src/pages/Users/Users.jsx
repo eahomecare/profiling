@@ -230,7 +230,9 @@ const Users = () => {
       <LoadingOverlay
         visible
         overlayBlur={2}
+        overlayColor={"#EBDFFF"}
         loaderProps={{
+          color: "#5C0FF2",
           size: "xl",
           variant: "dots",
         }}

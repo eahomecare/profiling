@@ -80,7 +80,7 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
             transition: "transform 0.3s ease, background-color 0.3s ease",
             "&:hover": {
               transform: "scale(0.99)",
-              backgroundColor: "#00000010",
+              backgroundColor: "#EBDFFF90",
             },
           },
         })}
