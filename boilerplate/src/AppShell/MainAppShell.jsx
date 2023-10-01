@@ -47,9 +47,15 @@ const useStyles = createStyles((theme) => ({
         theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
       color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
     },
+    "&:focus": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+      outline: "none",
+    },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F290",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -356,12 +362,14 @@ const MainAppShell = ({ children }) => {
               paddingLeft: "10px",
               paddingRight: "20px",
               marginTop: "20px",
+              backgroundColor: "transparent",
             }}
           >
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
+                backgroundColor: "transparent",
               }}
             ></div>
             {children}

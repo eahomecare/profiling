@@ -29,19 +29,24 @@ export const fetchProfileData = createAsyncThunk(
 const initialState = {
   hoveredItem: null,
   data: [
-    { name: "Techies", value: 21244, color: "#DE8965", src: "Techie" },
-    { name: "Foodies", value: 35242, color: "#D85972", src: "Foodie" },
+    { name: "Techies", value: 21244, color: "#DE896599", src: "Techie" },
+    { name: "Foodies", value: 35242, color: "#D8597299", src: "Foodie" },
     {
       name: "Fitness Freaks",
       value: 13123,
-      color: "#2745D9",
+      color: "#2745D999",
       src: "Fitness Freak",
     },
-    { name: "Sports Fans", value: 12320, color: "#1D9825", src: "Sports Fan" },
+    {
+      name: "Sports Fans",
+      value: 12320,
+      color: "#1D982599",
+      src: "Sports Fan",
+    },
     {
       name: "Avid Travelers",
       value: 13243,
-      color: "purple",
+      color: "#80008099",
       src: "Avid Traveler",
     },
   ],
