@@ -2,9 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import EmailQueue from './services/email.service';
 import QueueServices from './services/queue.service';
-
+import UserService from './services/user.service';
 
 const app = express();
+const userService = new UserService(); // Instantiate the user service
+
 
 const queueOpts = {
   limiter: {
@@ -40,6 +42,29 @@ app.post('/process', async (req, res) => {
     res.status(200).json({ message: 'SMS task added to the queue.' });
   } else {
     res.status(400).json({ message: 'Unsupported service_type.' });
+  }
+});
+
+
+app.post('/signup', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    await userService.createUser(username, email, password);
+    res.status(201).json({ message: 'User registered successfully.' });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ message: "failed" });
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const { token, user } = await userService.loginUser(username, password);
+    res.status(200).json({ token, user });
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ message: "failed" });
   }
 });
 
