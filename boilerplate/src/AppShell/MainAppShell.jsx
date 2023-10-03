@@ -47,9 +47,15 @@ const useStyles = createStyles((theme) => ({
         theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
       color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
     },
+    "&:focus": {
+      backgroundColor:
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+      outline: "none",
+    },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F290",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -111,6 +117,14 @@ const MainAppShell = ({ children }) => {
     setActiveNavLink(pathname);
   }, [location.pathname]);
 
+  //For Navbar entry
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true);
+    }, 500);
+  }, []);
+
   return (
     <>
       <Header
@@ -151,6 +165,20 @@ const MainAppShell = ({ children }) => {
           radius={"md"}
           w={"290px"}
           bg={theme.colorScheme == "dark" ? "" : "#FFFFFF"}
+          sx={{
+            boxShadow: `
+    rgba(92, 0, 242, 0.17) 0px -23px 25px 0px inset,
+    rgba(92, 0, 242, 0.15) 0px -36px 30px 0px inset,
+    rgba(92, 0, 242, 0.1) 0px -79px 40px 0px inset,
+    rgba(92, 0, 242, 0.06) 0px 2px 1px,
+    rgba(92, 0, 242, 0.09) 0px 4px 2px,
+    rgba(92, 0, 242, 0.09) 0px 8px 4px,
+    rgba(92, 0, 242, 0.09) 0px 16px 8px,
+    rgba(92, 0, 242, 0.09) 0px 32px 16px
+`,
+            transform: isMounted ? "translateX(0%)" : "translateX(-100%)",
+            transition: "transform 0.6s ease-out",
+          }}
         >
           <Navbar
             className={classes.stickyNavbar}
@@ -170,6 +198,10 @@ const MainAppShell = ({ children }) => {
                   styles={{
                     root: {
                       boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
                     },
                   }}
                   component={Link}
@@ -186,6 +218,10 @@ const MainAppShell = ({ children }) => {
                   styles={{
                     root: {
                       boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
                     },
                   }}
                   component={Link}
@@ -202,6 +238,10 @@ const MainAppShell = ({ children }) => {
                   styles={{
                     root: {
                       boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
                     },
                   }}
                   component={Link}
@@ -216,6 +256,10 @@ const MainAppShell = ({ children }) => {
                     styles={{
                       root: {
                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(5px)",
+                        },
                       },
                     }}
                     component={Link}
@@ -228,6 +272,10 @@ const MainAppShell = ({ children }) => {
                     styles={{
                       root: {
                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(5px)",
+                        },
                       },
                     }}
                     component={Link}
@@ -240,6 +288,10 @@ const MainAppShell = ({ children }) => {
                     styles={{
                       root: {
                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "translateY(5px)",
+                        },
                       },
                     }}
                     component={Link}
@@ -249,13 +301,16 @@ const MainAppShell = ({ children }) => {
                     className={classes.link}
                   />
                 </NavLink>
-                
               )}
               {hasPermission(userPermissions, "campaign_dashoard") && (
                 <NavLink
                   styles={{
                     root: {
                       boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
                     },
                   }}
                   component={Link}
@@ -272,6 +327,10 @@ const MainAppShell = ({ children }) => {
                   styles={{
                     root: {
                       boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
                     },
                   }}
                   component={Link}
@@ -303,12 +362,14 @@ const MainAppShell = ({ children }) => {
               paddingLeft: "10px",
               paddingRight: "20px",
               marginTop: "20px",
+              backgroundColor: "transparent",
             }}
           >
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
+                backgroundColor: "transparent",
               }}
             ></div>
             {children}
