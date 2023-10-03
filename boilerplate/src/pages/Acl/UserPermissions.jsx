@@ -1,32 +1,24 @@
-// ... (rest of the imports)
 import {
   ActionIcon,
-  AppShell,
   Box,
   Button,
   Center,
   Container,
-  createStyles,
   Flex,
   LoadingOverlay,
-  rem,
-  ScrollArea,
-  Table,
-  Text,
   Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconSettings } from "@tabler/icons-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { addUser } from "../../redux/authSlice";
 import { getAllRolesPermissionsMappings } from "../../redux/rolesPermissionSlice";
+import StyledButton from "../../StyledComponents/StyledButton";
+import StyledTable from "../../StyledComponents/StyledTable";
 import AddUserModal from "./AddUserModal";
 import UserActionModal from "./UserActionModal";
-import StyledTable from "../../StyledComponents/StyledTable";
 
-// ... (rest of the code)
 function showNotification(prop) {
   notifications.show({
     title: "Success",
@@ -50,39 +42,8 @@ function showNotification(prop) {
 }
 
 const UserPermissions = ({ initialData }) => {
-  // ... (rest of the code)
-  const useStyles = createStyles((theme) => ({
-    header: {
-      position: "sticky",
-      top: 0,
-      backgroundColor: "#4E70EA",
-      fontColor: "red",
-      transition: "box-shadow 150ms ease",
-
-      "&::after": {
-        content: '""',
-        position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        borderBottom: `${rem(1)} solid ${
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[3]
-            : theme.colors.gray[2]
-        }`,
-      },
-    },
-
-    scrolled: {
-      boxShadow: theme.shadows.sm,
-    },
-  }));
-
-  const { classes, cx } = useStyles();
-  const [scrolled, setScrolled] = useState(false);
   const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
   const [isUserActionModalOpen, setUserActionModalOpen] = useState(false);
-  const location = useLocation();
   const dispatch = useDispatch();
   const { rolesPermissions, roles, permissions } = useSelector(
     (state) => state.rolePermission,
@@ -162,7 +123,6 @@ const UserPermissions = ({ initialData }) => {
     },
   ];
 
-  // ... (rest of the code)
   const rolesData =
     roles &&
     Array.isArray(roles) &&
@@ -211,78 +171,74 @@ const UserPermissions = ({ initialData }) => {
   } else {
     return (
       <>
-        <AppShell padding="md">
-          <Box
-            sx={{
-              backgroundColor: "#DDE5FF",
-              padding: "50px",
-              marginTop: "-80px",
-            }}
-          >
-            <div style={{ display: "flex" }}>
-              <span style={{ flexGrow: "1", width: "100px" }}>
-                <div style={{ padding: "10px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: "20px",
-                      marginTop: "-65px",
-                    }}
-                  >
-                    <span style={{ padding: "10px" }}>
-                      <Title pl={5}>Users Permisssions</Title>
-                    </span>
-                    <span>
-                      <Container>
-                        <Center>
-                          <Flex mt={5}>
-                            <Button
-                              className="mt-4"
-                              onClick={handleAddUserModal}
-                              style={{
-                                backgroundColor: "black",
-                                fontColor: "white",
-                              }}
-                            >
-                              + Create User
-                            </Button>
-                            <AddUserModal
-                              isModalOpen={isAddUserModalOpen}
-                              handleAddUser={handleAddUser}
-                              handleModalClose={handleModalClose}
-                              userDetails={userDetails}
-                              setUserDetails={setUserDetails}
-                              rolesData={rolesData}
-                            />
-                          </Flex>
-                        </Center>
-                      </Container>
-                    </span>
-                  </div>
-
-                  {isUserActionModalOpen && (
-                    <UserActionModal
-                      isModalOpen={isUserActionModalOpen}
-                      handleModalClose={handleModalClose}
-                      curr_user={curr_user}
-                      userRolesPermissions={userRolesPermissions}
-                      userPermissionsOptions={userPermissionsOptions}
-                      classes={classes}
-                      cx={cx}
-                    />
-                  )}
-
-                  <StyledTable
-                    columns={columns}
-                    data={initialData}
-                    onRowClick={(row) => console.log("Row clicked:", row)}
-                  />
+        <Box
+          sx={{
+            backgroundColor: "#DDE5FF",
+            padding: "50px",
+            marginTop: "-80px",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <span style={{ flexGrow: "1", width: "100px" }}>
+              <div style={{ padding: "10px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "20px",
+                    marginTop: "-65px",
+                  }}
+                >
+                  <span style={{ padding: "10px" }}>
+                    <Title pl={5}>Users Permisssions</Title>
+                  </span>
+                  <span>
+                    <Container>
+                      <Center>
+                        <Flex mt={5}>
+                          <StyledButton
+                            className="mt-4"
+                            onClick={handleAddUserModal}
+                            style={{
+                              backgroundColor: "black",
+                              fontColor: "white",
+                            }}
+                          >
+                            + Create User
+                          </StyledButton>
+                          <AddUserModal
+                            isModalOpen={isAddUserModalOpen}
+                            handleAddUser={handleAddUser}
+                            handleModalClose={handleModalClose}
+                            userDetails={userDetails}
+                            setUserDetails={setUserDetails}
+                            rolesData={rolesData}
+                          />
+                        </Flex>
+                      </Center>
+                    </Container>
+                  </span>
                 </div>
-              </span>
-            </div>
-          </Box>
-        </AppShell>
+
+                {isUserActionModalOpen && (
+                  <UserActionModal
+                    isModalOpen={isUserActionModalOpen}
+                    handleModalClose={handleModalClose}
+                    curr_user={curr_user}
+                    userRolesPermissions={userRolesPermissions}
+                    userPermissionsOptions={userPermissionsOptions}
+                  />
+                )}
+
+                <StyledTable
+                  columns={columns}
+                  data={initialData}
+                  onRowClick={(row) => console.log("Row clicked:", row)}
+                />
+              </div>
+            </span>
+          </div>
+        </Box>
       </>
     );
   }
