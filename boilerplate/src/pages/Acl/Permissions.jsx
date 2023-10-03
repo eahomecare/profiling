@@ -1,42 +1,75 @@
-import React, { useState } from 'react';
-import { ScrollArea, Table, Title, Button } from '@mantine/core';
-import { ActionIcon } from '@mantine/core';
-import { IconSettings } from '@tabler/icons-react';
+import { ActionIcon, Flex, Title } from "@mantine/core";
+import { IconSettings } from "@tabler/icons-react";
+import StyledButton from "../../StyledComponents/StyledButton";
+import StyledTable from "../../StyledComponents/StyledTable";
 
-const Permissions = ({ useStyles, initialData, title }) => {
+function Permissions({ initialData, title }) {
+  const permissionsData = initialData.map((row) => ({
+    id: row.id,
+    name: row.name,
+    isactive: row.isactive,
+    created_at: row.created_at,
+  }));
 
-    const { classes, cx } = useStyles();
-    const [scrolled, setScrolled] = useState(false);
+  const columns = [
+    {
+      header: "Name",
+      accessorKey: "name",
+    },
+    {
+      header: "Status",
+      accessorKey: "isactive",
+      Cell: ({ value }) => (
+        <StyledButton c="teal" size="xs" compact>
+          {value}
+        </StyledButton>
+      ),
+    },
+    {
+      header: "Created At",
+      accessorKey: "created_at",
+    },
+    {
+      header: "Action",
+      accessorKey: "action",
+      Cell: () => {
+        const handleActionClick = () => {
+          console.log("Icon in the Action column clicked!");
+        };
 
-    const rows = initialData.map((row) => (
-        <tr key={row.id}>
-            <td>{row.name}</td>
-            <td><Button color='teal' size="xs" compact>{row.isactive}</Button></td>
-            <td>{row.created_at}</td>
-            <td><ActionIcon variant="light"><IconSettings size="1rem" /></ActionIcon></td>
-        </tr>
-    ));
+        return (
+          <ActionIcon variant="light" onClick={handleActionClick}>
+            <IconSettings size="1rem" />
+          </ActionIcon>
+        );
+      },
+    },
+  ];
 
-    return (
-        <>
-            <Title style={{ padding: "10px" }} order={4} color="blue.5">{title}</Title>
-
-            <ScrollArea h={600} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                <Table miw={700} striped withBorder highlightOnHover withColumnBorders>
-                    <thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                        <tr>
-                            <th>Name</th>
-                            <th>Status</th>
-                            <th>Created At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>{rows}</tbody>
-                </Table>
-            </ScrollArea>
-        </>
-
-    );
+  return (
+    <>
+      <Title style={{ padding: "10px" }} order={4} color="blue.5">
+        {title}
+      </Title>
+      <StyledTable
+        columns={columns}
+        data={permissionsData}
+        onRowClick={(row) => console.log("Row clicked:", row)}
+        topProps={() => (
+          <Flex>
+            <StyledButton
+              compact
+              onClick={() => {
+                console.log("Create Permission clicked!");
+              }}
+            >
+              Create Permission
+            </StyledButton>
+          </Flex>
+        )}
+      />
+    </>
+  );
 }
 
 export default Permissions;
