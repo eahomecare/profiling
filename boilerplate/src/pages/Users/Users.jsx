@@ -232,6 +232,7 @@ const Users = () => {
   };
 
   const handleAddUserModal = () => {
+    console.log("hi");
     setAddUserModalOpen(true);
   };
 
