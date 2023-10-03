@@ -48,8 +48,8 @@ const StyledSelect = (props) => {
       {...props}
       withinPortal
       transitionProps={{
-        transition: "pop-top-left",
-        duration: 200,
+        transition: "scale-y",
+        duration: 500,
         timingFunction: "ease",
       }}
       styles={{ ...defaultStyles, ...props.styles }}

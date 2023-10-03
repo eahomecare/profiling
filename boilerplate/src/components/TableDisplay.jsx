@@ -1,28 +1,10 @@
-/* eslint-disable react/jsx-pascal-case */
 import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCurrentCustomer } from "../redux/customerSlice";
 
-import {
-  MRT_FullScreenToggleButton,
-  MRT_ShowHideColumnsButton,
-  MRT_ToggleFiltersButton,
-  MRT_ToggleGlobalFilterButton,
-  MaterialReactTable,
-} from "material-react-table";
-import { ThemeProvider, createTheme } from "@mui/material";
-import {
-  RingProgress,
-  Text,
-  Box,
-  Center,
-  ActionIcon,
-  useMantineTheme,
-  Loader,
-} from "@mantine/core";
-import { mkConfig, generateCsv, download } from "export-to-csv";
-import { IconTableExport } from "@tabler/icons-react";
+import { RingProgress, Text, Box, Loader } from "@mantine/core";
+import StyledTable from "../StyledComponents/StyledTable";
 
 export default function TableDisplay({
   customerList,
@@ -30,38 +12,6 @@ export default function TableDisplay({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const csvConfig = mkConfig({
-    useKeysAsHeaders: true,
-    filename: "exported_customers",
-  });
-
-  const handleExportRows = (rows) => {
-    const csv = generateCsv(csvConfig)(rows.map((row) => row.original));
-    download(csvConfig)(csv);
-  };
-
-  const theme = useMantineTheme();
-
-  const localTheme = createTheme({
-    shadows: Array(25)
-      .fill("none")
-      .map((_, i) =>
-        i === 2
-          ? "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)"
-          : "none",
-      ),
-    spacing: (factor) => `${0.25 * factor}rem`,
-    palette: {
-      background: {
-        default: "#00000000",
-        // theme.colorScheme == "light" ? "#F1F5F9" : "#25262B",
-      },
-      text: {
-        primary: theme.colorScheme == "light" ? "#0E0E0F" : "#A6A7AB",
-      },
-    },
-  });
 
   const profileCompletion = (percentage) => {
     return (
@@ -90,7 +40,7 @@ export default function TableDisplay({
     );
   };
 
-  const buttonClick = (customer) => {
+  const handleRowClick = (customer) => {
     navigate("/dashboard");
     dispatch(setCurrentCustomer(customer));
   };
@@ -130,115 +80,17 @@ export default function TableDisplay({
         id: "profileCompletion",
         header: "Profile Completion",
       },
-      // {
-      //   id: 'action',
-      //   header: '',
-      //   Cell: ({ row }) => (
-      //     <Button
-      //       variant={'gradient'}
-      //       gradient={{ from: 'indigo', to: 'cyan' }}
-      //       onClick={() => buttonClick(row.original)}
-      //     >
-      //       View
-      //     </Button>
-      //   ),
-      // }
     ],
     [fetchedPofileCompleteness],
   );
 
   return (
     <Box>
-      <ThemeProvider theme={localTheme}>
-        <MaterialReactTable
-          columns={columns}
-          data={customerList}
-          defaultColumn={{
-            maxSize: 300,
-          }}
-          enableColumnActions={false}
-          enableDensityToggle={false}
-          state={{ density: "compact" }}
-          initialState={{ density: "compact" }}
-          muiTableProps={{
-            sx: {
-              tableLayout: "fixed",
-            },
-          }}
-          muiTablePaperProps={{
-            sx: {
-              borderRadius: "20px",
-              backgroundColor:
-                theme.colorScheme == "dark" ? "#25262B" : "white",
-              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-            },
-          }}
-          muiTableBodyRowProps={({ row }) => ({
-            onClick: () => buttonClick(row.original),
-            sx: {
-              cursor: "pointer",
-              transition: "transform 0.3s ease, background-color 0.3s ease",
-              "&:hover": {
-                transform: "scale(0.99)",
-                backgroundColor: "#00000010",
-              },
-            },
-          })}
-          muiTableBodyCellProps={{
-            sx: {
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            },
-          }}
-          muiTableHeadRowProps={{
-            sx: {
-              backgroundColor: "#EBDFFF",
-            },
-          }}
-          muiTablePaginationProps={{
-            sx: {
-              color: "#5C00F2",
-            },
-          }}
-          renderTopToolbarCustomActions={({ table }) => (
-            <Box
-              onClick={() => handleExportRows(table.getRowModel().rows)}
-              sx={{ cursor: "pointer" }}
-              mt={10}
-            >
-              <Center>
-                <ActionIcon c={"#5C00F2"} size={"sm"}>
-                  <IconTableExport />
-                </ActionIcon>
-                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
-                  Export
-                </Text>
-              </Center>
-            </Box>
-          )}
-          renderToolbarInternalActions={({ table }) => (
-            <Box>
-              <MRT_ToggleGlobalFilterButton
-                style={{ color: "#5C00F2" }}
-                table={table}
-              />
-              <MRT_ToggleFiltersButton
-                style={{ color: "#5C00F2" }}
-                table={table}
-              />
-              <MRT_ShowHideColumnsButton
-                style={{ color: "#5C00F2" }}
-                table={table}
-              />
-              <MRT_FullScreenToggleButton
-                style={{ color: "#5C00F2" }}
-                table={table}
-              />
-            </Box>
-          )}
-        />
-      </ThemeProvider>
+      <StyledTable
+        columns={columns}
+        data={customerList}
+        onRowClick={handleRowClick}
+      />
     </Box>
   );
 }

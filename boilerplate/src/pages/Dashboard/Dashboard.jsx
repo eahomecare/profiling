@@ -98,11 +98,7 @@ const Dashboard = () => {
           </Grid.Col>
 
           <Grid.Col span={9}>
-            <Card
-              shadow={"lg"}
-              bg={theme.colorScheme == "light" ? "#F1F5F9" : ""}
-              radius={"md"}
-            >
+            <Card shadow={"lg"} radius={"md"}>
               <Routes>
                 <Route>
                   <Route
