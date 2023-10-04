@@ -1,23 +1,56 @@
 import {
-  ActionIcon,
-  Box,
+  Modal,
+  Navbar,
+  AppShell,
+  MultiSelect,
   Button,
+  ActionIcon,
   Center,
   Container,
   Flex,
+  Group,
+  Header,
   LoadingOverlay,
+  Space,
+  Stack,
+  Text,
+  TextInput,
   Title,
+  Box,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
-import { IconSettings } from "@tabler/icons-react";
-import { useState } from "react";
+import {
+  Icon3dCubeSphere,
+  IconAdjustmentsHorizontal,
+  IconAnalyze,
+  IconArrowAutofitUp,
+  IconArrowBadgeDown,
+  IconArrowBadgeUp,
+  IconBlade,
+  IconChevronLeft,
+  IconChevronRight,
+  IconLayoutAlignBottom,
+  IconSearch,
+  IconSettings,
+} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../../redux/authSlice";
-import { getAllRolesPermissionsMappings } from "../../redux/rolesPermissionSlice";
-import StyledButton from "../../StyledComponents/StyledButton";
-import StyledTable from "../../StyledComponents/StyledTable";
+import {
+  getAllRolesPermissionsMappings,
+  getAllPermissions,
+  getAllRoles,
+} from "../../redux/rolesPermissionSlice";
+import { Table } from "@mantine/core";
+import { createStyles, ScrollArea, rem } from "@mantine/core";
+import { getUsers, addUser } from "../../redux/authSlice";
+import { useLocation } from "react-router-dom";
 import AddUserModal from "./AddUserModal";
 import UserActionModal from "./UserActionModal";
+import { notifications } from "@mantine/notifications";
+
+function formatDate(dateString) {
+  const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
 
 function showNotification(prop) {
   notifications.show({
@@ -25,6 +58,7 @@ function showNotification(prop) {
     message: prop,
     styles: (theme) => ({
       root: {
+        backgroundColor: "#4E70EA",
         borderColor: theme.colors.blue[6],
 
         "&::before": { backgroundColor: theme.white },
@@ -41,8 +75,37 @@ function showNotification(prop) {
 }
 
 const UserPermissions = ({ initialData }) => {
+  const useStyles = createStyles((theme) => ({
+    header: {
+      position: "sticky",
+      top: 0,
+      backgroundColor: "#4E70EA",
+      fontColor: "red",
+      transition: "box-shadow 150ms ease",
+
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderBottom: `${rem(1)} solid ${theme.colorScheme === "dark"
+            ? theme.colors.dark[3]
+            : theme.colors.gray[2]
+          }`,
+      },
+    },
+
+    scrolled: {
+      boxShadow: theme.shadows.sm,
+    },
+  }));
+
+  const { classes, cx } = useStyles();
+  const [scrolled, setScrolled] = useState(false);
   const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
   const [isUserActionModalOpen, setUserActionModalOpen] = useState(false);
+  const location = useLocation();
   const dispatch = useDispatch();
   const { rolesPermissions, roles, permissions } = useSelector(
     (state) => state.rolePermission,
@@ -84,6 +147,7 @@ const UserPermissions = ({ initialData }) => {
     setUserActionModalOpen(true);
   };
 
+
   const userRolesPermissions =
     curr_user &&
     rolesPermissions.filter((item) => item.userId === curr_user.id);
@@ -97,30 +161,27 @@ const UserPermissions = ({ initialData }) => {
     });
   }
 
-  const columns = [
-    { header: "Email", accessorKey: "email" },
-    { header: "Role", accessorKey: "role" },
-    { header: "Permissions", accessorKey: "permissions" },
-    {
-      header: "Status",
-      accessorKey: "isactive",
-      Cell: ({ value }) => (
-        <Button color="teal" size="xs" compact>
-          {value}
-        </Button>
-      ),
-    },
-    { header: "Created At", accessorKey: "created_at" },
-    {
-      header: "Action",
-      accessorKey: "action",
-      Cell: ({ row }) => (
-        <ActionIcon variant="light" onClick={() => handleUserActionModal(row)}>
-          <IconSettings size="1rem" />
-        </ActionIcon>
-      ),
-    },
-  ];
+
+  const rows = Array.isArray(initialData)
+    ? initialData.map((row) => (
+      <tr key={row.id}>
+        <td>{row.email}</td>
+        <td>{row.role}</td>
+        <td>{row.permissions}</td>
+        <td>
+          <Button color="teal" size="xs" compact>
+            {row.isactive}
+          </Button>
+        </td>
+        <td>{row.created_at}</td>
+        <td onClick={() => handleUserActionModal(row)}>
+          <ActionIcon variant="light">
+            <IconSettings size="1rem" />
+          </ActionIcon>
+        </td>
+      </tr>
+    ))
+    : [];
 
   const rolesData =
     roles &&
@@ -170,49 +231,114 @@ const UserPermissions = ({ initialData }) => {
   } else {
     return (
       <>
-        <Box>
-          <div style={{ display: "flex" }}>
-            <span>
-              <Container>
-                <Center>
-                  <Flex mt={5}>
-                    <AddUserModal
-                      isModalOpen={isAddUserModalOpen}
-                      handleAddUser={handleAddUser}
-                      handleModalClose={handleModalClose}
-                      userDetails={userDetails}
-                      setUserDetails={setUserDetails}
-                      rolesData={rolesData}
-                    />
-                  </Flex>
-                </Center>
-              </Container>
-            </span>
-          </div>
+        <AppShell padding="md">
+          <Box
+            sx={{
+              backgroundColor: "#DDE5FF",
+              padding: "50px",
+              marginTop: "-80px",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <span style={{ flexGrow: "1", width: "100px" }}>
+                <div style={{ padding: "10px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "20px",
+                      marginTop: "-65px",
+                    }}
+                  >
+                    <span style={{ padding: "10px" }}>
+                      <Title pl={5}>Users Permisssions</Title>
+                    </span>
+                    <span>
+                      <Container>
+                        <Center>
+                          <Flex mt={5}>
+                            <Button
+                              className="mt-4"
+                              onClick={handleAddUserModal}
+                              style={{
+                                backgroundColor: "black",
+                                fontColor: "white",
+                              }}
+                            >
+                              + Create User
+                            </Button>
 
-          {isUserActionModalOpen && (
-            <UserActionModal
-              isModalOpen={isUserActionModalOpen}
-              handleModalClose={handleModalClose}
-              curr_user={curr_user}
-              userRolesPermissions={userRolesPermissions}
-              userPermissionsOptions={userPermissionsOptions}
-            />
-          )}
+                            <AddUserModal
+                              isModalOpen={isAddUserModalOpen}
+                              handleAddUser={handleAddUser}
+                              handleModalClose={handleModalClose}
+                              userDetails={userDetails}
+                              setUserDetails={setUserDetails}
+                              rolesData={rolesData}
+                            />
+                          </Flex>
+                        </Center>
+                      </Container>
+                    </span>
+                  </div>
+                  <div>
+                    {isUserActionModalOpen && (
+                      <UserActionModal
+                        isModalOpen={isUserActionModalOpen}
+                        handleModalClose={handleModalClose}
+                        curr_user={curr_user}
+                        userRolesPermissions={userRolesPermissions}
+                        userPermissionsOptions={userPermissionsOptions}
+                        classes={classes}
+                        cx={cx}
+                      />
+                    )}
 
-          <StyledTable
-            columns={columns}
-            data={initialData}
-            onRowClick={(row) => console.log("Row clicked:", row)}
-            topProps={() => (
-              <Flex>
-                <StyledButton onClick={handleAddUserModal}>
-                  + Create User
-                </StyledButton>
-              </Flex>
-            )}
-          />
-        </Box>
+                    <ScrollArea
+                      h={600}
+                      onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
+                    >
+                      <Table
+                        miw={700}
+                        withBorder
+                        highlightOnHover
+                        withColumnBorders
+                      >
+                        <thead
+                          className={cx(classes.header, {
+                            [classes.scrolled]: scrolled,
+                          })}
+                        >
+                          <tr>
+                            <th>
+                              <Text color="white">Email</Text>
+                            </th>
+                            <th>
+                              <Text color="white">Role</Text>
+                            </th>
+                            <th>
+                              <Text color="white">Permissions</Text>
+                            </th>
+                            <th>
+                              <Text color="white">Status</Text>
+                            </th>
+                            <th>
+                              <Text color="white">Created At</Text>
+                            </th>
+                            <th>
+                              <Text color="white">Action</Text>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                      </Table>
+                    </ScrollArea>
+                  </div>
+                </div>
+              </span>
+            </div>
+          </Box>
+        </AppShell>
       </>
     );
   }
