@@ -5,6 +5,7 @@ import {
   Flex,
   LoadingOverlay,
   rem,
+  Text
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconSettings } from "@tabler/icons-react";
@@ -19,6 +20,9 @@ import {
 import StyledButton from "../../StyledComponents/StyledButton";
 import StyledTable from "../../StyledComponents/StyledTable";
 import UserActionModal from "./UserActionModal";
+import EditUserInfoModal from "./EditUserInfoModal";
+import { Link } from "react-router-dom";
+
 
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
@@ -62,11 +66,10 @@ const Users = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        borderBottom: `${rem(1)} solid ${
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[3]
-            : theme.colors.gray[2]
-        }`,
+        borderBottom: `${rem(1)} solid ${theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+          }`,
       },
     },
 
@@ -78,6 +81,10 @@ const Users = () => {
   const { classes, cx } = useStyles();
   const [isAddUserModalOpen, setAddUserModalOpen] = useState(false);
   const [isUserActionModalOpen, setUserActionModalOpen] = useState(false);
+  const [isEditUserModalOpen, setEditUserModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+
+
   const dispatch = useDispatch();
   const { rolesPermissions, roles, permissions } = useSelector(
     (state) => state.rolePermission,
@@ -119,6 +126,12 @@ const Users = () => {
     setUserActionModalOpen(true);
   };
 
+  const handleEditUserModal = (selected_user) => {
+    setEditingUser(selected_user);
+    setEditUserModalOpen(true);
+  };
+
+
   useEffect(() => {
     dispatch(getAllRolesPermissionsMappings());
     dispatch(getUsers());
@@ -141,19 +154,32 @@ const Users = () => {
   const initialData =
     Object.keys(userPermissionsDict).length > 0
       ? users.map((data) => ({
-          id: data.id,
-          roleId: data.roleId,
-          email: data.email,
-          isactive: "active",
-          role: data.role.name,
-          created_at: formatDate(data.created_at),
-        }))
+        id: data.id,
+        roleId: data.roleId,
+        email: data.email,
+        isactive: "active",
+        role: data.role.name,
+        created_at: formatDate(data.created_at),
+      }))
       : [];
 
   const columns = [
     {
       header: "Email",
       accessorKey: "email",
+      Cell: ({ row, column }) => {
+        const handleActionClick = (e) => {
+          e.preventDefault();
+          if (column.id === "email") {
+            handleUserActionModal(row.original);
+          }
+        };
+        return (
+          <Text variant="light" onClick={handleActionClick}>
+            {row.original.email}
+          </Text>
+        );
+      },
     },
     {
       header: "Role",
@@ -179,7 +205,7 @@ const Users = () => {
         const handleActionClick = (e) => {
           e.preventDefault();
           if (column.id === "action") {
-            handleUserActionModal(row.original);
+            handleEditUserModal(row.original);
           }
         };
 
@@ -225,6 +251,12 @@ const Users = () => {
     }
   };
 
+
+  const handleEditUser = (updatedUserData) => {
+    setEditUserModalOpen(false);
+    showNotification("User data updated successfully");
+  };
+
   if (!users || users.length === 0) {
     return (
       <LoadingOverlay
@@ -264,6 +296,13 @@ const Users = () => {
             cx={cx}
           />
         )}
+        <EditUserInfoModal
+          isModalOpen={isEditUserModalOpen}
+          handleModalClose={() => setEditUserModalOpen(false)}
+          handleEditUser={handleEditUser} // Pass a function to handle the edit action
+          userData={editingUser} // Pass the user data to prepopulate the modal
+          rolesData={rolesData} // Pass the roles data as needed
+        />
       </>
     );
   }
