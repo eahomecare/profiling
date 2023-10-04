@@ -48,9 +48,6 @@ const useStyles = createStyles((theme) => ({
       color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
     },
     "&:focus": {
-      backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
       outline: "none",
     },
     "&:hover": {

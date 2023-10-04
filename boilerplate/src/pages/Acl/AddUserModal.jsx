@@ -10,6 +10,10 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconCalendar } from "@tabler/icons-react";
+import StyledTextInput from "../../StyledComponents/StyledTextInput";
+import StyledDateInput from "../../StyledComponents/StyledDateInput";
+import StyledSelect from "../../StyledComponents/StyledSelect";
+import StyledButton from "../../StyledComponents/StyledButton";
 
 const AddUserModal = ({
   isModalOpen,
@@ -27,7 +31,7 @@ const AddUserModal = ({
       style={{ content: { maxHeight: "80vh" } }}
     >
       <SimpleGrid cols={2}>
-        <TextInput
+        <StyledTextInput
           placeholder="First Name"
           label="First Name"
           value={userDetails.firstname}
@@ -38,7 +42,7 @@ const AddUserModal = ({
           required
         />
 
-        <TextInput
+        <StyledTextInput
           placeholder="Last Name"
           label="Last Name"
           value={userDetails.lastname}
@@ -49,7 +53,7 @@ const AddUserModal = ({
         />
       </SimpleGrid>
 
-      <TextInput
+      <StyledTextInput
         placeholder="Email"
         label="Email"
         value={userDetails.email}
@@ -61,7 +65,7 @@ const AddUserModal = ({
         type="email"
       />
 
-      <TextInput
+      <StyledTextInput
         placeholder="Mobile"
         label="Mobile"
         value={userDetails.mobile}
@@ -71,7 +75,27 @@ const AddUserModal = ({
         }
       />
 
-      <TextInput
+      <StyledTextInput
+        placeholder="State"
+        label="State"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledTextInput
+        placeholder="City"
+        label="City"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledTextInput
         placeholder="Address"
         label="Address"
         // value={userDetails.mobile}
@@ -81,7 +105,7 @@ const AddUserModal = ({
         // }
       />
 
-      <TextInput
+      <StyledTextInput
         placeholder="Pincode"
         label="Pincode"
         // value={userDetails.mobile}
@@ -91,7 +115,7 @@ const AddUserModal = ({
         // }
       />
 
-      <DateInput
+      <StyledDateInput
         placeholder={"Date Of Birth"}
         label={"Date Of Birth"}
         rightSection={
@@ -103,7 +127,7 @@ const AddUserModal = ({
         maxDate={new Date()}
       />
 
-      <Select
+      <StyledSelect
         label="Role"
         placeholder="Select Role"
         data={rolesData}
@@ -113,18 +137,18 @@ const AddUserModal = ({
         required
       />
 
-      <Button
+      <StyledButton
         className="mt-4"
-        style={{
-          backgroundColor: !(
-            !userDetails.firstname ||
-            !userDetails.lastname ||
-            !userDetails.email ||
-            !userDetails.role
-          )
-            ? "#4E70EA"
-            : "grey",
-        }}
+        // style={{
+        //   backgroundColor: !(
+        //     !userDetails.firstname ||
+        //     !userDetails.lastname ||
+        //     !userDetails.email ||
+        //     !userDetails.role
+        //   )
+        //     ? "#4E70EA"
+        //     : "grey",
+        // }}
         onClick={handleAddUser}
         disabled={
           !userDetails.firstname ||
@@ -134,7 +158,7 @@ const AddUserModal = ({
         }
       >
         Submit
-      </Button>
+      </StyledButton>
     </Modal>
   );
 };
