@@ -146,20 +146,15 @@ const CampaignModal = () => {
       >
         <p>Are you sure you want to publish this campaign?</p>
         <Center>
-          <Button
-            bg={"#524EE1"}
-            sx={{
-              marginRight: "10px",
-              "&:hover": { backgroundColor: "white", color: "#524EE1" },
-            }}
-            onClick={handleConfirmedPublish}
-            disabled={loading}
-          >
+          <StyledButton onClick={handleConfirmedPublish} disabled={loading}>
             {loading ? "Publishing..." : "Yes, Publish"}
-          </Button>
-          <Button variant="outline" onClick={() => setShowConfirmation(false)}>
+          </StyledButton>
+          <StyledButton
+            variant="outline"
+            onClick={() => setShowConfirmation(false)}
+          >
             No, Go back
-          </Button>
+          </StyledButton>
         </Center>
       </Modal>
     </>

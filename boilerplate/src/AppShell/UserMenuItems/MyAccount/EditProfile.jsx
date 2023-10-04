@@ -52,20 +52,7 @@ const EditProfile = () => {
                 {...form.getInputProps("name")}
               />
 
-              <StyledTextInput
-                label="Address"
-                placeholder="Enter your address"
-                {...form.getInputProps("address")}
-              />
-
               <Group>
-                <StyledTextInput
-                  label="Pincode"
-                  placeholder="Enter your pincode"
-                  {...form.getInputProps("pincode")}
-                  inputMode="numeric"
-                />
-
                 <StyledSelect
                   placeholder="Select your state"
                   label="State"
@@ -78,6 +65,18 @@ const EditProfile = () => {
                   label="City"
                   data={[]}
                   {...form.getInputProps("city")}
+                />
+                <StyledTextInput
+                  w={"100%"}
+                  label="Address"
+                  placeholder="Enter your address"
+                  {...form.getInputProps("address")}
+                />
+                <StyledTextInput
+                  label="Pincode"
+                  placeholder="Enter your pincode"
+                  {...form.getInputProps("pincode")}
+                  inputMode="numeric"
                 />
               </Group>
 

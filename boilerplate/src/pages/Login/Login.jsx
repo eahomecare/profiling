@@ -80,15 +80,22 @@ export default function Login() {
                 >
                   <Stack p={"5%"} h={"100%"} justify={"end"}>
                     <Text c={"white"}>
-                      <Title>Title</Title>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Morbi auctor sagittis nunc nec sollicitudin. Duis ultrices
-                      tristique ligula ac suscipit.
+                      <Flex justify={"end"}>
+                        <Title
+                          variant={"gradient"}
+                          gradient={{ from: "#5C00F2", to: "#EBDFFF", deg: 45 }}
+                        >
+                          Customer Profiling
+                        </Title>
+                      </Flex>
+                      {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. */}
+                      {/* Morbi auctor sagittis nunc nec sollicitudin. Duis ultrices */}
+                      {/* tristique ligula ac suscipit. */}
                     </Text>
-                    <StyledButton w={"30%"}>
-                      Read More
-                      <IconArrowRight />
-                    </StyledButton>
+                    {/* <StyledButton w={"30%"}> */}
+                    {/*   Read More */}
+                    {/*   <IconArrowRight /> */}
+                    {/* </StyledButton> */}
                   </Stack>
                 </BackgroundImage>
               </Box>
