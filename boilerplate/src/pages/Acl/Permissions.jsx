@@ -20,7 +20,7 @@ function Permissions({ initialData, title }) {
       header: "Status",
       accessorKey: "isactive",
       Cell: ({ value }) => (
-        <StyledButton c="teal" size="xs" compact>
+        <StyledButton w={80} c="teal" size="xs" compact>
           {value}
         </StyledButton>
       ),
@@ -29,21 +29,21 @@ function Permissions({ initialData, title }) {
       header: "Created At",
       accessorKey: "created_at",
     },
-    {
-      header: "Action",
-      accessorKey: "action",
-      Cell: () => {
-        const handleActionClick = () => {
-          console.log("Icon in the Action column clicked!");
-        };
-
-        return (
-          <ActionIcon variant="light" onClick={handleActionClick}>
-            <IconSettings size="1rem" />
-          </ActionIcon>
-        );
-      },
-    },
+    // {
+    //   header: "Action",
+    //   accessorKey: "action",
+    //   Cell: () => {
+    //     const handleActionClick = () => {
+    //       console.log("Icon in the Action column clicked!");
+    //     };
+    //
+    //     return (
+    //       <ActionIcon variant="light" onClick={handleActionClick}>
+    //         <IconSettings size="1rem" />
+    //       </ActionIcon>
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -55,18 +55,18 @@ function Permissions({ initialData, title }) {
         columns={columns}
         data={permissionsData}
         onRowClick={(row) => console.log("Row clicked:", row)}
-        topProps={() => (
-          <Flex>
-            <StyledButton
-              compact
-              onClick={() => {
-                console.log("Create Permission clicked!");
-              }}
-            >
-              Create Permission
-            </StyledButton>
-          </Flex>
-        )}
+        // topProps={() => (
+        //   <Flex>
+        //     <StyledButton
+        //       compact
+        //       onClick={() => {
+        //         console.log("Create Permission clicked!");
+        //       }}
+        //     >
+        //       Create Permission
+        //     </StyledButton>
+        //   </Flex>
+        // )}
       />
     </>
   );

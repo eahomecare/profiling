@@ -25,7 +25,6 @@ function showNotification(prop) {
     message: prop,
     styles: (theme) => ({
       root: {
-        backgroundColor: "#4E70EA",
         borderColor: theme.colors.blue[6],
 
         "&::before": { backgroundColor: theme.white },
@@ -171,73 +170,48 @@ const UserPermissions = ({ initialData }) => {
   } else {
     return (
       <>
-        <Box
-          sx={{
-            backgroundColor: "#DDE5FF",
-            padding: "50px",
-            marginTop: "-80px",
-          }}
-        >
+        <Box>
           <div style={{ display: "flex" }}>
-            <span style={{ flexGrow: "1", width: "100px" }}>
-              <div style={{ padding: "10px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "20px",
-                    marginTop: "-65px",
-                  }}
-                >
-                  <span style={{ padding: "10px" }}>
-                    <Title pl={5}>Users Permisssions</Title>
-                  </span>
-                  <span>
-                    <Container>
-                      <Center>
-                        <Flex mt={5}>
-                          <StyledButton
-                            className="mt-4"
-                            onClick={handleAddUserModal}
-                            style={{
-                              backgroundColor: "black",
-                              fontColor: "white",
-                            }}
-                          >
-                            + Create User
-                          </StyledButton>
-                          <AddUserModal
-                            isModalOpen={isAddUserModalOpen}
-                            handleAddUser={handleAddUser}
-                            handleModalClose={handleModalClose}
-                            userDetails={userDetails}
-                            setUserDetails={setUserDetails}
-                            rolesData={rolesData}
-                          />
-                        </Flex>
-                      </Center>
-                    </Container>
-                  </span>
-                </div>
-
-                {isUserActionModalOpen && (
-                  <UserActionModal
-                    isModalOpen={isUserActionModalOpen}
-                    handleModalClose={handleModalClose}
-                    curr_user={curr_user}
-                    userRolesPermissions={userRolesPermissions}
-                    userPermissionsOptions={userPermissionsOptions}
-                  />
-                )}
-
-                <StyledTable
-                  columns={columns}
-                  data={initialData}
-                  onRowClick={(row) => console.log("Row clicked:", row)}
-                />
-              </div>
+            <span>
+              <Container>
+                <Center>
+                  <Flex mt={5}>
+                    <AddUserModal
+                      isModalOpen={isAddUserModalOpen}
+                      handleAddUser={handleAddUser}
+                      handleModalClose={handleModalClose}
+                      userDetails={userDetails}
+                      setUserDetails={setUserDetails}
+                      rolesData={rolesData}
+                    />
+                  </Flex>
+                </Center>
+              </Container>
             </span>
           </div>
+
+          {isUserActionModalOpen && (
+            <UserActionModal
+              isModalOpen={isUserActionModalOpen}
+              handleModalClose={handleModalClose}
+              curr_user={curr_user}
+              userRolesPermissions={userRolesPermissions}
+              userPermissionsOptions={userPermissionsOptions}
+            />
+          )}
+
+          <StyledTable
+            columns={columns}
+            data={initialData}
+            onRowClick={(row) => console.log("Row clicked:", row)}
+            topProps={() => (
+              <Flex>
+                <StyledButton onClick={handleAddUserModal}>
+                  + Create User
+                </StyledButton>
+              </Flex>
+            )}
+          />
         </Box>
       </>
     );

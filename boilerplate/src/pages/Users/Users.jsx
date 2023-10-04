@@ -5,7 +5,7 @@ import {
   Flex,
   LoadingOverlay,
   rem,
-  Text
+  Text,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { IconSettings } from "@tabler/icons-react";
@@ -22,7 +22,6 @@ import StyledTable from "../../StyledComponents/StyledTable";
 import UserActionModal from "./UserActionModal";
 import EditUserInfoModal from "./EditUserInfoModal";
 import { Link } from "react-router-dom";
-
 
 function formatDate(dateString) {
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
@@ -56,7 +55,7 @@ const Users = () => {
     header: {
       position: "sticky",
       top: 0,
-      backgroundColor: "#4E70EA",
+      backgroundColor: "#EBDFFF",
       fontColor: "red",
       transition: "box-shadow 150ms ease",
 
@@ -66,15 +65,16 @@ const Users = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        borderBottom: `${rem(1)} solid ${theme.colorScheme === "dark"
-          ? theme.colors.dark[3]
-          : theme.colors.gray[2]
-          }`,
+        borderBottom: `${rem(1)} solid ${
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[3]
+            : theme.colors.gray[2]
+        }`,
       },
     },
 
     scrolled: {
-      boxShadow: theme.shadows.sm,
+      boxShadow: theme.shadows.lg,
     },
   }));
 
@@ -83,7 +83,6 @@ const Users = () => {
   const [isUserActionModalOpen, setUserActionModalOpen] = useState(false);
   const [isEditUserModalOpen, setEditUserModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-
 
   const dispatch = useDispatch();
   const { rolesPermissions, roles, permissions } = useSelector(
@@ -131,7 +130,6 @@ const Users = () => {
     setEditUserModalOpen(true);
   };
 
-
   useEffect(() => {
     dispatch(getAllRolesPermissionsMappings());
     dispatch(getUsers());
@@ -154,13 +152,13 @@ const Users = () => {
   const initialData =
     Object.keys(userPermissionsDict).length > 0
       ? users.map((data) => ({
-        id: data.id,
-        roleId: data.roleId,
-        email: data.email,
-        isactive: "active",
-        role: data.role.name,
-        created_at: formatDate(data.created_at),
-      }))
+          id: data.id,
+          roleId: data.roleId,
+          email: data.email,
+          isactive: "active",
+          role: data.role.name,
+          created_at: formatDate(data.created_at),
+        }))
       : [];
 
   const columns = [
@@ -252,7 +250,6 @@ const Users = () => {
     }
   };
 
-
   const handleEditUser = (updatedUserData) => {
     setEditUserModalOpen(false);
     showNotification("User data updated successfully");
@@ -278,13 +275,13 @@ const Users = () => {
           columns={columns}
           data={initialData}
           onRowClick={(row) => console.log("Row clicked:", row)}
-          topProps={() => (
-            <Flex>
-              <StyledButton compact onClick={handleAddUserModal}>
-                + Create User
-              </StyledButton>
-            </Flex>
-          )}
+          // topProps={() => (
+          //   <Flex>
+          //     <StyledButton compact onClick={handleAddUserModal}>
+          //       + Create User
+          //     </StyledButton>
+          //   </Flex>
+          // )}
         />
         {isUserActionModalOpen && (
           <UserActionModal
