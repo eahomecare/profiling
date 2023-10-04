@@ -13,6 +13,7 @@ import { IconCalendar } from "@tabler/icons-react";
 import StyledTextInput from "../../StyledComponents/StyledTextInput";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import StyledButton from "../../StyledComponents/StyledButton";
+import StyledDateInput from "../../StyledComponents/StyledDateInput";
 
 const EditUserInfoModal = ({
   isModalOpen,
@@ -77,6 +78,58 @@ const EditUserInfoModal = ({
         withAsterisk
         required
         type="email"
+      />
+
+      <StyledTextInput
+        placeholder="State"
+        label="State"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledTextInput
+        placeholder="City"
+        label="City"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledTextInput
+        placeholder="Address"
+        label="Address"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledTextInput
+        placeholder="Pincode"
+        label="Pincode"
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
+      />
+
+      <StyledDateInput
+        placeholder={"Date Of Birth"}
+        label={"Date Of Birth"}
+        rightSection={
+          <ActionIcon variant={"subtle"}>
+            <IconCalendar />
+          </ActionIcon>
+        }
+        withAsterisk
+        maxDate={new Date()}
       />
 
       <StyledTextInput
