@@ -36,7 +36,7 @@ const RolesVsPermissions = ({ initialData, title }) => {
 
   return (
     <>
-      <Title style={{ padding: "10px" }} order={4} color="blue.5">
+      <Title style={{ padding: "10px" }} order={4} color="#5c00f2">
         {title}
       </Title>
       <StyledTable
