@@ -38,7 +38,7 @@ const BoardStats = () => {
           <Grid.Col span={6}>
             <Card shadow="lg" radius={"lg"} h={"100%"}>
               <Flex c={"#5C00F2"} justify={"space-between"}>
-                <Text fw={"bold"}>Customer Information</Text>
+                <Text fw={"bold"}>Overview</Text>
                 <Center>
                   <ActionIcon c={"#5C00F2"}>
                     <IconTableExport />
@@ -105,20 +105,20 @@ const BoardStats = () => {
                 </Stack>
               </Stack>
             </Card>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <Card shadow="lg" radius={"lg"} h={"100%"}>
-              <Flex c={"#5C00F2"} justify={"space-between"}>
-                <Text fw={"bold"}>Customers vs Profiles</Text>
-                <Center>
-                  <ActionIcon c={"#5C00F2"}>
-                    <IconTableExport />
-                  </ActionIcon>
-                  <Text fw={"bold"}>Export</Text>
-                </Center>
-              </Flex>
-              <RadialChart />
-            </Card>
+            {/* </Grid.Col> */}
+            {/* <Grid.Col span={6}> */}
+            {/* <Card shadow="lg" radius={"lg"} h={"100%"}> */}
+            {/*   <Flex c={"#5C00F2"} justify={"space-between"}> */}
+            {/*     <Text fw={"bold"}>Customers vs Profiles</Text> */}
+            {/*     <Center> */}
+            {/*       <ActionIcon c={"#5C00F2"}> */}
+            {/*         <IconTableExport /> */}
+            {/*       </ActionIcon> */}
+            {/*       <Text fw={"bold"}>Export</Text> */}
+            {/*     </Center> */}
+            {/*   </Flex> */}
+            {/*   <RadialChart /> */}
+            {/* </Card> */}
           </Grid.Col>
         </Grid>
 
