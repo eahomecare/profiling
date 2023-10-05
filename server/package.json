@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "add-random-customers": "node db-scripts/add_random_customers.js",
     "view-customer-crm-id-mappings": "node db-scripts/view-customer-crm-ids.js",
     "customer-crm-id-mappings-generate": "node db-scripts/customer-crm-ids-generate.js",
     "delete-customer-crm-id-mappings": "node db-scripts/delete-customer-crm-ids.js",
