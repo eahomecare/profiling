@@ -1,8 +1,12 @@
-const {
-  PrismaClient,
-} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const casual = require('casual');
+
+async function getRandomProfileType() {
+  const profileTypes = await prisma.profileType.findMany();
+  const randomIndex = Math.floor(Math.random() * profileTypes.length);
+  return profileTypes[randomIndex];
+}
 
 async function createRandomCustomer() {
   const randomMobile = casual.phone;
@@ -31,31 +35,44 @@ async function createRandomCustomer() {
     'female',
   ]);
 
-  const personalDetails =
-    await prisma.personal_Details.create({
-      data: {
-        customer_id: customer.id,
-        full_name: randomFullName,
-        phone_number: randomPhoneNumber,
-        email_address: randomEmail,
-        date_of_birth: randomDateOfBirth,
-        gender: randomGender,
+  const personalDetails = await prisma.personal_Details.create({
+    data: {
+      customer_id: customer.id,
+      full_name: randomFullName,
+      phone_number: randomPhoneNumber,
+      email_address: randomEmail,
+      date_of_birth: randomDateOfBirth,
+      gender: randomGender,
+    },
+  });
+
+  const randomProfileType = await getRandomProfileType();
+
+  await prisma.profileTypeCustomerMapping.create({
+    data: {
+      profileType: {
+        connect: {
+          id: randomProfileType.id,
+        },
       },
-    });
+      customer: {
+        connect: {
+          id: customer.id,
+        },
+      },
+      level: 1,
+    },
+  });
 
   return { customer, personalDetails };
 }
 
 async function main() {
-  const loopLimit =
-    parseInt(process.argv[2], 10) || 2;
+  const loopLimit = parseInt(process.argv[2], 10) || 2;
 
   for (let i = 0; i < loopLimit; i++) {
-    const { customer, personalDetails } =
-      await createRandomCustomer();
-    console.log(
-      `Created customer with id: ${customer.id}`,
-    );
+    const { customer, personalDetails } = await createRandomCustomer();
+    console.log(`Created customer with id: ${customer.id}`);
   }
 }
 
