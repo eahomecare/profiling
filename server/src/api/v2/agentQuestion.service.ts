@@ -86,7 +86,7 @@ export class AgentQuestionService {
         },
       );
 
-    console.log('mappings\n', mappings);
+    // console.log('mappings\n', mappings);
 
     const categories = {};
     for (const mapping of mappings) {
@@ -116,6 +116,7 @@ export class AgentQuestionService {
       }
     }
 
+    console.log('categories\n', categories);
     return categories;
   }
 
@@ -166,10 +167,10 @@ export class AgentQuestionService {
       resultCategories.push(randomCategory);
     }
 
-    console.log(
-      'resultCategories=>\n',
-      resultCategories,
-    );
+    // console.log(
+    //   'resultCategories=>\n',
+    //   resultCategories,
+    // );
     return resultCategories;
   }
 
