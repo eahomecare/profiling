@@ -61,11 +61,11 @@ const UserActionModal = ({
   const initialData =
     Object.keys(userRolesPermissions).length > 0
       ? userRolesPermissions.map((data) => ({
-          id: data.id,
-          permission: data.permission.name,
-          isactive: data.isActive ? "active" : "disabled",
-          created_at: formatDate(data.created_at),
-        }))
+        id: data.id,
+        permission: data.permission.name,
+        isactive: data.isActive ? "active" : "disabled",
+        created_at: formatDate(data.created_at),
+      }))
       : [];
   const theme = useMantineTheme();
   const dispatch = useDispatch();
@@ -83,34 +83,34 @@ const UserActionModal = ({
 
   const rows = Array.isArray(tableData)
     ? tableData.map((row) => (
-        <tr key={row.id}>
-          <td>
-            {row.permission ? (
-              row.permission
-            ) : (
-              <Select
-                label="Permission"
-                placeholder="Select Permission"
-                data={userPermissionsOptions}
-                value={selectedPermission}
-                onChange={(value) => setSelectedPermission(value)}
-                withAsterisk
-                required
-              />
-            )}
-          </td>
-          <td>
-            <Switch
-              onClick={() => deactivateMappingOnClick(row.id)}
-              checked={row.isactive == "active"}
-              color="teal"
-              onLabel="ACTIVE"
-              offLabel="DISABLE"
+      <tr key={row.id}>
+        <td>
+          {row.permission ? (
+            row.permission
+          ) : (
+            <Select
+              label="Permission"
+              placeholder="Select Permission"
+              data={userPermissionsOptions}
+              value={selectedPermission}
+              onChange={(value) => setSelectedPermission(value)}
+              withAsterisk
+              required
             />
-          </td>
-          <td>{row.created_at}</td>
-        </tr>
-      ))
+          )}
+        </td>
+        <td>
+          <Switch
+            onClick={() => deactivateMappingOnClick(row.id)}
+            checked={row.isactive == "active"}
+            color="teal"
+            onLabel="ACTIVE"
+            offLabel="DISABLE"
+          />
+        </td>
+        <td>{row.created_at}</td>
+      </tr>
+    ))
     : [];
 
   const addRow = () => {
@@ -184,6 +184,28 @@ const UserActionModal = ({
                 Role:
               </Text>{" "}
               {curr_user.role}
+            </Text>
+          </Grid.Col>
+          <Grid.Col
+            span={8}
+            style={{ borderLeft: "1px solid #ccc", borderRadius: "4px" }}
+          >
+            <Text>
+              <Text c="#4E70EA" fw={700}>
+                Address:
+              </Text>{" "}
+              123/street,Lorem ipsume Lorem ipsumeLorem ipsume
+            </Text>
+          </Grid.Col>
+          <Grid.Col
+            span={4}
+            style={{ borderLeft: "1px solid #ccc", borderRadius: "4px" }}
+          >
+            <Text>
+              <Text c="#4E70EA" fw={700}>
+                Mobile:
+              </Text>{" "}
+              987654321
             </Text>
           </Grid.Col>
         </Grid>
@@ -282,7 +304,7 @@ const UserActionModal = ({
             </Timeline>
           </Grid.Col>
         </Grid>
-      </Modal>
+      </Modal >
     </>
   );
 };
