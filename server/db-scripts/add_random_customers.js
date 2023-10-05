@@ -54,7 +54,7 @@ async function createRandomCustomer() {
             id: customer.id,
           },
         },
-        level: 1,
+        level: Math.floor(Math.random() * 5) + 1,
       },
     });
   }
