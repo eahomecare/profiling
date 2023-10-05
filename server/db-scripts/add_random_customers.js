@@ -2,10 +2,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const casual = require('casual');
 
-async function getRandomProfileType() {
-  const profileTypes = await prisma.profileType.findMany();
-  const randomIndex = Math.floor(Math.random() * profileTypes.length);
-  return profileTypes[randomIndex];
+async function getAllProfileTypes() {
+  return await prisma.profileType.findMany();
 }
 
 async function createRandomCustomer() {
@@ -27,13 +25,8 @@ async function createRandomCustomer() {
 
   const randomFullName = casual.full_name;
   const randomPhoneNumber = casual.phone;
-  const randomDateOfBirth = new Date(
-    casual.date('YYYY-MM-DD'),
-  ); // Convert string to Date object
-  const randomGender = casual.random_element([
-    'male',
-    'female',
-  ]);
+  const randomDateOfBirth = new Date(casual.date('YYYY-MM-DD'));
+  const randomGender = casual.random_element(['male', 'female']);
 
   const personalDetails = await prisma.personal_Details.create({
     data: {
@@ -46,23 +39,25 @@ async function createRandomCustomer() {
     },
   });
 
-  const randomProfileType = await getRandomProfileType();
+  const allProfileTypes = await getAllProfileTypes();
 
-  await prisma.profileTypeCustomerMapping.create({
-    data: {
-      profileType: {
-        connect: {
-          id: randomProfileType.id,
+  for (const profileType of allProfileTypes) {
+    await prisma.profileTypeCustomerMapping.create({
+      data: {
+        profileType: {
+          connect: {
+            id: profileType.id,
+          },
         },
-      },
-      customer: {
-        connect: {
-          id: customer.id,
+        customer: {
+          connect: {
+            id: customer.id,
+          },
         },
+        level: 1,
       },
-      level: 1,
-    },
-  });
+    });
+  }
 
   return { customer, personalDetails };
 }
