@@ -16,10 +16,10 @@ export class ProfileTypeCustomerMappingController {
         return this.profileTypeCustomerMappingService.findAll();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.profileTypeCustomerMappingService.findOne(id);
-    }
+    // @Get(':id')
+    // findOne(@Param('id') id: string) {
+    //     return this.profileTypeCustomerMappingService.findOne(id);
+    // }
 
     @Put(':id')
     update(@Param('id') id: string, @Body() data: ProfileTypeCustomerMapping) {
@@ -33,7 +33,7 @@ export class ProfileTypeCustomerMappingController {
 
     @Get('grouped-counts-by-profile-type-name')
     async getGroupedCountsByProfileTypeName() {
-        return this.profileTypeCustomerMappingService.getGroupedCountsByProfileTypeName();
+        return this.profileTypeCustomerMappingService.getGroupedCountsByCustomerAgeRange();
     }
 
     @Get('by-age-range/:ageRange')
@@ -44,5 +44,16 @@ export class ProfileTypeCustomerMappingController {
     @Get('by-gender/:gender')
     async getCustomersByGenderForProfileTypeCustomerMappings(@Param('gender') gender: string) {
         return this.profileTypeCustomerMappingService.getCustomersByGenderForProfileTypeCustomerMappings(gender);
+    }
+
+    @Post('groupByAll')
+    async getGrouped(@Body() data: any) {
+        return {
+            "profiles": await this.profileTypeCustomerMappingService.getGroupedCountsByProfileTypeName(),
+            "gender": await this.profileTypeCustomerMappingService.getGroupedCountsByCustomerGender(),
+            "age": await this.profileTypeCustomerMappingService.getGroupedCountsByCustomerAgeRange(),
+            "source": await this.profileTypeCustomerMappingService.getGroupedCountsByCustomerSource()
+
+        }
     }
 }
