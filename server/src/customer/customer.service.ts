@@ -10,14 +10,15 @@ import { Customer } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async countCustomersByMonth() {
-    const customers = await this.prisma.customer.findMany({
-      select: {
-        created_at: true,
-      },
-    });
+    const customers =
+      await this.prisma.customer.findMany({
+        select: {
+          created_at: true,
+        },
+      });
 
     const monthNames = {
       '01': 'January',
@@ -34,11 +35,23 @@ export class CustomerService {
       '12': 'December',
     };
 
-    const customersGroupedByMonth = groupBy(customers, (customer) =>
-      monthNames[customer.created_at.toISOString().slice(5, 7)] + ' ' + customer.created_at.toISOString().slice(0, 4)
+    const customersGroupedByMonth = groupBy(
+      customers,
+      (customer: any) =>
+        monthNames[
+          customer.created_at
+            .toISOString()
+            .slice(5, 7)
+        ] +
+        ' ' +
+        customer.created_at
+          .toISOString()
+          .slice(0, 4),
     );
 
-    const customerCountsByMonth = Object.entries(customersGroupedByMonth).map(([month, customers]) => ({
+    const customerCountsByMonth = Object.entries(
+      customersGroupedByMonth,
+    ).map(([month, customers]: any) => ({
       month,
       count: customers.length,
     }));
@@ -290,8 +303,12 @@ export class CustomerService {
   async getCustomersByAgeRange(ageRange: string) {
     try {
       const currentDate = new Date();
-      const minAge = parseInt(ageRange.split('-')[0]);
-      const maxAge = parseInt(ageRange.split('-')[1]);
+      const minAge = parseInt(
+        ageRange.split('-')[0],
+      );
+      const maxAge = parseInt(
+        ageRange.split('-')[1],
+      );
 
       const minDOB = new Date(
         currentDate.getFullYear() - maxAge,
@@ -308,74 +325,82 @@ export class CustomerService {
         return date.toISOString(); // Convert Date to "YYYY-MM-DDTHH:mm:ss.sssZ" format
       };
 
-      const customers = await this.prisma.customer.findMany({
-        where: {
-          personal_details: {
-            date_of_birth: {
-              gte: formatDate(minDOB),
-              lte: formatDate(maxDOB),
+      const customers =
+        await this.prisma.customer.findMany({
+          where: {
+            personal_details: {
+              date_of_birth: {
+                gte: formatDate(minDOB),
+                lte: formatDate(maxDOB),
+              },
             },
           },
-        },
-      });
+        });
 
       return customers;
     } catch (error) {
-      console.error('Error fetching customers:', error);
+      console.error(
+        'Error fetching customers:',
+        error,
+      );
       throw error;
     } finally {
       await this.prisma.$disconnect();
     }
   }
-
 
   async getCustomersByGender(gender: string) {
     try {
-      const customers = await this.prisma.customer.findMany({
-        where: {
-          personal_details: {
-            gender: {
-              equals: gender,
+      const customers =
+        await this.prisma.customer.findMany({
+          where: {
+            personal_details: {
+              gender: {
+                equals: gender,
+              },
             },
           },
-        },
-        include: { personal_details: true }
-      });
+          include: { personal_details: true },
+        });
 
       return customers;
     } catch (error) {
-      console.error('Error fetching customers by gender:', error);
+      console.error(
+        'Error fetching customers by gender:',
+        error,
+      );
       throw error;
     } finally {
       await this.prisma.$disconnect();
     }
   }
 
-
-  async getCustomersByKeyword(keywordCategoryId: string) {
+  async getCustomersByKeyword(
+    keywordCategoryId: string,
+  ) {
     try {
       console.log(keywordCategoryId);
 
-      const customers = await this.prisma.customer.findMany({
-        where: {
-          keywords: {
-            some: {
-              id: keywordCategoryId,
+      const customers =
+        await this.prisma.customer.findMany({
+          where: {
+            keywords: {
+              some: {
+                id: keywordCategoryId,
+              },
             },
           },
-        },
-      });
+        });
 
       return customers;
     } catch (error) {
-      console.error('Error fetching customers by keyword category:', error);
+      console.error(
+        'Error fetching customers by keyword category:',
+        error,
+      );
       throw error;
     } finally {
       await this.prisma.$disconnect();
     }
   }
-
-
-
 }
-

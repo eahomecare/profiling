@@ -28,7 +28,7 @@ const BoardStats = () => {
           <Flex c={"#5C00F2"} justify={"space-between"}>
             <Text fw={"bold"}>General</Text>
           </Flex>
-          <SimpleGrid cols={4}>
+          <SimpleGrid cols={5}>
             <TopPanelCards />
           </SimpleGrid>
         </Card>
