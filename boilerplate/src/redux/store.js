@@ -6,6 +6,7 @@ import rolesPermissionSlice from "./rolesPermissionSlice";
 import campaignManagementReducer from "./campaignManagementSlice";
 import campaignReducer from "./campaignSlice";
 import profileDataCardSlice from "./profileDataCardSlice";
+import customerProfileSlice from "./customerProfileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     campaignManagement: campaignManagementReducer,
     campaign: campaignReducer,
     profileDataCard: profileDataCardSlice,
+    customerProfileTool: customerProfileSlice,
   },
 });

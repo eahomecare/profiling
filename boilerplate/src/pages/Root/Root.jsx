@@ -1,34 +1,23 @@
 import {
+  ActionIcon,
   Box,
   Card,
-  Stack,
-  Title,
-  Text,
-  Grid,
-  Select,
-  ActionIcon,
   Center,
   Flex,
+  Grid,
   Group,
-  useMantineTheme,
+  Stack,
+  Text,
 } from "@mantine/core";
-import {
-  IconArrowDownRight,
-  IconArrowRight,
-  IconChevronDown,
-  IconTableExport,
-} from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import AreaChartSample from "./AreaChart";
-import BubbleChart from "./BubbleChart";
-import ProfilePieChart from "./PofilePieChart";
+import CustomerProfileAnalysis from "./CustomerProfileAnalysis";
 import ProfileBarChart from "./ProfileBarChart";
-import ProfileDataCard from "./ProfileDataCard";
 import ProfileTypeAnalysis from "./ProfileTypeAnalysis";
 
 const Root = () => {
-  const theme = useMantineTheme();
   return (
     <Box>
       <Stack>
@@ -36,50 +25,7 @@ const Root = () => {
         <ProfileTypeAnalysis />
 
         {/* Second Card */}
-        <Card shadow={"md"} radius={"md"}>
-          <Box>
-            <Flex justify={"space-between"}>
-              <Center>
-                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
-                  Customer vs Profile
-                </Text>
-              </Center>
-              <Center>
-                <Link to={"/campaign"}>
-                  <ActionIcon c={"#5C00F2"} size={"sm"}>
-                    <IconArrowRight />
-                  </ActionIcon>
-                </Link>
-              </Center>
-            </Flex>
-          </Box>
-          <Grid grow>
-            <Grid.Col span={3}>
-              <Stack>
-                <StyledSelect
-                  label={"Source(s)"}
-                  placeholder={"All"}
-                  data={["Test"]}
-                />
-                <Group>
-                  <StyledSelect
-                    label={"Year"}
-                    placeholder={"All"}
-                    data={["Test"]}
-                  />
-                  <StyledSelect
-                    label={"Month"}
-                    placeholder={"All"}
-                    data={["Test"]}
-                  />
-                </Group>
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={9}>
-              <AreaChartSample />
-            </Grid.Col>
-          </Grid>
-        </Card>
+        <CustomerProfileAnalysis />
 
         {/* Third Card */}
         <Card shadow={"md"} radius={"md"}>

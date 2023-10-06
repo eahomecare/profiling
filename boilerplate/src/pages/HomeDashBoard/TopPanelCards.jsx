@@ -36,24 +36,24 @@ const data = [
     icon: IconCreditCard,
   },
   { color: "pink", text: "Conversion Rate", percentage: "91%", icon: IconCone },
-  {
-    color: "yellow",
-    text: "No. of Views",
-    percentage: "70%",
-    icon: IconView360,
-  },
-  {
-    color: "teal",
-    text: "No. of Searchs",
-    percentage: "70%",
-    icon: IconSearch,
-  },
-  {
-    color: "blue",
-    text: "No. of Sessions",
-    percentage: "63%",
-    icon: IconClock,
-  },
+  // {
+  //   color: "yellow",
+  //   text: "No. of Views",
+  //   percentage: "70%",
+  //   icon: IconView360,
+  // },
+  // {
+  //   color: "teal",
+  //   text: "No. of Searchs",
+  //   percentage: "70%",
+  //   icon: IconSearch,
+  // },
+  // {
+  //   color: "blue",
+  //   text: "No. of Sessions",
+  //   percentage: "63%",
+  //   icon: IconClock,
+  // },
   {
     color: "teal",
     text: "Bounce Rate",
@@ -69,6 +69,7 @@ const TopPanelCards = () => {
         <Box key={index}>
           <Card
             sx={{
+              height: "100%",
               backgroundImage: "radial-gradient(#FFFFFF 50% ,#EBDFFF)",
               cursor: "pointer",
               transition: "transform 0.3s ease",
@@ -81,15 +82,13 @@ const TopPanelCards = () => {
           >
             <Center>
               <Flex>
-                <Group>
+                <Group noWrap>
                   <ActionIcon size={rem(70)} c={item.color}>
                     <item.icon size={rem(70)} />
                   </ActionIcon>
-                  <Stack>
+                  <Stack justify={"start"}>
                     <Text>{item.text}</Text>
-                    <Center>
-                      <Text c={item.color}>{item.percentage}</Text>
-                    </Center>
+                    <Text c={item.color}>{item.percentage}</Text>
                   </Stack>
                 </Group>
               </Flex>
