@@ -50,22 +50,10 @@ export class ProfileTypeCustomerMappingService {
             },
         });
 
-        const uniqueCustomerIds = new Set<string>();
-        const groupedCounts: Record<string, number> = {};
-
-        profileTypeCustomerMappings.forEach((mapping) => {
-            const customerId = mapping.customer.id;
-            if (!uniqueCustomerIds.has(customerId)) {
-                uniqueCustomerIds.add(customerId);
-
-                const gender = mapping.customer.personal_details?.gender || 'Unknown';
-                groupedCounts[gender] = (groupedCounts[gender] || 0) + 1;
-            }
-        });
-
-        const groupedCountsArray = Object.entries(groupedCounts).map(([gender, count]) => ({
+        const groupedCounts = _.groupBy(profileTypeCustomerMappings, (mapping) => mapping.customer.personal_details?.gender || 'Unknown');
+        const groupedCountsArray = _.map(groupedCounts, (group, gender) => ({
             gender,
-            count,
+            count: group.length,
         }));
 
         return groupedCountsArray;
@@ -74,22 +62,10 @@ export class ProfileTypeCustomerMappingService {
     async getGroupedCountsByCustomerSource(): Promise<{ source: string; count: number }[]> {
         const profileTypeCustomerMappings = await this.prisma.profileTypeCustomerMapping.findMany({ include: { customer: true } });
 
-        const uniqueCustomerIds = new Set<string>();
-        const groupedCounts: Record<string, number> = {};
-
-        profileTypeCustomerMappings.forEach((mapping) => {
-            const customerId = mapping.customer.id;
-            if (!uniqueCustomerIds.has(customerId)) {
-                uniqueCustomerIds.add(customerId);
-
-                const source = mapping.customer.source || 'Unknown';
-                groupedCounts[source] = (groupedCounts[source] || 0) + 1;
-            }
-        });
-
-        const groupedCountsArray = Object.entries(groupedCounts).map(([source, count]) => ({
+        const groupedCounts = _.groupBy(profileTypeCustomerMappings, (mapping) => mapping.customer.source || 'Unknown');
+        const groupedCountsArray = _.map(groupedCounts, (group, source) => ({
             source,
-            count,
+            count: group.length,
         }));
 
         return groupedCountsArray;
@@ -107,12 +83,7 @@ export class ProfileTypeCustomerMappingService {
             { min: 26, max: 30, label: '26-30' },
             { min: 30, max: 35, label: '30-35' },
             { min: 36, max: 40, label: '36-40' },
-            { min: 40, max: 45, label: '40-45' },
             { min: 46, max: 50, label: '46-50' },
-            { min: 50, max: 55, label: '50-55' },
-            { min: 56, max: 60, label: '56-60' },
-            { min: 60, max: 65, label: '60-65' },
-            { min: 66, max: 70, label: '66-70' },
         ];
 
         const groupedCounts: Record<string, number> = {};
@@ -133,8 +104,7 @@ export class ProfileTypeCustomerMappingService {
                 return date.toISOString();
             };
 
-            const uniqueCustomerIds = new Set<string>();
-            const profileTypeCustomerMappings = await this.prisma.profileTypeCustomerMapping.findMany({
+            const customers = await this.prisma.profileTypeCustomerMapping.findMany({
                 where: {
                     customer: {
                         personal_details: {
@@ -147,13 +117,7 @@ export class ProfileTypeCustomerMappingService {
                 },
             });
 
-            profileTypeCustomerMappings.forEach((mapping) => {
-                const customerId = mapping.customerId;
-                if (!uniqueCustomerIds.has(customerId)) {
-                    uniqueCustomerIds.add(customerId);
-                    groupedCounts[range.label] = (groupedCounts[range.label] || 0) + 1;
-                }
-            });
+            groupedCounts[range.label] = customers.length;
         }
 
         const groupedCountsArray = Object.entries(groupedCounts).map(([ageRange, count]) => ({
@@ -163,7 +127,6 @@ export class ProfileTypeCustomerMappingService {
 
         return groupedCountsArray;
     }
-
 
     async getCustomersByGenderForProfileTypeCustomerMappings(gender: string) {
         try {
