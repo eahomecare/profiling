@@ -23,6 +23,8 @@ const ProfileDataCard = () => {
   const hoveredItem = useSelector(selectHoveredItem);
   const data = useSelector(selectProfileData);
 
+  console.log("data from ProfileDataCard", data);
+
   const handleMouseEnter = (name) => {
     dispatch(setHoveredItem(name));
   };
@@ -34,7 +36,14 @@ const ProfileDataCard = () => {
   const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
 
   return (
-    <Card withBorder shadow={"xl"} radius={"md"} bg={"#EBDFFF"}>
+    <Card
+      withBorder
+      shadow={"xl"}
+      radius={"md"}
+      bg={"#EBDFFF"}
+      mah={300}
+      sx={{ overflowY: "auto", scrollbarColor: "#5C00F2" }}
+    >
       <Stack>
         <Group spacing={"xs"}>
           <Title size={"md"}>Total</Title>
@@ -52,6 +61,7 @@ const ProfileDataCard = () => {
               <Avatar
                 key={entry.src}
                 src={assets[entry.src]}
+                alt="type"
                 sx={{
                   transition: "transform 0.3s ease",
                   transform:
@@ -60,7 +70,6 @@ const ProfileDataCard = () => {
                     hoveredItem === entry.name
                       ? "radial-gradient(#000000 20% ,#5C0FF2)"
                       : "none",
-                  // padding: hoveredItem === entry.name ? 5 : "none",
                 }}
                 radius={"xl"}
                 size={"lg"}

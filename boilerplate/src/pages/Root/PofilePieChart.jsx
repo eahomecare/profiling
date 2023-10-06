@@ -12,6 +12,8 @@ import {
   setHoveredItem,
   clearHoveredItem,
   selectProfileData,
+  selectRequestBody,
+  selectProfileTypeDemoStats,
 } from "../../redux/profileDataCardSlice";
 
 const RenderActiveShape = (props) => {
@@ -99,6 +101,8 @@ const RenderActiveShape = (props) => {
 const ProfilePieChart = () => {
   const dispatch = useDispatch();
   const profileData = useSelector(selectProfileData);
+  const requestBody = useSelector(selectRequestBody);
+  const profileTypeDemoStats = useSelector(selectProfileTypeDemoStats);
 
   const handleMouseEnter = (data, index) => {
     const name = data.name;

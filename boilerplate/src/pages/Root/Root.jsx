@@ -25,6 +25,7 @@ import BubbleChart from "./BubbleChart";
 import ProfilePieChart from "./PofilePieChart";
 import ProfileBarChart from "./ProfileBarChart";
 import ProfileDataCard from "./ProfileDataCard";
+import ProfileTypeAnalysis from "./ProfileTypeAnalysis";
 
 const Root = () => {
   const theme = useMantineTheme();
@@ -32,56 +33,7 @@ const Root = () => {
     <Box>
       <Stack>
         {/* First Card */}
-        <Card shadow={"lg"} radius={"md"}>
-          <Box>
-            <Flex justify={"space-between"}>
-              <Center>
-                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
-                  Profile
-                </Text>
-              </Center>
-              <Center>
-                <Link to={"/campaign"}>
-                  <ActionIcon c={"#5C00F2"} size={"sm"}>
-                    <IconArrowRight />
-                  </ActionIcon>
-                </Link>
-              </Center>
-            </Flex>
-          </Box>
-          <Grid grow>
-            <Grid.Col span={4}>
-              <Stack>
-                <StyledSelect
-                  label={"Profile"}
-                  placeholder={"Select Profile(s)"}
-                  data={["Test", "Hello", "World"]}
-                />
-                <StyledSelect
-                  label={"Main Demographics"}
-                  placeholder={"Select Main Demographics"}
-                  data={["Test"]}
-                />
-                <StyledSelect
-                  label={"Sub-demographic(s)"}
-                  placeholder={"Select Sub-demographic(s)"}
-                  data={["Test"]}
-                />
-                <StyledSelect
-                  label={"Status"}
-                  placeholder={"All"}
-                  data={["Test"]}
-                />
-              </Stack>
-            </Grid.Col>
-            <Grid.Col span={4}>
-              <ProfilePieChart />
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <ProfileDataCard />
-            </Grid.Col>
-          </Grid>
-        </Card>
+        <ProfileTypeAnalysis />
 
         {/* Second Card */}
         <Card shadow={"md"} radius={"md"}>
