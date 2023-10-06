@@ -16,6 +16,30 @@ import {
   selectProfileTypeDemoStats,
 } from "../../redux/profileDataCardSlice";
 
+// Predefined colors
+const COLORS = [
+  "#FF6384",
+  "#63FF84",
+  "#84FF63",
+  "#8463FF",
+  "#6384FF",
+  "#FF6348",
+  "#FF8439",
+  "#48FF63",
+  "#39FF84",
+  "#4839FF",
+  "#FF383D",
+  "#FFD638",
+  "#3DFF73",
+  "#73FF3D",
+  "#3D38FF",
+  "#FF8A80",
+  "#FFEB3B",
+  "#81C784",
+  "#64B5F6",
+  "#BA68C8",
+];
+
 const RenderActiveShape = (props) => {
   const RADIAN = Math.PI / 180;
   const {
@@ -104,6 +128,18 @@ const ProfilePieChart = () => {
   const requestBody = useSelector(selectRequestBody);
   const profileTypeDemoStats = useSelector(selectProfileTypeDemoStats);
 
+  let dataToDisplay = profileData;
+
+  if (requestBody && requestBody.profileType && requestBody.demographic) {
+    const demoData =
+      profileTypeDemoStats[requestBody.profileType][requestBody.demographic];
+    dataToDisplay = demoData.map((item, index) => ({
+      name: item[requestBody.demographic],
+      value: item.count,
+      color: COLORS[index % COLORS.length], // Use modulo to loop through colors
+    }));
+  }
+
   const handleMouseEnter = (data, index) => {
     const name = data.name;
     dispatch(setHoveredItem(name));
@@ -114,7 +150,7 @@ const ProfilePieChart = () => {
   };
 
   const hoveredItem = useSelector((state) => state.profileDataCard.hoveredItem);
-  const activeIndex = profileData.findIndex(
+  const activeIndex = dataToDisplay.findIndex(
     (item) => item.name === hoveredItem,
   );
 
@@ -123,7 +159,7 @@ const ProfilePieChart = () => {
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={300} height={400}>
           <Pie
-            data={profileData}
+            data={dataToDisplay}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -135,11 +171,10 @@ const ProfilePieChart = () => {
             activeIndex={activeIndex}
             activeShape={RenderActiveShape}
           >
-            {profileData.map((entry, index) => (
+            {dataToDisplay.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
-          {/* <Tooltip /> */}
         </PieChart>
       </ResponsiveContainer>
     </Box>
