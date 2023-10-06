@@ -79,7 +79,7 @@ const UserPermissions = ({ initialData }) => {
     header: {
       position: "sticky",
       top: 0,
-      backgroundColor: "#4E70EA",
+      backgroundColor: "#5C0FF2",
       fontColor: "red",
       transition: "box-shadow 150ms ease",
 
@@ -90,8 +90,8 @@ const UserPermissions = ({ initialData }) => {
         right: 0,
         bottom: 0,
         borderBottom: `${rem(1)} solid ${theme.colorScheme === "dark"
-            ? theme.colors.dark[3]
-            : theme.colors.gray[2]
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
           }`,
       },
     },
@@ -234,7 +234,7 @@ const UserPermissions = ({ initialData }) => {
         <AppShell padding="md">
           <Box
             sx={{
-              backgroundColor: "#DDE5FF",
+              backgroundColor: "white",
               padding: "50px",
               marginTop: "-80px",
             }}
