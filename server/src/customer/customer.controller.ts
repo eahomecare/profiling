@@ -83,4 +83,9 @@ export class CustomerController {
 
         return []
     }
+
+    @Get('/count/monthly')
+    getMonthlyCounts() {
+        return this.customerService.countCustomersByMonth();
+    }
 }

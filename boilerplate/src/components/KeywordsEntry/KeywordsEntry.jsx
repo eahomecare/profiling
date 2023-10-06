@@ -1,11 +1,11 @@
-import { MultiSelect, Button,Badge  } from "@mantine/core";
+import { MultiSelect, Button, Badge } from "@mantine/core";
 import React, { useState, useEffect, useMemo } from "react";
 import AddKeywordsModal from "./AddKeywordsModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getCustomerKeywords ,getKeywords} from "../../redux/keywordSlice";
+import { getCustomerKeywords, getKeywords } from "../../redux/keywordSlice";
 import _ from "lodash";
 
-const KeywordsEntry = ({updateKeywordValuesParent }) => {
+const KeywordsEntry = ({ updateKeywordValuesParent }) => {
   const [data, setData] = useState([]);
 
 
@@ -13,12 +13,12 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
   const { status, customerDetails } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
 
-  const { customerKeywords,keywords,keywordsStatus,customerKeywordsStatus } = useSelector((state) => state.keyword);
+  const { customerKeywords, keywords, keywordsStatus, customerKeywordsStatus } = useSelector((state) => state.keyword);
 
 
   const [values, setValue] = useState();
   const [searchValue, onSearchChange] = useState("");
-  const [unknowns,setUnknowns] = useState([])
+  const [unknowns, setUnknowns] = useState([])
 
 
 
@@ -30,7 +30,7 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
 
   const transformedData = useMemo(
     () =>
-      _.map(customerKeywords, ({ id,value,category }) => ({
+      _.map(customerKeywords, ({ id, value, category }) => ({
         value: id,
         label: `${value} [${category}]`,
       })),
@@ -39,37 +39,37 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
 
   const allKeywords = useMemo(
     () =>
-      _.map(keywords, ({ id,value,category }) => ({
+      _.map(keywords, ({ id, value, category }) => ({
         value: id,
         label: `${value} [${category}]`,
       })),
     [keywords]
   );
 
-  
+
 
   const unknownValues = _.map(
     _.filter(keywords, { category: 'unknown' }),
     'value'
   );
 
-  
+
   useEffect(() => {
-    if(keywordsStatus == 'success' && customerKeywordsStatus == 'success' ){
+    if (keywordsStatus == 'success' && customerKeywordsStatus == 'success') {
       setData(allKeywords);
       setValue(transformedData.map((obj) => obj.value));
       setUnknowns(unknownValues)
 
     }
 
-    
+
   }, [customerKeywords, keywords]);
 
   useEffect(() => {
     // setData(allKeywords);
     // setValue(transformedData.map((obj) => obj.value));
     updateKeywordValuesParent(values)
-  }, [ data,values]);
+  }, [data, values]);
 
 
   useEffect(() => {
@@ -88,45 +88,45 @@ const KeywordsEntry = ({updateKeywordValuesParent }) => {
 
   return (
     <>
-    {keywordsStatus == 'success' && customerKeywordsStatus == 'success' ?
-    <>
-    <MultiSelect
-        data={data}
-        value={values}
-        onChange={(e) => setValue(e)}
-        label="Keywords"
-        searchable
-        searchValue={searchValue}
-        onSearchChange={(event) => handleSearchChange(event)}
-        clearable
-        
-        placeholder="Add keywords"
-        creatable
-        getCreateLabel={(query) => `+ Create ${query}`}
-        onCreate={(query) => {
-          const item = { value: query, label: query };
-          setData((current) => [...current, item]);
-          return item;
-        }}
-      />
-      
-      <div style={{ marginTop: '1rem' }}>
+      {keywordsStatus == 'success' && customerKeywordsStatus == 'success' ?
+        <>
+          <MultiSelect
+            data={data}
+            value={values}
+            onChange={(e) => setValue(e)}
+            label="Keywords"
+            searchable
+            searchValue={searchValue}
+            onSearchChange={(event) => handleSearchChange(event)}
+            clearable
+            withinPortal
+            placeholder="Add keywords"
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => {
+              const item = { value: query, label: query };
+              setData((current) => [...current, item]);
+              return item;
+            }}
+          />
+
+          <div style={{ marginTop: '1rem' }}>
             Existing Unknown keywords : {unknowns.map((unknown, index) => (
               <Badge
-              key={unknown}
-              variant="gradient"
-              gradient={{ from: 'indigo', to: 'cyan' }}
-            >
-              {unknown}
-            </Badge>
+                key={unknown}
+                variant="gradient"
+                gradient={{ from: 'indigo', to: 'cyan' }}
+              >
+                {unknown}
+              </Badge>
             ))}
           </div>
-    </>
-    :<>
-    <p>Please wait.......</p>
-    </>
-    }
-      
+        </>
+        : <>
+          <p>Please wait.......</p>
+        </>
+      }
+
     </>
   );
 };
