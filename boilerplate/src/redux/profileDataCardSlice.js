@@ -1,57 +1,82 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-// Async thunk for fetching profile data (kept blank as per your request)
+const API_URL = `${process.env.REACT_APP_API_URL}/profile-type-customer-mapping/groupByAll`;
+
 export const fetchProfileData = createAsyncThunk(
   "profileDataCard/fetchProfileData",
-  async () => {
-    // The API call would go here...
-    // For now, return a static representation.
-    return [
-      { name: "Techies", value: 1244, color: "#E38627", src: "Techie" },
-      { name: "Foodies", value: 5242, color: "blue", src: "Foodie" },
-      {
-        name: "Fitness Freaks",
-        value: 13123,
-        color: "#FFBB28",
-        src: "Fitness Freak",
-      },
-      { name: "Sports Fans", value: 12320, color: "green", src: "Sports Fan" },
-      {
-        name: "Avid Travelers",
-        value: 3243,
-        color: "purple",
-        src: "Avid Traveler",
-      },
-    ];
+  async (requestBody, { getState }) => {
+    console.log("Entered from dispatch", requestBody);
+    const { profileTypeDemoStats } = getState().profileDataCard;
+    console.log("profileTypeDemoStats", profileTypeDemoStats);
+
+    if (
+      requestBody.profileType &&
+      requestBody.demographic &&
+      profileTypeDemoStats[requestBody.profileType] &&
+      profileTypeDemoStats[requestBody.profileType][requestBody.demographic]
+    ) {
+      return {};
+    }
+
+    const response = await axios.post(API_URL, requestBody);
+    console.log("Response ", response);
+
+    if (requestBody.profileType && requestBody.demographic) {
+      const demographicData = response.data[requestBody.demographic];
+      return {
+        profileType: requestBody.profileType,
+        demographic: requestBody.demographic,
+        data: demographicData,
+        requestBody,
+      };
+    }
+
+    const transformedData = response.data.profiles.map((profile) => {
+      const displayName =
+        initialState.displayAndColorMappings[profile.profileType].displayName ||
+        profile.profileType;
+      return {
+        name: displayName,
+        value: profile.count,
+        color:
+          initialState.displayAndColorMappings[profile.profileType].color ||
+          "#DE896599",
+        src: displayName,
+      };
+    });
+
+    const totalCount = transformedData.reduce(
+      (sum, item) => sum + item.value,
+      0,
+    );
+
+    return {
+      transformedData,
+      totalCount,
+      requestBody,
+    };
   },
 );
 
 const initialState = {
   hoveredItem: null,
-  data: [
-    { name: "Techies", value: 21244, color: "#DE896599", src: "Techie" },
-    { name: "Foodies", value: 35242, color: "#D8597299", src: "Foodie" },
-    {
-      name: "Fitness Freaks",
-      value: 13123,
-      color: "#2745D999",
-      src: "Fitness Freak",
-    },
-    {
-      name: "Sports Fans",
-      value: 12320,
-      color: "#1D982599",
-      src: "Sports Fan",
-    },
-    {
-      name: "Avid Travelers",
-      value: 13243,
-      color: "#80008099",
-      src: "Avid Traveler",
-    },
-  ],
+  data: [],
+  totalCount: 0,
   status: "idle",
   error: null,
+  profileTypeDemoStats: {},
+  requestBody: null,
+  displayAndColorMappings: {
+    food: { displayName: "Foodie", color: "#DE896599" },
+    sports: { displayName: "Sports Fan", color: "#D8597299" },
+    travel: { displayName: "Avid Traveller", color: "#2745D999" },
+    music: { displayName: "Musicophile", color: "#1D982599" },
+    fitness: { displayName: "Fitness Freak", color: "#80008099" },
+    automobile: { displayName: "Auto Lover", color: "#E2768D" },
+    gadget: { displayName: "Gadgets Freaks", color: "#56C3A6" },
+    technology: { displayName: "Techie", color: "#EBD43B" },
+  },
 };
 
 const profileDataCardSlice = createSlice({
@@ -72,10 +97,23 @@ const profileDataCardSlice = createSlice({
       })
       .addCase(fetchProfileData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Update the data if payload is available and not empty
-        if (action.payload && action.payload.length > 0) {
-          state.data = action.payload;
+        // console.log("profileDataCard:\n", action.payload);
+
+        if (action.payload.transformedData) {
+          state.data = action.payload.transformedData;
+          state.totalCount = action.payload.totalCount;
         }
+
+        if (action.payload.profileType && action.payload.demographic) {
+          if (!state.profileTypeDemoStats[action.payload.profileType]) {
+            state.profileTypeDemoStats[action.payload.profileType] = {};
+          }
+          state.profileTypeDemoStats[action.payload.profileType][
+            action.payload.demographic
+          ] = action.payload.data;
+        }
+
+        state.requestBody = action.payload.requestBody;
       })
       .addCase(fetchProfileData.rejected, (state, action) => {
         state.status = "failed";
@@ -84,13 +122,13 @@ const profileDataCardSlice = createSlice({
   },
 });
 
-// Export reducers to be used in components
 export const { setHoveredItem, clearHoveredItem } =
   profileDataCardSlice.actions;
 
-// Selector to get the hovered item (for use in components)
 export const selectHoveredItem = (state) => state.profileDataCard.hoveredItem;
-// Selector to get profile data
 export const selectProfileData = (state) => state.profileDataCard.data;
+export const selectRequestBody = (state) => state.profileDataCard.requestBody;
+export const selectProfileTypeDemoStats = (state) =>
+  state.profileDataCard.profileTypeDemoStats;
 
 export default profileDataCardSlice.reducer;
