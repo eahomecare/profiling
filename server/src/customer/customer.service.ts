@@ -5,12 +5,46 @@ import {
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { findInClassification } from '../classifications/find.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { merge } from 'lodash';
+import { merge, groupBy } from 'lodash';
 import { Customer } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
   constructor(private prisma: PrismaService) { }
+
+  async countCustomersByMonth() {
+    const customers = await this.prisma.customer.findMany({
+      select: {
+        created_at: true,
+      },
+    });
+
+    const monthNames = {
+      '01': 'January',
+      '02': 'February',
+      '03': 'March',
+      '04': 'April',
+      '05': 'May',
+      '06': 'June',
+      '07': 'July',
+      '08': 'August',
+      '09': 'September',
+      '10': 'October',
+      '11': 'November',
+      '12': 'December',
+    };
+
+    const customersGroupedByMonth = groupBy(customers, (customer) =>
+      monthNames[customer.created_at.toISOString().slice(5, 7)] + ' ' + customer.created_at.toISOString().slice(0, 4)
+    );
+
+    const customerCountsByMonth = Object.entries(customersGroupedByMonth).map(([month, customers]) => ({
+      month,
+      count: customers.length,
+    }));
+
+    return customerCountsByMonth;
+  }
 
   async addCustomerDetails(
     customer_details: any,
@@ -340,6 +374,8 @@ export class CustomerService {
       await this.prisma.$disconnect();
     }
   }
+
+
 
 }
 
