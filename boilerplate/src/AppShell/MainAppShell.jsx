@@ -186,11 +186,11 @@ const MainAppShell = ({ children }) => {
           >
             <Space h={5} />
             <Navbar.Section>
-              <User user={user} roleName={findUserRoleNameById(user._id)} />
+              {users && user && user._id && <User user={user} roleName={findUserRoleNameById(user._id)} />}
             </Navbar.Section>
             <Space h={2} />
             <Stack>
-              {hasPermission(userPermissions, "customer_dashboard") && (
+              {hasPermission(userPermissions, "profile_dashboard") && (
                 <NavLink
                   styles={{
                     root: {

@@ -23,7 +23,7 @@ import { Link, redirect, useNavigate } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons-react";
 import loginImage from "./assets/login.png";
 import eaLogo from "./assets/eaLogo.png";
-import { loginUser } from "../../redux/authSlice";
+import { loginUser, getUsers } from "../../redux/authSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -57,6 +57,7 @@ export default function Login() {
   useEffect(() => {
     if (status === "success" && isLoggedIn) {
       dispatch(getAllRolesPermissionsMappingsByUser(user._id));
+      dispatch(getUsers())
       navigate("/");
     }
   }, [status, navigate]);
