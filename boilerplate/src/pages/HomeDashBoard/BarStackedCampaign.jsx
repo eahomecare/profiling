@@ -39,7 +39,7 @@ const BarStackedView = () => {
   return (
     <>
       <Box p={30} h={500} w={"100%"}>
-        <Title c={"#4e70ea"}>Other Campaign Comparison</Title>
+        <Title c={"#5C0FF2"}>Other Campaign Comparison</Title>
         <Box>
           <Flex>
             <Select

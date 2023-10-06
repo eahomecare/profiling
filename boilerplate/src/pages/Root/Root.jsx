@@ -12,6 +12,7 @@ import {
 import { IconArrowRight } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
+import BarStackedView from "../HomeDashBoard/BarStackedCampaign";
 import AreaChartSample from "./AreaChart";
 import CustomerProfileAnalysis from "./CustomerProfileAnalysis";
 import ProfileBarChart from "./ProfileBarChart";
@@ -71,6 +72,11 @@ const Root = () => {
               <ProfileBarChart />
             </Grid.Col>
           </Grid>
+        </Card>
+
+        {/* Fourth Card */}
+        <Card shadow={"md"} radius={"md"}>
+          <BarStackedView />
         </Card>
 
         {/* Third Card */}
