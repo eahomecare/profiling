@@ -1,4 +1,12 @@
-import { ActionIcon, Box, Flex, Select, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Flex,
+  Select,
+  Text,
+  Title,
+  Loader,
+} from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import {
   BarChart,
@@ -17,6 +25,7 @@ import {
   fetchData,
   fetchSources,
   fetchCampaignNames,
+  selectCampaign,
 } from "../../redux/campaignSlice";
 
 const BarStackedView = () => {
@@ -36,9 +45,23 @@ const BarStackedView = () => {
     }
   }, [status, dispatch]);
 
+  if (status === "loading") {
+    return (
+      <Loader
+        c="5c00f2"
+        style={{ margin: "0 auto", display: "block" }}
+        size={50}
+      />
+    );
+  }
+
+  if (status === "failed") {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <>
-      <Box p={30} h={500} w={"100%"}>
+      <Box p={30}>
         <Title c={"#5C0FF2"}>Other Campaign Comparison</Title>
         <Box>
           <Flex>
@@ -58,6 +81,7 @@ const BarStackedView = () => {
                   <IconChevronDown />
                 </ActionIcon>
               }
+              onChange={(value) => dispatch(selectCampaign(value))}
             />
             <Select
               maw={320}
@@ -78,50 +102,50 @@ const BarStackedView = () => {
             />
           </Flex>
         </Box>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart
-            width={500}
-            height={300}
-            data={data}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-            maxBarSize={60}
-          >
-            <CartesianGrid
-              strokeLinecap="3"
-              horizontalCoordinatesGenerator={(props) =>
-                props.height > 250 ? [75, 150, 225] : [100, 200]
-              }
-              vertical={false}
-            />
-            <XAxis dataKey="name" />
-            <YAxis
-              label={{
-                value: "No. of Customers",
-                angle: -90,
-                position: "insideLeft",
-                offset: -4,
+        <Box h={500} w={"100%"}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={data}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
               }}
-            />
-            <Tooltip />
-            <Legend
-              iconType="circle"
-              verticalAlign="top"
-              align="right"
-              offset={-10}
-            />
-            <Bar dataKey="delivered" stackId="a" fill="#8334f8" />
-            <Bar dataKey="failure" stackId="a" fill="#8884d8" />
-            <Bar dataKey="interested" stackId="a" fill="#883538" />
-            <Bar dataKey="converted" stackId="a" fill="#82ca9d">
-              <LabelList position={"top"} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+              maxBarSize={60}
+            >
+              <CartesianGrid
+                strokeLinecap="3"
+                horizontalCoordinatesGenerator={(props) =>
+                  props.height > 250 ? [75, 150, 225] : [100, 200]
+                }
+                vertical={false}
+              />
+              <XAxis dataKey="name" />
+              <YAxis
+                label={{
+                  value: "No. of Customers",
+                  angle: -90,
+                  position: "insideLeft",
+                  offset: -4,
+                }}
+              />
+              <Tooltip />
+              <Legend
+                iconType="circle"
+                verticalAlign="top"
+                align="right"
+                offset={-10}
+              />
+              <Bar dataKey="delivered" stackId="a" fill="#8334f8" />
+              <Bar dataKey="failure" stackId="a" fill="#8884d8" />
+              <Bar dataKey="interested" stackId="a" fill="#883538" />
+              <Bar dataKey="converted" stackId="a" fill="#82ca9d">
+                <LabelList position={"top"} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </Box>
       </Box>
     </>
   );

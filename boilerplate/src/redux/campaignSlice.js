@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchData = createAsyncThunk("campaign/fetchData", async () => {
-  const response = {
-    data: [],
-  };
-  return response.data;
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/campaign/reports/all`,
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  return data;
 });
 
 export const fetchSources = createAsyncThunk(
@@ -28,66 +32,10 @@ export const fetchCampaignNames = createAsyncThunk(
 );
 
 const initialState = {
-  data: [
-    {
-      name: "Campaign Name 1",
-      delivered: 4000,
-      interested: 3000,
-      converted: 2000,
-      failure: 100,
-      success: 1000,
-    },
-    {
-      name: "Campaign Name 2",
-      delivered: 9000,
-      interested: 6500,
-      converted: 4500,
-      failure: 300,
-      success: 900,
-    },
-    {
-      name: "Campaign Name 3",
-      delivered: 5000,
-      interested: 3700,
-      converted: 2500,
-      failure: 150,
-      success: 1100,
-    },
-    {
-      name: "Campaign Name 4",
-      delivered: 5500,
-      interested: 4000,
-      converted: 2700,
-      failure: 180,
-      success: 900,
-    },
-    {
-      name: "Campaign Name 5",
-      delivered: 4800,
-      interested: 3400,
-      converted: 2300,
-      failure: 120,
-      success: 1000,
-    },
-    {
-      name: "Campaign Name 6",
-      delivered: 4700,
-      interested: 3300,
-      converted: 2200,
-      failure: 110,
-      success: 1300,
-    },
-    {
-      name: "Campaign Name 7",
-      delivered: 4600,
-      interested: 3200,
-      converted: 2100,
-      failure: 100,
-      success: 1400,
-    },
-  ],
+  data: [],
   sources: ["Homecare", "Cyberior", "EZ-Auto", "EZ-Travel", "E-Portal 2.0"],
   campaignNames: ["Campaign 1", "Campaign 2", "Campaign 3"],
+  selectedCampaign: "All",
   status: "idle",
   error: null,
 };
@@ -95,7 +43,11 @@ const initialState = {
 const campaignSlice = createSlice({
   name: "campaign",
   initialState,
-  reducers: {},
+  reducers: {
+    selectCampaign: (state, action) => {
+      state.selectedCampaign = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.pending, (state) => {
@@ -103,9 +55,13 @@ const campaignSlice = createSlice({
       })
       .addCase(fetchData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        if (action.payload && action.payload.length > 0) {
-          state.data = action.payload;
-        }
+        state.data = action.payload.map((item) => ({
+          name: item.campaignName,
+          delivered: item.totalSent,
+          interested: item.success,
+          failure: item.failed,
+          converted: 0,
+        }));
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.status = "failed";
@@ -123,5 +79,7 @@ const campaignSlice = createSlice({
       });
   },
 });
+
+export const { selectCampaign } = campaignSlice.actions;
 
 export default campaignSlice.reducer;

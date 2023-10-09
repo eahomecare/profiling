@@ -94,10 +94,22 @@ const ProfileTypeAnalysis = () => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={4}>
-          {status === "loading" ? <Loader size="lg" /> : <ProfilePieChart />}
+          <Center>
+            {status === "loading" ? (
+              <Loader c="5c0ff2" size="lg" />
+            ) : (
+              <ProfilePieChart />
+            )}
+          </Center>
         </Grid.Col>
         <Grid.Col span={3}>
-          {status === "loading" ? <Loader size="lg" /> : <ProfileDataCard />}
+          <Center>
+            {status === "loading" ? (
+              <Loader c="5c0ff2" size="lg" />
+            ) : (
+              <ProfileDataCard />
+            )}
+          </Center>
         </Grid.Col>
       </Grid>
     </Card>
