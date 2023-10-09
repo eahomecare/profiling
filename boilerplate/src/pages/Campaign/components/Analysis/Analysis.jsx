@@ -143,20 +143,6 @@ const Analysis = () => {
       <Card mt={20} shadow={"lg"} radius="md">
         <div className="row">
           <div className="col-12 col-lg-8">
-            <div className="col-12 col-lg-12 mb-3">
-              <Flex justify={"end"}>
-                <div className="pl-90">
-                  <Group onClick={addRow} style={{ cursor: "pointer" }}>
-                    <ActionIcon color="#5C00F2" variant="subtle" size={"sm"}>
-                      <IconPlus color="#5C00F2" />
-                    </ActionIcon>
-                    <Text ml={-18} color="#5C00F2" size={"sm"}>
-                      Add More
-                    </Text>
-                  </Group>
-                </div>
-              </Flex>
-            </div>
             <div
               className="row"
               style={{ maxHeight: "250px", overflowY: "scroll" }}
@@ -197,6 +183,18 @@ const Analysis = () => {
                   deleteRow={deleteRow}
                 />
               ))}
+              <Flex justify={"end"}>
+                <div className="pl-90">
+                  <Group onClick={addRow} style={{ cursor: "pointer" }}>
+                    <ActionIcon color="#5C00F2" variant="subtle" size={"sm"}>
+                      <IconPlus color="#5C00F2" />
+                    </ActionIcon>
+                    <Text ml={-18} color="#5C00F2" size={"sm"}>
+                      Add More
+                    </Text>
+                  </Group>
+                </div>
+              </Flex>
             </div>
             {/* <ButtonGroup
                                 isModalOpen={isModalOpen}
