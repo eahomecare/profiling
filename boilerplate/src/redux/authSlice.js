@@ -69,8 +69,17 @@ export const authSlice = createSlice({
       state.isLoggedIn = false;
       axios.defaults.headers.common["authorization"] = null;
     },
-    setUser: (state, action) => {
-      state.user = action.payload;
+    setAuth: (state, action) => {
+      const storage = JSON.parse(localStorage.getItem("login"));
+      if (Object.keys(storage).length > 0) {
+        const { email, _id } = storage
+        state.user.email = email;
+        state.user._id = _id;
+        state.status = "success";
+        state.isLoggedIn = true;
+      } else {
+        state.isLoggedIn = false;
+      }
     },
   },
   extraReducers: {

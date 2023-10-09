@@ -164,6 +164,7 @@ const User = ({ user, roleName }) => {
                 color="red"
                 icon={<IconLogout size={14} />}
                 className={cx(classes.link, classes.linkIcon)}
+                onClick={() => window.location.reload()}
               />
             </Card>
           </Box>

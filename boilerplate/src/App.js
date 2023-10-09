@@ -20,6 +20,7 @@ import Users from "./pages/Users/Users";
 import MyAccount from "./AppShell/UserMenuItems/MyAccount/MyAccount";
 import Security from "./AppShell/UserMenuItems/SecuritySettings/Security";
 import Root from "./pages/Root/Root";
+import { setAuth } from "./redux/authSlice";
 // const Analysis = lazy(() =>
 //   import("./pages/Campaign/components/Analysis/Analysis"),
 // );
@@ -57,6 +58,13 @@ function App() {
       (permission) => permission.name === permissionName,
     );
   }
+
+  useEffect(() => {
+    const { isLoggedIn } = JSON.parse(localStorage.getItem("login")) || {};
+    if (isLoggedIn) {
+      dispatch(setAuth());
+    }
+  }, [dispatch, isLoggedIn]);
 
   // useEffect(() => {
   //   if (!isLoggedIn) {
