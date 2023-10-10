@@ -130,18 +130,25 @@ const ProfilePieChart = () => {
 
   let dataToDisplay = profileData;
 
-  if (requestBody && requestBody.profileType && requestBody.demographic) {
+  if (
+    requestBody &&
+    requestBody.profileType &&
+    requestBody.demographic &&
+    profileTypeDemoStats[requestBody.profileType]
+  ) {
     const demoData =
-      profileTypeDemoStats[requestBody.profileType][requestBody.demographic];
+      profileTypeDemoStats[requestBody.profileType][requestBody.demographic] ||
+      [];
     dataToDisplay = demoData.map((item, index) => ({
       name: item[requestBody.demographic],
       value: item.count,
-      color: COLORS[index % COLORS.length], // Use modulo to loop through colors
+      color: COLORS[index % COLORS.length],
     }));
+    console.log("Data to display", dataToDisplay);
   }
 
   const handleMouseEnter = (data, index) => {
-    const name = data.name;
+    const name = typeof data.name === "string" ? data.name : "Unknown";
     dispatch(setHoveredItem(name));
   };
 

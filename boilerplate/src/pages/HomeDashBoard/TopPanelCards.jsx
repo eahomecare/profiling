@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -9,6 +9,7 @@ import {
   Text,
   Stack,
   rem,
+  Tooltip,
 } from "@mantine/core";
 import {
   IconBounceLeft,
@@ -22,51 +23,61 @@ import {
 } from "@tabler/icons-react";
 
 const data = [
-  { color: "green", text: "No. of Clicks", percentage: "85%", icon: IconClick },
+  {
+    color: "green",
+    text: "No. of Clicks",
+    percentage: "85%",
+    icon: IconClick,
+    label:
+      "Number of times that a customer has clicked any othe marketing campaign links",
+  },
   {
     color: "orange",
     text: "No. of Bookings",
     percentage: "70%",
     icon: IconCalendar,
+    label: "Number of Bookings created",
   },
   {
     color: "purple",
     text: "No. of Payments",
     percentage: "85%",
     icon: IconCreditCard,
+    label: "Number of Bookings that followed through with complete payments",
   },
-  { color: "pink", text: "Conversion Rate", percentage: "91%", icon: IconCone },
-  // {
-  //   color: "yellow",
-  //   text: "No. of Views",
-  //   percentage: "70%",
-  //   icon: IconView360,
-  // },
-  // {
-  //   color: "teal",
-  //   text: "No. of Searchs",
-  //   percentage: "70%",
-  //   icon: IconSearch,
-  // },
-  // {
-  //   color: "blue",
-  //   text: "No. of Sessions",
-  //   percentage: "63%",
-  //   icon: IconClock,
-  // },
+  {
+    color: "pink",
+    text: "Conversion Rate",
+    percentage: "91%",
+    icon: IconCone,
+    label: "Percentage of payments to bookings",
+  },
   {
     color: "teal",
     text: "Bounce Rate",
     percentage: "13%",
     icon: IconBounceLeft,
+    label:
+      "All the attempts through out all the campaigns that resulted in a failure",
   },
 ];
 
 const TopPanelCards = () => {
+  // state to hold the index of the currently hovered item or -1 if none
+  const [visibleTooltip, setVisibleTooltip] = useState(false);
+
+  useEffect(() => {
+    console.log(visibleTooltip);
+  }, [visibleTooltip]);
+
   return (
     <>
       {data.map((item, index) => (
-        <Box key={index}>
+        <Box
+          key={index}
+          onMouseEnter={() => setVisibleTooltip(index)}
+          onMouseLeave={() => setVisibleTooltip(false)}
+        >
           <Card
             sx={{
               height: "100%",
@@ -83,9 +94,17 @@ const TopPanelCards = () => {
             <Center>
               <Flex>
                 <Group noWrap>
-                  <ActionIcon size={rem(70)} c={item.color}>
-                    <item.icon size={rem(70)} />
-                  </ActionIcon>
+                  <Tooltip
+                    key={`Tooltip-${index}`}
+                    label={item.label}
+                    color={"EBDFFF"}
+                    withArrow
+                    opened={visibleTooltip === index}
+                  >
+                    <ActionIcon size={rem(70)} c={item.color}>
+                      <item.icon size={rem(70)} />
+                    </ActionIcon>
+                  </Tooltip>
                   <Stack justify={"start"}>
                     <Text>{item.text}</Text>
                     <Text c={item.color}>{item.percentage}</Text>

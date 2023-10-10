@@ -34,8 +34,9 @@ const ProfileTypeAnalysis = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedProfile !== "none" && selectedDemographic !== "none") {
-      console.log("dispatching 2");
+    if (selectedProfile === "none" && selectedDemographic === "none") {
+      dispatch(fetchProfileData({}));
+    } else if (selectedProfile !== "none" && selectedDemographic !== "none") {
       dispatch(
         fetchProfileData({
           profileType: selectedProfile,
@@ -54,7 +55,7 @@ const ProfileTypeAnalysis = () => {
 
   const demographicOptions = [
     { value: "none", label: "None" },
-    { value: "age", label: "Age" },
+    { value: "ageRange", label: "Age" },
     { value: "gender", label: "Gender" },
   ];
 
