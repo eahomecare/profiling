@@ -1,24 +1,28 @@
 {
   "files": {
-    "main.css": "/static/css/main.373562eb.chunk.css",
-    "main.js": "/static/js/main.591398df.chunk.js",
-    "main.js.map": "/static/js/main.591398df.chunk.js.map",
+    "main.css": "/static/css/main.e03142b8.chunk.css",
+    "main.js": "/static/js/main.401d1e78.chunk.js",
+    "main.js.map": "/static/js/main.401d1e78.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.6649c910.js",
     "runtime-main.js.map": "/static/js/runtime-main.6649c910.js.map",
     "static/css/2.a4923f21.chunk.css": "/static/css/2.a4923f21.chunk.css",
-    "static/js/2.ebca3c6b.chunk.js": "/static/js/2.ebca3c6b.chunk.js",
-    "static/js/2.ebca3c6b.chunk.js.map": "/static/js/2.ebca3c6b.chunk.js.map",
+    "static/js/2.a4f82afc.chunk.js": "/static/js/2.a4f82afc.chunk.js",
+    "static/js/2.a4f82afc.chunk.js.map": "/static/js/2.a4f82afc.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.a4923f21.chunk.css.map": "/static/css/2.a4923f21.chunk.css.map",
-    "static/css/main.373562eb.chunk.css.map": "/static/css/main.373562eb.chunk.css.map",
-    "static/js/2.ebca3c6b.chunk.js.LICENSE.txt": "/static/js/2.ebca3c6b.chunk.js.LICENSE.txt",
+    "static/css/main.e03142b8.chunk.css.map": "/static/css/main.e03142b8.chunk.css.map",
+    "static/js/2.a4f82afc.chunk.js.LICENSE.txt": "/static/js/2.a4f82afc.chunk.js.LICENSE.txt",
     "static/media/AddProfile.4fbe8ef9.png": "/static/media/AddProfile.4fbe8ef9.png",
+    "static/media/Auto Lover.176e4ecb.png": "/static/media/Auto Lover.176e4ecb.png",
     "static/media/Avid Traveler.png": "/static/media/Avid Traveler.153391f9.png",
     "static/media/Fitness Freak.46faf880.png": "/static/media/Fitness Freak.46faf880.png",
     "static/media/Foodie.2aa654ef.png": "/static/media/Foodie.2aa654ef.png",
+    "static/media/Gadgets Freaks.5948795a.png": "/static/media/Gadgets Freaks.5948795a.png",
+    "static/media/Musicophile.4103dd9d.png": "/static/media/Musicophile.4103dd9d.png",
     "static/media/Sports Fan.2152ca0c.png": "/static/media/Sports Fan.2152ca0c.png",
     "static/media/Techie.4d48204f.png": "/static/media/Techie.4d48204f.png",
     "static/media/eaLogo.f8ac5978.png": "/static/media/eaLogo.f8ac5978.png",
+    "static/media/eaLogoRotate.0d85ab0c.svg": "/static/media/eaLogoRotate.0d85ab0c.svg",
     "static/media/getFetch.cjs": "/static/media/getFetch.582d29c4.cjs",
     "static/media/login.fb9a0a6a.png": "/static/media/login.fb9a0a6a.png",
     "static/media/logo.6dbf63a8.svg": "/static/media/logo.6dbf63a8.svg"
@@ -26,8 +30,8 @@
   "entrypoints": [
     "static/js/runtime-main.6649c910.js",
     "static/css/2.a4923f21.chunk.css",
-    "static/js/2.ebca3c6b.chunk.js",
-    "static/css/main.373562eb.chunk.css",
-    "static/js/main.591398df.chunk.js"
+    "static/js/2.a4f82afc.chunk.js",
+    "static/css/main.e03142b8.chunk.css",
+    "static/js/main.401d1e78.chunk.js"
   ]
 }
