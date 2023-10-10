@@ -6,11 +6,12 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { findInClassification } from '../classifications/find.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { merge, groupBy } from 'lodash';
-import { Customer } from '@prisma/client';
+import { Customer, Prisma, Personal_Details } from '@prisma/client';
+import { tryCatch } from 'bullmq';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async countCustomersByMonth() {
     const customers =
@@ -39,9 +40,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-          customer.created_at
-            .toISOString()
-            .slice(5, 7)
+        customer.created_at
+          .toISOString()
+          .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -403,4 +404,45 @@ export class CustomerService {
       await this.prisma.$disconnect();
     }
   }
+
+  async addCustomer_Generic(customerInput: Prisma.CustomerCreateInput, personalDetailsInput: Prisma.Personal_DetailsCreateInput) {
+    try {
+
+
+      const dateOfBirth = personalDetailsInput.date_of_birth ? new Date(personalDetailsInput.date_of_birth) : null;
+
+      const customer = await this.prisma.customer.create({
+        data: {
+          mobile: customerInput.mobile,
+          email: customerInput.email,
+          source: customerInput.source,
+        },
+      });
+
+      await this.prisma.personal_Details.create({
+        data: {
+          customer_id: customer.id,
+          full_name: personalDetailsInput.full_name,
+          phone_number: customerInput.mobile,
+          email_address: customerInput.email,
+          date_of_birth: dateOfBirth,
+          gender: personalDetailsInput.gender,
+          address: personalDetailsInput.address,
+          employment: personalDetailsInput.employment,
+          location: personalDetailsInput.location
+        },
+      });
+
+      const createdCustomer = await this.prisma.customer.findUnique({
+        where: {
+          id: customer.id,
+        },
+      });
+
+      return createdCustomer;
+    } catch (error) {
+      return error;
+    }
+  }
+
 }
