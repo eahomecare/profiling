@@ -37,12 +37,12 @@ export const fetchProfileData = createAsyncThunk(
         initialState.displayAndColorMappings[profile.profileType].displayName ||
         profile.profileType;
       return {
-        name: displayName,
+        name: `${displayName}`,
         value: profile.count,
         color:
           initialState.displayAndColorMappings[profile.profileType].color ||
           "#DE896599",
-        src: displayName,
+        src: `${displayName}`,
       };
     });
 
