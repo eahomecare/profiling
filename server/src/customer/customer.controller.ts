@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard';
 import { CustomerService } from './customer.service';
-import { Customer } from '@prisma/client';
+import { Customer, Prisma } from '@prisma/client';
 
 // @UseGuards(JwtGuard)
 @Controller('customers')
@@ -87,5 +87,20 @@ export class CustomerController {
     @Get('/count/monthly')
     getMonthlyCounts() {
         return this.customerService.countCustomersByMonth();
+    }
+
+    @Post('/add/customer/generic')
+    @HttpCode(HttpStatus.CREATED)
+    async addCustomerHM(
+        @Body('customerInput') customerInput: Prisma.CustomerCreateInput,
+        @Body('personalDetailsInput') personalDetailsInput: Prisma.Personal_DetailsCreateInput
+    ) {
+        try {
+            const createdCustomer = await this.customerService.addCustomer_Generic(customerInput, personalDetailsInput);
+            return { message: 'Customer created successfully', customer: createdCustomer };
+        } catch (error) {
+            console.log(error)
+            return { message: 'Failed to create customer', error };
+        }
     }
 }
