@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id                        String @id @default(auto()) @map("_id") @db.ObjectId
+  id                        String                      @id @default(auto()) @map("_id") @db.ObjectId
   fullname                  String?
   agentID                   String?                     @unique
   agentJWT                  String?                     @unique
@@ -30,7 +30,7 @@ model User {
   role                      Role                        @relation(fields: [roleId], references: [id])
   agentSubmits              agentSubmits[]
   AgentSession              AgentSession[]
-  isActive                  Boolean      @default(true)
+  isActive                  Boolean                     @default(true)
 
   @@map("users")
 }
@@ -62,6 +62,7 @@ model Customer {
   agentSubmits                agentSubmits[]
   campaignIDs                 String[]                      @db.ObjectId
   campaign                    Campaign[]                    @relation(fields: [campaignIDs], references: [id])
+  CustomerHomecareMapping     CustomerHomecareMapping[]
 
   @@map("customers")
 }
@@ -246,12 +247,11 @@ model Role {
   @@unique([name])
 }
 
-
 enum RoleNames {
   admin
   agent
   campaign_manager
-  team_lead  
+  team_lead
 }
 
 enum PermissionNames {
@@ -450,4 +450,54 @@ model CustomerCRMMapping {
 
   @@unique([customerCrmId, crmName])
   @@map("customer_crm_mappings")
+}
+
+model CustomerHomecareMapping {
+  id                   String           @id @default(auto()) @map("_id") @db.ObjectId
+  master_customer_id   String           @db.ObjectId
+  wp_user_id           Int
+  homecare_customer_id String           @db.ObjectId
+  customer             Customer         @relation(fields: [master_customer_id], references: [id])
+  customer_homecare    CustomerHomecare @relation(fields: [homecare_customer_id], references: [id])
+
+  @@unique([master_customer_id, wp_user_id])
+}
+
+model PersonalDetailsHomecare {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  customer_id     String            @unique @db.ObjectId
+  customer        CustomerHomecare? @relation(fields: [customer_id], references: [id])
+  ccode           String?
+  country         String?
+  fname           String?
+  lname           String?
+  gender          String?
+  location        String?
+  email           String?
+  mobile          String?
+  memberBenefitId String?
+  planId          String?
+  clientId        String?
+  programId       String?
+  regCode         String?
+}
+
+model CustomerHomecare {
+  id                             String                    @id @default(auto()) @map("_id") @db.ObjectId
+  personalDetails                PersonalDetailsHomecare?
+  socketId                       String?
+  cyberior_customer_id           String?
+  homecare_post_id               String?
+  cyberior_activation_status     String?
+  cyberior_id                    String?
+  cyberior_user_id               String?
+  cyberior_activation_date       String?
+  registrationVerificationStatus String?
+  wp_user_id                     Int
+  customer_id                    String?
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt
+  CustomerHomecareMapping        CustomerHomecareMapping[]
+
+  @@unique([wp_user_id])
 }
