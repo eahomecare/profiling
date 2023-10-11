@@ -467,6 +467,7 @@ export class CustomerService {
         updatedAt,
       } = payload;
 
+      console.log(payload, "payload");
 
       createdAt = new Date(createdAt)
       updatedAt = new Date(updatedAt)
@@ -543,7 +544,8 @@ export class CustomerService {
 
       return customerHomecareMapping
     } catch (error) {
-      throw Error(error)
+      console.log(error);
+      return error;
     }
   }
 
