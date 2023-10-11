@@ -460,7 +460,7 @@ model CustomerHomecareMapping {
   customer             Customer         @relation(fields: [master_customer_id], references: [id])
   customer_homecare    CustomerHomecare @relation(fields: [homecare_customer_id], references: [id])
 
-  @@unique([master_customer_id, wp_user_id])
+  @@unique([wp_user_id])
   @@map("customer_homecare_mappings")
 }
 
