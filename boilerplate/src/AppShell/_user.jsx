@@ -27,6 +27,8 @@ import {
   IconChevronDown,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import { logout } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -78,6 +80,7 @@ const useStyles = createStyles((theme) => ({
 const User = ({ user, roleName }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -164,7 +167,7 @@ const User = ({ user, roleName }) => {
                 color="red"
                 icon={<IconLogout size={14} />}
                 className={cx(classes.link, classes.linkIcon)}
-                onClick={() => window.location.reload()}
+                onClick={() => dispatch(logout())}
               />
             </Card>
           </Box>

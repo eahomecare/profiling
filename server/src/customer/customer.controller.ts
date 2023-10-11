@@ -13,6 +13,7 @@ import {
 import { JwtGuard } from '../auth/guard';
 import { CustomerService } from './customer.service';
 import { Customer, Prisma } from '@prisma/client';
+import { CreateCustomerHomecarePayload } from './types';
 
 // @UseGuards(JwtGuard)
 @Controller('customers')
@@ -91,12 +92,26 @@ export class CustomerController {
 
     @Post('/add/customer/generic')
     @HttpCode(HttpStatus.CREATED)
-    async addCustomerHM(
+    async addCustomer(
         @Body('customerInput') customerInput: Prisma.CustomerCreateInput,
         @Body('personalDetailsInput') personalDetailsInput: Prisma.Personal_DetailsCreateInput
     ) {
         try {
-            const createdCustomer = await this.customerService.addCustomer_Generic(customerInput, personalDetailsInput);
+            const createdCustomer = await this.customerService.addCustomer_Homecare(customerInput, personalDetailsInput);
+            return { message: 'Customer created successfully', customer: createdCustomer };
+        } catch (error) {
+            console.log(error)
+            return { message: 'Failed to create customer', error };
+        }
+    }
+
+    @Post('/add/customer/homecare')
+    @HttpCode(HttpStatus.CREATED)
+    async addCustomerHM(
+        @Body() data: CreateCustomerHomecarePayload,
+    ) {
+        try {
+            const createdCustomer = await this.customerService.addCustomerHomecare(data);
             return { message: 'Customer created successfully', customer: createdCustomer };
         } catch (error) {
             console.log(error)

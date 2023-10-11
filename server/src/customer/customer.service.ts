@@ -8,6 +8,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { merge, groupBy } from 'lodash';
 import { Customer, Prisma, Personal_Details } from '@prisma/client';
 import { tryCatch } from 'bullmq';
+import { CreateCustomerHomecarePayload } from './types';
+import { log } from 'console';
+
+
 
 @Injectable()
 export class CustomerService {
@@ -405,7 +409,7 @@ export class CustomerService {
     }
   }
 
-  async addCustomer_Generic(customerInput: Prisma.CustomerCreateInput, personalDetailsInput: Prisma.Personal_DetailsCreateInput) {
+  async addCustomer_Homecare(customerInput: Prisma.CustomerCreateInput, personalDetailsInput: Prisma.Personal_DetailsCreateInput) {
     try {
 
 
@@ -444,5 +448,106 @@ export class CustomerService {
       return error;
     }
   }
+
+  async addCustomerHomecare(payload: CreateCustomerHomecarePayload) {
+    try {
+      let {
+        personalDetails,
+        socketId,
+        cyberior_customer_id,
+        homecare_post_id,
+        cyberior_activation_status,
+        cyberior_id,
+        cyberior_user_id,
+        cyberior_activation_date,
+        registrationVerificationStatus,
+        wp_user_id,
+        customer_id,
+        createdAt,
+        updatedAt,
+      } = payload;
+
+      console.log(payload, "payload");
+
+      createdAt = new Date(createdAt)
+      updatedAt = new Date(updatedAt)
+
+      // Create CustomerHomecare
+      const customerHomecare = await this.prisma.customerHomecare.create({
+        data: {
+          socketId,
+          cyberior_customer_id,
+          homecare_post_id,
+          cyberior_activation_status,
+          cyberior_id,
+          cyberior_user_id,
+          cyberior_activation_date,
+          registrationVerificationStatus,
+          wp_user_id,
+          customer_id,
+          createdAt,
+          updatedAt,
+        },
+      });
+
+      const personalDetailsHomecare = await this.prisma.personalDetailsHomecare.create({
+        data: {
+          ccode: personalDetails.ccode,
+          country: personalDetails.country,
+          fname: personalDetails.fname,
+          lname: personalDetails.lname,
+          gender: personalDetails.gender,
+          location: personalDetails.location,
+          email: personalDetails.email,
+          mobile: personalDetails.mobile,
+          memberBenefitId: personalDetails.memberBenefitId,
+          planId: personalDetails.planId,
+          clientId: personalDetails.clientId,
+          programId: personalDetails.programId,
+          regCode: personalDetails.regCode,
+          customer: {
+            connect: {
+              id: customerHomecare.id,
+            },
+          },
+        },
+      });
+
+
+      const customerMaster = await this.prisma.customer.create({
+        data: {
+          mobile: personalDetails.mobile,
+          email: personalDetails.email,
+          source: 'homecare',
+        },
+      });
+
+      await this.prisma.personal_Details.create({
+        data: {
+          customer_id: customerMaster.id,
+          full_name: `${personalDetails.fname} ${personalDetails.lname}`,
+          phone_number: personalDetails.mobile,
+          email_address: personalDetails.email,
+          gender: personalDetails.gender,
+          location: personalDetails.location
+        },
+      });
+
+
+      const customerHomecareMapping = await this.prisma.customerHomecareMapping.create({
+        data: {
+          master_customer_id: customerHomecare.id,
+          wp_user_id,
+          homecare_customer_id: customerHomecare.id,
+        },
+      });
+
+      return customerHomecareMapping
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
 
 }
