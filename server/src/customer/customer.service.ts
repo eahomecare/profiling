@@ -17,7 +17,7 @@ import { log } from 'console';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async countCustomersByMonth() {
     const customers =
@@ -46,9 +46,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-          customer.created_at
-            .toISOString()
-            .slice(5, 7)
+        customer.created_at
+          .toISOString()
+          .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -419,8 +419,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-              personalDetailsInput.date_of_birth,
-            )
+            personalDetailsInput.date_of_birth,
+          )
           : null;
 
       const customer =
@@ -481,7 +481,6 @@ export class CustomerService {
         updatedAt,
       } = payload;
 
-      console.log(payload, 'payload');
 
       createdAt = new Date(createdAt);
       updatedAt = new Date(updatedAt);
@@ -570,8 +569,7 @@ export class CustomerService {
 
       return customerHomecareMapping;
     } catch (error) {
-      console.log(error);
-      return error;
+      throw Error(error)
     }
   }
 }
