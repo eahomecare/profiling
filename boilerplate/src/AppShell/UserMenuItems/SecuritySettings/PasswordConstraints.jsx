@@ -18,7 +18,7 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
       /[A-Z]/.test(password),
       /[a-z]/.test(password),
       /[0-9]/.test(password),
-      /[^A-Za-z0-9]/.test(password),
+      /[^A-Za-z0-9\s]/.test(password),
     ];
 
     onValidationChange(validations.every((v) => v));
@@ -102,11 +102,11 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
                 border: "1px solid #5C00F2",
               },
             }}
-            color={isValid(/[^A-Za-z0-9]/.test(password))}
-            checked={/[^A-Za-z0-9]/.test(password)}
+            color={isValid(/[^A-Za-z0-9\s]/.test(password))}
+            checked={/[^A-Za-z0-9\s]/.test(password)}
             label={
-              <Text c={isValid(/[^A-Za-z0-9]/.test(password))}>
-                At least 1 Symbols or special characters
+              <Text c={isValid(/[^A-Za-z0-9\s]/.test(password))}>
+                At least 1 Symbols or special characters (excluding space)
               </Text>
             }
           />

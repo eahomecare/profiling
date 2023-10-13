@@ -2,9 +2,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 const TEST_SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
 
-const Recaptcha = () => {
+const Recaptcha = ({ setCaptchaStatus }) => {
   const handleCaptchaChange = (value) => {
     console.log("Captcha value:", value);
+    if (value) setCaptchaStatus(true);
   };
 
   return (

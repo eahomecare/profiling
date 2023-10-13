@@ -69,13 +69,13 @@ const initialState = {
   requestBody: null,
   displayAndColorMappings: {
     food: { displayName: "Foodie", color: "#DE896599" },
-    sports: { displayName: "Sports Fan", color: "#D8597299" },
+    sports: { displayName: "Sports Fan", color: "#ff990099" },
     travel: { displayName: "Avid Traveller", color: "#2745D999" },
-    music: { displayName: "Musicophile", color: "#1D982599" },
+    music: { displayName: "Musicophile", color: "#E54B4B99" },
     fitness: { displayName: "Fitness Freak", color: "#80008099" },
-    automobile: { displayName: "Auto Lover", color: "#E2768D" },
-    gadget: { displayName: "Gadgets Freaks", color: "#56C3A6" },
-    technology: { displayName: "Techie", color: "#EBD43B" },
+    automobile: { displayName: "Auto Lover", color: "#00ff0099" },
+    gadget: { displayName: "Gadgets Freaks", color: "#56C3A699" },
+    technology: { displayName: "Techie", color: "#66003399" },
   },
 };
 

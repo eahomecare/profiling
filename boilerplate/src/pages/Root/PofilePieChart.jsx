@@ -67,18 +67,18 @@ const RenderActiveShape = (props) => {
 
   return (
     <g>
-      <text
-        x={cx}
-        y={cy + 120}
-        dy={8}
-        textAnchor="middle"
-        fill={"black"}
-        font-family="Arial"
-        font-weight="bold"
-        font-size="14px"
-      >
-        {payload.name}
-      </text>
+      {/* <text */}
+      {/*   x={cx} */}
+      {/*   y={cy + 120} */}
+      {/*   dy={8} */}
+      {/*   textAnchor="middle" */}
+      {/*   fill={"black"} */}
+      {/*   font-family="Arial" */}
+      {/*   font-weight="bold" */}
+      {/*   font-size="14px" */}
+      {/* > */}
+      {/*   {payload.name} */}
+      {/* </text> */}
       <Sector
         cx={cx}
         cy={cy}
@@ -106,9 +106,12 @@ const RenderActiveShape = (props) => {
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
+        style={{
+          fontSize: 15,
+        }}
         textAnchor={textAnchor}
         fill="#333"
-      >{`PV ${value}`}</text>
+      >{`${payload.name}`}</text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}

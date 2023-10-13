@@ -21,9 +21,11 @@ import { DateInput } from "@mantine/dates";
 import StyledTextInput from "../../../StyledComponents/StyledTextInput";
 import StyledDateInput from "../../../StyledComponents/StyledDateInput";
 import StyledButton from "../../../StyledComponents/StyledButton";
+import { useSelector } from "react-redux";
 
 const MyProfile = () => {
   const [imagePreview, setImagePreview] = useState(null);
+  const { user } = useSelector((state) => state.auth);
 
   const form = useForm({
     initialValues: {
@@ -125,7 +127,7 @@ const MyProfile = () => {
             <Stack>
               <Center>
                 <Title size={30} c="#5C00F2">
-                  Name
+                  {user?.email?.split("@")[0]}
                 </Title>
               </Center>
               {imagePreview && (
@@ -173,7 +175,7 @@ const MyProfile = () => {
                     flexGrow: 1,
                   }}
                   label="Email ID"
-                  placeholder="your@email.com"
+                  placeholder={user?.email}
                   {...form.getInputProps("emailId")}
                   disabled
                 />
