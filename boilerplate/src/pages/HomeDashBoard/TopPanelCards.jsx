@@ -63,12 +63,7 @@ const data = [
 ];
 
 const TopPanelCards = () => {
-  // state to hold the index of the currently hovered item or -1 if none
   const [visibleTooltip, setVisibleTooltip] = useState(false);
-
-  useEffect(() => {
-    console.log(visibleTooltip);
-  }, [visibleTooltip]);
 
   return (
     <>

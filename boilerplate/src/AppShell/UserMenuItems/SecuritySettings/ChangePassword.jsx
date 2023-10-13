@@ -21,7 +21,7 @@ const ChangePassword = ({ onPasswordChange, canSave }) => {
     },
     validate: {
       confirmPassword: (value, values) =>
-        value !== values.newPassword ? "Passwords do not match" : null,
+        value !== values.newPassword ? "Password does not match" : null,
     },
   });
 

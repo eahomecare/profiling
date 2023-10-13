@@ -52,7 +52,13 @@ const EditProfile = () => {
                 {...form.getInputProps("name")}
               />
 
-              <Group>
+              <Group grow>
+                <StyledTextInput
+                  label="Pincode"
+                  placeholder="Enter your pincode"
+                  {...form.getInputProps("pincode")}
+                  inputMode="numeric"
+                />
                 <StyledSelect
                   placeholder="Select your state"
                   label="State"
@@ -66,19 +72,13 @@ const EditProfile = () => {
                   data={[]}
                   {...form.getInputProps("city")}
                 />
-                <StyledTextInput
-                  w={"100%"}
-                  label="Address"
-                  placeholder="Enter your address"
-                  {...form.getInputProps("address")}
-                />
-                <StyledTextInput
-                  label="Pincode"
-                  placeholder="Enter your pincode"
-                  {...form.getInputProps("pincode")}
-                  inputMode="numeric"
-                />
               </Group>
+              <StyledTextInput
+                w={"100%"}
+                label="Address"
+                placeholder="Enter your address"
+                {...form.getInputProps("address")}
+              />
 
               <StyledButton type="submit">Update Profile</StyledButton>
             </Stack>
