@@ -82,14 +82,14 @@ const ProfileBarChart = () => {
             color={"yellow"}
           />
           <Bar
-            dataKey="detractors"
+            dataKey="promotors"
             stroke="#7366FF"
             strokeWidth={2.36}
             fill="#7366FF"
             fillOpacity={0.7}
           />
           <Bar
-            dataKey="promotors"
+            dataKey="detractors"
             stroke="#F73164"
             strokeWidth={2.36}
             fill="#F73164"
