@@ -567,6 +567,27 @@ export class CustomerService {
           },
         );
 
+      const allProfileTypes = await this.prisma.profileType.findMany();
+
+      for (const profileType of allProfileTypes) {
+        await this.prisma.profileTypeCustomerMapping.create({
+          data: {
+            profileType: {
+              connect: {
+                id: profileType.id,
+              },
+            },
+            customer: {
+              connect: {
+                id: customerMaster.id,
+              },
+            },
+            level: 1,
+          },
+        });
+      }
+
+
       return customerHomecareMapping;
     } catch (error) {
       throw Error(error)
