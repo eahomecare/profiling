@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { ProfileTypeCustomerMapping } from '@prisma/client';
 import * as _ from 'lodash';
 import { PrismaService } from '../prisma/prisma.service';
+import { groupBy } from 'lodash';
 
 
 @Injectable()
@@ -229,6 +230,54 @@ export class ProfileTypeCustomerMappingService {
         } finally {
             await this.prisma.$disconnect();
         }
+    }
+
+
+    async countProfilesByMonth() {
+        const profiles =
+            await this.prisma.profileTypeCustomerMapping.findMany({
+                select: {
+                    created_at: true,
+                },
+            });
+
+        const monthNames = {
+            '01': 'January',
+            '02': 'February',
+            '03': 'March',
+            '04': 'April',
+            '05': 'May',
+            '06': 'June',
+            '07': 'July',
+            '08': 'August',
+            '09': 'September',
+            '10': 'October',
+            '11': 'November',
+            '12': 'December',
+        };
+
+        const profilesGroupedByMonth = groupBy(
+            profiles,
+            (profile: any) =>
+                monthNames[
+                profile.created_at
+                    .toISOString()
+                    .slice(5, 7)
+                ] +
+                ' ' +
+                profile.created_at
+                    .toISOString()
+                    .slice(0, 4),
+        );
+
+        const profilesCountsByMonth = Object.entries(
+            profilesGroupedByMonth,
+        ).map(([month, profiles]: any) => ({
+            month,
+            count: profiles.length,
+        }));
+
+        return profilesCountsByMonth;
     }
 
 }

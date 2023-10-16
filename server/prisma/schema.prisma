@@ -197,6 +197,8 @@ model ProfileTypeCustomerMapping {
   customerId    String      @db.ObjectId
   customer      Customer    @relation(fields: [customerId], references: [id])
   level         Int         @default(1)
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
 
   @@map("profile_type_customer_mapping")
 }
