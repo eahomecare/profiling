@@ -12,7 +12,7 @@ import {
 import { IconArrowRight } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
-import CustomerProfileBarChart from "./CustomerProfileBarChart";
+import CustomerBarChart from "./CustomerBarChart";
 
 const CustomerProfileAnalysis = () => {
   return (
@@ -21,15 +21,15 @@ const CustomerProfileAnalysis = () => {
         <Flex justify={"space-between"}>
           <Center>
             <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
-              Customer vs Profile
+              Customer Analysis
             </Text>
           </Center>
           <Center>
-            <Link to={"/campaign"}>
-              <ActionIcon c={"#5C00F2"} size={"sm"}>
-                <IconArrowRight />
-              </ActionIcon>
-            </Link>
+            {/* <Link to={"/campaign"}> */}
+            <ActionIcon c={"#5C00F2"} size={"sm"}>
+              <IconArrowRight />
+            </ActionIcon>
+            {/* </Link> */}
           </Center>
         </Flex>
       </Box>
@@ -56,7 +56,7 @@ const CustomerProfileAnalysis = () => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
-          <CustomerProfileBarChart />
+          <CustomerBarChart />
         </Grid.Col>
       </Grid>
     </Card>

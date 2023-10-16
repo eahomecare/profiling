@@ -6,8 +6,9 @@ import {
   Text,
   Title,
   Loader,
+  Group,
 } from "@mantine/core";
-import { IconChevronDown } from "@tabler/icons-react";
+import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import {
   BarChart,
   Bar,
@@ -27,6 +28,7 @@ import {
   fetchCampaignNames,
   selectCampaign,
 } from "../../redux/campaignSlice";
+import { Link } from "react-router-dom";
 
 const BarStackedView = () => {
   const dispatch = useDispatch();
@@ -62,7 +64,14 @@ const BarStackedView = () => {
   return (
     <>
       <Box p={30}>
-        <Title c={"#5C0FF2"}>Other Campaign Comparison</Title>
+        <Flex justify={"space-between"}>
+          <Title c={"#5C0FF2"}>Campaigns</Title>
+          <Link to={"/campaign"}>
+            <ActionIcon c={"#5C00F2"} size={"sm"}>
+              <IconArrowRight />
+            </ActionIcon>
+          </Link>
+        </Flex>
         <Box>
           <Flex>
             <Select
@@ -137,10 +146,38 @@ const BarStackedView = () => {
                 align="right"
                 offset={-10}
               />
-              <Bar dataKey="delivered" stackId="a" fill="#8334f8" />
-              <Bar dataKey="failure" stackId="a" fill="#8884d8" />
-              <Bar dataKey="interested" stackId="a" fill="#883538" />
-              <Bar dataKey="converted" stackId="a" fill="#82ca9d">
+              <Bar
+                dataKey="delivered"
+                stackId="a"
+                fill="#5C7DF2"
+                stroke="#5C7DF2"
+                strokeWidth={2.36}
+                fillOpacity={0.7}
+              />
+              <Bar
+                stackId="a"
+                dataKey="failure"
+                stroke="#F73164"
+                strokeWidth={2.36}
+                fill="#F73164"
+                fillOpacity={0.7}
+              />
+              <Bar
+                dataKey="interested"
+                stackId="a"
+                fill="#F78C31"
+                stroke="#F78C31"
+                strokeWidth={2.36}
+                fillOpacity={0.7}
+              />
+              <Bar
+                dataKey="converted"
+                stackId="a"
+                fill="#4BCA74"
+                stroke="#4BCA74"
+                strokeWidth={2.36}
+                fillOpacity={0.7}
+              >
                 <LabelList position={"top"} />
               </Bar>
             </BarChart>
