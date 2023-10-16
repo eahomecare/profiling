@@ -14,7 +14,7 @@ import { ProfileTypeCustomerMapping } from '@prisma/client';
 export class ProfileTypeCustomerMappingController {
   constructor(
     private readonly profileTypeCustomerMappingService: ProfileTypeCustomerMappingService,
-  ) {}
+  ) { }
 
   @Post()
   create(
@@ -88,5 +88,10 @@ export class ProfileTypeCustomerMappingController {
       source:
         await this.profileTypeCustomerMappingService.getGroupedCountsByCustomerSource(),
     };
+  }
+
+  @Get('/count/monthly')
+  getMonthlyCounts() {
+    return this.profileTypeCustomerMappingService.countProfilesByMonth();
   }
 }
