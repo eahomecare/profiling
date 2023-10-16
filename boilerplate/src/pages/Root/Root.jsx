@@ -15,6 +15,7 @@ import StyledSelect from "../../StyledComponents/StyledSelect";
 import BarStackedView from "../HomeDashBoard/BarStackedCampaign";
 import AreaChartSample from "./AreaChart";
 import CustomerProfileAnalysis from "./CustomerProfileAnalysis";
+import ProfileAnalysis from "./ProfileAnalysis";
 import ProfileBarChart from "./ProfileBarChart";
 import ProfileTypeAnalysis from "./ProfileTypeAnalysis";
 
@@ -29,6 +30,9 @@ const Root = () => {
         <CustomerProfileAnalysis />
 
         {/* Third Card */}
+        <ProfileAnalysis />
+
+        {/* Fourth Card */}
         <Card shadow={"md"} radius={"md"}>
           <Box>
             <Flex justify={"space-between"}>
