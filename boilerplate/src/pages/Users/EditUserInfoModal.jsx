@@ -68,6 +68,18 @@ const EditUserInfoModal = ({
         />
       </SimpleGrid>
 
+      <StyledDateInput
+        placeholder={"Date Of Birth"}
+        label={"Date Of Birth"}
+        rightSection={
+          <ActionIcon variant={"subtle"}>
+            <IconCalendar />
+          </ActionIcon>
+        }
+        withAsterisk
+        maxDate={new Date()}
+      />
+
       <StyledTextInput
         placeholder="Email"
         label="Email"
@@ -78,6 +90,28 @@ const EditUserInfoModal = ({
         withAsterisk
         required
         type="email"
+      />
+
+      <StyledTextInput
+        placeholder="Mobile"
+        label="Mobile"
+        type={"number"}
+        value={userDetails.mobile}
+        onChange={(event) =>
+          setUserDetails({ ...userDetails, mobile: event.target.value })
+        }
+        withAsterisk
+      />
+
+      <StyledTextInput
+        placeholder="Pincode"
+        label="Pincode"
+        type={"number"}
+        // value={userDetails.mobile}
+        withAsterisk
+        // onChange={(event) =>
+        //   setUserDetails({ ...userDetails, mobile: event.target.value })
+        // }
       />
 
       <StyledTextInput
@@ -110,40 +144,6 @@ const EditUserInfoModal = ({
         // }
       />
 
-      <StyledTextInput
-        placeholder="Pincode"
-        label="Pincode"
-        // value={userDetails.mobile}
-        withAsterisk
-        // onChange={(event) =>
-        //   setUserDetails({ ...userDetails, mobile: event.target.value })
-        // }
-      />
-
-      <StyledDateInput
-        placeholder={"Date Of Birth"}
-        label={"Date Of Birth"}
-        rightSection={
-          <ActionIcon variant={"subtle"}>
-            <IconCalendar />
-          </ActionIcon>
-        }
-        withAsterisk
-        maxDate={new Date()}
-      />
-
-      <StyledTextInput
-        placeholder="Mobile"
-        label="Mobile"
-        value={userDetails.mobile}
-        onChange={(event) =>
-          setUserDetails({ ...userDetails, mobile: event.target.value })
-        }
-        withAsterisk
-      />
-
-      {/* Add other fields here as needed */}
-
       <StyledSelect
         label="Role"
         placeholder="Select Role"
@@ -153,6 +153,7 @@ const EditUserInfoModal = ({
         withAsterisk
         required
       />
+      {/* Add other fields here as needed */}
 
       <StyledButton
         className="mt-4"

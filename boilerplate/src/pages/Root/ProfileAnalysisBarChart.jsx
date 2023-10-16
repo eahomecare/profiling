@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@mantine/core";
 import {
   BarChart,
@@ -9,53 +11,28 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { fetchCustomerProfileData } from "../../redux/profileAnalysisSlice"; // Ensure correct path
 
-const data = [
-  {
-    name: "Tech Enthusiastic",
-    detractors: 4000,
-    promotors: 2400,
-  },
-  {
-    name: "Foodies",
-    detractors: 3000,
-    promotors: 2210,
-  },
-  {
-    name: "Auto Lovers",
-    detractors: 2000,
-    promotors: 2290,
-  },
-  {
-    name: "Gadget Freaks",
-    detractors: 2780,
-    promotors: 2000,
-  },
-  {
-    name: "Sports Fans",
-    detractors: 1890,
-    promotors: 2181,
-  },
-  {
-    name: "Musicophile",
-    detractors: 2390,
-    promotors: 2500,
-  },
-  {
-    name: "Avid Traveller",
-    detractors: 3490,
-    promotors: 2100,
-  },
-];
+const ProfileAnalysisBarChart = () => {
+  const dispatch = useDispatch();
 
-const ProfileBarChart = () => {
+  // Fetching data on component mount
+  useEffect(() => {
+    dispatch(fetchCustomerProfileData());
+  }, [dispatch]);
+
+  // Get data from the Redux store
+  const chartData = useSelector((state) => state.customerProfileTool.data);
+  const status = useSelector((state) => state.customerProfileTool.status);
+
+  // If data is still loading, display a loading indicator (you can adjust this as per your requirements)
+  if (status === "loading") return <div>Loading...</div>;
+
   return (
     <Box h={"400px"} w={"870px"} pt={20}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          // width={500}
-          // height={300}
-          data={data}
+          data={chartData}
           margin={{
             top: 20,
             right: 30,
@@ -67,7 +44,7 @@ const ProfileBarChart = () => {
           <XAxis dataKey="name" />
           <YAxis
             label={{
-              value: "No. of Customers",
+              value: "No. of Entities",
               angle: -90,
               position: "insideLeft",
               offset: 0,
@@ -82,14 +59,7 @@ const ProfileBarChart = () => {
             color={"yellow"}
           />
           <Bar
-            dataKey="promotors"
-            stroke="#7366FF"
-            strokeWidth={2.36}
-            fill="#7366FF"
-            fillOpacity={0.7}
-          />
-          <Bar
-            dataKey="detractors"
+            dataKey="profiles"
             stroke="#F73164"
             strokeWidth={2.36}
             fill="#F73164"
@@ -101,4 +71,4 @@ const ProfileBarChart = () => {
   );
 };
 
-export default ProfileBarChart;
+export default ProfileAnalysisBarChart;

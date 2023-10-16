@@ -12,16 +12,16 @@ import {
 import { IconArrowRight } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
-import CustomerBarChart from "./CustomerBarChart";
+import ProfileAnalysisBarChart from "./ProfileAnalysisBarChart";
 
-const CustomerProfileAnalysis = () => {
+const ProfileAnalysis = () => {
   return (
     <Card shadow={"md"} radius={"md"}>
       <Box>
         <Flex justify={"space-between"}>
           <Center>
             <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
-              Customer Analysis
+              Profile Analysis
             </Text>
           </Center>
           <Center>
@@ -56,11 +56,11 @@ const CustomerProfileAnalysis = () => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
-          <CustomerBarChart />
+          <ProfileAnalysisBarChart />
         </Grid.Col>
       </Grid>
     </Card>
   );
 };
 
-export default CustomerProfileAnalysis;
+export default ProfileAnalysis;

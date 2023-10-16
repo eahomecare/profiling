@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import { fetchCustomerProfileData } from "../../redux/customerProfileSlice"; // Ensure correct path
 
-const CustomerProfileBarChart = () => {
+const CustomerBarChart = () => {
   const dispatch = useDispatch();
 
   // Fetching data on component mount
@@ -65,17 +65,10 @@ const CustomerProfileBarChart = () => {
             fill="#7366FF"
             fillOpacity={0.7}
           />
-          <Bar
-            dataKey="profiles"
-            stroke="#F73164"
-            strokeWidth={2.36}
-            fill="#F73164"
-            fillOpacity={0.7}
-          />
         </BarChart>
       </ResponsiveContainer>
     </Box>
   );
 };
 
-export default CustomerProfileBarChart;
+export default CustomerBarChart;

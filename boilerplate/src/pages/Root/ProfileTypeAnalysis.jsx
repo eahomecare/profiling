@@ -69,11 +69,11 @@ const ProfileTypeAnalysis = () => {
             </Text>
           </Center>
           <Center>
-            <Link to={"/campaign"}>
-              <ActionIcon c={"#5C00F2"} size={"sm"}>
-                <IconArrowRight />
-              </ActionIcon>
-            </Link>
+            {/* <Link to={"/campaign"}> */}
+            <ActionIcon c={"#5C00F2"} size={"sm"}>
+              <IconArrowRight />
+            </ActionIcon>
+            {/* </Link> */}
           </Center>
         </Flex>
       </Box>
