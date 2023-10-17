@@ -423,9 +423,9 @@ model CampaignReport {
 model AgentSubmitKeywordsMapping {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   agentSubmitId String       @map("agent_submit_id") @db.ObjectId
-  keywordId     String       @map("keyword_id") @db.ObjectId
+  keywordId     String?       @map("keyword_id") @db.ObjectId
   agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
-  keyword       Keyword      @relation(fields: [keywordId], references: [id])
+  keyword       Keyword?      @relation(fields: [keywordId], references: [id])
 
   @@unique([agentSubmitId, keywordId])
   @@map("agentSubmitKeywordsMapping")

@@ -86,7 +86,7 @@ export class AgentQuestionService {
         },
       );
 
-    // console.log('mappings\n', mappings);
+    console.log('mappings\n', mappings);
 
     const categories = {};
     for (const mapping of mappings) {
@@ -107,12 +107,20 @@ export class AgentQuestionService {
         keywords,
         { category: categoryName },
       );
+      console.log(
+        'filtered keywords',
+        filtered_keywords,
+      );
 
       for (const keyword of filtered_keywords) {
         categories[categoryName].push({
           key: keyword.value.toLowerCase(),
           level: keyword.level,
         });
+        console.log(
+          'Keyword pushed from filtered keywords',
+          keyword,
+        );
       }
     }
 
