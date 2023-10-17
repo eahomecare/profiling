@@ -186,7 +186,9 @@ const MainAppShell = ({ children }) => {
           >
             <Space h={5} />
             <Navbar.Section>
-              {users && user && user._id && <User user={user} roleName={findUserRoleNameById(user._id)} />}
+              {users && user && user._id && (
+                <User user={user} roleName={findUserRoleNameById(user._id)} />
+              )}
             </Navbar.Section>
             <Space h={2} />
             <Stack>

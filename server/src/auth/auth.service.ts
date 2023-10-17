@@ -111,4 +111,41 @@ export class AuthService {
       access_token: token,
     };
   }
+
+  async changePassword(email: string, oldPassword: string, newPassword: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user)
+      throw new ForbiddenException('User not found');
+
+    const pwMatches = await argon.verify(user.hash, oldPassword);
+    if (!pwMatches)
+      throw new ForbiddenException('Old password is incorrect');
+
+    const wasUsedBefore = user.previousHashes.some(async (hash) => await argon.verify(hash, newPassword));
+    if (wasUsedBefore)
+      throw new ForbiddenException('New password has been used recently. Please choose a different password.');
+
+    user.previousHashes.unshift(user.hash);
+
+    if (user.previousHashes.length > 3) {
+      user.previousHashes.pop();
+    }
+
+    const newHash = await argon.hash(newPassword);
+    await this.prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        hash: newHash,
+        previousHashes: user.previousHashes,
+      },
+    });
+
+    return { message: 'Password updated successfully' };
+  }
 }

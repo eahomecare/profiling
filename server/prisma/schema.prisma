@@ -31,6 +31,7 @@ model User {
   agentSubmits              agentSubmits[]
   AgentSession              AgentSession[]
   isActive                  Boolean                     @default(true)
+  previousHashes       String[]   @default([])
 
   @@map("users")
 }
