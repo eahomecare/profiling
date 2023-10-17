@@ -68,6 +68,7 @@ export const authSlice = createSlice({
       localStorage.clear();
       state.isLoggedIn = false;
       axios.defaults.headers.common["authorization"] = null;
+      window.location.reload()
     },
     setAuth: (state, action) => {
       const storage = JSON.parse(localStorage.getItem("login"));

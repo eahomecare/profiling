@@ -5,12 +5,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCustomerKeywords, getKeywords } from "../../redux/keywordSlice";
 import _ from "lodash";
 
+
+function hasPermission(userPermissions, permissionName) {
+  return userPermissions.some(
+    (permission) => permission.name === permissionName,
+  );
+}
+
 const KeywordsEntry = ({ updateKeywordValuesParent }) => {
   const [data, setData] = useState([]);
 
 
 
   const { status, customerDetails } = useSelector((state) => state.customer);
+  const { userPermissions, rolesPermissionsStatus } =
+    useSelector((state) => state.rolePermission);
   const dispatch = useDispatch();
 
   const { customerKeywords, keywords, keywordsStatus, customerKeywordsStatus } = useSelector((state) => state.keyword);
@@ -88,7 +97,8 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
 
   return (
     <>
-      {keywordsStatus == 'success' && customerKeywordsStatus == 'success' ?
+      {console.log(userPermissions, hasPermission(userPermissions, "keywords_edit"))}
+      {keywordsStatus == 'success' && customerKeywordsStatus == 'success' && userPermissions && Array.isArray(userPermissions) ?
         <>
           <MultiSelect
             data={data}
@@ -108,6 +118,7 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
               setData((current) => [...current, item]);
               return item;
             }}
+            readOnly={!hasPermission(userPermissions, "keywords_edit")}
           />
 
           <div style={{ marginTop: '1rem' }}>

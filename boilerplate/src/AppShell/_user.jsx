@@ -29,6 +29,7 @@ import {
 import { Link } from "react-router-dom";
 import { logout } from "../redux/authSlice";
 import { useDispatch } from "react-redux";
+import { clearUserPermissions } from "../redux/rolesPermissionSlice";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -77,10 +78,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
+
+
 const User = ({ user, roleName }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
   const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    dispatch(logout())
+    dispatch(clearUserPermissions())
+  }
 
   return (
     <div>
@@ -167,7 +175,7 @@ const User = ({ user, roleName }) => {
                 color="red"
                 icon={<IconLogout size={14} />}
                 className={cx(classes.link, classes.linkIcon)}
-                onClick={() => dispatch(logout())}
+                onClick={() => handleLogout()}
               />
             </Card>
           </Box>

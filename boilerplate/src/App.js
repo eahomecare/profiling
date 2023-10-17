@@ -95,7 +95,7 @@ function App() {
                 <PrivateRoute path="/" element={<PermissionDenied />} />
               )} */}
               <PrivateRoute path="/" element={<Root />} />
-              {hasPermission(userPermissions, "user_view") ? (
+              {hasPermission(userPermissions, "customer_dashboard") ? (
                 <PrivateRoute path="/customers" element={<Customers />} />
               ) : (
                 <PrivateRoute
@@ -106,7 +106,14 @@ function App() {
               <PrivateRoute path="/campaign" element={<Analysis />} />
               <PrivateRoute path="/myAccount" element={<MyAccount />} />
               <PrivateRoute path="/securitySettings" element={<Security />} />
-              <PrivateRoute path="/users" element={<Users />} />
+              {hasPermission(userPermissions, "user_view") ? (
+                <PrivateRoute path="/users" element={<Users />} />
+              ) : (
+                <PrivateRoute
+                  path="/users"
+                  element={<PermissionDenied />}
+                />
+              )}
               {hasPermission(userPermissions, "customer_dashboard") ? (
                 <PrivateRoute path="/dashboard/*" element={<Dashboard />} />
               ) : (

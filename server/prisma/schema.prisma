@@ -265,6 +265,8 @@ enum PermissionNames {
   user_edit
   customer_details
   acl
+  keywords_view
+  keywords_edit
 }
 
 model Permission {
