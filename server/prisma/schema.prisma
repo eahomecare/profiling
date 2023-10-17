@@ -499,8 +499,8 @@ model CustomerHomecare {
   registrationVerificationStatus String?
   wp_user_id                     Int
   customer_id                    String?
-  createdAt                      DateTime                  @default(now())
-  updatedAt                      DateTime                  @updatedAt
+  createdAt                      DateTime?                  @default(now())
+  updatedAt                      DateTime?                  @updatedAt
   CustomerHomecareMapping        CustomerHomecareMapping[]
 
   @@unique([wp_user_id])
