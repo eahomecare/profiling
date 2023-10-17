@@ -12,7 +12,7 @@ const initialState = {
   permissionsByRoleStatus: "idle",
   createRolesPermissionMappingStatus: "idle",
   getAllRolesPermissionsMappingsByUserStatus: "idle",
-  deactivateMappingStatus:"idle",
+  deactivateMappingStatus: "idle",
   roles: [],
   permissions: [],
   userRoles: [],
@@ -115,7 +115,12 @@ export const rolesPermissionSlice = createSlice({
           if (e.permission) state.userPermissions.push(e.permission)
         }
       })
-    }
+    },
+    clearUserPermissions: (state) => {
+      state.userPermissions = [];
+      state.userRole = []
+      state.rolesPermissions = []
+    },
   },
   extraReducers: {
     [getAllRolesPermissionsMappings.pending]: (state, action) => {
@@ -222,11 +227,11 @@ export const rolesPermissionSlice = createSlice({
     [deactivateMapping.rejected]: (state, action) => {
       state.deactivateMappingStatus = "failed";
     },
-    
+
   },
 });
 
-export const { getUserRolesPermissionsByMapping } = rolesPermissionSlice.actions;
+export const { getUserRolesPermissionsByMapping, clearUserPermissions } = rolesPermissionSlice.actions;
 
 
 export default rolesPermissionSlice.reducer;
