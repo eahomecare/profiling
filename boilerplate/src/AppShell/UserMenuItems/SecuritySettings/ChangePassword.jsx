@@ -11,6 +11,8 @@ import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import StyledPasswordInput from "../../../StyledComponents/StyledPasswordInput";
 import StyledButton from "../../../StyledComponents/StyledButton";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ChangePassword = ({ onPasswordChange, canSave }) => {
   const form = useForm({
@@ -25,26 +27,52 @@ const ChangePassword = ({ onPasswordChange, canSave }) => {
     },
   });
 
+  const { user } = useSelector((state) => state.auth);
+
   const newPassword = form.values.newPassword;
 
   useEffect(() => {
     onPasswordChange(newPassword);
   }, [newPassword, onPasswordChange]);
 
-  const handleSubmit = (values) => {
-    console.log(values);
+  const handleSubmit = async (values) => {
+    try {
+      if (canSave) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/auth/change-password`,
+          {
+            email: user.email,
+            oldPassword: values.oldPassword,
+            newPassword: values.newPassword,
+          },
+        );
 
-    if (canSave) {
+        if (response.status === 200) {
+          showNotification({
+            type: "success",
+            title: `Password changed successfully!`,
+            message: `Your password has been updated.`,
+          });
+        } else {
+          // handle other status codes if required
+          showNotification({
+            type: "error",
+            title: `Password change failed!`,
+            message: response.data.message || "Unexpected error occurred",
+          });
+        }
+      } else {
+        showNotification({
+          type: "warning",
+          title: `Password change failed!`,
+          message: `Ensure all validations are met.`,
+        });
+      }
+    } catch (error) {
       showNotification({
-        type: "success",
-        title: `Password changed successfully!`,
-        message: `Your password has been updated.`,
-      });
-    } else {
-      showNotification({
-        type: "warning",
+        type: "error",
         title: `Password change failed!`,
-        message: `Ensure all validations are met.`,
+        message: error.response?.data.message || "Unexpected error occurred",
       });
     }
   };

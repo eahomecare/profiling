@@ -25,8 +25,8 @@ const ProfileTypeAnalysis = () => {
     (state) => state.profileDataCard.displayAndColorMappings,
   );
 
-  const [selectedProfile, setSelectedProfile] = useState("none");
-  const [selectedDemographic, setSelectedDemographic] = useState("none");
+  const [selectedProfile, setSelectedProfile] = useState("all");
+  const [selectedDemographic, setSelectedDemographic] = useState("all");
 
   useEffect(() => {
     console.log("dispatching");
@@ -34,9 +34,9 @@ const ProfileTypeAnalysis = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedProfile === "none" && selectedDemographic === "none") {
+    if (selectedProfile === "all" && selectedDemographic === "all") {
       dispatch(fetchProfileData({}));
-    } else if (selectedProfile !== "none" && selectedDemographic !== "none") {
+    } else if (selectedProfile !== "all" && selectedDemographic !== "all") {
       dispatch(
         fetchProfileData({
           profileType: selectedProfile,
@@ -47,14 +47,14 @@ const ProfileTypeAnalysis = () => {
   }, [selectedProfile, selectedDemographic, dispatch]);
 
   const profileOptions = [
-    { value: "none", label: "None" },
+    { value: "all", label: "All" },
     ...Object.entries(displayAndColorMappings).map(
       ([key, { displayName }]) => ({ value: key, label: displayName }),
     ),
   ];
 
   const demographicOptions = [
-    { value: "none", label: "None" },
+    { value: "all", label: "All" },
     { value: "ageRange", label: "Age" },
     { value: "gender", label: "Gender" },
   ];
@@ -81,12 +81,14 @@ const ProfileTypeAnalysis = () => {
         <Grid.Col span={4}>
           <Stack>
             <StyledSelect
+              disabled={status === "loading"}
               label={"Profile"}
               placeholder={"Select Profile(s)"}
               data={profileOptions}
               onChange={(value) => setSelectedProfile(value)}
             />
             <StyledSelect
+              disabled={status === "loading"}
               label={"Demographics"}
               placeholder={"Select Main Demographics"}
               data={demographicOptions}

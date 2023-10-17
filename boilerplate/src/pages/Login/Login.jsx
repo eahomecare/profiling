@@ -144,7 +144,7 @@ export default function Login() {
 
                       {status === "failed" && (
                         <Text style={{ color: "red" }}>
-                          Incorrect credentials !
+                          Invalid credentials !
                         </Text>
                       )}
                     </Stack>

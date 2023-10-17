@@ -16,4 +16,14 @@ export class AuthController {
   async signin(@Body('email') email: string, @Body('password') password: string) {
     return this.authService.signin(email, password);
   }
+
+  @Post('change-password')
+@HttpCode(HttpStatus.OK)
+async changePassword(
+  @Body('email') email: string, 
+  @Body('oldPassword') oldPassword: string, 
+  @Body('newPassword') newPassword: string
+) {
+  return this.authService.changePassword(email, oldPassword, newPassword);
+}
 }
