@@ -20,7 +20,7 @@ import { CreateCustomerHomecarePayload } from './types';
 export class CustomerController {
   constructor(
     private customerService: CustomerService,
-  ) { }
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
@@ -119,18 +119,30 @@ export class CustomerController {
     }
   }
 
-
   @Post('/add/customer/homecare')
   async addCustomerHM(
     @Body() data: CreateCustomerHomecarePayload,
   ) {
     try {
-      const createdCustomer = await this.customerService.addCustomerHomecare(data);
-      return { message: 'Customer created successfully', customer: createdCustomer, status: 201 };
+      const createdCustomer =
+        await this.customerService.addCustomerHomecare(
+          data,
+        );
+      console.log(
+        'Homecare customer created',
+        createdCustomer,
+      );
+      return {
+        message: 'Customer created successfully',
+        customer: createdCustomer,
+        status: 201,
+      };
     } catch (error) {
-      console.error(error, "ERROR");
-      return { message: 'Failed to create customer', status: 500 };
+      console.error(error, 'ERROR');
+      return {
+        message: 'Failed to create customer',
+        status: 500,
+      };
     }
   }
 }
-
