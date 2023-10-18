@@ -287,18 +287,27 @@ export class AgentQuestionService {
         );
       }
     }
+    console.log(
+      'fallback responses=>',
+      responses,
+    );
     return {
       questions: responses,
       method: 'fallback',
     };
   }
 
-  private findQuestionFromExamples(inputString) {
-    console.log(inputString);
+  private findQuestionFromExamples(
+    inputString: string,
+  ) {
+    console.log(
+      'Finding example for =>',
+      inputString,
+    );
     for (const example of examples) {
       if (
         example.Input.toLowerCase() ===
-        inputString
+        inputString.toLowerCase()
       ) {
         return example.Response;
       }
