@@ -119,7 +119,7 @@ export class CustomerController {
     }
   }
 
-  @Post('/add/customer/homecare')
+  @Post('/add/customer/hc')
   async addCustomerHM(
     @Body() data: CreateCustomerHomecarePayload,
   ) {
