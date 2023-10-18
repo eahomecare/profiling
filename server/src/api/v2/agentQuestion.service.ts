@@ -175,10 +175,6 @@ export class AgentQuestionService {
       resultCategories.push(randomCategory);
     }
 
-    // console.log(
-    //   'resultCategories=>\n',
-    //   resultCategories,
-    // );
     return resultCategories;
   }
 
@@ -215,10 +211,8 @@ export class AgentQuestionService {
         const answersSection =
           response.split('Answers: ')[1];
         const answers = answersSection
-          ? answersSection
-              .split(', ')
-              .concat('None')
-          : ['None'];
+          ? answersSection.split(', ')
+          : [];
 
         responses.push({
           Category: category,
@@ -270,10 +264,8 @@ export class AgentQuestionService {
         const answersSection =
           response.split('Answers: ')[1];
         const answers = answersSection
-          ? answersSection
-              .split(', ')
-              .concat('None')
-          : ['None'];
+          ? answersSection.split(', ')
+          : [];
 
         responses.push({
           Category: category,
@@ -281,10 +273,6 @@ export class AgentQuestionService {
           level: level,
           Answers: answers,
         });
-      } else {
-        throw new NotFoundException(
-          `No fallback question found for category: ${category}.`,
-        );
       }
     }
     console.log(
@@ -312,8 +300,7 @@ export class AgentQuestionService {
         return example.Response;
       }
     }
-    throw new NotFoundException(
-      `Example not found for input: ${inputString} in fallback method.`,
-    );
+    // No need to throw an error, just continue.
+    return null;
   }
 }
