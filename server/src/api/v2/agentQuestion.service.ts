@@ -296,7 +296,10 @@ export class AgentQuestionService {
   private findQuestionFromExamples(inputString) {
     console.log(inputString);
     for (const example of examples) {
-      if (example.Input === inputString) {
+      if (
+        example.Input.toLowerCase() ===
+        inputString
+      ) {
         return example.Response;
       }
     }
