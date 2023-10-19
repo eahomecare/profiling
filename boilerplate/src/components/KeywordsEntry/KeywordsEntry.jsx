@@ -121,7 +121,7 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
             readOnly={!hasPermission(userPermissions, "keywords_edit")}
           />
 
-          <div style={{ marginTop: '1rem' }}>
+          {/* <div style={{ marginTop: '1rem' }}>
             Existing Unknown keywords : {unknowns.map((unknown, index) => (
               <Badge
                 key={unknown}
@@ -131,7 +131,7 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
                 {unknown}
               </Badge>
             ))}
-          </div>
+          </div> */}
         </>
         : <>
           <p>Please wait.......</p>
