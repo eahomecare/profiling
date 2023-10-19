@@ -11,19 +11,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { fetchCustomerProfileData } from "../../redux/profileAnalysisSlice"; // Ensure correct path
+import { fetchProfileCount } from "../../redux/profileAnalysisSlice"; // Ensure correct path
 
 const ProfileAnalysisBarChart = () => {
   const dispatch = useDispatch();
 
   // Fetching data on component mount
   useEffect(() => {
-    dispatch(fetchCustomerProfileData());
+    dispatch(fetchProfileCount());
   }, [dispatch]);
 
   // Get data from the Redux store
-  const chartData = useSelector((state) => state.customerProfileTool.data);
-  const status = useSelector((state) => state.customerProfileTool.status);
+  const chartData = useSelector((state) => state.profileCount.data);
+  const status = useSelector((state) => state.profileCount.status);
 
   // If data is still loading, display a loading indicator (you can adjust this as per your requirements)
   if (status === "loading") return <div>Loading...</div>;
