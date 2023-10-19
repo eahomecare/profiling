@@ -3,8 +3,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const API_ENDPOINT = `${process.env.REACT_APP_API_URL}/customers/count/monthly`;
 
 // Async action for fetching customer profile data
-export const fetchCustomerProfileData = createAsyncThunk(
-  "customerProfileTool/fetchCustomerProfileData",
+export const fetchProfileCount = createAsyncThunk(
+  "profileCount/fetchProfileCount",
   async () => {
     const response = await fetch(API_ENDPOINT);
 
@@ -33,24 +33,24 @@ const initialState = {
   error: null,
 };
 
-const customerProfileToolSlice = createSlice({
-  name: "customerProfileTool",
+const profileCountSlice = createSlice({
+  name: "profileCount",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCustomerProfileData.pending, (state) => {
+      .addCase(fetchProfileCount.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchCustomerProfileData.fulfilled, (state, action) => {
+      .addCase(fetchProfileCount.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = action.payload;
       })
-      .addCase(fetchCustomerProfileData.rejected, (state, action) => {
+      .addCase(fetchProfileCount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-export default customerProfileToolSlice.reducer;
+export default profileCountSlice.reducer;

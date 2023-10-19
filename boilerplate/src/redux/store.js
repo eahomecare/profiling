@@ -7,6 +7,7 @@ import campaignManagementReducer from "./campaignManagementSlice";
 import campaignReducer from "./campaignSlice";
 import profileDataCardSlice from "./profileDataCardSlice";
 import customerProfileSlice from "./customerProfileSlice";
+import profileAnalysisSlice from "./profileAnalysisSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     campaign: campaignReducer,
     profileDataCard: profileDataCardSlice,
     customerProfileTool: customerProfileSlice,
+    profileCount: profileAnalysisSlice,
   },
 });
