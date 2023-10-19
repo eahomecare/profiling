@@ -143,6 +143,9 @@ const Analysis = () => {
       <Card mt={20} shadow={"lg"} radius="md">
         <div className="row">
           <div className="col-12 col-lg-8">
+            <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+              Data Analysis
+            </Text>
             <div
               className="row"
               style={{ maxHeight: "250px", overflowY: "scroll" }}
