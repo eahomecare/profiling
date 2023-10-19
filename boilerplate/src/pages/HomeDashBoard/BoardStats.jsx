@@ -120,24 +120,25 @@ const BoardStats = () => {
             {/*   <RadialChart /> */}
             {/* </Card> */}
           </Grid.Col>
+          <Grid.Col span={6}>
+            <Card shadow="lg" radius={"lg"}>
+              <Stack>
+                <Flex c={"#5C00F2"} justify={"space-between"}>
+                  <Text fw={"bold"}>Communications</Text>
+                  <Center>
+                    <ActionIcon c={"#5C00F2"}>
+                      <IconTableExport />
+                    </ActionIcon>
+                    <Text fw={"bold"}>Export</Text>
+                  </Center>
+                </Flex>
+                <Box>
+                  <VerticalBarChart />
+                </Box>
+              </Stack>
+            </Card>
+          </Grid.Col>
         </Grid>
-
-        <Card shadow="lg" radius={"lg"}>
-          <Stack>
-            <Flex c={"#5C00F2"} justify={"space-between"}>
-              <Text fw={"bold"}>Communications</Text>
-              <Center>
-                <ActionIcon c={"#5C00F2"}>
-                  <IconTableExport />
-                </ActionIcon>
-                <Text fw={"bold"}>Export</Text>
-              </Center>
-            </Flex>
-            <Box>
-              <VerticalBarChart />
-            </Box>
-          </Stack>
-        </Card>
       </Stack>
     </>
   );
