@@ -18,8 +18,11 @@ export const fetchCustomerProfileData = createAsyncThunk(
 
     return data.map((item) => ({
       name: item.month,
-      customers: item.count,
-      profiles: 0,
+      // customers: item.count,
+      // profiles: 0,
+      // Temporary change
+      customers: 0,
+      profiles: item.count,
     }));
   },
 );
