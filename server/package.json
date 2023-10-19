@@ -42,6 +42,7 @@
     "@nestjs/platform-express": "^9.3.9",
     "argon2": "^0.30.3",
     "aws-sdk": "^2.1445.0",
+    "bad-words": "^3.0.4",
     "bullmq": "^4.8.0",
     "casual": "^1.6.2",
     "class-transformer": "^0.5.1",

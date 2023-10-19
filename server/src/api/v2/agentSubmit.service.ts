@@ -9,10 +9,14 @@ import {
   AgentSession,
   User,
 } from '@prisma/client';
+import Filter = require('bad-words');
 
 @Injectable()
 export class SubmitService {
-  constructor(private prisma: PrismaService) {}
+  private filter: Filter;
+  constructor(private prisma: PrismaService) {
+    this.filter = new Filter();
+  }
 
   async connectCustomerToKeywords(
     customerId: string,
@@ -50,8 +54,13 @@ export class SubmitService {
     keywords: string[],
   ): Promise<string[]> {
     const createdKeywordIds = [];
+    const cleanedKeywords = keywords.filter(
+      (keyword) =>
+        !this.filter.isProfane(keyword),
+    );
+
     try {
-      for (const keyword of keywords) {
+      for (const keyword of cleanedKeywords) {
         const createdKeyword =
           await this.prisma.keyword.create({
             data: {
@@ -110,36 +119,89 @@ export class SubmitService {
 
         for (const option of options) {
           if (selectedOptions.includes(option)) {
-            const createdKeyword =
-              await this.prisma.keyword.create({
-                data: {
-                  category,
-                  value: option,
-                  level,
-                  customers: {
-                    connect: { id: customerId },
+            // Check if keyword exists
+            const existingKeyword =
+              await this.prisma.keyword.findUnique(
+                {
+                  where: {
+                    value_category: {
+                      value: option,
+                      category,
+                    },
                   },
-                  questionIDs: [
-                    createdQuestion.id,
-                  ],
+                },
+              );
+
+            if (existingKeyword) {
+              // Keyword exists, connect it to the question and check for customer connection
+              createdKeywordIds.push(
+                existingKeyword.id,
+              );
+              await this.prisma.question.update({
+                where: { id: createdQuestion.id },
+                data: {
+                  keywords: {
+                    connect: {
+                      id: existingKeyword.id,
+                    },
+                  },
                 },
               });
-            createdKeywordIds.push(
-              createdKeyword.id,
-              console.log(
-                'Keyword stored',
-                createdKeyword,
-              ),
-            );
 
-            // await this.prisma.customer.update({
-            //   where: { id: customerId },
-            //   data: {
-            //     keywordIDs: {
-            //       push: createdKeyword.id,
-            //     },
-            //   },
-            // });
+              if (
+                !existingKeyword.customerIDs.includes(
+                  customerId,
+                )
+              ) {
+                await this.prisma.keyword.update({
+                  where: {
+                    id: existingKeyword.id,
+                  },
+                  data: {
+                    customers: {
+                      connect: { id: customerId },
+                    },
+                  },
+                });
+              }
+              console.log(
+                'Keyword connected:\n',
+                existingKeyword,
+                'To question Id:\n',
+                createdQuestion.id,
+                'and customer:',
+                customerId,
+              );
+            } else {
+              // Keyword does not exist, create it and connect to the question and customer
+              const createdKeyword =
+                await this.prisma.keyword.create({
+                  data: {
+                    category,
+                    value: option,
+                    level,
+                    customers: {
+                      connect: { id: customerId },
+                    },
+                    questions: {
+                      connect: {
+                        id: createdQuestion.id,
+                      },
+                    },
+                  },
+                });
+              createdKeywordIds.push(
+                createdKeyword.id,
+              );
+              console.log(
+                'Keyword created',
+                createdKeyword,
+                'To question Id:\n',
+                createdQuestion.id,
+                'and customer:',
+                customerId,
+              );
+            }
           }
         }
       }
