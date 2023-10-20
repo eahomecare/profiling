@@ -47,10 +47,6 @@ export class CustomerController {
   async getCustomerRemarks(
     @Param('id') customerId: string,
   ) {
-    console.log(
-      'Controller Remarks customer id',
-      customerId,
-    );
     return await this.customerService.fetchCustomerRemarks(
       customerId,
     );
