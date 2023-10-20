@@ -65,11 +65,10 @@ const Users = () => {
         left: 0,
         right: 0,
         bottom: 0,
-        borderBottom: `${rem(1)} solid ${
-          theme.colorScheme === "dark"
-            ? theme.colors.dark[3]
-            : theme.colors.gray[2]
-        }`,
+        borderBottom: `${rem(1)} solid ${theme.colorScheme === "dark"
+          ? theme.colors.dark[3]
+          : theme.colors.gray[2]
+          }`,
       },
     },
 
@@ -152,16 +151,33 @@ const Users = () => {
   const initialData =
     Object.keys(userPermissionsDict).length > 0
       ? users.map((data) => ({
-          id: data.id,
-          roleId: data.roleId,
-          email: data.email,
-          isactive: "active",
-          role: data.role.name,
-          created_at: formatDate(data.created_at),
-        }))
+        id: data.id,
+        roleId: data.roleId,
+        email: data.email,
+        isactive: "active",
+        role: data.role.name,
+        created_at: formatDate(data.created_at),
+      }))
       : [];
 
   const columns = [
+    {
+      header: "Name",
+      accessorKey: "email",
+      Cell: ({ row, column }) => {
+        const handleActionClick = (e) => {
+          e.preventDefault();
+          if (column.id === "email") {
+            handleUserActionModal(row.original);
+          }
+        };
+        return (
+          <Text variant="light" onClick={handleActionClick}>
+            {row.original.email.split("@").length > 0 ? row.original.email.split("@")[0] : ""}
+          </Text>
+        );
+      },
+    },
     {
       header: "Email",
       accessorKey: "email",
@@ -188,7 +204,7 @@ const Users = () => {
       accessorKey: "isactive",
       Cell: ({ value }) => (
         <Button color="teal" size="xs" compact>
-          {value}
+          active
         </Button>
       ),
     },
@@ -275,13 +291,13 @@ const Users = () => {
           columns={columns}
           data={initialData}
           onRowClick={(row) => console.log("Row clicked:", row)}
-          // topProps={() => (
-          //   <Flex>
-          //     <StyledButton compact onClick={handleAddUserModal}>
-          //       + Create User
-          //     </StyledButton>
-          //   </Flex>
-          // )}
+        // topProps={() => (
+        //   <Flex>
+        //     <StyledButton compact onClick={handleAddUserModal}>
+        //       + Create User
+        //     </StyledButton>
+        //   </Flex>
+        // )}
         />
         {isUserActionModalOpen && (
           <UserActionModal
