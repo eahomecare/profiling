@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import React, { useEffect, useState, useMemo } from "react";
 import InfoTag from "./InfoTag";
-import { en_IN as faker } from '@faker-js/faker';
+import { fakerEN_IN as faker } from '@faker-js/faker';
 
 const PersonalInformation = ({ selectedCustomer }) => {
   const [profile, setProfile] = useState({
