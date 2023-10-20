@@ -336,7 +336,7 @@ model agentSubmits {
   customerID String                        @db.ObjectId
   customer   Customer                      @relation(fields: [customerID], references: [id])
   agentID    String
-  agent      User                          @relation(fields: [agentID], references: [agentID])
+  agent      User?                          @relation(fields: [agentID], references: [agentID])
   remarks    String?
   keywords   AgentSubmitKeywordsMapping[]
   questions  AgentSubmitQuestionsMapping[]

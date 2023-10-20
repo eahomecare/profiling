@@ -618,7 +618,7 @@ export class CustomerService {
         !isNaN(data.created_at.getTime());
 
       return {
-        agentName: data.agent.agentName,
+        agentName: data?.agent?.agentName,
         date: isValidDate
           ? data.created_at
               .toISOString()
