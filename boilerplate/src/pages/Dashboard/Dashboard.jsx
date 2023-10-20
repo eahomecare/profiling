@@ -22,6 +22,8 @@ import Interests from "../../components/Interests/Interests";
 import { Occupation } from "../../components/Occupation/Occupation";
 import { FamilyDetails } from "../../components/FamilyDetails/FamilyDetails";
 import { Activity } from "../../components/Activity/Activity";
+import Remarks from "../../components/AgentPages/Remarks";
+import RemarkListings from "../../components/Remarks/RemarkListings";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
@@ -125,6 +127,7 @@ const Dashboard = () => {
                   />
 
                   <Route path="/interests" element={<Interests />} />
+                  <Route path="/remarks" element={<RemarkListings />} />
                   <Route path="/occupation" element={<Occupation />} />
                   <Route path="/familydetails" element={<FamilyDetails />} />
                   <Route path="/activity" element={<Activity />} />

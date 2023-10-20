@@ -43,6 +43,20 @@ export class CustomerController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('remarks/:id')
+  async getCustomerRemarks(
+    @Param('id') customerId: string,
+  ) {
+    console.log(
+      'Controller Remarks customer id',
+      customerId,
+    );
+    return await this.customerService.fetchCustomerRemarks(
+      customerId,
+    );
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   getCustomerInfo(
     @Param('id') customerId: string,

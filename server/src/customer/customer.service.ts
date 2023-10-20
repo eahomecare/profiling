@@ -17,7 +17,7 @@ import { log } from 'console';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async countCustomersByMonth() {
     const customers =
@@ -46,9 +46,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-        customer.created_at
-          .toISOString()
-          .slice(5, 7)
+          customer.created_at
+            .toISOString()
+            .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -419,8 +419,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-            personalDetailsInput.date_of_birth,
-          )
+              personalDetailsInput.date_of_birth,
+            )
           : null;
 
       const customer =
@@ -480,7 +480,6 @@ export class CustomerService {
         createdAt,
         updatedAt,
       } = payload;
-
 
       createdAt = new Date(createdAt);
       updatedAt = new Date(updatedAt);
@@ -567,30 +566,71 @@ export class CustomerService {
           },
         );
 
-      const allProfileTypes = await this.prisma.profileType.findMany();
+      const allProfileTypes =
+        await this.prisma.profileType.findMany();
 
       for (const profileType of allProfileTypes) {
-        await this.prisma.profileTypeCustomerMapping.create({
-          data: {
-            profileType: {
-              connect: {
-                id: profileType.id,
+        await this.prisma.profileTypeCustomerMapping.create(
+          {
+            data: {
+              profileType: {
+                connect: {
+                  id: profileType.id,
+                },
               },
-            },
-            customer: {
-              connect: {
-                id: customerMaster.id,
+              customer: {
+                connect: {
+                  id: customerMaster.id,
+                },
               },
+              level: 1,
             },
-            level: 1,
           },
-        });
+        );
       }
-
 
       return customerHomecareMapping;
     } catch (error) {
-      throw Error(error)
+      throw Error(error);
     }
+  }
+
+  async fetchCustomerRemarks(customerId: string) {
+    const remarksData =
+      await this.prisma.agentSubmits.findMany({
+        where: {
+          customerID: customerId,
+        },
+        select: {
+          agent: {
+            select: {
+              agentName: true,
+            },
+          },
+          created_at: true,
+          remarks: true,
+        },
+      });
+
+    return remarksData.map((data) => {
+      const isValidDate =
+        data.created_at instanceof Date &&
+        !isNaN(data.created_at.getTime());
+
+      return {
+        agentName: data.agent.agentName,
+        date: isValidDate
+          ? data.created_at
+              .toISOString()
+              .split('T')[0]
+          : 'N/A',
+        time: isValidDate
+          ? data.created_at
+              .toTimeString()
+              .split(' ')[0]
+          : 'N/A',
+        remark: data.remarks,
+      };
+    });
   }
 }
