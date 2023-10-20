@@ -119,7 +119,6 @@ export class SubmitService {
 
         for (const option of options) {
           if (selectedOptions.includes(option)) {
-            // Check if keyword exists
             const existingKeyword =
               await this.prisma.keyword.findUnique(
                 {
@@ -133,7 +132,6 @@ export class SubmitService {
               );
 
             if (existingKeyword) {
-              // Keyword exists, connect it to the question and check for customer connection
               createdKeywordIds.push(
                 existingKeyword.id,
               );
@@ -173,7 +171,6 @@ export class SubmitService {
                 customerId,
               );
             } else {
-              // Keyword does not exist, create it and connect to the question and customer
               const createdKeyword =
                 await this.prisma.keyword.create({
                   data: {
