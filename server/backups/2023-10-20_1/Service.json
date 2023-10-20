@@ -1,0 +1,44 @@
+[
+  {
+    "id": "64895e4ce3ea3ca6dada70ab",
+    "name": "Europ Assistance - Test Plan1",
+    "subType": "Test1",
+    "description": null,
+    "profileTypeIDs": []
+  },
+  {
+    "id": "6489b89ca22035a008b71870",
+    "name": "Kotak Bank - Vehicle and Travel Benefits",
+    "subType": "Exterior Wash with Sanitization",
+    "description": null,
+    "profileTypeIDs": []
+  },
+  {
+    "id": "6489b8a0a22035a008b71879",
+    "name": "VISA - VISA Plan",
+    "subType": "VoucherBooking",
+    "description": null,
+    "profileTypeIDs": []
+  },
+  {
+    "id": "6489b8a1a22035a008b7187d",
+    "name": "Rupay - Rupay Union Bank",
+    "subType": "Appliance Repair",
+    "description": null,
+    "profileTypeIDs": []
+  },
+  {
+    "id": "6489b8b2a22035a008b7189e",
+    "name": "-",
+    "subType": "Appliance Repair & Maintenance",
+    "description": null,
+    "profileTypeIDs": []
+  },
+  {
+    "id": "6489b8b5a22035a008b718ac",
+    "name": "Axis Bank - Axis Bank Platinum",
+    "subType": "Dinners",
+    "description": null,
+    "profileTypeIDs": []
+  }
+]
