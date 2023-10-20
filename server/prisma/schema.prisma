@@ -26,12 +26,13 @@ model User {
   created_by                String?
   updated_by                String?
   // UserAgentSessionMapping   UserAgentSessionMapping[]
-  roleId                    String                      @db.ObjectId
-  role                      Role                        @relation(fields: [roleId], references: [id])
+  roleId                    String?                      @db.ObjectId
+  role                      Role?                        @relation(fields: [roleId], references: [id])
   agentSubmits              agentSubmits[]
   AgentSession              AgentSession[]
   isActive                  Boolean                     @default(true)
   previousHashes       String[]   @default([])
+  test String
 
   @@map("users")
 }
@@ -156,7 +157,7 @@ model Question {
   question       String
   category       String
   level          Int
-  type           String
+  type           String?
   options        String[]
   customerIDs    String[]                      @db.ObjectId
   customers      Customer[]                    @relation(fields: [customerIDs], references: [id])
@@ -282,10 +283,10 @@ model Permission {
 
 model userRolePermissionMapping {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
-  roleId       String     @db.ObjectId
-  role         Role       @relation(fields: [roleId], references: [id])
-  permissionId String     @db.ObjectId
-  permission   Permission @relation(fields: [permissionId], references: [id])
+  roleId       String?     @db.ObjectId
+  role         Role?       @relation(fields: [roleId], references: [id])
+  permissionId String?     @db.ObjectId
+  permission   Permission? @relation(fields: [permissionId], references: [id])
   userId       String     @db.ObjectId
   isActive     Boolean    @default(true)
   user         User       @relation(fields: [userId], references: [id])
@@ -322,8 +323,8 @@ model AgentSession {
   id                 String   @id @default(auto()) @map("_id") @db.ObjectId
   CRM                String
   authorizationToken String   @unique
-  userId             String   @db.ObjectId
-  user               User     @relation(fields: [userId], references: [id])
+  userId             String?   @db.ObjectId
+  user               User?     @relation(fields: [userId], references: [id])
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 

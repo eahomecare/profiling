@@ -1,0 +1,38 @@
+[
+  {
+    "id": "64c0bff4d2e66a6450d09b1a",
+    "roleId": "64c0bfcd8b732ad6600fcc33",
+    "permissionId": null,
+    "userId": "64c0bff4d2e66a6450d09b19",
+    "isActive": true,
+    "created_at": "2023-07-26T06:40:52.665Z",
+    "updated_at": "2023-07-26T06:40:52.665Z"
+  },
+  {
+    "id": "64c0e2ac47977a757f9f3781",
+    "roleId": "64c0bfcd8b732ad6600fcc33",
+    "permissionId": null,
+    "userId": "64c0e2ac47977a757f9f3780",
+    "isActive": true,
+    "created_at": "2023-07-26T09:09:00.924Z",
+    "updated_at": "2023-07-26T09:09:00.924Z"
+  },
+  {
+    "id": "64c0e32fc1f87d46e1bd4eb1",
+    "roleId": "64c0bfcd8b732ad6600fcc33",
+    "permissionId": null,
+    "userId": "64c0e32fc1f87d46e1bd4eb0",
+    "isActive": true,
+    "created_at": "2023-07-26T09:11:11.122Z",
+    "updated_at": "2023-07-26T09:11:11.122Z"
+  },
+  {
+    "id": "64c7a3950826b42a9bab2dd8",
+    "roleId": "64c0bfcd8b732ad6600fcc33",
+    "permissionId": null,
+    "userId": "64c7a3950826b42a9bab2dd7",
+    "isActive": true,
+    "created_at": "2023-07-31T12:05:41.137Z",
+    "updated_at": "2023-07-31T12:05:41.137Z"
+  }
+]
