@@ -10,8 +10,9 @@ import {
   Space,
   Text,
 } from "@mantine/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import InfoTag from "./InfoTag";
+import { fakerDE as faker } from '@faker-js/faker';
 
 const PersonalInformation = ({ selectedCustomer }) => {
   const [profile, setProfile] = useState({
@@ -19,6 +20,17 @@ const PersonalInformation = ({ selectedCustomer }) => {
   });
   const { profile_completion } = selectedCustomer;
   const { source } = selectedCustomer;
+  const memoizedSelectedCustomer = useMemo(() => selectedCustomer, [selectedCustomer.id, selectedCustomer.profiling.personal_details]);
+
+  const randomDetails = useMemo(() => {
+    return {
+      randomLocation: faker.location.city(),
+      randomState: faker.location.state(),
+      randomAddress: faker.location.streetAddress(),
+      randomPincode: faker.location.zipCode(),
+    };
+  }, [memoizedSelectedCustomer]);
+
 
   const profileCompletion = (percentage) => {
     return (
@@ -35,8 +47,8 @@ const PersonalInformation = ({ selectedCustomer }) => {
                   percentage > 75
                     ? "#1D9B25"
                     : percentage > 60
-                    ? "#CFA400"
-                    : "#D85972",
+                      ? "#CFA400"
+                      : "#D85972",
               },
             ]}
             label={
@@ -49,6 +61,7 @@ const PersonalInformation = ({ selectedCustomer }) => {
       </div>
     );
   };
+
   return (
     <>
       <Container mt={-80}>
@@ -63,7 +76,7 @@ const PersonalInformation = ({ selectedCustomer }) => {
           </div>
         </Group>
         <div style={{ marginTop: "-30px" }}>
-          {/* <InfoTag title={'Picture'} subject={<Avatar radius={'xl'} size='xl' />} /> */}
+          {/* <InfoTag title={'Picture'} subject={<Avatar radius={'xl'} size='xl' />} */}
           <Grid gutter="xl" pt={"sm"}>
             <Grid.Col span={4}>
               <InfoTag
@@ -124,19 +137,19 @@ const PersonalInformation = ({ selectedCustomer }) => {
           <Text fw={500}>Address</Text>
           <Grid gutter="xl">
             <Grid.Col span={6}>
-              <InfoTag title={"Location(city)"} subject={profile.location} />
+              <InfoTag title={"Location(city)"} subject={randomDetails.randomLocation} />
             </Grid.Col>
             <Grid.Col span={6}>
-              <InfoTag title={"State"} subject={profile.state} />
+              <InfoTag title={"State"} subject={randomDetails.randomState} />
             </Grid.Col>
             <Grid.Col span={6}>
-              <InfoTag title={"PINCODE"} subject={profile.pincode} />
+              <InfoTag title={"PINCODE"} subject={randomDetails.randomPincode} />
             </Grid.Col>
             <Grid.Col span={6}>
-              <InfoTag title={"Country"} subject={profile.country} />
+              <InfoTag title={"Country"} subject="India" />
             </Grid.Col>
             <Grid.Col span={6}>
-              <InfoTag title={"Address Line"} subject={profile.address} />
+              <InfoTag title={"Address Line"} subject={randomDetails.randomAddress} />
             </Grid.Col>
           </Grid>
         </div>
