@@ -14,7 +14,7 @@ export class SearchService
 
   async onModuleInit() {
     try {
-      const index = 'keywords';
+      const index = 'eaprofiling.keywords';
       const indexExists =
         await this.checkIfIndexExists(index);
 

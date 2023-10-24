@@ -11,7 +11,7 @@ async function bootstrap() {
     allowedHeaders: '*',
     // credentials: true,
     // preflightContinue: true
-  })
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

@@ -335,13 +335,11 @@ model agentSubmits {
   CRM        String
   customerID String                        @db.ObjectId
   customer   Customer                      @relation(fields: [customerID], references: [id])
-  agentID    String                        
+  agentID    String
   agent      User                          @relation(fields: [agentID], references: [agentID])
   remarks    String?
   keywords   AgentSubmitKeywordsMapping[]
   questions  AgentSubmitQuestionsMapping[]
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
 
   @@map("agentSubmits")
 }
@@ -425,9 +423,9 @@ model CampaignReport {
 model AgentSubmitKeywordsMapping {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId
   agentSubmitId String       @map("agent_submit_id") @db.ObjectId
-  keywordId     String?       @map("keyword_id") @db.ObjectId
+  keywordId     String       @map("keyword_id") @db.ObjectId
   agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
-  keyword       Keyword?      @relation(fields: [keywordId], references: [id])
+  keyword       Keyword      @relation(fields: [keywordId], references: [id])
 
   @@unique([agentSubmitId, keywordId])
   @@map("agentSubmitKeywordsMapping")
@@ -501,8 +499,8 @@ model CustomerHomecare {
   registrationVerificationStatus String?
   wp_user_id                     Int
   customer_id                    String?
-  createdAt                      DateTime?                  @default(now())
-  updatedAt                      DateTime?                  @updatedAt
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt
   CustomerHomecareMapping        CustomerHomecareMapping[]
 
   @@unique([wp_user_id])

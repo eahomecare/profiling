@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  monstache:
+    image: rwynn/monstache:latest
+    container_name: monstache
+    working_dir: /monstache
+    volumes:
+      # - ./monstache.toml:/etc/monstache/monstache.toml
+      - './monstache:/monstache/'
+      # - './monstache/config.toml:/monstache/config.toml'
+    # command: -f /etc/monstache/monstache.toml
+    command: '-f ./config.toml'
+    restart: always
+    networks:
+      mynetwork:
+        aliases:
+          - monstache
+
+networks:
+  mynetwork:
+    external: true
