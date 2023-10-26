@@ -146,7 +146,7 @@ const MainAppShell = ({ children }) => {
               bg={"white"}
               // styles={{
               //   root: {
-              //     backgroundImage: "radial-gradient(#FFFFFF 50% ,#5C0FF2)",
+              //     backgroundImage: "radial-gradient(#FFFFFF 50% ,#2B1DFD)",
               //   },
               // }}
               size={"2.5rem"}
@@ -159,20 +159,20 @@ const MainAppShell = ({ children }) => {
       <div style={{ display: "flex" }}>
         <Card
           shadow="md"
-          radius={"md"}
           w={"290px"}
           bg={theme.colorScheme == "dark" ? "" : "#FFFFFF"}
           sx={{
             boxShadow: `
-    rgba(92, 0, 242, 0.17) 0px -23px 25px 0px inset,
-    rgba(92, 0, 242, 0.15) 0px -36px 30px 0px inset,
-    rgba(92, 0, 242, 0.1) 0px -79px 40px 0px inset,
-    rgba(92, 0, 242, 0.06) 0px 2px 1px,
-    rgba(92, 0, 242, 0.09) 0px 4px 2px,
-    rgba(92, 0, 242, 0.09) 0px 8px 4px,
-    rgba(92, 0, 242, 0.09) 0px 16px 8px,
-    rgba(92, 0, 242, 0.09) 0px 32px 16px
-`,
+        rgba(43, 29, 253, 0.17) 0px -23px 25px 0px inset,
+        rgba(43, 29, 253, 0.15) 0px -36px 30px 0px inset,
+        rgba(43, 29, 253, 0.1) 0px -79px 40px 0px inset,
+        rgba(43, 29, 253, 0.06) 0px 2px 1px,
+        rgba(43, 29, 253, 0.09) 0px 4px 2px,
+        rgba(43, 29, 253, 0.09) 0px 8px 4px,
+        rgba(43, 29, 253, 0.09) 0px 16px 8px,
+        rgba(43, 29, 253, 0.09) 0px 32px 16px
+    `,
+
             transform: isMounted ? "translateX(0%)" : "translateX(-100%)",
             transition: "transform 0.6s ease-out",
           }}
