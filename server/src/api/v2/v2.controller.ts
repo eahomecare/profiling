@@ -268,8 +268,8 @@ export class V2Controller {
 
       const results =
         await this.searchService.autocomplete(
-          'eaprofiling.keywords',
-          // 'keywords',
+          // 'eaprofiling.keywords',
+          'keywords',
           searchDto.term,
           searchDto.field,
         );
