@@ -68,7 +68,7 @@ const ProfileDataCard = () => {
                     hoveredItem === entry.name ? "scale(1.1)" : "scale(1)",
                   backgroundImage:
                     hoveredItem === entry.name
-                      ? "radial-gradient(#000000 20% ,#5C0FF2)"
+                      ? "radial-gradient(#000000 20% ,#2B1DFD)"
                       : "none",
                 }}
                 radius={"xl"}

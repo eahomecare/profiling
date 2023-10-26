@@ -28,7 +28,7 @@ const Customers = () => {
         overlayBlur={2}
         overlayColor={"#F3F6FF"}
         loaderProps={{
-          color: "#5C0FF2",
+          color: "#2B1DFD",
           size: "xl",
           variant: "dots",
         }}
