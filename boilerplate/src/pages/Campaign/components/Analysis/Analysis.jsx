@@ -143,7 +143,7 @@ const Analysis = () => {
       <Card mt={20} shadow={"lg"} radius="md">
         <div className="row">
           <div className="col-12 col-lg-8">
-            <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+            <Text fw={"bold"} c={"#2B1DFD"} size={"sm"}>
               Data Analysis
             </Text>
             <div
@@ -189,10 +189,10 @@ const Analysis = () => {
               <Flex justify={"end"}>
                 <div className="pl-90">
                   <Group onClick={addRow} style={{ cursor: "pointer" }}>
-                    <ActionIcon color="#5C00F2" variant="subtle" size={"sm"}>
-                      <IconPlus color="#5C00F2" />
+                    <ActionIcon color="#2B1DFD" variant="subtle" size={"sm"}>
+                      <IconPlus color="#2B1DFD" />
                     </ActionIcon>
-                    <Text ml={-18} color="#5C00F2" size={"sm"}>
+                    <Text ml={-18} color="#2B1DFD" size={"sm"}>
                       Add More
                     </Text>
                   </Group>

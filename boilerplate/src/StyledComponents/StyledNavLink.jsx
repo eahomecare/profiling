@@ -18,12 +18,12 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 500,
     "&": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
     },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -40,7 +40,7 @@ const useStyles = createStyles((theme) => ({
   },
   linkActive: {
     "&, &:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#5C00F2",
+      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#2B1DFD",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.fn.variant({ variant: "light", color: theme.primaryColor })

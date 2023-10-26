@@ -41,7 +41,7 @@ const Demographic = () => {
 
   return (
     <div className="col-12 col-lg-4">
-      <Card shadow="lg" radius="md" bg="#EBDFFF">
+      <Card shadow="lg" radius="md" bg="#F3F6FF">
         <div className="dem-title mb-4">
           <h1>Total Demographic</h1>
         </div>

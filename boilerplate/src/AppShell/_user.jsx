@@ -37,18 +37,18 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     fontSize: theme.fontSizes.sm,
-    color: theme.colorScheme === "dark" ? theme.colors.dark[1] : "#5C00F2",
+    color: theme.colorScheme === "dark" ? theme.colors.dark[1] : "#2B1DFD",
     borderRadius: theme.radius.sm,
     fontWeight: 500,
 
     "&": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
     },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
     },
 
@@ -62,17 +62,17 @@ const useStyles = createStyles((theme) => ({
     //     backgroundColor:
     //       theme.colorScheme === "dark" ? theme.colors.dark[6] : "transparent",
     //     backgroundImage: "radial-gradient(#FFFFFF 1% ,#FFFFFF00)",
-    //     color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+    //     color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
     //     width: "110%",
     //   },
     // },
     //
     // linkActive: {
     //   "&, &:hover": {
-    //     backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#EBDFFF",
-    //     color: theme.colorScheme === "dark" ? theme.white : "#EBDFFF",
+    //     backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#F3F6FF",
+    //     color: theme.colorScheme === "dark" ? theme.white : "#F3F6FF",
     //     [`& .${getStylesRef("icon")}`]: {
-    //       color: theme.fn.variant({ variant: "light", color: "#EBDFFF" }).color,
+    //       color: theme.fn.variant({ variant: "light", color: "#F3F6FF" }).color,
     //     },
     //   },
   },
@@ -114,7 +114,7 @@ const User = ({ user, roleName }) => {
               // boxShadow:
               //   "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px",
               color:
-                theme.colorScheme === "dark" ? theme.colors.dark[0] : "#5C00F2",
+                theme.colorScheme === "dark" ? theme.colors.dark[0] : "#2B1DFD",
               "&:hover": {
                 backgroundColor:
                   theme.colorScheme === "dark"
@@ -137,7 +137,7 @@ const User = ({ user, roleName }) => {
                   <Text size="sm" weight={500}>
                     {user?.email?.split("@")[0]}
                   </Text>
-                  <Text color="#5C00F2" size="xs">
+                  <Text color="#2B1DFD" size="xs">
                     {roleName}
                   </Text>
                 </Stack>
@@ -150,10 +150,10 @@ const User = ({ user, roleName }) => {
         <Menu.Dropdown>
           <Box>
             <Card
-              bg={"#EBDFFF"}
+              bg={"#F3F6FF"}
               shadow="xl"
               radius={"md"}
-              sx={{ border: "1px solid #5C00F2" }}
+              sx={{ border: "1px solid #2B1DFD" }}
             >
               <NavLink
                 component={Link}

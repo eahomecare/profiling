@@ -127,13 +127,13 @@ const DropdownRow = ({
         </ActionIcon>
       </div>
       <div className="col-12 col-lg-2">
-        {loadingState === "loading" && <Loader type={"dots"} color="#5C00F2" />}
+        {loadingState === "loading" && <Loader type={"dots"} color="#2B1DFD" />}
         {loadingState === "error" && (
           <Flex>
             <ActionIcon c={"red"}>
               <IconExclamationMark />
             </ActionIcon>
-            <ActionIcon c={"#5C00F2"} onClick={handleRefresh}>
+            <ActionIcon c={"#2B1DFD"} onClick={handleRefresh}>
               <IconRefresh />
             </ActionIcon>
           </Flex>
@@ -142,7 +142,7 @@ const DropdownRow = ({
           <>
             <Flex>
               <ActionIcon>{figures !== null ? figures : "-"}</ActionIcon>
-              <ActionIcon c={"#5C00F2"} onClick={handleRefresh}>
+              <ActionIcon c={"#2B1DFD"} onClick={handleRefresh}>
                 <IconRefresh />
               </ActionIcon>
             </Flex>

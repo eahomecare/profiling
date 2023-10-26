@@ -7,15 +7,15 @@ const StyledBadge = (props) => {
     root: {
       cursor: "pointer",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
       "&:hover": {
         backgroundImage:
           theme.colorScheme === "dark"
             ? theme.colors.teal[9]
-            : "radial-gradient(#FFFFFF 1% ,#EBDFFF)",
-        color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
-        border: "1px solid #5C00F2",
+            : "radial-gradient(#FFFFFF 1% ,#F3F6FF)",
+        color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
+        border: "1px solid #2B1DFD",
       },
     },
   };

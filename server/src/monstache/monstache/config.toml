@@ -1,7 +1,7 @@
 # monstache.toml
 verbose=true
-direct-read-stateful=true
-resume=true
+# direct-read-stateful=true
+# resume=true
 # connect to MongoDB using the following URL
 mongo-url = "mongodb://mongo:example@mongodb/eaProfiling?authSource=admin&connect=direct"
 # connect to the Elasticsearch REST API at the following node URLs
@@ -10,7 +10,7 @@ elasticsearch-urls = ["http://elasticsearch:9200"]
 # if you need to seed an index from a collection and not just listen and sync changes events
 direct-read-namespaces = ["eaProfiling.keywords"]
 # you can copy entire collections or views from MongoDB to Elasticsearch
-# change-stream-namespaces = ["eaProfiling.keywords"]
+change-stream-namespaces = ["eaProfiling.keywords"]
 
 
 # # Direct mapping: Syncing 'keywords' collection in MongoDB to 'keywords' in Elasticsearch

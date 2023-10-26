@@ -26,7 +26,7 @@ const Customers = () => {
       <LoadingOverlay
         visible
         overlayBlur={2}
-        overlayColor={"#EBDFFF"}
+        overlayColor={"#F3F6FF"}
         loaderProps={{
           color: "#5C0FF2",
           size: "xl",

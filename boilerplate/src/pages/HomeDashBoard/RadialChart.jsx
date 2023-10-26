@@ -42,7 +42,7 @@ const RadialChart = () => {
           <RadialBar
             minAngle={15}
             label={{ position: "insideStart", fill: "#fff" }}
-            background={{ fill: "#EBDFFF" }}
+            background={{ fill: "#F3F6FF" }}
             clockWise
             dataKey="count"
           />

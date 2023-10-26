@@ -40,10 +40,10 @@ const EditProfile = () => {
     <Box>
       <Card shadow="lg" p={30} radius={"md"}>
         <Stack>
-          <Title mb={10} size={"lg"} c="#5C00F2">
+          <Title mb={10} size={"lg"} c="#2B1DFD">
             Edit Profile
           </Title>
-          <Divider c="#5C00F2" />
+          <Divider c="#2B1DFD" />
           <form onSubmit={form.onSubmit(handleFormSubmit)}>
             <Stack mt={30}>
               <StyledTextInput
