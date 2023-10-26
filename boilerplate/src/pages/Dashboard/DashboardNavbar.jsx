@@ -50,18 +50,18 @@ const useStyles = createStyles((theme) => ({
       //   theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
       color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
       boxShadow: `
-          rgba(92, 0, 242, 0.06) 0px 2px 1px,
-          rgba(92, 0, 242, 0.09) 0px 4px 2px,
-          rgba(92, 0, 242, 0.09) 0px 8px 4px,
-          rgba(92, 0, 242, 0.09) 0px 16px 8px,
-          rgba(92, 0, 242, 0.09) 0px 32px 16px
+          rgba(43,29,253) 0px 2px 1px,
+          rgba(43,29,253) 0px 4px 2px,
+          rgba(43,29,253) 0px 8px 4px,
+          rgba(43,29,253) 0px 16px 8px,
+          rgba(43,29,253) 0px 32px 16px
       `,
       /* From https://css.glass */
-      background: "rgba(235, 223, 255, 1)",
+      background: "rgba(, 1)",
       borderRadius: "16px",
       // boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
       backdropFilter: "blur(5.1px)",
-      border: "1px solid rgba(235, 223, 255, 0.42)",
+      border: "1px solid rgba(, 0.42)",
       webkitBackdropFilter: "blur(5.1px)",
       //       boxShadow: `
       //     rgba(92, 0, 242, 0.09) 0px 4px 2px,
