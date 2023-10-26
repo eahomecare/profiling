@@ -7,36 +7,36 @@ const StyledSelect = (props) => {
   const defaultStyles = {
     rightSection: { pointerEvents: "none" },
     label: {
-      color: "#5C00F299",
+      color: "#2B1DFD99",
     },
     dropdown: {
       border: "none",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
       color: theme.colorScheme === "dark" ? theme.white : "black",
     },
     input: {
       cursor: "pointer",
       border: "none",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
       color: theme.colorScheme === "dark" ? theme.white : "black",
     },
     item: {
       "&": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
         color: theme.colorScheme === "dark" ? theme.white : "black",
       },
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#5C00F299",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD99",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
       "&[data-selected]": {
         "&, &:hover": {
           backgroundColor:
-            theme.colorScheme === "dark" ? theme.colors.teal[9] : "#5C00F299",
+            theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD99",
           color: theme.colorScheme === "dark" ? theme.white : "white",
         },
       },
@@ -55,7 +55,7 @@ const StyledSelect = (props) => {
       styles={{ ...defaultStyles, ...props.styles }}
       rightSection={
         props.rightSection || (
-          <ActionIcon c="#5C00F2" size={"sm"}>
+          <ActionIcon c="#2B1DFD" size={"sm"}>
             <IconChevronDown />
           </ActionIcon>
         )

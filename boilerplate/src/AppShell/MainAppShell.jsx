@@ -44,15 +44,15 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 500,
     "&": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
     },
     "&:focus": {
       outline: "none",
     },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#5C00F290",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD90",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -69,7 +69,7 @@ const useStyles = createStyles((theme) => ({
   },
   linkActive: {
     "&, &:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#5C00F2",
+      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#2B1DFD",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
@@ -127,7 +127,7 @@ const MainAppShell = ({ children }) => {
       <Header
         styles={{
           root: {
-            backgroundImage: "linear-gradient(#8C53E7,#5C00F2)",
+            backgroundImage: "linear-gradient(#8C53E7,#2B1DFD)",
             paddingTop: 5,
             paddingRight: 20,
           },
@@ -353,7 +353,7 @@ const MainAppShell = ({ children }) => {
             height: "calc(100vh - 50px)",
             overflowY: "auto",
             // backgroundColor: "#F8F8F8",
-            backgroundImage: "radial-gradient(#F2F2F2 50% ,#EBDFFF)",
+            backgroundImage: "radial-gradient(#F2F2F2 50% ,#F3F6FF)",
           }}
         >
           <div

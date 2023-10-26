@@ -37,13 +37,13 @@ const Root = () => {
           <Box>
             <Flex justify={"space-between"}>
               <Center>
-                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+                <Text fw={"bold"} c={"#2B1DFD"} size={"sm"}>
                   Promoters vs Detractors
                 </Text>
               </Center>
               <Center>
                 <Link to={"/campaign"}>
-                  <ActionIcon c={"#5C00F2"} size={"sm"}>
+                  <ActionIcon c={"#2B1DFD"} size={"sm"}>
                     <IconArrowRight />
                   </ActionIcon>
                 </Link>
@@ -88,13 +88,13 @@ const Root = () => {
         {/*   <Box> */}
         {/*     <Flex justify={"space-between"}> */}
         {/*       <Center> */}
-        {/*         <Text fw={"bold"} c={"#5C00F2"} size={"sm"}> */}
+        {/*         <Text fw={"bold"} c={"#2B1DFD"} size={"sm"}> */}
         {/*           Hourly Hits */}
         {/*         </Text> */}
         {/*       </Center> */}
         {/*       <Center> */}
         {/*         <Link to={"/campaign"}> */}
-        {/*           <ActionIcon c={"#5C00F2"} size={"sm"}> */}
+        {/*           <ActionIcon c={"#2B1DFD"} size={"sm"}> */}
         {/*             <IconArrowRight /> */}
         {/*           </ActionIcon> */}
         {/*         </Link> */}

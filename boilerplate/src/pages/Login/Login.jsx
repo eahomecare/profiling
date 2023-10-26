@@ -56,7 +56,7 @@ export default function Login() {
       <Box
         h={"100vh"}
         sx={{
-          backgroundImage: "radial-gradient(#F2F2F2 50% ,#EBDFFF)",
+          backgroundImage: "radial-gradient(#F2F2F2 50% ,#F3F6FF)",
         }}
       >
         <Grid pt={"8%"} grow>
@@ -73,7 +73,7 @@ export default function Login() {
                       <Flex justify={"end"}>
                         <Title
                           variant={"gradient"}
-                          gradient={{ from: "#5C00F2", to: "#EBDFFF", deg: 45 }}
+                          gradient={{ from: "#2B1DFD", to: "#F3F6FF", deg: 45 }}
                         >
                           Customer Profiling
                         </Title>
@@ -128,7 +128,7 @@ export default function Login() {
 
                                                 Forgot password?
                                             </Anchor> */}
-                        <Text size={"sm"} c={"#5C00F2"}>
+                        <Text size={"sm"} c={"#2B1DFD"}>
                           Forgot Password
                         </Text>
                       </Group>

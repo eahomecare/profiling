@@ -40,14 +40,14 @@ const ProfileDataCard = () => {
       withBorder
       shadow={"xl"}
       radius={"md"}
-      bg={"#EBDFFF"}
+      bg={"#F3F6FF"}
       mah={300}
-      sx={{ overflowY: "auto", scrollbarColor: "#5C00F2" }}
+      sx={{ overflowY: "auto", scrollbarColor: "#2B1DFD" }}
     >
       <Stack>
         <Group spacing={"xs"}>
           <Title size={"md"}>Total</Title>
-          <Title size={"md"} c={"#5C00F2"}>
+          <Title size={"md"} c={"#2B1DFD"}>
             {totalValue}
           </Title>
         </Group>

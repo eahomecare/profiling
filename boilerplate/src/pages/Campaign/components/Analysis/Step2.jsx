@@ -87,8 +87,8 @@ const Step2 = () => {
                         className="preview-container"
                         key={tab}
                         onClick={() => dispatch(setActiveTab(tab))}
-                        c={activeTab === tab ? "#5C00F2" : "white"}
-                        bg={activeTab === tab ? "white" : "#5C00F2"}
+                        c={activeTab === tab ? "#2B1DFD" : "white"}
+                        bg={activeTab === tab ? "white" : "#2B1DFD"}
                         sx={{
                           "&:hover": {
                             backgroundColor: "white",
@@ -107,12 +107,12 @@ const Step2 = () => {
                       className="preview-container"
                       key={tab}
                       onClick={() => dispatch(setActiveTab(tab))}
-                      c={activeTab === tab ? "#white" : "#5C00F2"}
-                      bg={activeTab === tab ? "#5C00F2" : "white"}
+                      c={activeTab === tab ? "#white" : "#2B1DFD"}
+                      bg={activeTab === tab ? "#2B1DFD" : "white"}
                       sx={{
                         "&:hover": {
-                          backgroundColor: "#EBDFFF",
-                          color: "#5C00F2",
+                          backgroundColor: "#F3F6FF",
+                          color: "#2B1DFD",
                         },
                       }}
                       mr={-5}

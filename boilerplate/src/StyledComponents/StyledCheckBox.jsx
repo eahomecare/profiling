@@ -7,10 +7,10 @@ const StyledCheckBox = (props) => {
     input: {
       cursor: "pointer",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
       "&:hover": {
-        border: "2px solid #5C00F2",
+        border: "2px solid #2B1DFD",
         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
       },
     },

@@ -73,7 +73,7 @@ export default function TableDisplay({
       {
         accessorFn: (row) =>
           !fetchedPofileCompleteness ? (
-            <Loader type={"dots"} color="#5C00F2" />
+            <Loader type={"dots"} color="#2B1DFD" />
           ) : (
             profileCompletion(row.profile_completion)
           ),

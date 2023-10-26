@@ -55,7 +55,7 @@ const Users = () => {
     header: {
       position: "sticky",
       top: 0,
-      backgroundColor: "#EBDFFF",
+      backgroundColor: "#F3F6FF",
       fontColor: "red",
       transition: "box-shadow 150ms ease",
 
@@ -276,7 +276,7 @@ const Users = () => {
       <LoadingOverlay
         visible
         overlayBlur={2}
-        overlayColor={"#EBDFFF"}
+        overlayColor={"#F3F6FF"}
         loaderProps={{
           color: "#5C0FF2",
           size: "xl",

@@ -76,7 +76,7 @@ const TopPanelCards = () => {
           <Card
             sx={{
               height: "100%",
-              backgroundImage: "radial-gradient(#FFFFFF 50% ,#EBDFFF)",
+              backgroundImage: "radial-gradient(#FFFFFF 50% ,#F3F6FF)",
               cursor: "pointer",
               transition: "transform 0.3s ease",
               ":hover": {

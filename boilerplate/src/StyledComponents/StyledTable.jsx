@@ -79,7 +79,7 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
             transition: "transform 0.3s ease, background-color 0.3s ease",
             "&:hover": {
               transform: "scale(0.99)",
-              backgroundColor: "#EBDFFF90",
+              backgroundColor: "#F3F6FF90",
             },
           },
         })}
@@ -91,23 +91,23 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
           },
         }}
         muiTableHeadRowProps={{
-          sx: { backgroundColor: "#EBDFFF" },
+          sx: { backgroundColor: "#F3F6FF" },
         }}
         muiTablePaginationProps={{
-          sx: { color: "#5C00F2" },
+          sx: { color: "#2B1DFD" },
         }}
         renderTopToolbarCustomActions={({ table }) => (
           <Box w={"100%"} pt={10}>
             <Flex justify={"space-between"}>
               <Center>
                 <ActionIcon
-                  c={"#5C00F2"}
+                  c={"#2B1DFD"}
                   size={"sm"}
                   onClick={() => handleExportRows(table.getRowModel().rows)}
                 >
                   <IconTableExport />
                 </ActionIcon>
-                <Text fw={"bold"} c={"#5C00F2"} size={"sm"}>
+                <Text fw={"bold"} c={"#2B1DFD"} size={"sm"}>
                   Export
                 </Text>
               </Center>
@@ -120,19 +120,19 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
         renderToolbarInternalActions={({ table }) => (
           <Box w={160}>
             <MRT_ToggleGlobalFilterButton
-              style={{ color: "#5C00F2" }}
+              style={{ color: "#2B1DFD" }}
               table={table}
             />
             <MRT_ToggleFiltersButton
-              style={{ color: "#5C00F2" }}
+              style={{ color: "#2B1DFD" }}
               table={table}
             />
             <MRT_ShowHideColumnsButton
-              style={{ color: "#5C00F2" }}
+              style={{ color: "#2B1DFD" }}
               table={table}
             />
             <MRT_FullScreenToggleButton
-              style={{ color: "#5C00F2" }}
+              style={{ color: "#2B1DFD" }}
               table={table}
             />
           </Box>

@@ -6,53 +6,53 @@ const StyledDateInput = (props) => {
   const theme = useMantineTheme();
 
   const defaultStyles = {
-    rightSection: { pointerEvents: "none", color: "#5C00F2" },
+    rightSection: { pointerEvents: "none", color: "#2B1DFD" },
     label: {
-      color: "#5C00F299",
+      color: "#2B1DFD99",
     },
     dropdown: {
       border: "none",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
       color: theme.colorScheme === "dark" ? theme.white : "black",
     },
     calendarHeader: {
-      backgroundColor: "#EBDFFF",
+      backgroundColor: "#F3F6FF",
     },
     day: {
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#5C00F2",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     monthList: {
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#5C00F2",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     weekday: {
-      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
     },
     calendarHeaderLevel: {
-      backgroundColor: "#EBDFFF",
-      color: theme.colorScheme === "dark" ? theme.white : "#5C00F2",
+      backgroundColor: "#F3F6FF",
+      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#5C00F2",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     calendarHeaderControlIcon: {
-      color: "#5C00F2",
+      color: "#2B1DFD",
     },
     input: {
       cursor: "pointer",
       border: "none",
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#EBDFFF",
+        theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
       color: theme.colorScheme === "dark" ? theme.white : "black",
     },
   };
@@ -65,7 +65,7 @@ const StyledDateInput = (props) => {
       popoverProps={{ withinPortal: true }}
       rightSection={
         <ActionIcon>
-          <IconCalendar color={"#5C00F2"} />
+          <IconCalendar color={"#2B1DFD"} />
         </ActionIcon>
       }
     />

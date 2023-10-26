@@ -27,15 +27,15 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
   return (
     <Card shadow="lg" p={30} radius={"md"}>
       <Stack>
-        <Title mb={10} size={"lg"} c="#5C00F2">
+        <Title mb={10} size={"lg"} c="#2B1DFD">
           Password Constraints
         </Title>
-        <Divider c="#5C00F2" />
+        <Divider c="#2B1DFD" />
         <Group>
           <Checkbox
             styles={{
               input: {
-                border: "1px solid #5C00F2",
+                border: "1px solid #2B1DFD",
               },
             }}
             color={isValid(password.length >= 8)}
@@ -51,7 +51,7 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
           <Checkbox
             styles={{
               input: {
-                border: "1px solid #5C00F2",
+                border: "1px solid #2B1DFD",
               },
             }}
             color={isValid(/[A-Z]/.test(password))}
@@ -67,7 +67,7 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
           <Checkbox
             styles={{
               input: {
-                border: "1px solid #5C00F2",
+                border: "1px solid #2B1DFD",
               },
             }}
             color={isValid(/[a-z]/.test(password))}
@@ -83,7 +83,7 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
           <Checkbox
             styles={{
               input: {
-                border: "1px solid #5C00F2",
+                border: "1px solid #2B1DFD",
               },
             }}
             color={isValid(/[0-9]/.test(password))}
@@ -99,7 +99,7 @@ const PasswordConstraints = ({ password = "", onValidationChange }) => {
           <Checkbox
             styles={{
               input: {
-                border: "1px solid #5C00F2",
+                border: "1px solid #2B1DFD",
               },
             }}
             color={isValid(/[^A-Za-z0-9\s]/.test(password))}
