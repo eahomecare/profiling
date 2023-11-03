@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CurrentKeywordsDto {
+class CurrentKeywordsDto {
   @IsOptional()
   @IsString()
   id: string;
@@ -31,6 +31,10 @@ export class QuestionDto {
     message: 'customerCRMId should not be blank',
   })
   customerCRMId: string | number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  questionNumber: number;
 
   @IsOptional()
   @IsString()
