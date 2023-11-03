@@ -10,20 +10,22 @@ const _ = require('lodash');
 export class ProfileMappingController {
   constructor(
     private readonly profileService: ProfileTypeCustomerMappingService,
-  ) { }
+  ) {}
 
   @Get(':customerId')
   async getProfileMappings(
     @Param('customerId') customerId: string,
   ) {
-
-    console.log('Recieved customer id for profile_mapping', customerId)
+    console.log(
+      'Recieved customer id for profile_mapping',
+      customerId,
+    );
     const mappings =
       await this.profileService.getProfileMappings(
         customerId,
       );
 
-    console.log('mappings =>', mappings)
+    console.log('mappings =>', mappings);
 
     const categories = {};
     for (const mapping of mappings) {
@@ -32,7 +34,10 @@ export class ProfileMappingController {
 
       const keywords = customer.keywords;
 
-      console.log('unfiltered keywords', keywords)
+      console.log(
+        'unfiltered keywords',
+        keywords,
+      );
 
       const categoryName =
         profileType.name.toLowerCase();
@@ -50,7 +55,7 @@ export class ProfileMappingController {
         { category: categoryName },
       );
 
-      console.log('filtered keywords', keywords)
+      console.log('filtered keywords', keywords);
 
       for (const keyword of filtered_keywords) {
         categories[categoryName].push({
@@ -60,7 +65,10 @@ export class ProfileMappingController {
       }
     }
 
-    console.dir('Categories objec in response', categories)
+    console.dir(
+      'Categories objec in response',
+      categories,
+    );
 
     return { categories };
   }

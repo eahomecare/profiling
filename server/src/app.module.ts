@@ -1,4 +1,8 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
@@ -23,8 +27,9 @@ import { UserRolePermissionMappingModule } from './user-role-permission-mapping/
 import { CampaignModule } from './campaign/campaign.module';
 import { TemplateModule } from './template/template.module';
 import { EventModule } from './event/event.module';
-import { V2Module } from './api/v2/v2.module';
+import { V3Module } from './api/v3/v3.module';
 import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mapping/profile-type-customer-mapping.module';
+import { ProfileTypesModule } from './profile_types/profile-type.module';
 
 @Module({
   imports: [
@@ -42,7 +47,7 @@ import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mappin
     ProfileMappingModule,
     LangchainModule,
     // V1Module,
-    V2Module,
+    V3Module,
     RolesModule,
     PermissionsModule,
     UserRolePermissionMappingModule,
@@ -50,6 +55,7 @@ import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mappin
     TemplateModule,
     EventModule,
     ProfileTypeCustomerMappingModule,
+    ProfileTypesModule,
     // SearchModule,
   ],
   controllers: [ServiceCustomerController],

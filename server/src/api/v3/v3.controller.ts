@@ -27,9 +27,10 @@ import { AgentQuestionService } from './agentQuestion.service';
 import { SubmitService } from './agentSubmit.service';
 import { SubmitDataDto } from './dto/agent-submit.dto';
 import { CustomerLookupService } from './customerLookup.service';
+import { ProfileTypeService } from './profileType.service';
 
-@Controller('api/v2')
-export class V2Controller {
+@Controller('api/v3')
+export class V3Controller {
   constructor(
     private readonly registerAgentService: RegisterAgentService,
     private readonly createAgentSessionService: CreateAgentSessionService,
@@ -42,6 +43,7 @@ export class V2Controller {
     private readonly agentQuestionService: AgentQuestionService,
     private readonly submitService: SubmitService,
     private readonly customerLookupService: CustomerLookupService,
+    private readonly profileTypeService: ProfileTypeService,
   ) {}
 
   @Post('/register')
@@ -189,7 +191,7 @@ export class V2Controller {
     }
   }
 
-  @Post('/keywords')
+  @Post('/customer-info')
   async getKeywords(
     @Req() request: Request,
     @Body(
@@ -230,10 +232,16 @@ export class V2Controller {
         await this.keywordsService.getKeywordsForCustomer(
           customer,
         );
+      const profileTypes =
+        await this.profileTypeService.getProfileTypesForCustomer(
+          customer.id,
+        );
 
-      res
-        .status(HttpStatus.OK)
-        .json({ success: true, ...keywords });
+      res.status(HttpStatus.OK).json({
+        success: true,
+        keywords,
+        profileTypes,
+      });
     } catch (error) {
       this.handleException(error, res);
     }
