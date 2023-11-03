@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { V2Controller } from './v2.controller';
+import { V3Controller } from './v3.controller';
 import { RegisterAgentService } from './registerAgent.service';
 import { CreateAgentSessionService } from './createAgentSession.service';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -14,10 +14,25 @@ import { LangchainService } from 'src/langchain/langchain.service';
 import { SubmitService } from './agentSubmit.service';
 import { CustomerLookupService } from './customerLookup.service';
 import { CryptoService } from './crypto.service';
+import { ProfileTypeService } from './profileType.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
-  controllers: [V2Controller],
-  providers: [RegisterAgentService, CreateAgentSessionService, PrismaService, AuthorizationService, LogoutAgentService, ValidateAgentTokenService, KeywordsService, AgentQuestionService, LangchainService, SubmitService, CustomerLookupService, CryptoService],
+  controllers: [V3Controller],
+  providers: [
+    RegisterAgentService,
+    CreateAgentSessionService,
+    PrismaService,
+    AuthorizationService,
+    LogoutAgentService,
+    ValidateAgentTokenService,
+    KeywordsService,
+    AgentQuestionService,
+    LangchainService,
+    SubmitService,
+    CustomerLookupService,
+    CryptoService,
+    ProfileTypeService,
+  ],
 })
-export class V2Module { }
+export class V3Module {}
