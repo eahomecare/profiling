@@ -29,6 +29,21 @@ export class AgentQuestionService {
       );
     }
 
+    return {
+      success: true,
+      question: {
+        Category: 'food',
+        text: 'Which type of cuisine do you prefer?',
+        level: 2,
+        Answers: [
+          'Asian Cuisine',
+          'European Cuisine',
+          'American Cuisine',
+          'None',
+        ],
+      },
+    };
+
     const categories =
       await this.computeCategories(customer.id);
     if (
