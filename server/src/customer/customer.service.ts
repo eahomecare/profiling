@@ -17,15 +17,23 @@ import { log } from 'console';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  async countCustomersByMonth() {
-    const customers =
-      await this.prisma.customer.findMany({
-        select: {
-          created_at: true,
-        },
-      });
+  async countCustomersByMonth(source: string) {
+    const query: any = {
+      select: {
+        created_at: true,
+        source: true,
+      },
+    };
+
+    if (source !== "All") {
+      query.where = {
+        source,
+      };
+    }
+
+    const customers = await this.prisma.customer.findMany(query);
 
     const monthNames = {
       '01': 'January',
@@ -46,9 +54,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-          customer.created_at
-            .toISOString()
-            .slice(5, 7)
+        customer.created_at
+          .toISOString()
+          .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -65,6 +73,8 @@ export class CustomerService {
 
     return customerCountsByMonth;
   }
+
+
 
   async addCustomerDetails(
     customer_details: any,
@@ -419,8 +429,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-              personalDetailsInput.date_of_birth,
-            )
+            personalDetailsInput.date_of_birth,
+          )
           : null;
 
       const customer =
@@ -621,13 +631,13 @@ export class CustomerService {
         agentName: data?.agent?.agentName,
         date: isValidDate
           ? data.created_at
-              .toISOString()
-              .split('T')[0]
+            .toISOString()
+            .split('T')[0]
           : 'N/A',
         time: isValidDate
           ? data.created_at
-              .toTimeString()
-              .split(' ')[0]
+            .toTimeString()
+            .split(' ')[0]
           : 'N/A',
         remark: data.remarks,
       };

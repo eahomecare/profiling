@@ -20,7 +20,7 @@ import { CreateCustomerHomecarePayload } from './types';
 export class CustomerController {
   constructor(
     private customerService: CustomerService,
-  ) {}
+  ) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
@@ -97,9 +97,11 @@ export class CustomerController {
     return [];
   }
 
-  @Get('/count/monthly')
-  getMonthlyCounts() {
-    return this.customerService.countCustomersByMonth();
+  @Get('/count/monthly/:source')
+  getMonthlyCounts(
+    @Param('source') source: string
+  ) {
+    return this.customerService.countCustomersByMonth(source);
   }
 
   @Post('/add/customer/generic')

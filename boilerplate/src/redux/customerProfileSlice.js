@@ -5,8 +5,8 @@ const API_ENDPOINT = `${process.env.REACT_APP_API_URL}/customers/count/monthly`;
 // Async action for fetching customer profile data
 export const fetchCustomerProfileData = createAsyncThunk(
   "customerProfileTool/fetchCustomerProfileData",
-  async () => {
-    const response = await fetch(API_ENDPOINT);
+  async (source) => {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/customers/count/monthly/${source}`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch customer data");
