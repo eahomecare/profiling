@@ -74,4 +74,3 @@ export class LangchainService {
     return result.trim();
   }
 }
-
