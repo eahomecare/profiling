@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { ProfileTypeCustomerMapping } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { ProfileTypeCustomerMapping, Keyword } from '@prisma/client';
 import * as _ from 'lodash';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -230,5 +230,74 @@ export class ProfileTypeCustomerMappingService {
             await this.prisma.$disconnect();
         }
     }
+
+    async updateProfileTypeCustomerMappingGeneric(customerId: string): Promise<ProfileTypeCustomerMapping[]> {
+        const keywords = await this.prisma.keyword.findMany({
+            where: {
+                customerIDs: {
+                    has: customerId,
+                },
+                category: {
+                    not: 'Unknown',
+                },
+            },
+        });
+
+        const categoryAverageLevels = this.calculateCategoryAverageLevels(keywords);
+
+        const profileTypeMappings = await this.prisma.profileTypeCustomerMapping.findMany({
+            where: {
+                customerId,
+            },
+            include: { profileType: true },
+        });
+
+        const updatedMappings = await Promise.all(profileTypeMappings.map(async (mapping) => {
+            const category = mapping.profileType.category;
+            const averageLevel = categoryAverageLevels[category] || 1;
+
+            const updatedMapping = await this.prisma.profileTypeCustomerMapping.update({
+                where: {
+                    id: mapping.id,
+                },
+                data: {
+                    level: averageLevel,
+                },
+            });
+
+            return {
+                id: updatedMapping.id,
+                customerId: updatedMapping.customerId,
+                profileTypeId: updatedMapping.profileTypeId,
+                level: updatedMapping.level,
+            };
+        }));
+
+        return updatedMappings;
+    }
+
+
+    private calculateCategoryAverageLevels(keywords: Keyword[]): { [category: string]: number } {
+        const categoryTotals: { [category: string]: { sum: number; count: number } } = {};
+
+        keywords.forEach((keyword) => {
+            if (!categoryTotals[keyword.category]) {
+                categoryTotals[keyword.category] = { sum: 0, count: 0 };
+            }
+
+            categoryTotals[keyword.category].sum += keyword.level;
+            categoryTotals[keyword.category].count++;
+        });
+
+        const categoryAverageLevels: { [category: string]: number } = {};
+
+        for (const category in categoryTotals) {
+            const { sum, count } = categoryTotals[category];
+            categoryAverageLevels[category] = sum / count;
+        }
+
+        return categoryAverageLevels;
+    }
+
 
 }
