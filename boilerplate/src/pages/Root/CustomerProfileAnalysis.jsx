@@ -13,8 +13,10 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import CustomerBarChart from "./CustomerBarChart";
+import { useState } from "react";
 
 const CustomerProfileAnalysis = () => {
+  const [selectedSource, setSelectedSource] = useState("All");
   return (
     <Card shadow={"md"} radius={"md"}>
       <Box>
@@ -39,9 +41,11 @@ const CustomerProfileAnalysis = () => {
             <StyledSelect
               label={"Source(s)"}
               placeholder={"All"}
-              data={["Test"]}
+              data={["All", "Call", "homecare", "eportal"]}
+              value={selectedSource}
+              onChange={setSelectedSource}
             />
-            <Group>
+            {/* <Group>
               <StyledSelect
                 label={"Year"}
                 placeholder={"All"}
@@ -52,11 +56,11 @@ const CustomerProfileAnalysis = () => {
                 placeholder={"All"}
                 data={["Test"]}
               />
-            </Group>
+            </Group> */}
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
-          <CustomerBarChart />
+          <CustomerBarChart source={selectedSource} />
         </Grid.Col>
       </Grid>
     </Card>

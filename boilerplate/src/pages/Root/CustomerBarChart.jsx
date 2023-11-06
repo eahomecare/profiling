@@ -13,13 +13,14 @@ import {
 } from "recharts";
 import { fetchCustomerProfileData } from "../../redux/customerProfileSlice"; // Ensure correct path
 
-const CustomerBarChart = () => {
+const CustomerBarChart = ({ source }) => {
+  console.log(source);
   const dispatch = useDispatch();
 
   // Fetching data on component mount
   useEffect(() => {
-    dispatch(fetchCustomerProfileData());
-  }, [dispatch]);
+    dispatch(fetchCustomerProfileData(source));
+  }, [dispatch, source]);
 
   // Get data from the Redux store
   const chartData = useSelector((state) => state.customerProfileTool.data);

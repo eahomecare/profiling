@@ -39,9 +39,9 @@ const ProfileAnalysis = () => {
             <StyledSelect
               label={"Source(s)"}
               placeholder={"All"}
-              data={["Test"]}
+              data={["All", "Call", "homecare", "eportal"]}
             />
-            <Group>
+            {/* <Group>
               <StyledSelect
                 label={"Year"}
                 placeholder={"All"}
@@ -52,7 +52,7 @@ const ProfileAnalysis = () => {
                 placeholder={"All"}
                 data={["Test"]}
               />
-            </Group>
+            </Group> */}
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
