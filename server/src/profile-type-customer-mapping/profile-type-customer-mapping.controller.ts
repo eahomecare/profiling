@@ -14,7 +14,7 @@ import { ProfileTypeCustomerMapping } from '@prisma/client';
 export class ProfileTypeCustomerMappingController {
   constructor(
     private readonly profileTypeCustomerMappingService: ProfileTypeCustomerMappingService,
-  ) {}
+  ) { }
 
   @Post()
   create(
@@ -88,5 +88,14 @@ export class ProfileTypeCustomerMappingController {
       source:
         await this.profileTypeCustomerMappingService.getGroupedCountsByCustomerSource(),
     };
+  }
+
+  @Get('update_level_by_keywords/:customer_id')
+  async updateProfileLevelUpdate(
+    @Param('customer_id') customer_id: string,
+  ) {
+    return this.profileTypeCustomerMappingService.updateProfileTypeCustomerMappingGeneric(
+      customer_id,
+    )
   }
 }
