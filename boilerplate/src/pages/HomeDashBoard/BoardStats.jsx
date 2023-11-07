@@ -25,7 +25,7 @@ const BoardStats = () => {
         {/* <Title>Campaign</Title> */}
         {/* Pannel 1 */}
         <Card shadow="lg" radius={"lg"}>
-          <Flex c={"#2B1DFD"} justify={"space-between"}>
+          <Flex c={"#0d5ff9"} justify={"space-between"}>
             <Text fw={"bold"}>General</Text>
           </Flex>
           <SimpleGrid cols={5}>
@@ -37,10 +37,10 @@ const BoardStats = () => {
         <Grid>
           <Grid.Col span={6}>
             <Card shadow="lg" radius={"lg"} h={"100%"}>
-              <Flex c={"#2B1DFD"} justify={"space-between"}>
+              <Flex c={"#0d5ff9"} justify={"space-between"}>
                 <Text fw={"bold"}>Overview</Text>
                 <Center>
-                  <ActionIcon c={"#2B1DFD"}>
+                  <ActionIcon c={"#0d5ff9"}>
                     <IconTableExport />
                   </ActionIcon>
                   <Text fw={"bold"}>Export</Text>
@@ -52,7 +52,7 @@ const BoardStats = () => {
                     <Stack>
                       <Group spacing={"xs"}>
                         <Title size={"md"}>Total</Title>
-                        <Title size={"md"} c={"#2B1DFD"}>
+                        <Title size={"md"} c={"#0d5ff9"}>
                           16,954
                         </Title>
                       </Group>
@@ -108,10 +108,10 @@ const BoardStats = () => {
             {/* </Grid.Col> */}
             {/* <Grid.Col span={6}> */}
             {/* <Card shadow="lg" radius={"lg"} h={"100%"}> */}
-            {/*   <Flex c={"#2B1DFD"} justify={"space-between"}> */}
+            {/*   <Flex c={"#0d5ff9"} justify={"space-between"}> */}
             {/*     <Text fw={"bold"}>Customers vs Profiles</Text> */}
             {/*     <Center> */}
-            {/*       <ActionIcon c={"#2B1DFD"}> */}
+            {/*       <ActionIcon c={"#0d5ff9"}> */}
             {/*         <IconTableExport /> */}
             {/*       </ActionIcon> */}
             {/*       <Text fw={"bold"}>Export</Text> */}
@@ -123,10 +123,10 @@ const BoardStats = () => {
           <Grid.Col span={6}>
             <Card shadow="lg" radius={"lg"}>
               <Stack>
-                <Flex c={"#2B1DFD"} justify={"space-between"}>
+                <Flex c={"#0d5ff9"} justify={"space-between"}>
                   <Text fw={"bold"}>Communications</Text>
                   <Center>
-                    <ActionIcon c={"#2B1DFD"}>
+                    <ActionIcon c={"#0d5ff9"}>
                       <IconTableExport />
                     </ActionIcon>
                     <Text fw={"bold"}>Export</Text>

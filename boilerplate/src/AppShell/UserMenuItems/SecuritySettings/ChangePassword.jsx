@@ -80,10 +80,10 @@ const ChangePassword = ({ onPasswordChange, canSave }) => {
   return (
     <Card shadow="lg" p={30} radius={"md"}>
       <Stack>
-        <Title mb={10} size={"lg"} c="#2B1DFD">
+        <Title mb={10} size={"lg"} c="#0d5ff9">
           Change Password
         </Title>
-        <Divider c="#2B1DFD" />
+        <Divider c="#0d5ff9" />
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack mt={30}>
             <StyledPasswordInput

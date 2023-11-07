@@ -87,8 +87,8 @@ const Step2 = () => {
                         className="preview-container"
                         key={tab}
                         onClick={() => dispatch(setActiveTab(tab))}
-                        c={activeTab === tab ? "#2B1DFD" : "white"}
-                        bg={activeTab === tab ? "white" : "#2B1DFD"}
+                        c={activeTab === tab ? "#0d5ff9" : "white"}
+                        bg={activeTab === tab ? "white" : "#0d5ff9"}
                         sx={{
                           "&:hover": {
                             backgroundColor: "white",
@@ -107,12 +107,12 @@ const Step2 = () => {
                       className="preview-container"
                       key={tab}
                       onClick={() => dispatch(setActiveTab(tab))}
-                      c={activeTab === tab ? "#white" : "#2B1DFD"}
-                      bg={activeTab === tab ? "#2B1DFD" : "white"}
+                      c={activeTab === tab ? "#white" : "#0d5ff9"}
+                      bg={activeTab === tab ? "#0d5ff9" : "white"}
                       sx={{
                         "&:hover": {
                           backgroundColor: "#F3F6FF",
-                          color: "#2B1DFD",
+                          color: "#0d5ff9",
                         },
                       }}
                       mr={-5}
@@ -132,9 +132,8 @@ const Step2 = () => {
                 {["Email", "SMS", "Notification", "Whatsapp"].map((tab) => (
                   <div
                     key={tab}
-                    className={` tab-pane fade ${
-                      activeTab === tab ? "show active" : ""
-                    }`}
+                    className={` tab-pane fade ${activeTab === tab ? "show active" : ""
+                      }`}
                     id={`v-pills-${tab}`}
                     role="tabpanel"
                   >
@@ -163,10 +162,10 @@ const Step2 = () => {
                         <Box ml={5}>
                           {tabData[activeTab].characterCount >
                             tabData[activeTab].charLimit && (
-                            <div className="character-limit-error">
-                              Character limit exceeded!
-                            </div>
-                          )}
+                              <div className="character-limit-error">
+                                Character limit exceeded!
+                              </div>
+                            )}
                         </Box>
                       )}
                     </Flex>

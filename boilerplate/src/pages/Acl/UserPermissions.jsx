@@ -79,7 +79,7 @@ const UserPermissions = ({ initialData }) => {
     header: {
       position: "sticky",
       top: 0,
-      backgroundColor: "#2B1DFD",
+      backgroundColor: "#0d5ff9",
       fontColor: "red",
       transition: "box-shadow 150ms ease",
 

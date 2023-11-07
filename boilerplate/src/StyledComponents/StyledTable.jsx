@@ -94,20 +94,20 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
           sx: { backgroundColor: "#F3F6FF" },
         }}
         muiTablePaginationProps={{
-          sx: { color: "#2B1DFD" },
+          sx: { color: "#0d5ff9" },
         }}
         renderTopToolbarCustomActions={({ table }) => (
           <Box w={"100%"} pt={10}>
             <Flex justify={"space-between"}>
               <Center>
                 <ActionIcon
-                  c={"#2B1DFD"}
+                  c={"#0d5ff9"}
                   size={"sm"}
                   onClick={() => handleExportRows(table.getRowModel().rows)}
                 >
                   <IconTableExport />
                 </ActionIcon>
-                <Text fw={"bold"} c={"#2B1DFD"} size={"sm"}>
+                <Text fw={"bold"} c={"#0d5ff9"} size={"sm"}>
                   Export
                 </Text>
               </Center>
@@ -120,19 +120,19 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
         renderToolbarInternalActions={({ table }) => (
           <Box w={160}>
             <MRT_ToggleGlobalFilterButton
-              style={{ color: "#2B1DFD" }}
+              style={{ color: "#0d5ff9" }}
               table={table}
             />
             <MRT_ToggleFiltersButton
-              style={{ color: "#2B1DFD" }}
+              style={{ color: "#0d5ff9" }}
               table={table}
             />
             <MRT_ShowHideColumnsButton
-              style={{ color: "#2B1DFD" }}
+              style={{ color: "#0d5ff9" }}
               table={table}
             />
             <MRT_FullScreenToggleButton
-              style={{ color: "#2B1DFD" }}
+              style={{ color: "#0d5ff9" }}
               table={table}
             />
           </Box>

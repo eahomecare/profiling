@@ -26,33 +26,33 @@ const DropdownRow = ({
 
   const thirdDropdownOptions = row.second
     ? dropdownData[row.first][row.second].filter((option) => {
-        const currentCombination = {
-          first: row.first,
-          second: row.second,
-          third: row.first === "Interests" ? option.value : option,
-        };
+      const currentCombination = {
+        first: row.first,
+        second: row.second,
+        third: row.first === "Interests" ? option.value : option,
+      };
 
-        const isSelectedCombination = selectedCombinations.some(
-          (selected) =>
-            selected.first === currentCombination.first &&
-            selected.second === currentCombination.second &&
-            (row.first === "Interests"
-              ? selected.third.value
-              : selected.third) === currentCombination.third,
-        );
+      const isSelectedCombination = selectedCombinations.some(
+        (selected) =>
+          selected.first === currentCombination.first &&
+          selected.second === currentCombination.second &&
+          (row.first === "Interests"
+            ? selected.third.value
+            : selected.third) === currentCombination.third,
+      );
 
-        const isSelectedInCurrentRow = selectedCombinations.some(
-          (selected) =>
-            selected.rowId === rowId &&
-            selected.first === currentCombination.first &&
-            selected.second === currentCombination.second &&
-            (row.first === "Interests"
-              ? selected.third.value
-              : selected.third) === currentCombination.third,
-        );
+      const isSelectedInCurrentRow = selectedCombinations.some(
+        (selected) =>
+          selected.rowId === rowId &&
+          selected.first === currentCombination.first &&
+          selected.second === currentCombination.second &&
+          (row.first === "Interests"
+            ? selected.third.value
+            : selected.third) === currentCombination.third,
+      );
 
-        return !isSelectedCombination || isSelectedInCurrentRow;
-      })
+      return !isSelectedCombination || isSelectedInCurrentRow;
+    })
     : [];
 
   const dispatch = useDispatch();
@@ -127,13 +127,13 @@ const DropdownRow = ({
         </ActionIcon>
       </div>
       <div className="col-12 col-lg-2">
-        {loadingState === "loading" && <Loader type={"dots"} color="#2B1DFD" />}
+        {loadingState === "loading" && <Loader type={"dots"} color="#0d5ff9" />}
         {loadingState === "error" && (
           <Flex>
             <ActionIcon c={"red"}>
               <IconExclamationMark />
             </ActionIcon>
-            <ActionIcon c={"#2B1DFD"} onClick={handleRefresh}>
+            <ActionIcon c={"#0d5ff9"} onClick={handleRefresh}>
               <IconRefresh />
             </ActionIcon>
           </Flex>
@@ -142,7 +142,7 @@ const DropdownRow = ({
           <>
             <Flex>
               <ActionIcon>{figures !== null ? figures : "-"}</ActionIcon>
-              <ActionIcon c={"#2B1DFD"} onClick={handleRefresh}>
+              <ActionIcon c={"#0d5ff9"} onClick={handleRefresh}>
                 <IconRefresh />
               </ActionIcon>
             </Flex>

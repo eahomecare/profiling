@@ -8,14 +8,14 @@ const StyledBadge = (props) => {
       cursor: "pointer",
       backgroundColor:
         theme.colorScheme === "dark" ? theme.colors.teal[9] : "#F3F6FF",
-      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
+      color: theme.colorScheme === "dark" ? theme.white : "#0d5ff9",
       "&:hover": {
         backgroundImage:
           theme.colorScheme === "dark"
             ? theme.colors.teal[9]
             : "radial-gradient(#FFFFFF 1% ,#F3F6FF)",
-        color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
-        border: "1px solid #2B1DFD",
+        color: theme.colorScheme === "dark" ? theme.white : "#0d5ff9",
+        border: "1px solid #0d5ff9",
       },
     },
   };

@@ -6,9 +6,9 @@ const StyledTimeInput = (props) => {
   const theme = useMantineTheme();
 
   const defaultStyles = {
-    rightSection: { pointerEvents: "none", color: "#2B1DFD" },
+    rightSection: { pointerEvents: "none", color: "#0d5ff9" },
     label: {
-      color: "#2B1DFD99",
+      color: "#0d5ff999",
     },
     dropdown: {
       border: "none",
@@ -22,31 +22,31 @@ const StyledTimeInput = (props) => {
     day: {
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff9",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     monthList: {
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff9",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     weekday: {
-      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
+      color: theme.colorScheme === "dark" ? theme.white : "#0d5ff9",
     },
     calendarHeaderLevel: {
       backgroundColor: "#F3F6FF",
-      color: theme.colorScheme === "dark" ? theme.white : "#2B1DFD",
+      color: theme.colorScheme === "dark" ? theme.white : "#0d5ff9",
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff9",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     calendarHeaderControlIcon: {
-      color: "#2B1DFD",
+      color: "#0d5ff9",
     },
     input: {
       cursor: "pointer",
@@ -65,7 +65,7 @@ const StyledTimeInput = (props) => {
       onClick={(e) => e.target.showPicker()}
       popoverProps={{ withinPortal: true }}
       rightSection={
-        <ActionIcon c="#2B1DFD">
+        <ActionIcon c="#0d5ff9">
           <IconClock />
         </ActionIcon>
       }

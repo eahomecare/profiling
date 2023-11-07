@@ -119,14 +119,14 @@ const MyProfile = () => {
     <Box>
       <Card shadow="lg" p={30} radius={"md"}>
         <Stack>
-          <Title mb={10} size={"lg"} c="#2B1DFD">
+          <Title mb={10} size={"lg"} c="#0d5ff9">
             My Profile
           </Title>
-          <Divider c="#2B1DFD" />
+          <Divider c="#0d5ff9" />
           <Center>
             <Stack>
               <Center>
-                <Title size={30} c="#2B1DFD">
+                <Title size={30} c="#0d5ff9">
                   {user?.email?.split("@")[0]}
                 </Title>
               </Center>
@@ -138,7 +138,7 @@ const MyProfile = () => {
                   <ActionIcon
                     onClick={handleDeleteImage}
                     sx={{
-                      color: "#2B1DFD",
+                      color: "#0d5ff9",
                       "&:hover": {
                         backgroundColor: "#F3F6FF",
                       },
@@ -156,11 +156,11 @@ const MyProfile = () => {
               compact
               styles={{
                 root: {
-                  borderColor: "#2B1DFD",
-                  color: "#2B1DFD",
+                  borderColor: "#0d5ff9",
+                  color: "#0d5ff9",
                   "&:hover": {
                     backgroundColor: "#F3F6FF",
-                    color: "#2B1DFD",
+                    color: "#0d5ff9",
                   },
                 },
               }}

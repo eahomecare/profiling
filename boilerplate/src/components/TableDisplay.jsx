@@ -26,8 +26,8 @@ export default function TableDisplay({
                 percentage > 25
                   ? "#1D9B25"
                   : percentage > 50
-                  ? "#CFA400"
-                  : "#D85972",
+                    ? "#CFA400"
+                    : "#D85972",
             },
           ]}
           label={
@@ -73,7 +73,7 @@ export default function TableDisplay({
       {
         accessorFn: (row) =>
           !fetchedPofileCompleteness ? (
-            <Loader type={"dots"} color="#2B1DFD" />
+            <Loader type={"dots"} color="#0d5ff9" />
           ) : (
             profileCompletion(row.profile_completion)
           ),

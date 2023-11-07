@@ -42,12 +42,12 @@ const ProfileDataCard = () => {
       radius={"md"}
       bg={"#F3F6FF"}
       mah={300}
-      sx={{ overflowY: "auto", scrollbarColor: "#2B1DFD" }}
+      sx={{ overflowY: "auto", scrollbarColor: "#0d5ff9" }}
     >
       <Stack>
         <Group spacing={"xs"}>
           <Title size={"md"}>Total</Title>
-          <Title size={"md"} c={"#2B1DFD"}>
+          <Title size={"md"} c={"#0d5ff9"}>
             {totalValue}
           </Title>
         </Group>
@@ -68,7 +68,7 @@ const ProfileDataCard = () => {
                     hoveredItem === entry.name ? "scale(1.1)" : "scale(1)",
                   backgroundImage:
                     hoveredItem === entry.name
-                      ? "radial-gradient(#000000 20% ,#2B1DFD)"
+                      ? "radial-gradient(#000000 20% ,#0d5ff9)"
                       : "none",
                 }}
                 radius={"xl"}

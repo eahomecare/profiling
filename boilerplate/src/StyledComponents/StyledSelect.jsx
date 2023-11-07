@@ -7,7 +7,7 @@ const StyledSelect = (props) => {
   const defaultStyles = {
     rightSection: { pointerEvents: "none" },
     label: {
-      color: "#2B1DFD99",
+      color: "#0d5ff999",
     },
     dropdown: {
       border: "none",
@@ -30,13 +30,13 @@ const StyledSelect = (props) => {
       },
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD99",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff999",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
       "&[data-selected]": {
         "&, &:hover": {
           backgroundColor:
-            theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD99",
+            theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff999",
           color: theme.colorScheme === "dark" ? theme.white : "white",
         },
       },
@@ -55,7 +55,7 @@ const StyledSelect = (props) => {
       styles={{ ...defaultStyles, ...props.styles }}
       rightSection={
         props.rightSection || (
-          <ActionIcon c="#2B1DFD" size={"sm"}>
+          <ActionIcon c="#0d5ff9" size={"sm"}>
             <IconChevronDown />
           </ActionIcon>
         )
