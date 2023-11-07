@@ -42,13 +42,13 @@ const useStyles = createStyles((theme) => ({
         ? theme.colors.dark[1]
         : theme.colors.gray[7],
     borderRadius: theme.radius.md,
-    // border: "1px solid #2B1DFD",
+    // border: "1px solid #0d5ff9",
     marginTop: 5,
     fontWeight: 500,
     "&": {
       // backgroundColor:
       //   theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
-      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#0d5ff9",
       boxShadow: `
           rgba(43,29,253) 0px 2px 1px,
           rgba(43,29,253) 0px 4px 2px,
@@ -73,7 +73,7 @@ const useStyles = createStyles((theme) => ({
     },
     "&:hover": {
       backgroundColor:
-        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#2B1DFD90",
+        theme.colorScheme === "dark" ? theme.colors.dark[6] : "#0d5ff990",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
@@ -94,7 +94,7 @@ const useStyles = createStyles((theme) => ({
   },
   linkActive: {
     "&, &:hover": {
-      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#2B1DFD",
+      backgroundColor: theme.colorScheme === "dark" ? "#252D3B" : "#0d5ff9",
       color: theme.colorScheme === "dark" ? theme.white : "#FFFFFF",
       [`& .${getStylesRef("icon")}`]: {
         color: theme.fn.variant({ variant: "light", color: theme.primaryColor })
@@ -218,7 +218,7 @@ const DashboardNavbar = () => {
             component={Link}
             variant="subtle"
             to="/customers"
-            c="#2B1DFD"
+            c="#0d5ff9"
             sx={{
               cursor: "pointer",
               borderRadius: 10,

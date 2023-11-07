@@ -48,25 +48,25 @@ function Permissions({ initialData, title }) {
 
   return (
     <>
-      <Title style={{ padding: "10px" }} order={4} color="#2B1DFD">
+      <Title style={{ padding: "10px" }} order={4} color="#0d5ff9">
         {title}
       </Title>
       <StyledTable
         columns={columns}
         data={permissionsData}
         onRowClick={(row) => console.log("Row clicked:", row)}
-        // topProps={() => (
-        //   <Flex>
-        //     <StyledButton
-        //       compact
-        //       onClick={() => {
-        //         console.log("Create Permission clicked!");
-        //       }}
-        //     >
-        //       Create Permission
-        //     </StyledButton>
-        //   </Flex>
-        // )}
+      // topProps={() => (
+      //   <Flex>
+      //     <StyledButton
+      //       compact
+      //       onClick={() => {
+      //         console.log("Create Permission clicked!");
+      //       }}
+      //     >
+      //       Create Permission
+      //     </StyledButton>
+      //   </Flex>
+      // )}
       />
     </>
   );

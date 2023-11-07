@@ -50,8 +50,8 @@ const RadarLinear = () => {
         <Radar
           name="Customer Campaign"
           dataKey="count"
-          stroke="#2B1DFD"
-          fill="#2B1DFD"
+          stroke="#0d5ff9"
+          fill="#0d5ff9"
           fillOpacity={0.6}
         />
       </RadarChart>

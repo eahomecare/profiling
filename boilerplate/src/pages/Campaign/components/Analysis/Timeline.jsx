@@ -177,11 +177,11 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
 
   return (
     <div>
-      <Divider c="#2B1DFD" mb={10} />
+      <Divider c="#0d5ff9" mb={10} />
       <Stack>
         <Stack>
           <Flex justify={"space-between"}>
-            <Text size="lg" fw={"normal"} c="#2B1DFD">
+            <Text size="lg" fw={"normal"} c="#0d5ff9">
               Timeline
             </Text>
             <StyledBadge onClick={() => onApplyForAll(results)}>
@@ -227,7 +227,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
             </div>
           </Group>
         </Stack>
-        <Text size="lg" fw={"normal"} c="#2B1DFD">
+        <Text size="lg" fw={"normal"} c="#0d5ff9">
           {" "}
           Recurrence{" "}
         </Text>
@@ -398,7 +398,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
                         rightSection={
                           <ActionIcon
                             size="xs"
-                            c="#2B1DFD"
+                            c="#0d5ff9"
                             radius="xl"
                             variant="transparent"
                             onClick={() => removeCustomDate(index)} // Add this onClick event here

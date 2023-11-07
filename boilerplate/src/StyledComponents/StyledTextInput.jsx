@@ -6,7 +6,7 @@ const StyledTextInput = (props) => {
   const defaultStyles = {
     rightSection: { pointerEvents: "none" },
     label: {
-      color: "#2B1DFD99",
+      color: "#0d5ff999",
     },
     input: {
       cursor: "pointer",

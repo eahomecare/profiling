@@ -28,7 +28,7 @@ const PermissionRoleMappings = ({ useStyles, initialData, title }) => {
 
   return (
     <>
-      <Title style={{ padding: "10px" }} order={4} color="#2B1DFD">
+      <Title style={{ padding: "10px" }} order={4} color="#0d5ff9">
         {title}
       </Title>
       <ScrollArea

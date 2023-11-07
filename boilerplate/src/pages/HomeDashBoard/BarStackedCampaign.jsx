@@ -65,9 +65,9 @@ const BarStackedView = () => {
     <>
       <Box p={30}>
         <Flex justify={"space-between"}>
-          <Title c={"#2B1DFD"}>Campaigns</Title>
+          <Title c={"#0d5ff9"}>Campaigns</Title>
           <Link to={"/campaign"}>
-            <ActionIcon c={"#2B1DFD"} size={"sm"}>
+            <ActionIcon c={"#0d5ff9"} size={"sm"}>
               <IconArrowRight />
             </ActionIcon>
           </Link>

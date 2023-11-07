@@ -73,7 +73,7 @@ export default function Login() {
                       <Flex justify={"end"}>
                         <Title
                           variant={"gradient"}
-                          gradient={{ from: "#2B1DFD", to: "#F3F6FF", deg: 45 }}
+                          gradient={{ from: "#0d5ff9", to: "#F3F6FF", deg: 45 }}
                         >
                           Customer Profiling
                         </Title>
@@ -128,7 +128,7 @@ export default function Login() {
 
                                                 Forgot password?
                                             </Anchor> */}
-                        <Text size={"sm"} c={"#2B1DFD"}>
+                        <Text size={"sm"} c={"#0d5ff9"}>
                           Forgot Password
                         </Text>
                       </Group>

@@ -7,12 +7,12 @@ const StyledPasswordInput = (props) => {
     visibilityToggle: {
       "&:hover": {
         backgroundColor:
-          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#2B1DFD99",
+          theme.colorScheme === "dark" ? theme.colors.teal[9] : "#0d5ff999",
         color: theme.colorScheme === "dark" ? theme.white : "white",
       },
     },
     label: {
-      color: "#2B1DFD99",
+      color: "#0d5ff999",
     },
     input: {
       cursor: "pointer",
