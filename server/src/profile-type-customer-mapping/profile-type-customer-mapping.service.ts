@@ -238,7 +238,7 @@ export class ProfileTypeCustomerMappingService {
                     has: customerId,
                 },
                 category: {
-                    not: 'Unknown',
+                    not: 'unknown',
                 },
             },
         });
