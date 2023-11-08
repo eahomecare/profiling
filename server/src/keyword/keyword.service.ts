@@ -4,11 +4,15 @@ import {
   Customer,
   Keyword,
 } from '@prisma/client';
+import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 const { RegExp } = require('mongodb');
 
 @Injectable()
 export class KeywordService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
+  ) {}
 
   async create(data: Keyword): Promise<Keyword> {
     try {
@@ -35,6 +39,9 @@ export class KeywordService {
                     },
                   },
                 );
+              await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
+                customerId,
+              );
               return customer;
             },
           ),
@@ -155,6 +162,9 @@ export class KeywordService {
                     },
                   },
                 );
+              await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
+                customerId,
+              );
               return customer;
             },
           ),
@@ -293,6 +303,9 @@ export class KeywordService {
             customerIDs: { push: customerId },
           },
         });
+      await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
+        customerId,
+      );
       return keyword;
     } catch (error) {
       throw new Error(

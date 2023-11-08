@@ -23,7 +23,7 @@ interface UpdateData {
   questionId: string;
   profileTypeId: string;
   keywordsPayload: string[];
-  level: number
+  level: number;
 }
 
 interface CreateKeywordInput
@@ -38,7 +38,7 @@ export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
     private customerService: CustomerService,
-  ) { }
+  ) {}
 
   @Post()
   async create(@Body() data: Keyword): Promise<{
@@ -249,7 +249,6 @@ export class KeywordController {
             continue;
           }
         } else {
-
           //@ts-ignore
           const newKeyword: Keyword = {
             id: undefined,
@@ -258,9 +257,8 @@ export class KeywordController {
             customerIDs: [data.customerId],
             level: data.level,
             questionIDs: [data.questionId],
-            profileTypeIDs: [data.profileTypeId]
+            profileTypeIDs: [data.profileTypeId],
           };
-
 
           keywordIds.push(newKeyword.id);
         }
