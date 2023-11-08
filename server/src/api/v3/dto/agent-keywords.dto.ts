@@ -5,4 +5,9 @@ export class KeywordsDto {
     message: 'customerCRMId should not be blank',
   })
   customerCRMId: string | number;
+
+  @IsNotEmpty({
+    message: 'sessionId should not be blank',
+  })
+  sessionId: string;
 }

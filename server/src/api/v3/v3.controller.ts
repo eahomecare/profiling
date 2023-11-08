@@ -286,6 +286,7 @@ export class V3Controller {
     searchDto: {
       term: string;
       field: 'category' | 'value' | 'both';
+      sessionId: string;
     },
     @Res() res: Response,
   ) {
@@ -365,6 +366,7 @@ export class V3Controller {
           questionsDto.questionNumber,
           questionsDto.sessionId,
           questionsDto.serviceId,
+          questionsDto.subServiceId,
           questionsDto.currentKeywords,
         );
 

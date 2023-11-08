@@ -8,6 +8,7 @@ import { Question1Service } from './questionServices/question1.service';
 import { Question2Service } from './questionServices/question2.service';
 import { Question3Service } from './questionServices/question3.service';
 import { Question4Service } from './questionServices/question4.service';
+import homecareServiceDump from './questionServices/serviceMappings/homecareServiceDump';
 
 @Injectable()
 export class AgentQuestionService {
@@ -23,12 +24,13 @@ export class AgentQuestionService {
     customer: Customer,
     questionNumber: number,
     sessionId: string,
-    serviceId?: string,
+    serviceId?: number,
+    subServiceId?: number,
     currentKeywords?: any[],
   ) {
     if (!customer) {
       throw new UnauthorizedException(
-        'No customer provided',
+        'Customer not found',
       );
     }
 
@@ -36,6 +38,33 @@ export class AgentQuestionService {
       'agentQuestion sessionId',
       sessionId,
     );
+
+    const serviceObject = {
+      serviceTitle: '',
+      serviceDescription: '',
+    };
+
+    if (serviceId) {
+      const service = homecareServiceDump.find(
+        (s) => s.serviceId === serviceId,
+      );
+      if (service) {
+        serviceObject.serviceTitle =
+          service.serviceTitle;
+        serviceObject.serviceDescription =
+          service.serviceDescription;
+
+        if (subServiceId) {
+          const subService =
+            service.subServices.find(
+              (sub) => sub.id === subServiceId,
+            );
+          if (subService) {
+            serviceObject.serviceDescription += ` ${subService.description}`;
+          }
+        }
+      }
+    }
 
     const sessionObject =
       await this.customerSessionService
@@ -51,17 +80,20 @@ export class AgentQuestionService {
       case 1:
         return this.question1Service.handleQuestion(
           customer,
-          serviceId,
+          serviceObject,
+          currentKeywords,
         );
       case 2:
         return this.question2Service.handleQuestion(
           customer,
           sessionObject,
+          serviceObject,
         );
       case 3:
         return this.question3Service.handleQuestion(
           customer,
           sessionObject,
+          serviceObject,
         );
       case 4:
         return this.question4Service.handleQuestion(

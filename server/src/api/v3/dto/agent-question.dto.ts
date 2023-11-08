@@ -46,7 +46,11 @@ export class QuestionDto {
 
   @IsOptional()
   @IsString()
-  serviceId?: string;
+  serviceId?: number;
+
+  @IsOptional()
+  @IsString()
+  subServiceId?: number;
 
   @IsArray()
   @ValidateNested({ each: true })

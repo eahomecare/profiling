@@ -8,6 +8,8 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { AiEngineService } from './engines/v1/aiEngine.service';
 import homeCareServices from './serviceMappings/homecareServices';
 import { CustomerSessionService } from './customerSession.service';
+import { ServiceObject } from './interfaces/serviceObject.interface';
+import { ServiceResolverService } from './serviceResolver.service';
 
 @Injectable()
 export class Question1Service {
@@ -16,28 +18,43 @@ export class Question1Service {
     private readonly prisma: PrismaService,
     private readonly aiEngineService: AiEngineService,
     private readonly customerSessionService: CustomerSessionService,
+    private readonly serviceResolver: ServiceResolverService,
   ) {}
 
   async handleQuestion(
     customer: Customer,
-    serviceId: string,
+    serviceObject: ServiceObject,
+    currentKeywords: any[],
   ) {
-    const homeCareService = homeCareServices.find(
-      (service) =>
-        service.serviceId.toString() ===
-        serviceId,
-    );
+    let usedServiceResolver = false;
 
-    if (!homeCareService) {
-      throw new NotFoundException(
-        `Service with ID ${serviceId} not found.`,
-      );
+    if (
+      !serviceObject.serviceTitle &&
+      !serviceObject.serviceDescription
+    ) {
+      const firstKeywordValue =
+        currentKeywords.length > 0
+          ? currentKeywords[0].value
+          : null;
+      if (firstKeywordValue) {
+        usedServiceResolver = true;
+        const newServiceObject =
+          await this.serviceResolver.resolveService(
+            [firstKeywordValue],
+          );
+        if (
+          newServiceObject.serviceTitle ||
+          newServiceObject.serviceDescription
+        ) {
+          serviceObject = newServiceObject;
+        }
+      }
     }
 
     const category =
       await this.categoryResolver.resolveCategory(
-        homeCareService.serviceTitle,
-        homeCareService.serviceDescription,
+        serviceObject.serviceTitle,
+        serviceObject.serviceDescription,
       );
 
     await this.customerSessionService.updateSessionQuestion(
@@ -95,25 +112,8 @@ export class Question1Service {
       maxLevelInCurrentLoop++;
     }
 
-    const levelRequired = maxLevelInCurrentLoop;
-    if (levelRequired == 1)
-      return {
-        level: 1,
-        category: 'unknown',
-        question:
-          'What categories are you interested in?',
-        'possible answers': [
-          'Food',
-          'Sports',
-          'Technology',
-          'Automobiles',
-          'Music',
-          'Fitness',
-          'Gadgets',
-          'Travel',
-          'None',
-        ],
-      };
+    let levelRequired = maxLevelInCurrentLoop;
+    if (levelRequired == 1) levelRequired = 2;
 
     if (profileTypeMapping) {
       await this.prisma.profileTypeCustomerMapping.update(
@@ -152,7 +152,18 @@ export class Question1Service {
         })),
       );
 
-    console.log('3', pastKeywords);
+    if (
+      usedServiceResolver &&
+      currentKeywords.length > 0
+    ) {
+      const firstCurrentKeyword = {
+        key: currentKeywords[0].value,
+        level: currentKeywords[0].level
+          ? String(currentKeywords[0].level)
+          : '1',
+      };
+      pastKeywords.push(firstCurrentKeyword);
+    }
 
     const pastQuestions =
       await this.prisma.question.findMany({
@@ -227,12 +238,19 @@ export class Question1Service {
       formattedPastQuestionsAnswers,
     );
 
+    console.log(
+      'question1',
+      serviceObject.serviceTitle,
+      serviceObject.serviceDescription,
+      formattedPastKeywords,
+    );
+
     const aiEngineResponse =
       await this.aiEngineService.processServiceInformation(
         levelRequired,
         category,
-        homeCareService.serviceTitle,
-        homeCareService.serviceDescription,
+        serviceObject.serviceTitle,
+        serviceObject.serviceDescription,
         formattedPastKeywords,
         formattedPastQuestionsAnswers,
       );
