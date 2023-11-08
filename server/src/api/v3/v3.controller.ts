@@ -28,6 +28,7 @@ import { SubmitService } from './agentSubmit.service';
 import { SubmitDataDto } from './dto/agent-submit.dto';
 import { CustomerLookupService } from './customerLookup.service';
 import { ProfileTypeService } from './profileType.service';
+import { QuestionDto } from './dto/agent-question.dto';
 
 @Controller('api/v3')
 export class V3Controller {
@@ -306,7 +307,7 @@ export class V3Controller {
   }
 
   @Post('/questions')
-  async getQuestions(
+  async getQuestionsForCustomer(
     @Req() request: Request,
     @Body(
       new ValidationPipe({
@@ -317,7 +318,7 @@ export class V3Controller {
           ),
       }),
     )
-    questionsDto: KeywordsDto,
+    questionsDto: QuestionDto,
     @Res() res: Response,
   ) {
     try {
@@ -345,11 +346,15 @@ export class V3Controller {
       const questions =
         await this.agentQuestionService.getQuestionsForCustomer(
           customer,
+          questionsDto.questionNumber,
+          questionsDto.sessionId,
+          questionsDto.serviceId,
+          questionsDto.currentKeywords,
         );
 
       res
         .status(HttpStatus.OK)
-        .json({ success: true, ...questions });
+        .json({ success: true, questions });
     } catch (error) {
       this.handleException(error, res);
     }
