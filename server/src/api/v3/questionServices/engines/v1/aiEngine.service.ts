@@ -95,7 +95,6 @@ export class AiEngineService {
       this.logger.log(
         'Received response from AI model.',
       );
-      console.log(response);
 
       if (!('lc_kwargs' in response)) {
         throw new Error(
@@ -127,7 +126,16 @@ export class AiEngineService {
         },
       };
 
-      return modifiedResponse.lc_kwargs.content;
+      const finalResponse =
+        modifiedResponse.lc_kwargs.content;
+      finalResponse.Answers =
+        finalResponse['possible answers'];
+      delete finalResponse['possible answers'];
+      finalResponse.text =
+        finalResponse['question'];
+      delete finalResponse['question'];
+
+      return finalResponse;
     } catch (error) {
       this.logger.error(
         'An error occurred during AI processing.',

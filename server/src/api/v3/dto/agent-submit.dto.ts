@@ -12,6 +12,11 @@ export class SubmitDataDto {
   })
   customerCRMId: string | number;
 
+  @IsNotEmpty({
+    message: 'customerCRMId should not be blank',
+  })
+  sessionId: string;
+
   @IsOptional()
   selectedKeywords: string[];
 
@@ -54,4 +59,3 @@ export class QuestionResponseDto {
   @IsArray()
   selectedOptions: string[];
 }
-

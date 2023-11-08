@@ -6,6 +6,7 @@ import { Customer } from '@prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CustomerSessionService } from './customerSession.service';
 import { AiEngineService } from './engines/v1/aiEngine.service';
+import { ServiceObject } from './interfaces/serviceObject.interface';
 
 @Injectable()
 export class Question2Service {
@@ -18,6 +19,7 @@ export class Question2Service {
   async handleQuestion(
     customer: Customer,
     sessionObject: Record<number, string>,
+    serviceObject: ServiceObject,
   ) {
     const keywords =
       await this.prisma.keyword.findMany({
@@ -234,8 +236,12 @@ export class Question2Service {
       await this.aiEngineService.processServiceInformation(
         levelRequired,
         selectedCategory,
-        '',
-        '',
+        levelRequired > 3
+          ? serviceObject.serviceTitle
+          : '',
+        levelRequired > 3
+          ? serviceObject.serviceDescription
+          : '',
         pastKeywordsAndQuestions.formattedPastKeywords ||
           [],
         pastKeywordsAndQuestions.formattedPastQuestionsAnswers ||
