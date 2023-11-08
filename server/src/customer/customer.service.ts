@@ -14,10 +14,14 @@ import {
 import { tryCatch } from 'bullmq';
 import { CreateCustomerHomecarePayload } from './types';
 import { log } from 'console';
+import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 
 @Injectable()
 export class CustomerService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
+  ) {}
 
   async countCustomersByMonth(source: string) {
     const query: any = {
@@ -27,13 +31,14 @@ export class CustomerService {
       },
     };
 
-    if (source !== "All") {
+    if (source !== 'All') {
       query.where = {
         source,
       };
     }
 
-    const customers = await this.prisma.customer.findMany(query);
+    const customers =
+      await this.prisma.customer.findMany(query);
 
     const monthNames = {
       '01': 'January',
@@ -54,9 +59,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-        customer.created_at
-          .toISOString()
-          .slice(5, 7)
+          customer.created_at
+            .toISOString()
+            .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -73,8 +78,6 @@ export class CustomerService {
 
     return customerCountsByMonth;
   }
-
-
 
   async addCustomerDetails(
     customer_details: any,
@@ -309,6 +312,9 @@ export class CustomerService {
           },
           include: { keywords: true },
         });
+      await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
+        customerId,
+      );
       return customer;
     } catch (error) {
       throw new Error(
@@ -429,8 +435,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-            personalDetailsInput.date_of_birth,
-          )
+              personalDetailsInput.date_of_birth,
+            )
           : null;
 
       const customer =
@@ -631,13 +637,13 @@ export class CustomerService {
         agentName: data?.agent?.agentName,
         date: isValidDate
           ? data.created_at
-            .toISOString()
-            .split('T')[0]
+              .toISOString()
+              .split('T')[0]
           : 'N/A',
         time: isValidDate
           ? data.created_at
-            .toTimeString()
-            .split(' ')[0]
+              .toTimeString()
+              .split(' ')[0]
           : 'N/A',
         remark: data.remarks,
       };
