@@ -22,6 +22,7 @@ import { Question4Service } from './questionServices/question4.service';
 import { AgentQuestionService } from './agentQuestion.service';
 import { CategoryResolverService } from './questionServices/categoryResolver.service';
 import { CustomerSessionService } from './questionServices/customerSession.service';
+import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
@@ -47,6 +48,7 @@ import { CustomerSessionService } from './questionServices/customerSession.servi
     AgentQuestionService,
     CategoryResolverService,
     CustomerSessionService,
+    ProfileTypeCustomerMappingService,
   ],
 })
 export class V3Module {}

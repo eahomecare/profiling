@@ -380,6 +380,11 @@ export class ProfileTypeCustomerMappingService {
           profileTypeId:
             updatedMapping.profileTypeId,
           level: updatedMapping.level,
+          resetCount:
+            updatedMapping.resetCount || 0,
+          maxLevelInCurrentLoop:
+            updatedMapping.maxLevelInCurrentLoop ||
+            0,
         };
       }),
     );
