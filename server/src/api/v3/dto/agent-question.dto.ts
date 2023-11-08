@@ -45,11 +45,11 @@ export class QuestionDto {
   sessionId: string;
 
   @IsOptional()
-  @IsString()
+  @IsNumber()
   serviceId?: number;
 
   @IsOptional()
-  @IsString()
+  @IsNumber()
   subServiceId?: number;
 
   @IsArray()
