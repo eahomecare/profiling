@@ -10,11 +10,15 @@ import {
   User,
 } from '@prisma/client';
 import Filter = require('bad-words');
+import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 
 @Injectable()
 export class SubmitService {
   private filter: Filter;
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private profileTypeCustomerMapping: ProfileTypeCustomerMappingService,
+  ) {
     this.filter = new Filter();
   }
 
@@ -302,6 +306,9 @@ export class SubmitService {
             })),
           },
         );
+      await this.profileTypeCustomerMapping.updateProfileTypeCustomerMappingGeneric(
+        data.customerID,
+      );
     } catch (error) {
       console.error(
         'Error in createAgentSubmit:',
