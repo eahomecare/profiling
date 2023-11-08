@@ -32,9 +32,17 @@ export class QuestionDto {
   })
   customerCRMId: string | number;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'questionNumber should not be blank',
+  })
   @IsNumber()
   questionNumber: number;
+
+  @IsNotEmpty({
+    message: 'sessionId should not be blank',
+  })
+  @IsString()
+  sessionId: string;
 
   @IsOptional()
   @IsString()
