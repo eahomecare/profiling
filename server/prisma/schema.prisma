@@ -31,7 +31,7 @@ model User {
   agentSubmits              agentSubmits[]
   AgentSession              AgentSession[]
   isActive                  Boolean                     @default(true)
-  previousHashes       String[]   @default([])
+  previousHashes            String[]                    @default([])
 
   @@map("users")
 }
@@ -64,6 +64,7 @@ model Customer {
   campaignIDs                 String[]                      @db.ObjectId
   campaign                    Campaign[]                    @relation(fields: [campaignIDs], references: [id])
   CustomerHomecareMapping     CustomerHomecareMapping[]
+  CustomerSession             CustomerSession[]
 
   @@map("customers")
 }
@@ -193,12 +194,14 @@ model ProfileType {
 }
 
 model ProfileTypeCustomerMapping {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  profileType   ProfileType @relation(fields: [profileTypeId], references: [id])
-  profileTypeId String      @db.ObjectId
-  customerId    String      @db.ObjectId
-  customer      Customer    @relation(fields: [customerId], references: [id])
-  level         Int         @default(1)
+  id                    String      @id @default(auto()) @map("_id") @db.ObjectId
+  profileType           ProfileType @relation(fields: [profileTypeId], references: [id])
+  profileTypeId         String      @db.ObjectId
+  customerId            String      @db.ObjectId
+  customer              Customer    @relation(fields: [customerId], references: [id])
+  level                 Int         @default(1)
+  resetCount            Int?        @default(0)
+  maxLevelInCurrentLoop Int?        @default(1)
 
   @@map("profile_type_customer_mapping")
 }
@@ -341,8 +344,8 @@ model agentSubmits {
   remarks    String?
   keywords   AgentSubmitKeywordsMapping[]
   questions  AgentSubmitQuestionsMapping[]
-  created_at         DateTime? @default(now())
-  updated_at         DateTime? @updatedAt
+  created_at DateTime?                     @default(now())
+  updated_at DateTime?                     @updatedAt
 
   @@map("agentSubmits")
 }
@@ -507,4 +510,17 @@ model CustomerHomecare {
   CustomerHomecareMapping        CustomerHomecareMapping[]
 
   @@unique([wp_user_id])
+}
+
+model CustomerSession {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId      String   @unique
+  questionStates Json
+  customer       Customer @relation(fields: [customerId], references: [id])
+  customerId     String   @db.ObjectId
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([customerId])
+  @@map("customer_sessions")
 }
