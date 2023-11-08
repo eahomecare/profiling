@@ -28,6 +28,7 @@ import { SubmitService } from './agentSubmit.service';
 import { SubmitDataDto } from './dto/agent-submit.dto';
 import { CustomerLookupService } from './customerLookup.service';
 import { ProfileTypeService } from './profileType.service';
+import { QuestionDto } from './dto/agent-question.dto';
 
 @Controller('api/v3')
 export class V3Controller {
@@ -232,30 +233,46 @@ export class V3Controller {
         await this.keywordsService.getKeywordsForCustomer(
           customer,
         );
-      // const profileTypes =
-      //   await this.profileTypeService.getProfileTypesForCustomer(
-      //     customer.id,
-      //   );
-
-      const profileTypes = [
-        {
-          id: '1',
-          name: 'Foodie',
-          srcUrl:
-            'https://www.imghost.net/ib/nfrRR1jXsNdznjC_1699253182.png',
-        },
-        {
-          id: '2',
-          name: 'Techie',
-          srcUrl:
-            'https://www.imghost.net/ib/SE3O0esWPpjFVs6_1699253323.png',
-        },
-      ];
+      const nameMapping = {
+        food: 'Foodie',
+        technology: 'Techie',
+        gadget: 'Gadget Freak',
+        sports: 'Sports Fan',
+        automobile: 'Auto Lover',
+        fitness: 'Fitness Freak',
+        travel: 'Avid Traveller',
+        music: 'Musicophile',
+      };
+      const profileTypes =
+        await this.profileTypeService.getProfileTypesForCustomer(
+          customer.id,
+        );
+      const updatedProfileTypes =
+        profileTypes.map((profileType) => ({
+          ...profileType,
+          name:
+            nameMapping[profileType.name] ||
+            profileType.name,
+        }));
+      // const profileTypes = [
+      //   {
+      //     id: '1',
+      //     name: 'Foodie',
+      //     srcUrl:
+      //       'https://www.imghost.net/ib/nfrRR1jXsNdznjC_1699253182.png',
+      //   },
+      //   {
+      //     id: '2',
+      //     name: 'Techie',
+      //     srcUrl:
+      //       'https://www.imghost.net/ib/SE3O0esWPpjFVs6_1699253323.png',
+      //   },
+      // ];
 
       res.status(HttpStatus.OK).json({
         success: true,
         keywords,
-        profileTypes,
+        profileTypes: updatedProfileTypes,
       });
     } catch (error) {
       this.handleException(error, res);
@@ -306,7 +323,7 @@ export class V3Controller {
   }
 
   @Post('/questions')
-  async getQuestions(
+  async getQuestionsForCustomer(
     @Req() request: Request,
     @Body(
       new ValidationPipe({
@@ -317,7 +334,7 @@ export class V3Controller {
           ),
       }),
     )
-    questionsDto: KeywordsDto,
+    questionsDto: QuestionDto,
     @Res() res: Response,
   ) {
     try {
@@ -345,11 +362,15 @@ export class V3Controller {
       const questions =
         await this.agentQuestionService.getQuestionsForCustomer(
           customer,
+          questionsDto.questionNumber,
+          questionsDto.sessionId,
+          questionsDto.serviceId,
+          questionsDto.currentKeywords,
         );
 
       res
         .status(HttpStatus.OK)
-        .json({ success: true, ...questions });
+        .json({ success: true, questions });
     } catch (error) {
       this.handleException(error, res);
     }
