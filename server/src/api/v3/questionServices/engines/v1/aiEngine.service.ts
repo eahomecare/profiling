@@ -85,56 +85,40 @@ export class AiEngineService {
         'Generated prompt strings for AI model.',
       );
 
-      const response = await this.chat.call([
-        new SystemMessage(systemMessage),
-        new HumanMessage(userMessage, {
-          role: 'user',
-        }),
-      ]);
+      function isValidResponse(content: any) {
+        const hasValidLevel =
+          typeof content.level === 'number';
+        const hasValidCategory =
+          typeof content.category === 'string' &&
+          content.category.trim() !== '';
+        const hasValidText =
+          typeof content.text === 'string' &&
+          content.text.trim() !== '';
+        const hasValidAnswers =
+          content.hasOwnProperty('Answers') &&
+          Array.isArray(content.Answers) &&
+          content.Answers.length > 0 &&
+          content.Answers.every(
+            (answer: string) =>
+              typeof answer === 'string' &&
+              answer.trim() !== '',
+          );
 
-      this.logger.log(
-        'Received response from AI model.',
-      );
-
-      if (!('lc_kwargs' in response)) {
-        throw new Error(
-          'Response does not contain kwargs',
+        return (
+          hasValidLevel &&
+          hasValidCategory &&
+          hasValidText &&
+          hasValidAnswers
         );
       }
 
-      const aiResponse = response as any;
+      function processResponse(response: any) {
+        const processedResponse = { ...response };
 
-      let content: any;
-      if (
-        typeof aiResponse.lc_kwargs.content ===
-        'string'
-      ) {
-        content = JSON.parse(
-          aiResponse.lc_kwargs.content,
-        );
-      } else {
-        throw new Error(
-          'Content is not a string',
-        );
-      }
-
-      const modifiedResponse = {
-        ...aiResponse,
-        lc_kwargs: {
-          ...aiResponse.lc_kwargs,
-          content: content,
-        },
-      };
-
-      function processResponse(response) {
-        const processedResponse = { ...response }; // Clone the response object
-
-        // Loop through the keys of the response object
         for (const key in processedResponse) {
           if (
             processedResponse.hasOwnProperty(key)
           ) {
-            // Check if the property is an array, and if so, rename it to 'Answers'
             if (
               Array.isArray(
                 processedResponse[key],
@@ -142,10 +126,8 @@ export class AiEngineService {
             ) {
               processedResponse.Answers =
                 processedResponse[key];
-              delete processedResponse[key]; // Remove the original property
-            }
-            // Check for a property that looks like a question regardless of casing and spacing
-            else if (
+              delete processedResponse[key];
+            } else if (
               typeof processedResponse[key] ===
                 'string' &&
               key
@@ -154,7 +136,7 @@ export class AiEngineService {
             ) {
               processedResponse.text =
                 processedResponse[key];
-              delete processedResponse[key]; // Remove the original property
+              delete processedResponse[key];
             }
           }
         }
@@ -162,9 +144,72 @@ export class AiEngineService {
         return processedResponse;
       }
 
-      const finalResponse = processResponse(
-        modifiedResponse.lc_kwargs.content,
-      );
+      const getValidResponse = async () => {
+        let validResponse: boolean;
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        do {
+          const response = await this.chat.call([
+            new SystemMessage(systemMessage),
+            new HumanMessage(userMessage, {
+              role: 'user',
+            }),
+          ]);
+
+          this.logger.log(
+            'Received response from AI model.',
+          );
+
+          if (!('lc_kwargs' in response)) {
+            throw new Error(
+              'Response does not contain kwargs',
+            );
+          }
+
+          const aiResponse = response as any;
+
+          let content: any;
+          if (
+            typeof aiResponse.lc_kwargs
+              .content === 'string'
+          ) {
+            content = JSON.parse(
+              aiResponse.lc_kwargs.content,
+            );
+          } else {
+            throw new Error(
+              'Content is not a string',
+            );
+          }
+
+          const processedResponse =
+            processResponse(content);
+
+          if (
+            isValidResponse(processedResponse)
+          ) {
+            validResponse = processedResponse;
+            break;
+          }
+
+          attempts++;
+        } while (
+          attempts < maxAttempts &&
+          !validResponse
+        );
+
+        if (!validResponse) {
+          throw new Error(
+            'Unable to generate a valid response after multiple attempts.',
+          );
+        }
+
+        return validResponse;
+      };
+
+      const finalResponse =
+        await getValidResponse();
       return finalResponse;
     } catch (error) {
       this.logger.error(

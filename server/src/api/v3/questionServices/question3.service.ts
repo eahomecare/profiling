@@ -127,54 +127,24 @@ export class Question3Service {
       selectedCategory,
     );
 
-    const profileTypeMapping =
-      await this.prisma.profileTypeCustomerMapping.findFirst(
-        {
-          where: {
-            customerId: customer.id,
-            profileType: {
-              category: selectedCategory,
-            },
-          },
+    const customerKeywords =
+      await this.prisma.keyword.findMany({
+        where: {
+          customerIDs: { hasSome: [customer.id] },
+          category: selectedCategory,
         },
-      );
+        select: {
+          level: true,
+        },
+      });
 
-    let maxLevelInCurrentLoop =
-      profileTypeMapping?.maxLevelInCurrentLoop ??
-      0;
-    let resetCount =
-      profileTypeMapping?.resetCount ?? 0;
-
-    if (
-      resetCount === 0 &&
-      maxLevelInCurrentLoop === 0
-    ) {
-      const maxKeywordLevel = Math.max(
-        0,
-        ...(
-          await this.prisma.keyword.findMany({
-            where: {
-              category: selectedCategory,
-              customerIDs: {
-                hasSome: [customer.id],
-              },
-            },
-            select: {
-              level: true,
-            },
-          })
-        ).map((keyword) => keyword.level),
-      );
-
-      maxLevelInCurrentLoop = maxKeywordLevel;
-    }
-
-    if (maxLevelInCurrentLoop >= 5) {
-      maxLevelInCurrentLoop = 2;
-      resetCount++;
-    } else {
-      maxLevelInCurrentLoop++;
-    }
+    const totalLevel = customerKeywords.reduce(
+      (acc, keyword) =>
+        acc + (keyword.level || 0),
+      0,
+    );
+    const maxLevelInCurrentLoop =
+      (totalLevel % 5) + 1;
 
     let levelRequired = maxLevelInCurrentLoop;
 
@@ -183,9 +153,8 @@ export class Question3Service {
       return {
         level: 1,
         category: 'unknown',
-        question:
-          'What categories are you interested in?',
-        'possible answers': [
+        text: 'What categories are you interested in?',
+        Answers: [
           'Food',
           'Sports',
           'Technology',
@@ -199,23 +168,6 @@ export class Question3Service {
       };
     } else {
       levelRequired = 2;
-    }
-
-    if (profileTypeMapping) {
-      await this.prisma.profileTypeCustomerMapping.update(
-        {
-          where: { id: profileTypeMapping.id },
-          data: {
-            maxLevelInCurrentLoop:
-              maxLevelInCurrentLoop,
-            resetCount: resetCount,
-          },
-        },
-      );
-    } else {
-      throw new NotFoundException(
-        'Profile Type Customer Mapping not found!',
-      );
     }
 
     const pastKeywordsAndQuestions =

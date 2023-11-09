@@ -13,7 +13,7 @@ export class SubmitDataDto {
   customerCRMId: string | number;
 
   @IsNotEmpty({
-    message: 'customerCRMId should not be blank',
+    message: 'sessionId should not be blank',
   })
   sessionId: string;
 

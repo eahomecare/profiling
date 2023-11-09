@@ -200,8 +200,6 @@ model ProfileTypeCustomerMapping {
   customerId            String      @db.ObjectId
   customer              Customer    @relation(fields: [customerId], references: [id])
   level                 Int         @default(1)
-  resetCount            Int?        @default(0)
-  maxLevelInCurrentLoop Int?        @default(1)
 
   @@map("profile_type_customer_mapping")
 }
