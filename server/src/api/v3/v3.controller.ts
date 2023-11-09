@@ -393,6 +393,8 @@ export class V3Controller {
     submitDataDto: SubmitDataDto,
     @Res() res: Response,
   ) {
+    console.log('submits', submitDataDto);
+
     try {
       const {
         selectedKeywords,
