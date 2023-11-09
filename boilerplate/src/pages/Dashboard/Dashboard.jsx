@@ -61,35 +61,22 @@ const Dashboard = () => {
     setKeywordValues(keywords);
   }
 
-  const handleSubmitKeywords = () => {
+  useEffect(() => {
+    if (
+      routesClicked.at(-2) &&
+      routesClicked.at(-2) === "/dashboard/keywords"
+    ) {
+      const updateKeywordPayload = {
+        customerId: customerDetails.id,
+        keywordsPayload: keywordValues,
+      };
 
-    const payload = {
-      customerId: customerDetails.id,
-      keywordsPayload: keywordValues,
-    };
-    setNotification(true);
-    sleep(5000).then((data) => setNotification(false));
-    dispatch(updateKeywords(payload));
+      setNotification(true);
+      sleep(5000).then((data) => setNotification(false));
 
-
-  }
-
-  // useEffect(() => {
-  //   if (
-  //     routesClicked.at(-2) &&
-  //     routesClicked.at(-2) === "/dashboard/keywords"
-  //   ) {
-  //     const updateKeywordPayload = {
-  //       customerId: customerDetails.id,
-  //       keywordsPayload: keywordValues,
-  //     };
-
-  //     setNotification(true);
-  //     sleep(5000).then((data) => setNotification(false));
-
-  //     dispatch(updateKeywords(updateKeywordPayload));
-  //   }
-  // }, [routesClicked, dispatch]);
+      dispatch(updateKeywords(updateKeywordPayload));
+    }
+  }, [routesClicked, dispatch]);
 
   if (status == "loading") {
     return (
@@ -135,7 +122,6 @@ const Dashboard = () => {
                       <KeywordsEntry
                         submitKeywords={submitKeywords}
                         updateKeywordValuesParent={updateKeywordValuesParent}
-                        handleSubmitKeywords={handleSubmitKeywords}
                       />
                     }
                   />
@@ -151,7 +137,7 @@ const Dashboard = () => {
             {showNotification && (
               <Notification
                 loading
-                title="Syncing keywords"
+                title="Background Syncing"
                 withCloseButton={true}
                 style={{ backgroundColor: "red !important" }}
               >
