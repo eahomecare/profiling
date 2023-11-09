@@ -12,7 +12,7 @@ function hasPermission(userPermissions, permissionName) {
   );
 }
 
-const KeywordsEntry = ({ updateKeywordValuesParent }) => {
+const KeywordsEntry = ({ updateKeywordValuesParent, handleSubmitKeywords }) => {
   const [data, setData] = useState([]);
 
 
@@ -28,6 +28,8 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
   const [values, setValue] = useState();
   const [searchValue, onSearchChange] = useState("");
   const [unknowns, setUnknowns] = useState([])
+  const [isDataChanged, setDataChanged] = useState(false);
+
 
 
 
@@ -86,6 +88,13 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
     dispatch(getKeywords())
   }, []);
 
+
+
+  useEffect(() => {
+    const hasChanged = !_.isEqual(values, transformedData.map((obj) => obj.value));
+    setDataChanged(hasChanged);
+  }, [values, transformedData]);
+
   const handleSearchChange = useMemo(
     () =>
       _.debounce((value) => {
@@ -120,6 +129,18 @@ const KeywordsEntry = ({ updateKeywordValuesParent }) => {
             }}
             readOnly={!hasPermission(userPermissions, "keywords_edit")}
           />
+
+          <div style={{ alignSelf: "center", padding: "10px" }}>
+            {isDataChanged && hasPermission(userPermissions, "keywords_edit") && <Button variant="light"
+              onClick={() => handleSubmitKeywords()}
+            >
+              Update keywords
+            </Button>
+            }
+
+          </div>
+
+
 
           {/* <div style={{ marginTop: '1rem' }}>
             Existing Unknown keywords : {unknowns.map((unknown, index) => (
