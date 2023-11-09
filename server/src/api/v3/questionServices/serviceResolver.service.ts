@@ -71,21 +71,27 @@ export class ServiceResolverService
   }
 
   async resolveService(
-    strings: string[],
+    serviceDetails: Record<string, any>,
   ): Promise<ServiceObject> {
-    const searchQuery = strings.join(' ');
+    const searchValues: string[] = [];
+    for (const value of Object.values(
+      serviceDetails,
+    )) {
+      if (typeof value === 'string') {
+        searchValues.push(value);
+      }
+    }
+    const searchQuery = searchValues.join(' ');
     const result =
       await this.vectorStore.similaritySearch(
         searchQuery,
         1,
       );
-
     if (result && result.length > 0) {
       const serviceId =
         result[0].metadata.serviceId.toString();
       const subServiceId =
         result[0].metadata.subServiceId?.toString();
-
       const service = homecareServiceDump.find(
         (s) =>
           s.serviceId.toString() === serviceId,
@@ -96,7 +102,6 @@ export class ServiceResolverService
           serviceDescription:
             service.serviceDescription,
         };
-
         if (subServiceId) {
           const subService =
             service.subServices.find(
@@ -108,11 +113,9 @@ export class ServiceResolverService
             serviceObject.serviceDescription += ` ${subService.description}`;
           }
         }
-
         return serviceObject;
       }
     }
-
     return {
       serviceTitle: '',
       serviceDescription: '',

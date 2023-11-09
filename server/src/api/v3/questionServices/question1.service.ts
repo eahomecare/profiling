@@ -25,37 +25,69 @@ export class Question1Service {
     customer: Customer,
     serviceObject: ServiceObject,
     currentKeywords: any[],
+    sessionObject: Record<number, string>,
   ) {
+    let category: string;
     let usedServiceResolver = false;
 
     if (
-      !serviceObject.serviceTitle &&
-      !serviceObject.serviceDescription
+      serviceObject.serviceTitle ||
+      serviceObject.serviceDescription
     ) {
-      const firstKeywordValue =
-        currentKeywords.length > 0
-          ? currentKeywords[0].value
-          : null;
-      if (firstKeywordValue) {
-        usedServiceResolver = true;
-        const newServiceObject =
-          await this.serviceResolver.resolveService(
-            [firstKeywordValue],
+      category =
+        await this.categoryResolver.resolveCategory(
+          serviceObject,
+        );
+    } else {
+      if (currentKeywords.length > 0) {
+        category =
+          await this.categoryResolver.resolveCategory(
+            { value: currentKeywords[0].value },
           );
-        if (
-          newServiceObject.serviceTitle ||
-          newServiceObject.serviceDescription
-        ) {
-          serviceObject = newServiceObject;
+        serviceObject =
+          await this.serviceResolver.resolveService(
+            { category },
+          );
+        usedServiceResolver = true;
+      } else {
+        const allCategories =
+          await this.prisma.profileType.findMany({
+            select: { category: true },
+          });
+
+        const uniqueCategories = Array.from(
+          new Set(
+            allCategories
+              .map((pt) =>
+                pt.category.toLowerCase(),
+              )
+              .filter((cat) => cat !== 'unknown'),
+          ),
+        );
+
+        const nonRepeatedCategories =
+          uniqueCategories.filter(
+            (cat) =>
+              !Object.values(
+                sessionObject,
+              ).includes(cat),
+          );
+
+        if (nonRepeatedCategories.length === 0) {
+          throw new NotFoundException(
+            'No unused categories available.',
+          );
         }
+
+        category =
+          nonRepeatedCategories[
+            Math.floor(
+              Math.random() *
+                nonRepeatedCategories.length,
+            )
+          ];
       }
     }
-
-    const category =
-      await this.categoryResolver.resolveCategory(
-        serviceObject.serviceTitle,
-        serviceObject.serviceDescription,
-      );
 
     await this.customerSessionService.updateSessionQuestion(
       customer.id,

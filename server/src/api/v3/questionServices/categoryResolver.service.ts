@@ -322,10 +322,20 @@ export class CategoryResolverService
   }
 
   async resolveCategory(
-    serviceTitle: string,
-    serviceDescription: string,
+    serviceObject: Record<string, any>,
   ): Promise<string> {
-    const searchQuery = `${serviceTitle} ${serviceDescription}`;
+    const searchValues: string[] = [];
+
+    for (const value of Object.values(
+      serviceObject,
+    )) {
+      if (typeof value === 'string') {
+        searchValues.push(value);
+      }
+    }
+
+    const searchQuery = searchValues.join(' ');
+
     const result =
       await this.vectorStore.similaritySearch(
         searchQuery,

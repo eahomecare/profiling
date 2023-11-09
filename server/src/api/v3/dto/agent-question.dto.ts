@@ -17,7 +17,7 @@ class CurrentKeywordsDto {
   @IsNumber()
   level?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   category: string;
 
