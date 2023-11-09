@@ -127,7 +127,7 @@ const MainAppShell = ({ children }) => {
       <Header
         styles={{
           root: {
-            backgroundImage: "linear-gradient(#8C53E7,#0d5ff9)",
+            backgroundImage: "linear-gradient(#00239c,#0d5ff9)",
             paddingTop: 5,
             paddingRight: 20,
           },
@@ -163,14 +163,14 @@ const MainAppShell = ({ children }) => {
           bg={theme.colorScheme == "dark" ? "" : "#FFFFFF"}
           sx={{
             boxShadow: `
-        rgba(43, 29, 253, 0.17) 0px -23px 25px 0px inset,
-        rgba(43, 29, 253, 0.15) 0px -36px 30px 0px inset,
-        rgba(43, 29, 253, 0.1) 0px -79px 40px 0px inset,
-        rgba(43, 29, 253, 0.06) 0px 2px 1px,
-        rgba(43, 29, 253, 0.09) 0px 4px 2px,
-        rgba(43, 29, 253, 0.09) 0px 8px 4px,
-        rgba(43, 29, 253, 0.09) 0px 16px 8px,
-        rgba(43, 29, 253, 0.09) 0px 32px 16px
+ rgba(13, 95, 249, 0.17) 0px -23px 25px 0px inset,
+ rgba(13, 95, 249, 0.15) 0px -36px 30px 0px inset,
+ rgba(13, 95, 249, 0.1) 0px -79px 40px 0px inset,
+ rgba(13, 95, 249, 0.06) 0px 2px 1px,
+ rgba(13, 95, 249, 0.09) 0px 4px 2px,
+ rgba(13, 95, 249, 0.09) 0px 8px 4px,
+ rgba(13, 95, 249, 0.09) 0px 16px 8px,
+ rgba(13, 95, 249, 0.09) 0px 32px 16px
     `,
 
             transform: isMounted ? "translateX(0%)" : "translateX(-100%)",
