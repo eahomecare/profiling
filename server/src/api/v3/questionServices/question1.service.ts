@@ -1,18 +1,22 @@
 import {
   Injectable,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { Customer } from '@prisma/client';
 import { CategoryResolverService } from './categoryResolver.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { AiEngineService } from './engines/v1/aiEngine.service';
-import homeCareServices from './serviceMappings/homecareServices';
 import { CustomerSessionService } from './customerSession.service';
 import { ServiceObject } from './interfaces/serviceObject.interface';
 import { ServiceResolverService } from './serviceResolver.service';
 
 @Injectable()
 export class Question1Service {
+  private readonly logger = new Logger(
+    Question1Service.name,
+  );
+
   constructor(
     private readonly categoryResolver: CategoryResolverService,
     private readonly prisma: PrismaService,
@@ -38,16 +42,25 @@ export class Question1Service {
         await this.categoryResolver.resolveCategory(
           serviceObject,
         );
+      this.logger.log(
+        `Resolved category with service title and description: ${category}`,
+      );
     } else {
       if (currentKeywords.length > 0) {
         category =
           await this.categoryResolver.resolveCategory(
             { value: currentKeywords[0].value },
           );
+        this.logger.log(
+          `Resolved category with first current keyword: ${category}`,
+        );
         serviceObject =
           await this.serviceResolver.resolveService(
             { category },
           );
+        this.logger.log(
+          `Resolved service title and description with category: ${serviceObject}`,
+        );
         usedServiceResolver = true;
       } else {
         const allCategories =
@@ -55,6 +68,9 @@ export class Question1Service {
             select: { category: true },
           });
 
+        this.logger.log(
+          `Random Category Selection- got all categories: ${allCategories}`,
+        );
         const uniqueCategories = Array.from(
           new Set(
             allCategories
@@ -63,6 +79,9 @@ export class Question1Service {
               )
               .filter((cat) => cat !== 'unknown'),
           ),
+        );
+        this.logger.log(
+          `Random Category Selection- got all categories: ${allCategories}`,
         );
 
         const nonRepeatedCategories =
@@ -73,6 +92,9 @@ export class Question1Service {
               ).includes(cat),
           );
 
+        this.logger.log(
+          `Random Category Selection- non repeated categories: ${nonRepeatedCategories}`,
+        );
         if (nonRepeatedCategories.length === 0) {
           throw new NotFoundException(
             'No unused categories available.',
@@ -87,6 +109,9 @@ export class Question1Service {
             )
           ];
       }
+      this.logger.log(
+        `Random Category Selection- completed: ${category}`,
+      );
     }
 
     await this.customerSessionService.updateSessionQuestion(

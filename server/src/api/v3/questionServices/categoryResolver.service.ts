@@ -1,6 +1,7 @@
 import {
   Injectable,
   OnModuleInit,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HNSWLib } from 'langchain/vectorstores/hnswlib';
@@ -14,6 +15,9 @@ interface Category {
 export class CategoryResolverService
   implements OnModuleInit
 {
+  private readonly logger = new Logger(
+    CategoryResolverService.name,
+  );
   private vectorStore: HNSWLib;
   private categories: Category[] = [
     {
@@ -324,6 +328,9 @@ export class CategoryResolverService
   async resolveCategory(
     serviceObject: Record<string, any>,
   ): Promise<string> {
+    this.logger.log(
+      `Service Object recieved: ${serviceObject}`,
+    );
     const searchValues: string[] = [];
 
     for (const value of Object.values(
@@ -341,12 +348,22 @@ export class CategoryResolverService
         searchQuery,
         1,
       );
+    this.logger.log(
+      `Result of simalarity search: ${result}`,
+    );
 
     if (result && result.length > 0) {
       const categoryKey =
         result[0].metadata.category;
+      this.logger.log(
+        `Category Obtained: ${categoryKey}`,
+      );
       return categoryKey;
     }
+
+    this.logger.error(
+      `No matching category for {serviceObject}`,
+    );
 
     throw new Error(
       'No matching category found.',
