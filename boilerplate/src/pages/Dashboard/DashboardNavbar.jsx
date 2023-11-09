@@ -48,13 +48,13 @@ const useStyles = createStyles((theme) => ({
     "&": {
       // backgroundColor:
       //   theme.colorScheme === "dark" ? theme.colors.dark[6] : "#F3F6FF",
-      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#0d5ff9",
+      color: theme.colorScheme === "dark" ? theme.colors.dark[6] : "#0D5FF9",
       boxShadow: `
-          rgba(43,29,253) 0px 2px 1px,
-          rgba(43,29,253) 0px 4px 2px,
-          rgba(43,29,253) 0px 8px 4px,
-          rgba(43,29,253) 0px 16px 8px,
-          rgba(43,29,253) 0px 32px 16px
+ rgba(13, 95, 249, 1) 0px 1px 1px,
+ rgba(13, 95, 249, 0.5) 0px 2px 2px,
+ rgba(13, 95, 249, 0.5) 0px 2px 5px,
+ rgba(13, 95, 249, 0.5) 0px 2px 5px,
+ rgba(13, 95, 249, 0.5) 0px 3px 5px
       `,
       /* From https://css.glass */
       background: "rgba(, 1)",
