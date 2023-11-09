@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Res,
   ValidationPipe,
+  Get,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateProfileTypeDto } from './dto/create-profile-type.dto';
@@ -19,6 +20,19 @@ export class ProfileTypeController {
   constructor(
     private readonly profileTypeService: ProfileTypesService,
   ) {}
+
+  @Get()
+  async getAllProfileTypes(@Res() res: Response) {
+    try {
+      const profileTypes =
+        await this.profileTypeService.getAllProfileTypes();
+      res
+        .status(HttpStatus.OK)
+        .json(profileTypes);
+    } catch (error) {
+      this.handleException(error, res);
+    }
+  }
 
   @Post()
   createProfileType(

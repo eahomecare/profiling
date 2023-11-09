@@ -321,7 +321,7 @@ export class ProfileTypeCustomerMappingService {
   async updateProfileTypeCustomerMappingGeneric(
     customerId: string,
   ): Promise<ProfileTypeCustomerMapping[]> {
-    const profilingTypeStandard = 5;
+    const profilingTypeStandard = 2;
 
     const keywords =
       await this.prisma.keyword.findMany({
@@ -356,6 +356,11 @@ export class ProfileTypeCustomerMappingService {
           mapping.profileType.category;
         const averageLevel =
           categoryAverageLevels[category] || 0;
+        console.log(
+          'Average level in ',
+          category,
+          averageLevel,
+        );
 
         const newLevel =
           averageLevel > profilingTypeStandard

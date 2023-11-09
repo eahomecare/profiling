@@ -38,4 +38,8 @@ export class ProfileTypesService {
 
     return profileType;
   }
+
+  async getAllProfileTypes() {
+    return this.prisma.profileType.findMany();
+  }
 }
