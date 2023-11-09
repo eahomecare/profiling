@@ -126,15 +126,45 @@ export class AiEngineService {
         },
       };
 
-      const finalResponse =
-        modifiedResponse.lc_kwargs.content;
-      finalResponse.Answers =
-        finalResponse['possible answers'];
-      delete finalResponse['possible answers'];
-      finalResponse.text =
-        finalResponse['question'];
-      delete finalResponse['question'];
+      function processResponse(response) {
+        const processedResponse = { ...response }; // Clone the response object
 
+        // Loop through the keys of the response object
+        for (const key in processedResponse) {
+          if (
+            processedResponse.hasOwnProperty(key)
+          ) {
+            // Check if the property is an array, and if so, rename it to 'Answers'
+            if (
+              Array.isArray(
+                processedResponse[key],
+              )
+            ) {
+              processedResponse.Answers =
+                processedResponse[key];
+              delete processedResponse[key]; // Remove the original property
+            }
+            // Check for a property that looks like a question regardless of casing and spacing
+            else if (
+              typeof processedResponse[key] ===
+                'string' &&
+              key
+                .replace(/\s+/g, '')
+                .toLowerCase() === 'question'
+            ) {
+              processedResponse.text =
+                processedResponse[key];
+              delete processedResponse[key]; // Remove the original property
+            }
+          }
+        }
+
+        return processedResponse;
+      }
+
+      const finalResponse = processResponse(
+        modifiedResponse.lc_kwargs.content,
+      );
       return finalResponse;
     } catch (error) {
       this.logger.error(

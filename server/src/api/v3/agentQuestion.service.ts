@@ -82,6 +82,7 @@ export class AgentQuestionService {
           customer,
           serviceObject,
           currentKeywords,
+          sessionObject,
         );
       case 2:
         return this.question2Service.handleQuestion(

@@ -26,8 +26,7 @@ export class Question4Service {
       .join(' ');
     const category =
       await this.categoryResolverService.resolveCategory(
-        combinedKeywords,
-        '',
+        { combinedKeywords },
       );
     const {
       formattedPastKeywords,
