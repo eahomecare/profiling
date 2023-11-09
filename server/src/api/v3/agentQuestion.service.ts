@@ -1,6 +1,7 @@
 import {
   Injectable,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { Customer } from '@prisma/client';
 import { CustomerSessionService } from './questionServices/customerSession.service';
@@ -12,6 +13,9 @@ import homecareServiceDump from './questionServices/serviceMappings/homecareServ
 
 @Injectable()
 export class AgentQuestionService {
+  private readonly logger = new Logger(
+    AgentQuestionService.name,
+  );
   constructor(
     private readonly question1Service: Question1Service,
     private readonly question2Service: Question2Service,
@@ -34,9 +38,9 @@ export class AgentQuestionService {
       );
     }
 
-    console.log(
-      'agentQuestion sessionId',
-      sessionId,
+    this.logger.log(`Session ID: ${sessionId}`);
+    this.logger.log(
+      `Service ID: ${serviceId} , Sub-Service ID: ${subServiceId}`,
     );
 
     const serviceObject = {
@@ -48,11 +52,17 @@ export class AgentQuestionService {
       const service = homecareServiceDump.find(
         (s) => s.serviceId === serviceId,
       );
+      this.logger.log(
+        `Found - Service: ${service}`,
+      );
       if (service) {
         serviceObject.serviceTitle =
           service.serviceTitle;
         serviceObject.serviceDescription =
           service.serviceDescription;
+        this.logger.log(
+          `Found - Service Details - without subService: Service Title: ${serviceObject.serviceTitle} , Service Description: ${serviceObject.serviceDescription}`,
+        );
 
         if (subServiceId) {
           const subService =
@@ -63,6 +73,9 @@ export class AgentQuestionService {
             serviceObject.serviceDescription += ` ${subService.description}`;
           }
         }
+        this.logger.log(
+          `Found - Service Details - with subService: Service Title: ${serviceObject.serviceTitle} , Service Description: ${serviceObject.serviceDescription}`,
+        );
       }
     }
 

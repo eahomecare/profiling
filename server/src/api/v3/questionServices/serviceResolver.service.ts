@@ -1,6 +1,7 @@
 import {
   Injectable,
   OnModuleInit,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HNSWLib } from 'langchain/vectorstores/hnswlib';
@@ -12,6 +13,9 @@ import { ServiceObject } from './interfaces/serviceObject.interface';
 export class ServiceResolverService
   implements OnModuleInit
 {
+  private readonly logger = new Logger(
+    ServiceResolverService.name,
+  );
   private vectorStore: HNSWLib;
 
   constructor(
@@ -73,6 +77,9 @@ export class ServiceResolverService
   async resolveService(
     serviceDetails: Record<string, any>,
   ): Promise<ServiceObject> {
+    this.logger.log(
+      `Service Details: ${serviceDetails}`,
+    );
     const searchValues: string[] = [];
     for (const value of Object.values(
       serviceDetails,
@@ -87,6 +94,9 @@ export class ServiceResolverService
         searchQuery,
         1,
       );
+    this.logger.log(
+      `Result From searchQuery ${searchQuery} : ${result}`,
+    );
     if (result && result.length > 0) {
       const serviceId =
         result[0].metadata.serviceId.toString();
@@ -95,6 +105,9 @@ export class ServiceResolverService
       const service = homecareServiceDump.find(
         (s) =>
           s.serviceId.toString() === serviceId,
+      );
+      this.logger.log(
+        `Service Picked: ${service}`,
       );
       if (service) {
         const serviceObject: ServiceObject = {
@@ -113,9 +126,15 @@ export class ServiceResolverService
             serviceObject.serviceDescription += ` ${subService.description}`;
           }
         }
+        this.logger.log(
+          `Final service Object created: ${serviceObject}`,
+        );
         return serviceObject;
       }
     }
+    this.logger.log(
+      `Returned blank service for :${serviceDetails}`,
+    );
     return {
       serviceTitle: '',
       serviceDescription: '',
