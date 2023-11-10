@@ -203,9 +203,15 @@ const newKeywords = {
 };
 
 async function deleteAllKeywords() {
-  await prisma.keyword.deleteMany({});
+  await prisma.$transaction(async (prisma) => {
+    await prisma.agentSubmitKeywordsMapping.deleteMany(
+      {},
+    );
+
+    await prisma.keyword.deleteMany({});
+  });
   console.log(
-    'All existing keywords have been deleted.',
+    'All existing keywords and their references have been deleted.',
   );
 }
 
