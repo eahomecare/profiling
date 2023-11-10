@@ -147,7 +147,7 @@ export class AiEngineService {
       const getValidResponse = async () => {
         let validResponse: boolean;
         let attempts = 0;
-        const maxAttempts = 3;
+        const maxAttempts = 10;
 
         do {
           const response = await this.chat.call([
