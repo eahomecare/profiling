@@ -433,18 +433,6 @@ export class ProfileTypeCustomerMappingService {
     customerId: string,
   ): Promise<ProfileTypeCustomerMapping[]> {
     try {
-      const nameMapping = {
-        food: 'Foodie',
-        technology: 'Techie',
-        gadget: 'Gadget Freak',
-        sports: 'Sports Fan',
-        automobile: 'Auto Lover',
-        fitness: 'Fitness Freak',
-        travel: 'Avid Traveller',
-        music: 'Musicophile',
-      };
-
-
       const customerMappings =
         await this.prisma.profileTypeCustomerMapping.findMany({
           include: {
@@ -458,21 +446,12 @@ export class ProfileTypeCustomerMappingService {
           },
         });
 
-      const mappedCustomerMappings = customerMappings.map(mapping => {
-        return {
-          ...mapping,
-          profileType: {
-            ...mapping.profileType,
-            name: nameMapping[mapping.profileType.name] || mapping.profileType.name,
-          },
-        };
-      });
-
-
-      return mappedCustomerMappings;
+      return customerMappings;
     } catch (error) {
       console.error('Error fetching customer mapping by customer ID:', error);
       throw error;
+    } finally {
+      await this.prisma.$disconnect();
     }
   }
 }
