@@ -10,11 +10,13 @@ import {
   Text,
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import ProfileAnalysisBarChart from "./ProfileAnalysisBarChart";
 
 const ProfileAnalysis = () => {
+  const [selectedSource, setSelectedSource] = useState("All");
   return (
     <Card shadow={"md"} radius={"md"}>
       <Box>
@@ -40,6 +42,8 @@ const ProfileAnalysis = () => {
               label={"Source(s)"}
               placeholder={"All"}
               data={["All", "Call", "homecare", "eportal"]}
+              value={selectedSource}
+              onChange={setSelectedSource}
             />
             {/* <Group>
               <StyledSelect
@@ -56,7 +60,7 @@ const ProfileAnalysis = () => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
-          <ProfileAnalysisBarChart />
+          <ProfileAnalysisBarChart source={selectedSource} />
         </Grid.Col>
       </Grid>
     </Card>

@@ -13,17 +13,18 @@ import {
 } from "recharts";
 import { fetchProfileCount } from "../../redux/profileAnalysisSlice"; // Ensure correct path
 
-const ProfileAnalysisBarChart = () => {
+const ProfileAnalysisBarChart = ({ source }) => {
   const dispatch = useDispatch();
-
+  console.log("source for profiles", source);
   // Fetching data on component mount
   useEffect(() => {
-    dispatch(fetchProfileCount());
-  }, [dispatch]);
+    dispatch(fetchProfileCount(source));
+  }, [dispatch, source]);
 
   // Get data from the Redux store
   const chartData = useSelector((state) => state.profileCount.data);
   const status = useSelector((state) => state.profileCount.status);
+  console.log("Chart data for profiles", chartData);
 
   // If data is still loading, display a loading indicator (you can adjust this as per your requirements)
   if (status === "loading") return <div>Loading...</div>;
