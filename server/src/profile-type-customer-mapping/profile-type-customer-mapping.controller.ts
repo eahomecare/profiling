@@ -98,4 +98,13 @@ export class ProfileTypeCustomerMappingController {
       customer_id,
     )
   }
+
+  @Get('customer-mapping/:customerId')
+  async getCustomerMappingByCustomerId(
+    @Param('customerId') customerId: string,
+  ) {
+    return this.profileTypeCustomerMappingService.getCustomerMappingByCustomerId(
+      customerId,
+    );
+  }
 }
