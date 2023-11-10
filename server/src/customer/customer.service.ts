@@ -304,31 +304,16 @@ export class CustomerService {
 
   async updateKeywords(
     customerId: string,
-    keywords: Array<{
-      id?: string;
-      category: string;
-      value: string;
-    }>,
+    keywordIds: string[],
   ): Promise<Customer> {
     try {
-      const existingKeywords = keywords.filter(
-        (kw) => kw.id,
-      );
-      const newKeywords = keywords.filter(
-        (kw) => !kw.id,
-      );
-
       const customer =
         await this.prisma.customer.update({
           where: { id: customerId },
           data: {
             keywords: {
-              connect: existingKeywords.map(
-                (kw) => ({ id: kw.id }),
-              ),
-              create: newKeywords.map((kw) => ({
-                category: kw.category,
-                value: kw.value,
+              set: keywordIds.map((id) => ({
+                id,
               })),
             },
           },
