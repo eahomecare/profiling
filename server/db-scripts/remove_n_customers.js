@@ -37,7 +37,14 @@ async function removeLastNCustomers(n) {
             },
         });
 
-        await prisma.keyword.updateMany({
+        await prisma.personal_Details.deleteMany({
+            where: {
+                customer_id: customerId,
+            },
+        });
+
+        // Get keywords associated with the customer
+        const customersKeywords = await prisma.keyword.findMany({
             where: {
                 customers: {
                     some: {
@@ -45,32 +52,52 @@ async function removeLastNCustomers(n) {
                     },
                 },
             },
-            data: {
-                customers: {
-                    disconnect: {
-                        id: customerId,
-                    },
-                },
-            },
         });
 
+        // Disconnect the customer from keywords
+        for (const keyword of customersKeywords) {
+            await prisma.keyword.update({
+                where: {
+                    id: keyword.id,
+                },
+                data: {
+                    customers: {
+                        disconnect: {
+                            id: customerId,
+                        },
+                    },
+                },
+            });
+        }
 
-        await prisma.question.updateMany({
+        const customerAgentSubmits = await prisma.agentSubmits.findMany({
             where: {
-                customers: {
-                    some: {
-                        id: customerId,
-                    },
-                },
-            },
-            data: {
-                customers: {
-                    disconnect: {
-                        id: customerId,
-                    },
-                },
+                customerID: customerId
             },
         });
+
+        for (const agentSubmit of customerAgentSubmits) {
+            const agentSubmitKeywordsMapping = await prisma.agentSubmitKeywordsMapping.findMany({
+                where: {
+                    agentSubmitId: agentSubmit.id,
+                    keywordId: {
+                        not: undefined,
+                    },
+                },
+            });
+
+            for (const mapping of agentSubmitKeywordsMapping) {
+                await prisma.agentSubmitKeywordsMapping.delete({
+                    where: { id: mapping.id },
+                });
+            }
+
+            await prisma.agentSubmits.delete({
+                where: { id: agentSubmit.id },
+            });
+        }
+
+
 
         await prisma.customer.delete({
             where: {
