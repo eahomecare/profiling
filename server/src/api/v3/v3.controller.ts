@@ -254,20 +254,6 @@ export class V3Controller {
             nameMapping[profileType.name] ||
             profileType.name,
         }));
-      // const profileTypes = [
-      //   {
-      //     id: '1',
-      //     name: 'Foodie',
-      //     srcUrl:
-      //       'https://www.imghost.net/ib/nfrRR1jXsNdznjC_1699253182.png',
-      //   },
-      //   {
-      //     id: '2',
-      //     name: 'Techie',
-      //     srcUrl:
-      //       'https://www.imghost.net/ib/SE3O0esWPpjFVs6_1699253323.png',
-      //   },
-      // ];
 
       res.status(HttpStatus.OK).json({
         success: true,
