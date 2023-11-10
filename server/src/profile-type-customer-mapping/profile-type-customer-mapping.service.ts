@@ -435,6 +435,9 @@ export class ProfileTypeCustomerMappingService {
     try {
       const customerMappings =
         await this.prisma.profileTypeCustomerMapping.findMany({
+          include: {
+            profileType: true
+          },
           where: {
             customerId: customerId,
             level: {
