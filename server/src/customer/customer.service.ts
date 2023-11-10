@@ -21,7 +21,7 @@ export class CustomerService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
-  ) {}
+  ) { }
 
   async countCustomersByMonth(source: string) {
     const query: any = {
@@ -59,9 +59,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-          customer.created_at
-            .toISOString()
-            .slice(5, 7)
+        customer.created_at
+          .toISOString()
+          .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -184,6 +184,9 @@ export class CustomerService {
       await this.prisma.customer.findMany({
         include: {
           personal_details: true,
+        },
+        orderBy: {
+          created_at: 'desc',
         },
       });
 
@@ -435,8 +438,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-              personalDetailsInput.date_of_birth,
-            )
+            personalDetailsInput.date_of_birth,
+          )
           : null;
 
       const customer =
@@ -637,13 +640,13 @@ export class CustomerService {
         agentName: data?.agent?.agentName,
         date: isValidDate
           ? data.created_at
-              .toISOString()
-              .split('T')[0]
+            .toISOString()
+            .split('T')[0]
           : 'N/A',
         time: isValidDate
           ? data.created_at
-              .toTimeString()
-              .split(' ')[0]
+            .toTimeString()
+            .split(' ')[0]
           : 'N/A',
         remark: data.remarks,
       };
