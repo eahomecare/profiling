@@ -87,8 +87,8 @@ async function removeCustomerAndMappings(
 async function removeLastCustomersAndMappings() {
   const customersToRemove =
     await prisma.customer.findMany({
-      take: -800,
-      orderBy: { created_at: 'desc' },
+      take: 500,
+      orderBy: { created_at: 'asc' },
     });
 
   for (const customer of customersToRemove) {
@@ -115,7 +115,7 @@ async function main() {
   try {
     await removeLastCustomersAndMappings();
     console.log(
-      'Last 800 customers and all related mappings have been removed.',
+      'First 500 customers and all related mappings have been removed.',
     );
   } catch (error) {
     console.error(
