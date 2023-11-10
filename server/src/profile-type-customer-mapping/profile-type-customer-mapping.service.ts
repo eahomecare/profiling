@@ -12,7 +12,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ProfileTypeCustomerMappingService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async create(
     data: ProfileTypeCustomerMapping,
@@ -158,18 +158,18 @@ export class ProfileTypeCustomerMappingService {
       max: number;
       label: string;
     }[] = [
-        { min: 0, max: 20, label: '0-20' },
-        { min: 21, max: 25, label: '21-25' },
-        { min: 26, max: 30, label: '26-30' },
-        { min: 30, max: 35, label: '30-35' },
-        { min: 36, max: 40, label: '36-40' },
-        { min: 40, max: 45, label: '40-45' },
-        { min: 46, max: 50, label: '46-50' },
-        { min: 50, max: 55, label: '50-55' },
-        { min: 56, max: 60, label: '56-60' },
-        { min: 60, max: 65, label: '60-65' },
-        { min: 66, max: 70, label: '66-70' },
-      ];
+      { min: 0, max: 20, label: '0-20' },
+      { min: 21, max: 25, label: '21-25' },
+      { min: 26, max: 30, label: '26-30' },
+      { min: 30, max: 35, label: '30-35' },
+      { min: 36, max: 40, label: '36-40' },
+      { min: 40, max: 45, label: '40-45' },
+      { min: 46, max: 50, label: '46-50' },
+      { min: 50, max: 55, label: '50-55' },
+      { min: 56, max: 60, label: '56-60' },
+      { min: 60, max: 65, label: '60-65' },
+      { min: 66, max: 70, label: '66-70' },
+    ];
 
     const groupedCounts: Record<string, number> =
       {};
@@ -427,28 +427,5 @@ export class ProfileTypeCustomerMappingService {
     }
 
     return categoryAverageLevels;
-  }
-
-  async getCustomerMappingByCustomerId(
-    customerId: string,
-  ): Promise<ProfileTypeCustomerMapping[]> {
-    try {
-      const customerMappings =
-        await this.prisma.profileTypeCustomerMapping.findMany({
-          where: {
-            customerId: customerId,
-            level: {
-              gt: 1,
-            },
-          },
-        });
-
-      return customerMappings;
-    } catch (error) {
-      console.error('Error fetching customer mapping by customer ID:', error);
-      throw error;
-    } finally {
-      await this.prisma.$disconnect();
-    }
   }
 }
