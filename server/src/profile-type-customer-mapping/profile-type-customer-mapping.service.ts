@@ -444,12 +444,16 @@ export class ProfileTypeCustomerMappingService {
         music: 'Musicophile',
       };
 
-
       const customerMappings =
         await this.prisma.profileTypeCustomerMapping.findMany(
           {
             include: {
               profileType: true,
+              customer: {
+                include: {
+                  keywords: true,
+                },
+              },
             },
             where: {
               customerId: customerId,
@@ -460,16 +464,26 @@ export class ProfileTypeCustomerMappingService {
           },
         );
 
-      const mappedCustomerMappings = customerMappings.map(mapping => {
-        return {
-          ...mapping,
-          profileType: {
-            ...mapping.profileType,
-            name: nameMapping[mapping.profileType.name] || mapping.profileType.name,
-          },
-        };
-      });
+      const mappedCustomerMappings =
+        customerMappings.map((mapping) => {
+          const profileCompletion =
+            this.calculateProfileCompletion(
+              mapping.customer.keywords,
+              mapping.profileType.name,
+            );
 
+          return {
+            ...mapping,
+            profileType: {
+              ...mapping.profileType,
+              name:
+                nameMapping[
+                  mapping.profileType.name
+                ] || mapping.profileType.name,
+            },
+            profileCompletion,
+          };
+        });
 
       return mappedCustomerMappings;
     } catch (error) {
@@ -480,4 +494,25 @@ export class ProfileTypeCustomerMappingService {
       throw error;
     }
   }
+
+  private calculateProfileCompletion = (
+    keywords: Keyword[],
+    profileName: string,
+  ): number => {
+    let totalLevel = 0;
+    const relevantKeywords = keywords.filter(
+      (keyword) =>
+        keyword.category === profileName,
+    );
+
+    relevantKeywords.forEach((keyword) => {
+      totalLevel += keyword.level ?? 0;
+    });
+
+    const profileCompletion =
+      (totalLevel / 50) * 100;
+    return profileCompletion > 100
+      ? 100
+      : profileCompletion;
+  };
 }

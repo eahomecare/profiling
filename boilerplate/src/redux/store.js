@@ -8,6 +8,7 @@ import campaignReducer from "./campaignSlice";
 import profileDataCardSlice from "./profileDataCardSlice";
 import customerProfileSlice from "./customerProfileSlice";
 import profileAnalysisSlice from "./profileAnalysisSlice";
+import profilingSlice from "./profileTypesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     profileDataCard: profileDataCardSlice,
     customerProfileTool: customerProfileSlice,
     profileCount: profileAnalysisSlice,
+    profileTypesCustomerMapping: profilingSlice,
   },
 });
