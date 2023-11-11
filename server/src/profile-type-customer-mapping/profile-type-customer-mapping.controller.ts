@@ -14,7 +14,7 @@ import { ProfileTypeCustomerMapping } from '@prisma/client';
 export class ProfileTypeCustomerMappingController {
   constructor(
     private readonly profileTypeCustomerMappingService: ProfileTypeCustomerMappingService,
-  ) { }
+  ) {}
 
   @Post()
   create(
@@ -96,7 +96,7 @@ export class ProfileTypeCustomerMappingController {
   ) {
     return this.profileTypeCustomerMappingService.updateProfileTypeCustomerMappingGeneric(
       customer_id,
-    )
+    );
   }
 
   @Get('customer-mapping/:customerId')
