@@ -7,6 +7,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { CustomerSessionService } from './customerSession.service';
 import { AiEngineService } from './engines/v1/aiEngine.service';
 import { ServiceObject } from './interfaces/serviceObject.interface';
+import { shuffle } from 'lodash';
 
 @Injectable()
 export class Question3Service {
@@ -46,11 +47,16 @@ export class Question3Service {
       (pt) => pt.category,
     );
 
-    let selectedCategory = uniqueCategories.find(
-      (cat) =>
-        !categoriesWithKeywords.has(cat) &&
-        cat !== 'unknown',
+    const randomizedCategories = shuffle(
+      uniqueCategories,
     );
+
+    let selectedCategory =
+      randomizedCategories.find(
+        (cat) =>
+          !categoriesWithKeywords.has(cat) &&
+          cat !== 'unknown',
+      );
 
     if (!selectedCategory) {
       const categoryLevels = keywords.reduce(
