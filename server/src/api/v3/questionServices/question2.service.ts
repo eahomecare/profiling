@@ -7,6 +7,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { CustomerSessionService } from './customerSession.service';
 import { AiEngineService } from './engines/v1/aiEngine.service';
 import { ServiceObject } from './interfaces/serviceObject.interface';
+import { shuffle } from 'lodash';
 
 @Injectable()
 export class Question2Service {
@@ -55,8 +56,13 @@ export class Question2Service {
             .filter((cat) => cat !== 'unknown'),
         ),
       );
+
+      const randomizedCategories = shuffle(
+        uniqueCategories,
+      );
+
       const nonRepeatedCategories =
-        uniqueCategories.filter(
+        randomizedCategories.filter(
           (cat) =>
             !Object.values(
               sessionObject,
@@ -134,8 +140,11 @@ export class Question2Service {
               .filter((cat) => cat !== 'unknown'),
           ),
         );
+        const randomizedCategories = shuffle(
+          uniqueCategories,
+        );
         const nonRepeatedCategories =
-          uniqueCategories.filter(
+          randomizedCategories.filter(
             (cat) =>
               !Object.values(
                 sessionObject,
