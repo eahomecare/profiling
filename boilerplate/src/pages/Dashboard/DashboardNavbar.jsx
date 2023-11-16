@@ -163,17 +163,9 @@ const data = [
   { link: "occupation", label: "Occupation", icon: <IconBriefcase /> },
   { link: "activity", label: "Activity", icon: <IconComet /> },
   { link: "familydetails", label: "Family Details", icon: <IconFriends /> },
-  {
-    link: "Financial Information",
-    label: "Financial Information",
-    icon: <IconReportMoney />,
-  },
-  {
-    link: "Insurance Details",
-    label: "Insurance Details  ",
-    icon: <IconCarCrash />,
-  },
-  { link: "Vehicle", label: "Vehicle", icon: <IconCar /> },
+  { link: "fi", label: "Financial Information", icon: <IconReportMoney /> },
+  { link: "id", label: "Insurance Details  ", icon: <IconCarCrash /> },
+  { link: "vd", label: "Vehicle", icon: <IconCar /> },
   { link: "Health", label: "Health", icon: <IconHealthRecognition /> },
   { link: "Social Media", label: "Social Media", icon: <IconSocial /> },
 ];
