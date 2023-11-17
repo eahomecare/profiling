@@ -321,7 +321,7 @@ export class ProfileTypeCustomerMappingService {
   async updateProfileTypeCustomerMappingGeneric(
     customerId: string,
   ): Promise<ProfileTypeCustomerMapping[]> {
-    const profilingTypeStandard = 2;
+    const profilingTypeStandard = 4;
 
     const keywords =
       await this.prisma.keyword.findMany({
@@ -336,7 +336,7 @@ export class ProfileTypeCustomerMappingService {
       });
 
     const categoryAverageLevels =
-      this.calculateCategoryAverageLevels(
+      this.calculateCategoryNonLinearLevels(
         keywords,
       );
 
@@ -390,6 +390,48 @@ export class ProfileTypeCustomerMappingService {
     );
 
     return updatedMappings;
+  }
+
+  private calculateCategoryNonLinearLevels(
+    keywords: Keyword[],
+  ): { [category: string]: number } {
+    const categoryTotals: {
+      [category: string]: {
+        sum: number;
+        count: number;
+      };
+    } = {};
+
+    const scalingFactor = 2;
+
+    keywords.forEach((keyword) => {
+      if (!categoryTotals[keyword.category]) {
+        categoryTotals[keyword.category] = {
+          sum: 0,
+          count: 0,
+        };
+      }
+
+      const scaledLevel = Math.pow(
+        scalingFactor,
+        keyword.level,
+      );
+      categoryTotals[keyword.category].sum +=
+        scaledLevel;
+      categoryTotals[keyword.category].count++;
+    });
+
+    const categoryScores: {
+      [category: string]: number;
+    } = {};
+
+    for (const category in categoryTotals) {
+      const { sum, count } =
+        categoryTotals[category];
+      categoryScores[category] = sum / count;
+    }
+
+    return categoryScores;
   }
 
   private calculateCategoryAverageLevels(
