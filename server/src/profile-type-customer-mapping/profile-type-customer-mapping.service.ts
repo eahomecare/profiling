@@ -321,7 +321,7 @@ export class ProfileTypeCustomerMappingService {
   async updateProfileTypeCustomerMappingGeneric(
     customerId: string,
   ): Promise<ProfileTypeCustomerMapping[]> {
-    const profilingTypeStandard = 4;
+    const profilingTypeStandard = 99;
 
     const keywords =
       await this.prisma.keyword.findMany({
@@ -428,7 +428,7 @@ export class ProfileTypeCustomerMappingService {
     for (const category in categoryTotals) {
       const { sum, count } =
         categoryTotals[category];
-      categoryScores[category] = sum / count;
+      categoryScores[category] = sum * count;
     }
 
     return categoryScores;
