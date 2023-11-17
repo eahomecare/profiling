@@ -34,12 +34,48 @@ export class ServiceResolverService
       { openAIApiKey: openAIKey },
     );
 
+    // const documents = homecareServiceDump.flatMap(
+    //   (service: Service) => {
+    //     return [
+    //       {
+    //         id: service.serviceId.toString(),
+    //         pageContent: service.serviceTitle,
+    //         metadata: {
+    //           serviceId: service.serviceId,
+    //           subServiceId: null,
+    //         },
+    //       },
+    //       ...service.subServices.map(
+    //         (subService: SubService) => {
+    //           const subServiceContent = [
+    //             subService.title,
+    //             subService.description,
+    //           ]
+    //             .filter(Boolean)
+    //             .join(' - ');
+    //
+    //           return {
+    //             id: `${service.serviceId}-${subService.id}`,
+    //             pageContent: subServiceContent,
+    //             metadata: {
+    //               serviceId: service.serviceId,
+    //               subServiceId: subService.id,
+    //             },
+    //           };
+    //         },
+    //       ),
+    //     ];
+    //   },
+    // );
     const documents = homecareServiceDump.flatMap(
       (service: Service) => {
+        const serviceContent =
+          service.serviceTitle;
+
         return [
           {
             id: service.serviceId.toString(),
-            pageContent: service.serviceTitle,
+            pageContent: serviceContent,
             metadata: {
               serviceId: service.serviceId,
               subServiceId: null,
