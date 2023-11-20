@@ -12,10 +12,21 @@ export class KeywordService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
-  ) {}
+  ) { }
 
   async create(data: Keyword): Promise<Keyword> {
     try {
+      const existingKeyword = await this.prisma.keyword.findFirst({
+        where: {
+          value: data.value,
+          category: data.category,
+        },
+      });
+
+      if (existingKeyword) {
+        console.log(`Keyword with value '${data.value}' and category '${data.category}' already exists. Skipping creation.`);
+        return existingKeyword;
+      }
       const createdKeyword =
         await this.prisma.keyword.create({
           data,
