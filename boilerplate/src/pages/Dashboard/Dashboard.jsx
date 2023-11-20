@@ -24,6 +24,9 @@ import { FamilyDetails } from "../../components/FamilyDetails/FamilyDetails";
 import { Activity } from "../../components/Activity/Activity";
 import Remarks from "../../components/AgentPages/Remarks";
 import RemarkListings from "../../components/Remarks/RemarkListings";
+import { FinancialInformation } from "../../components/FinancialInformation/FinancialInformation";
+import { InsuranceDetails } from "../../components/InsuranceDetails/InsuranceDetails";
+import { VehicleDetails } from "../../components/VehicleDetails/VehicleDetails";
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
@@ -145,6 +148,9 @@ const Dashboard = () => {
                   <Route path="/occupation" element={<Occupation />} />
                   <Route path="/familydetails" element={<FamilyDetails />} />
                   <Route path="/activity" element={<Activity />} />
+                  <Route path="/fi" element={<FinancialInformation />} />
+                  <Route path="/id" element={<InsuranceDetails />} />
+                  <Route path="/vd" element={<VehicleDetails />} />
                 </Route>
               </Routes>
             </Card>

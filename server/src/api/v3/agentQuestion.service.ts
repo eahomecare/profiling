@@ -58,8 +58,7 @@ export class AgentQuestionService {
       if (service) {
         serviceObject.serviceTitle =
           service.serviceTitle;
-        serviceObject.serviceDescription =
-          service.serviceDescription;
+        serviceObject.serviceDescription = '';
         this.logger.log(
           `Found - Service Details - without subService: Service Title: ${serviceObject.serviceTitle} , Service Description: ${serviceObject.serviceDescription}`,
         );
