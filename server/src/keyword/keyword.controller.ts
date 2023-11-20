@@ -38,7 +38,7 @@ export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
     private customerService: CustomerService,
-  ) {}
+  ) { }
 
   @Post()
   async create(@Body() data: Keyword): Promise<{
@@ -249,7 +249,6 @@ export class KeywordController {
             continue;
           }
         } else {
-          //@ts-ignore
           const newKeyword: Keyword = {
             id: undefined,
             value: idOrValue,
@@ -260,7 +259,9 @@ export class KeywordController {
             profileTypeIDs: [data.profileTypeId],
           };
 
-          keywordIds.push(newKeyword.id);
+          const newCreatedKeywordawait = await this.keywordService.create(newKeyword);
+          console.log(newCreatedKeywordawait);
+          keywordIds.push(newCreatedKeywordawait.id);
         }
       }
 

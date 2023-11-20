@@ -8,6 +8,10 @@ import { HNSWLib } from 'langchain/vectorstores/hnswlib';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import homecareServiceDump from './serviceMappings/homecareServiceDump';
 import { ServiceObject } from './interfaces/serviceObject.interface';
+import {
+  Service,
+  SubService,
+} from './interfaces/homecareServices.interface';
 
 @Injectable()
 export class ServiceResolverService
@@ -30,14 +34,43 @@ export class ServiceResolverService
       { openAIApiKey: openAIKey },
     );
 
+    // const documents = homecareServiceDump.flatMap(
+    //   (service: Service) => {
+    //     return [
+    //       {
+    //         id: service.serviceId.toString(),
+    //         pageContent: service.serviceTitle,
+    //         metadata: {
+    //           serviceId: service.serviceId,
+    //           subServiceId: null,
+    //         },
+    //       },
+    //       ...service.subServices.map(
+    //         (subService: SubService) => {
+    //           const subServiceContent = [
+    //             subService.title,
+    //             subService.description,
+    //           ]
+    //             .filter(Boolean)
+    //             .join(' - ');
+    //
+    //           return {
+    //             id: `${service.serviceId}-${subService.id}`,
+    //             pageContent: subServiceContent,
+    //             metadata: {
+    //               serviceId: service.serviceId,
+    //               subServiceId: subService.id,
+    //             },
+    //           };
+    //         },
+    //       ),
+    //     ];
+    //   },
+    // );
     const documents = homecareServiceDump.flatMap(
-      (service) => {
-        const serviceContent = [
-          service.serviceTitle,
-          service.serviceDescription,
-        ]
-          .filter(Boolean)
-          .join(' ');
+      (service: Service) => {
+        const serviceContent =
+          service.serviceTitle;
 
         return [
           {
@@ -49,9 +82,13 @@ export class ServiceResolverService
             },
           },
           ...service.subServices.map(
-            (subService) => {
-              const subServiceContent =
-                subService.description.toString();
+            (subService: SubService) => {
+              const subServiceContent = [
+                subService.title,
+                subService.description,
+              ]
+                .filter(Boolean)
+                .join(' - ');
 
               return {
                 id: `${service.serviceId}-${subService.id}`,
@@ -103,7 +140,7 @@ export class ServiceResolverService
       const subServiceId =
         result[0].metadata.subServiceId?.toString();
       const service = homecareServiceDump.find(
-        (s) =>
+        (s: Service) =>
           s.serviceId.toString() === serviceId,
       );
       this.logger.log(
@@ -112,18 +149,17 @@ export class ServiceResolverService
       if (service) {
         const serviceObject: ServiceObject = {
           serviceTitle: service.serviceTitle,
-          serviceDescription:
-            service.serviceDescription,
+          serviceDescription: '',
         };
         if (subServiceId) {
           const subService =
             service.subServices.find(
-              (sub) =>
+              (sub: SubService) =>
                 sub.id.toString() ===
                 subServiceId,
             );
           if (subService) {
-            serviceObject.serviceDescription += ` ${subService.description}`;
+            serviceObject.serviceDescription = `${subService.title} - ${subService.description}`;
           }
         }
         this.logger.log(

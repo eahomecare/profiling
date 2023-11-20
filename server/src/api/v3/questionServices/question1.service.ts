@@ -46,7 +46,10 @@ export class Question1Service {
         `Resolved category with service title and description: ${category}`,
       );
     } else {
-      if (currentKeywords.length > 0) {
+      if (
+        currentKeywords &&
+        currentKeywords.length > 0
+      ) {
         category =
           await this.categoryResolver.resolveCategory(
             { value: currentKeywords[0].value },
