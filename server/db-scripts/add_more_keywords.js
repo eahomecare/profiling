@@ -1337,7 +1337,10 @@ async function addNewKeywords() {
         await prisma.keyword.findFirst({
           where: {
             category,
-            value,
+            value: {
+              equals: value,
+              mode: 'insensitive',
+            },
           },
         });
 
