@@ -22,9 +22,7 @@ const Profiling = () => {
       <StatsCard
         title={profile.profileType.name}
         url={profile.profileType.srcUrl}
-        percentage={profile.profileCompletion}
-        frequency={0}
-        lastUpdated={0}
+        percentage={Math.round(profile.profileCompletion)}
       />
     </Grid.Col>
   ));
