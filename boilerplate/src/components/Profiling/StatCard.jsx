@@ -58,14 +58,14 @@ export function StatsCard({ title, url, percentage, frequency, lastUpdated }) {
                     Percentage Completed
                 </Text>
                 <Text fz="sm" color="dimmed">
-                    {percentage}%
+                    <Badge size="lg">{percentage}%</Badge>
                 </Text>
             </Group>
             <Progress value={percentage} mt={5} />
-            <Group position="apart" mt="md">
+            {/* <Group position="apart" mt="md">
                 <Text fz="sm">{frequency} times a month</Text>
                 <Badge size="sm">{lastUpdated} days ago</Badge>
-            </Group>
+            </Group> */}
         </Paper>
     );
 }
