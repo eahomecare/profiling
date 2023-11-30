@@ -30,6 +30,7 @@ import { EventModule } from './event/event.module';
 import { V3Module } from './api/v3/v3.module';
 import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mapping/profile-type-customer-mapping.module';
 import { ProfileTypesModule } from './profile_types/profile-type.module';
+import { QueryModule } from './assistant/assistant.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { ProfileTypesModule } from './profile_types/profile-type.module';
     ProfileTypeCustomerMappingModule,
     ProfileTypesModule,
     // SearchModule,
+    QueryModule,
   ],
   controllers: [ServiceCustomerController],
 })
