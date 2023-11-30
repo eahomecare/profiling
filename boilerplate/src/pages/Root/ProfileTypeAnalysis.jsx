@@ -9,9 +9,9 @@ import {
   ActionIcon,
   Stack,
   Loader,
+  Group,
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProfileData } from "../../redux/profileDataCardSlice.js";
 import StyledSelect from "../../StyledComponents/StyledSelect";
@@ -60,62 +60,65 @@ const ProfileTypeAnalysis = () => {
   ];
 
   return (
-    <Card shadow={"lg"} radius={"md"}>
-      <Box>
-        <Flex justify={"space-between"}>
-          <Center>
-            <Text fw={"bold"} c={"#0d5ff9"} size={"sm"}>
-              Profile
-            </Text>
-          </Center>
-          <Center>
-            {/* <Link to={"/campaign"}> */}
-            <ActionIcon c={"#0d5ff9"} size={"sm"}>
-              <IconArrowRight />
-            </ActionIcon>
-            {/* </Link> */}
-          </Center>
-        </Flex>
-      </Box>
-      <Grid grow>
-        <Grid.Col span={4}>
-          <Stack>
-            <StyledSelect
-              disabled={status === "loading"}
-              label={"Profile"}
-              placeholder={"Select Profile(s)"}
-              data={profileOptions}
-              onChange={(value) => setSelectedProfile(value)}
-            />
-            <StyledSelect
-              disabled={status === "loading"}
-              label={"Demographics"}
-              placeholder={"Select Main Demographics"}
-              data={demographicOptions}
-              onChange={(value) => setSelectedDemographic(value)}
-            />
-          </Stack>
-        </Grid.Col>
-        <Grid.Col span={4}>
-          <Center>
-            {status === "loading" ? (
-              <Loader c="5c0ff2" size="lg" />
-            ) : (
-              <ProfilePieChart />
-            )}
-          </Center>
-        </Grid.Col>
-        <Grid.Col span={3}>
-          <Center>
-            {status === "loading" ? (
-              <Loader c="5c0ff2" size="lg" />
-            ) : (
-              <ProfileDataCard />
-            )}
-          </Center>
-        </Grid.Col>
-      </Grid>
-    </Card>
+    <Flex style={{ width: "100%", alignItems: "flex-start" }}>
+      {/* First Card for Selectors and Pie Chart */}
+      <Card
+        shadow={"lg"}
+        radius={"md"}
+        style={{ marginRight: "20px", flex: 3 }}
+      >
+        <Box>
+          <Flex justify={"space-between"}>
+            <Center>
+              <Text fw={"bold"} c={"#0d5ff9"} size={"sm"}>
+                Profile
+              </Text>
+            </Center>
+            <Center>
+              <ActionIcon c={"#0d5ff9"} size={"sm"}>
+                <IconArrowRight />
+              </ActionIcon>
+            </Center>
+          </Flex>
+        </Box>
+        <Grid grow>
+          <Grid.Col span={4}>
+            <Stack>
+              <StyledSelect
+                disabled={status === "loading"}
+                label={"Profile"}
+                placeholder={"Select Profile(s)"}
+                data={profileOptions}
+                onChange={(value) => setSelectedProfile(value)}
+              />
+              <StyledSelect
+                disabled={status === "loading"}
+                label={"Demographics"}
+                placeholder={"Select Main Demographics"}
+                data={demographicOptions}
+                onChange={(value) => setSelectedDemographic(value)}
+              />
+            </Stack>
+          </Grid.Col>
+          <Grid.Col span={8}>
+            <Center>
+              {status === "loading" ? (
+                <Loader c="5c0ff2" size="lg" />
+              ) : (
+                <ProfilePieChart />
+              )}
+            </Center>
+          </Grid.Col>
+        </Grid>
+      </Card>
+
+      {/* Second Card for Profile Data */}
+      <Card shadow={"lg"} radius={"md"}>
+        <Center style={{ height: "100%" }}>
+          <ProfileDataCard />
+        </Center>
+      </Card>
+    </Flex>
   );
 };
 

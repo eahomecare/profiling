@@ -98,6 +98,7 @@ export class Question1Service {
         this.logger.log(
           `Random Category Selection- non repeated categories: ${nonRepeatedCategories}`,
         );
+
         if (nonRepeatedCategories.length === 0) {
           throw new NotFoundException(
             'No unused categories available.',
@@ -114,6 +115,14 @@ export class Question1Service {
       }
       this.logger.log(
         `Random Category Selection- completed: ${category}`,
+      );
+
+      serviceObject =
+        await this.serviceResolver.resolveService(
+          { category },
+        );
+      this.logger.log(
+        `Resolved service title and description with category: ${serviceObject}`,
       );
     }
 
