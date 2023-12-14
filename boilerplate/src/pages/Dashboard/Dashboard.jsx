@@ -5,6 +5,11 @@ import {
   LoadingOverlay,
   Box,
   Grid,
+  Space,
+  Center,
+  RingProgress,
+  Text,
+  Badge
 } from "@mantine/core";
 import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
@@ -27,9 +32,21 @@ import RemarkListings from "../../components/Remarks/RemarkListings";
 import { FinancialInformation } from "../../components/FinancialInformation/FinancialInformation";
 import { InsuranceDetails } from "../../components/InsuranceDetails/InsuranceDetails";
 import { VehicleDetails } from "../../components/VehicleDetails/VehicleDetails";
+import { IconUserSquareRounded } from '@tabler/icons-react';
+import { Avatar } from '@mantine/core';
+import { IconUser } from "@tabler/icons-react";
+import InfoTag from "./InfoTag";
+
+
+
 
 const Dashboard = () => {
   const { status, customerDetails } = useSelector((state) => state.customer);
+  const [profile, setProfile] = useState({
+    ...customerDetails.profiling.personal_details,
+  });
+  const { profile_completion } = customerDetails;
+
   const { updateKeywordsStatus } = useSelector((state) => state.keyword);
   const [submitKeywords, setSubmitKeywords] = useState(false);
   const [routesClicked, setRoutesClicked] = useState("");
@@ -77,6 +94,35 @@ const Dashboard = () => {
 
   }
 
+  const profileCompletion = (percentage = 0) => {
+    return (
+      <div>
+
+        <RingProgress
+          mt={0}
+          size={100}
+          thickness={8}
+          sections={[
+            {
+              value: percentage,
+              color:
+                percentage > 75
+                  ? "#1D9B25"
+                  : percentage > 60
+                    ? "#CFA400"
+                    : "#D85972",
+            },
+          ]}
+          label={
+            <Text color="" weight={20} align="center" size="xs">
+              {percentage}%
+            </Text>
+          }
+        />
+      </div>
+    );
+  };
+
   // useEffect(() => {
   //   if (
   //     routesClicked.at(-2) &&
@@ -116,44 +162,90 @@ const Dashboard = () => {
           </Grid.Col>
 
           <Grid.Col span={9}>
-            <Card shadow={"lg"} radius={"md"}>
-              <Routes>
-                <Route>
-                  <Route
-                    index
-                    element={
-                      <PersonalInformation selectedCustomer={customerDetails} />
-                    }
-                  />
-                  <Route
-                    path="/personalInformation"
-                    element={
-                      <PersonalInformation selectedCustomer={customerDetails} />
-                    }
-                  />
-                  <Route path="/profiling" element={<Profiling />} />
-                  <Route
-                    path="/keywords"
-                    element={
-                      <KeywordsEntry
-                        submitKeywords={submitKeywords}
-                        updateKeywordValuesParent={updateKeywordValuesParent}
-                        handleSubmitKeywords={handleSubmitKeywords}
-                      />
-                    }
-                  />
+            <Grid.Col span={12}>
+              <Card>
+                <Grid>
+                  <Grid.Col span={2}>
+                    <Grid.Col span={12} style={{ textAlign: "center" }}>
+                      <Avatar color="blue" size="lg">
+                        <IconUser size="lg" />
+                      </Avatar>
+                    </Grid.Col>
+                    <Grid.Col span={12}>
+                      <Badge color="yellow" variant="filled" size="lg">HNI</Badge>
+                    </Grid.Col>
 
-                  <Route path="/interests" element={<Interests />} />
-                  <Route path="/remarks" element={<RemarkListings />} />
-                  <Route path="/occupation" element={<Occupation />} />
-                  <Route path="/familydetails" element={<FamilyDetails />} />
-                  <Route path="/activity" element={<Activity />} />
-                  <Route path="/fi" element={<FinancialInformation />} />
-                  <Route path="/id" element={<InsuranceDetails />} />
-                  <Route path="/vd" element={<VehicleDetails />} />
-                </Route>
-              </Routes>
-            </Card>
+                  </Grid.Col>
+
+                  <Grid.Col span={4}>
+                    <Text fw={500}>Basic Info</Text>
+                    <Grid.Col span={12}>
+                      <InfoTag title={"Name"} subject={profile.full_name} />
+                    </Grid.Col>
+                    <Grid.Col span={12}>
+                      <InfoTag title={"Mobile Number"} subject={profile.phone_number} />
+                    </Grid.Col>
+                    <Grid.Col span={12}>
+                      <InfoTag title={"Email Address"} subject={customerDetails.email} />
+                    </Grid.Col>
+                    <Grid.Col span={12}>
+                      <InfoTag title={"Gender"} subject={profile.gender} />
+                    </Grid.Col>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Grid.Col span={12} >
+                      <Center> {profileCompletion(profile_completion)}</Center>
+                    </Grid.Col>
+                  </Grid.Col>
+
+                </Grid>
+              </Card>
+            </Grid.Col>
+
+
+
+            <Grid.Col span={12}>
+              <Card shadow={"lg"} radius={"md"}>
+                <Routes>
+                  <Route>
+                    <Route
+                      index
+                      element={
+                        <PersonalInformation selectedCustomer={customerDetails} />
+                      }
+                    />
+                    <Route
+                      path="/personalInformation"
+                      element={
+                        <PersonalInformation selectedCustomer={customerDetails} />
+                      }
+                    />
+                    <Route path="/profiling" element={<Profiling />} />
+                    <Route
+                      path="/keywords"
+                      element={
+                        <KeywordsEntry
+                          submitKeywords={submitKeywords}
+                          updateKeywordValuesParent={updateKeywordValuesParent}
+                          handleSubmitKeywords={handleSubmitKeywords}
+                        />
+                      }
+                    />
+
+                    <Route path="/interests" element={<Interests />} />
+                    <Route path="/remarks" element={<RemarkListings />} />
+                    <Route path="/occupation" element={<Occupation />} />
+                    <Route path="/familydetails" element={<FamilyDetails />} />
+                    <Route path="/activity" element={<Activity />} />
+                    <Route path="/fi" element={<FinancialInformation />} />
+                    <Route path="/id" element={<InsuranceDetails />} />
+                    <Route path="/vd" element={<VehicleDetails />} />
+                  </Route>
+                </Routes>
+              </Card>
+
+            </Grid.Col>
+
             {showNotification && (
               <Notification
                 loading
