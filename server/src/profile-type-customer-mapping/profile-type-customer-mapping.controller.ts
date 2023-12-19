@@ -14,7 +14,7 @@ import { ProfileTypeCustomerMapping } from '@prisma/client';
 export class ProfileTypeCustomerMappingController {
   constructor(
     private readonly profileTypeCustomerMappingService: ProfileTypeCustomerMappingService,
-  ) {}
+  ) { }
 
   @Post()
   create(
@@ -51,6 +51,11 @@ export class ProfileTypeCustomerMappingController {
     return this.profileTypeCustomerMappingService.remove(
       id,
     );
+  }
+
+  @Get('profile-customer-mappings-by-profile/:id')
+  fetchMappings(@Param('id') id: string) {
+    return this.profileTypeCustomerMappingService.findAllByProfileTypeId(id)
   }
 
   @Get('grouped-counts-by-profile-type-name')

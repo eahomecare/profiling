@@ -32,6 +32,15 @@ export class ProfileTypeCustomerMappingService {
   //     return this.prisma.profileTypeCustomerMapping.findUnique({ where: { id } });
   // }
 
+  async findAllByProfileTypeId(profileTypeId: string): Promise<ProfileTypeCustomerMapping[]> {
+    return this.prisma.profileTypeCustomerMapping.findMany({
+      where: {
+        profileTypeId,
+      },
+    });
+  }
+
+
   async update(
     id: string,
     data: ProfileTypeCustomerMapping,

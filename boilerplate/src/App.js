@@ -21,6 +21,7 @@ import MyAccount from "./AppShell/UserMenuItems/MyAccount/MyAccount";
 import Security from "./AppShell/UserMenuItems/SecuritySettings/Security";
 import Root from "./pages/Root/Root";
 import { setAuth } from "./redux/authSlice";
+import Profile from './pages/Profile/Profile'
 // const Analysis = lazy(() =>
 //   import("./pages/Campaign/components/Analysis/Analysis"),
 // );
@@ -130,6 +131,7 @@ function App() {
               {/* Agent specific routes not required */}
               <Route path="/mobileSimulation" element={<SimulateCall />} />
               <Route path="/agent" element={<AgentEntry />} />
+              <Route path="/profile" element={<Profile />} />
             </Routes>
           </MainAppShell>
         </Routes>
