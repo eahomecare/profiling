@@ -4,10 +4,10 @@ import axios from "axios";
 const initialState = {
   data: [],
   profileTypes: [],
-  profileMappings: [],  // New state for profile mappings
+  profileMappings: [],
   status: "idle",
   profileTypesStatus: "idle",
-  profileMappingsStatus: "idle",  // New status for profile mappings
+  profileMappingsStatus: "idle",
   error: null,
 };
 
@@ -95,6 +95,7 @@ const profilingSlice = createSlice({
       })
       .addCase(fetchProfileMappings.fulfilled, (state, action) => {
         state.profileMappingsStatus = "succeeded";
+        state.profileMappings = []
         state.profileMappings = action.payload;
       })
       .addCase(fetchProfileMappings.rejected, (state, action) => {
