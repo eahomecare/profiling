@@ -29,6 +29,8 @@ import {
 } from "@mantine/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -175,6 +177,8 @@ const DashboardNavbar = () => {
   const [active, setActive] = useState("Personal Information");
   const theme = useMantineTheme();
 
+  const location = useLocation();
+
   const links = data.map((item) => (
     <NavLink
       className={cx(classes.link, {
@@ -209,7 +213,8 @@ const DashboardNavbar = () => {
             icon={<IconArrowNarrowLeft />}
             component={Link}
             variant="subtle"
-            to="/customers"
+            to={"/dashboard"}
+            onClick={console.log(location)}
             c="#0d5ff9"
             sx={{
               cursor: "pointer",

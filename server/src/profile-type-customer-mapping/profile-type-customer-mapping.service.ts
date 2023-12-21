@@ -9,6 +9,7 @@ import {
 } from '@prisma/client';
 import * as _ from 'lodash';
 import { PrismaService } from '../prisma/prisma.service';
+import { map } from 'rxjs';
 
 @Injectable()
 export class ProfileTypeCustomerMappingService {
@@ -32,13 +33,39 @@ export class ProfileTypeCustomerMappingService {
   //     return this.prisma.profileTypeCustomerMapping.findUnique({ where: { id } });
   // }
 
-  async findAllByProfileTypeId(profileTypeId: string): Promise<ProfileTypeCustomerMapping[]> {
-    return this.prisma.profileTypeCustomerMapping.findMany({
+  async findAllByProfileTypeId(profileTypeId: string): Promise<any[]> {
+    const profileTypeCustomerMappings = await this.prisma.profileTypeCustomerMapping.findMany({
       where: {
         profileTypeId,
+        level: {
+          gt: 1,
+        },
+      },
+
+      include: {
+        profileType: true,
+        customer: {
+          include: {
+            personal_details: true,
+          },
+        }
       },
     });
+
+    const flattenedResult = profileTypeCustomerMappings.map((mapping) => ({
+      id: mapping.id,
+      profileTypeId: mapping.profileTypeId,
+      customerId: mapping.customerId,
+      level: mapping.level,
+      customerName: mapping.customer?.personal_details.full_name,
+      email: mapping.customer.email,
+      source: mapping.customer.source,
+      profileTypeName: mapping.profileType.name
+    }));
+
+    return flattenedResult;
   }
+
 
 
   async update(
