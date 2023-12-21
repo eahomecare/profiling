@@ -41,7 +41,7 @@ export const getCustomerDetails = createAsyncThunk(
 );
 
 export const getCustomerServicesHistory = createAsyncThunk(
-  "customer/getCustomerDetails",
+  "customer/getCustomerServicesHistory",
   async (id) => {
     const { data } = await axios.get("/api/service-customer-mappings/" + id);
     console.log(data);
@@ -65,6 +65,10 @@ const customerSlice = createSlice({
     setCurrentCustomer: (state, action) => {
       state.customerDetails = action.payload;
     },
+    clearCurrentCustomer: (state, action) => {
+      state.customerDetails = []
+      state.customerDetailsStatus = "idle"
+    }
   },
   extraReducers: {
     [getCustomers.pending]: (state) => {
@@ -86,7 +90,7 @@ const customerSlice = createSlice({
     },
     [getCustomerDetails.fulfilled]: (state, action) => {
       state.customerDetailsStatus = "success";
-      state.customerDetails = action.payload.response.customer;
+      state.customerDetails = action.payload;
     },
     [getCustomerDetails.rejected]: (state) => {
       state.customerDetailsStatus = "failed";
@@ -135,4 +139,4 @@ const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
-export const { setCurrentCustomer } = customerSlice.actions;
+export const { setCurrentCustomer, clearCurrentCustomer } = customerSlice.actions;
