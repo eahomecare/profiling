@@ -9,6 +9,7 @@ import StyledTable from "../StyledComponents/StyledTable";
 export default function TableDisplay({
   customerList,
   fetchedPofileCompleteness,
+  topProps,
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function TableDisplay({
                 percentage > 25
                   ? "#1D9B25"
                   : percentage > 50
-                    ? "#CFA400"
-                    : "#D85972",
+                  ? "#CFA400"
+                  : "#D85972",
             },
           ]}
           label={
@@ -90,6 +91,7 @@ export default function TableDisplay({
         columns={columns}
         data={customerList}
         onRowClick={handleRowClick}
+        topProps={topProps}
       />
     </Box>
   );

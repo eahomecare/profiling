@@ -27,7 +27,7 @@ import { UserRolePermissionMappingModule } from './user-role-permission-mapping/
 import { CampaignModule } from './campaign/campaign.module';
 import { TemplateModule } from './template/template.module';
 import { EventModule } from './event/event.module';
-import { V3Module } from './api/v3/v3.module';
+import { V4Module } from './api/v4/v4.module';
 import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mapping/profile-type-customer-mapping.module';
 import { ProfileTypesModule } from './profile_types/profile-type.module';
 import { QueryModule } from './assistant/assistant.module';
@@ -48,7 +48,7 @@ import { QueryModule } from './assistant/assistant.module';
     ProfileMappingModule,
     LangchainModule,
     // V1Module,
-    V3Module,
+    V4Module,
     RolesModule,
     PermissionsModule,
     UserRolePermissionMappingModule,

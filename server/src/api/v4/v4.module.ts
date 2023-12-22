@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { V3Controller } from './v3.controller';
+import { V4Controller } from './v4.controller';
 import { RegisterAgentService } from './registerAgent.service';
 import { CreateAgentSessionService } from './createAgentSession.service';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -24,10 +24,12 @@ import { CategoryResolverService } from './questionServices/categoryResolver.ser
 import { CustomerSessionService } from './questionServices/customerSession.service';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 import { ServiceResolverService } from './questionServices/serviceResolver.service';
+import { CampaignService } from './campaign.service';
+import { ValuationService } from './valuation.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
-  controllers: [V3Controller],
+  controllers: [V4Controller],
   providers: [
     RegisterAgentService,
     CreateAgentSessionService,
@@ -51,6 +53,8 @@ import { ServiceResolverService } from './questionServices/serviceResolver.servi
     CustomerSessionService,
     ProfileTypeCustomerMappingService,
     ServiceResolverService,
+    CampaignService,
+    ValuationService,
   ],
 })
-export class V3Module {}
+export class V4Module {}

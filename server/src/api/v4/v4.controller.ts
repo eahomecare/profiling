@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   UnauthorizedException,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RegisterAgentDto } from './dto/register-agent.dto';
@@ -29,9 +30,13 @@ import { SubmitDataDto } from './dto/agent-submit.dto';
 import { CustomerLookupService } from './customerLookup.service';
 import { ProfileTypeService } from './profileType.service';
 import { QuestionDto } from './dto/agent-question.dto';
+import { CampaignService } from './campaign.service';
+import { CampaignDto } from './dto/campaign.dto';
+import { GetCampaignsDto } from './dto/get-campaign.dto';
+import { ValuationService } from './valuation.service';
 
-@Controller('api/v3')
-export class V3Controller {
+@Controller('api/v4')
+export class V4Controller {
   constructor(
     private readonly registerAgentService: RegisterAgentService,
     private readonly createAgentSessionService: CreateAgentSessionService,
@@ -45,6 +50,8 @@ export class V3Controller {
     private readonly submitService: SubmitService,
     private readonly customerLookupService: CustomerLookupService,
     private readonly profileTypeService: ProfileTypeService,
+    private readonly campaignService: CampaignService,
+    private readonly valuationService: ValuationService,
   ) {}
 
   @Post('/register')
@@ -255,10 +262,16 @@ export class V3Controller {
             profileType.name,
         }));
 
+      const isHNI =
+        await this.valuationService.isCustomerHNI(
+          customer.id,
+        );
+
       res.status(HttpStatus.OK).json({
         success: true,
         keywords,
         profileTypes: updatedProfileTypes,
+        HNI: isHNI,
       });
     } catch (error) {
       this.handleException(error, res);
@@ -494,6 +507,90 @@ export class V3Controller {
       res.status(HttpStatus.OK).json({
         success: true,
         message: 'Data submitted successfully',
+      });
+    } catch (error) {
+      this.handleException(error, res);
+    }
+  }
+
+  @Post('/list-campaigns')
+  async getCampaigns(
+    @Req() request: Request,
+    @Body() GetCampaignsDto: GetCampaignsDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const decodedToken =
+        this.authorizationService.decodeAuthorizationToken(
+          request,
+        );
+      const agentSession =
+        await this.validateAgentTokenService.validate(
+          decodedToken,
+        );
+
+      if (!agentSession) {
+        throw new UnauthorizedException(
+          'Invalid authorization token',
+        );
+      }
+
+      const customer =
+        await this.customerLookupService.findCustomerByCRMIdAndName(
+          GetCampaignsDto.customerCRMId,
+          agentSession.CRM,
+        );
+
+      const campaigns =
+        await this.campaignService.getCampaignsForCustomer(
+          customer.id,
+        );
+
+      res
+        .status(HttpStatus.OK)
+        .json({ success: true, campaigns });
+    } catch (error) {
+      this.handleException(error, res);
+    }
+  }
+
+  @Post('/link-campaign')
+  async createOrUpdateCampaign(
+    @Req() request: Request,
+    @Body() campaignDto: CampaignDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const decodedToken =
+        this.authorizationService.decodeAuthorizationToken(
+          request,
+        );
+      const agentSession =
+        await this.validateAgentTokenService.validate(
+          decodedToken,
+        );
+
+      if (!agentSession) {
+        throw new UnauthorizedException(
+          'Invalid authorization token',
+        );
+      }
+
+      const customer =
+        await this.customerLookupService.findCustomerByCRMIdAndName(
+          campaignDto.customerCRMId,
+          agentSession.CRM,
+        );
+
+      const campaignResult =
+        await this.campaignService.handleCampaign(
+          customer.id,
+          campaignDto,
+        );
+
+      res.status(HttpStatus.OK).json({
+        success: true,
+        ...campaignResult,
       });
     } catch (error) {
       this.handleException(error, res);

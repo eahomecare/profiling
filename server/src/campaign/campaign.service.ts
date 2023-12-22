@@ -24,16 +24,6 @@ type CustomCampaignReportCreateInput = {
   emailLogs: string[];
 };
 
-// custom-types.ts
-
-// interface EmailLog {
-//   status: string;
-//   customer_id: string;
-//   customer_email: string;
-//   exception: string;
-//   log_time: Date;
-// }
-
 interface EmailLog {
   status: string;
   exception?: {
@@ -148,11 +138,36 @@ export class CampaignService {
           data: campaignPayload,
         });
 
-      const id = createdCampaign.id;
+      if (
+        data.keywordsUsed &&
+        Array.isArray(data.keywordsUsed)
+      ) {
+        for (const keywordId of data.keywordsUsed) {
+          const keywordExists =
+            await this.prisma.keyword.findUnique({
+              where: { id: keywordId },
+            });
+
+          if (!keywordExists) {
+            throw new Error(
+              `Keyword with ID ${keywordId} does not exist`,
+            );
+          }
+
+          await this.prisma.campaignKeywordMapping.create(
+            {
+              data: {
+                campaignId: createdCampaign.id,
+                keywordId: keywordId,
+              },
+            },
+          );
+        }
+      }
 
       const campaignResponse =
         await this.prisma.campaign.findUnique({
-          where: { id },
+          where: { id: createdCampaign.id },
           include: {
             events: true,
             template: true,
@@ -211,7 +226,6 @@ export class CampaignService {
         });
       }
 
-      // Use Promise.all to send emails and populate emailLogs
       await Promise.all(
         campaignResponse.customers.map(
           sendEmailAndPopulateLogs,
@@ -234,7 +248,6 @@ export class CampaignService {
       return createdCampaign;
     } catch (error) {
       console.log(error);
-
       throw new Error(
         'Failed to create campaign',
       );

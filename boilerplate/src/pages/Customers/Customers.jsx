@@ -1,4 +1,4 @@
-import { LoadingOverlay, Title } from "@mantine/core";
+import { LoadingOverlay, Title, Button, ActionIcon } from "@mantine/core";
 import { useEffect } from "react";
 import {
   getCustomers,
@@ -6,20 +6,29 @@ import {
 } from "../../redux/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay";
+import { IconRefresh } from "@tabler/icons-react";
 
 const Customers = () => {
   const dispatch = useDispatch();
-
   const { status, customers, fetchedPofileCompleteness } = useSelector(
     (state) => state.customer,
   );
 
-  // if(Array.isArray(customers) && customers.length > 0) setCustomerList(customers)
-
   useEffect(() => {
     dispatch(getCustomers());
     dispatch(getCustomersProfileCompleteness());
-  }, []);
+  }, [dispatch]);
+
+  const handleRefresh = () => {
+    dispatch(getCustomers());
+    dispatch(getCustomersProfileCompleteness());
+  };
+
+  const refreshButton = (
+    <ActionIcon c={"#0d5ff9"} size={"sm"} onClick={handleRefresh}>
+      <IconRefresh />
+    </ActionIcon>
+  );
 
   if (status === "loading") {
     return (
@@ -55,6 +64,7 @@ const Customers = () => {
               <TableDisplay
                 customerList={customers}
                 fetchedPofileCompleteness={fetchedPofileCompleteness}
+                topProps={() => refreshButton}
               />
             </div>
           </span>
