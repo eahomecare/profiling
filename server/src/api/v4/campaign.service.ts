@@ -58,18 +58,23 @@ export class CampaignService {
         },
       });
 
-    const enhancedCampaigns = campaigns.map(
-      (campaign) => ({
+    const today = new Date();
+
+    const enhancedCampaigns = campaigns
+      .filter(
+        (campaign) =>
+          new Date(campaign.end) >= today,
+      )
+      .map((campaign) => ({
         id: campaign.id,
         name: campaign.name,
-        endDate: campaign.end,
+        date: campaign.end,
         modes: [campaign.type],
         included:
           campaign.customerIDs.includes(
             customerId,
           ),
-      }),
-    );
+      }));
 
     return enhancedCampaigns;
   }
