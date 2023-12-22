@@ -41,7 +41,6 @@ const ProfileDataCard = () => {
       shadow={"xl"}
       radius={"md"}
       bg={"#F3F6FF"}
-      mah={300}
       sx={{ overflowY: "auto", scrollbarColor: "#0d5ff9" }}
     >
       <Stack>

@@ -32,7 +32,7 @@ const Analysis = () => {
   }, [dispatch]);
 
   const keywords = useSelector((state) => state.keyword.keywords);
-  console.log(keywords, keywords);
+  console.log("keywords fetched for analysis", keywords);
   const keywordsStatus = useSelector((state) => state.keyword.keywordsStatus);
 
   if (keywordsStatus === "loading") {
@@ -50,9 +50,9 @@ const Analysis = () => {
       keywords.forEach((keyword) => {
         const updatedCategory = updatedDropdownData[keyword.category]
           ? [
-            ...updatedDropdownData[keyword.category],
-            { label: keyword.value, value: keyword.id },
-          ]
+              ...updatedDropdownData[keyword.category],
+              { label: keyword.value, value: keyword.id },
+            ]
           : [{ label: keyword.value, value: keyword.id }];
 
         updatedDropdownData = {

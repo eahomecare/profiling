@@ -52,6 +52,8 @@ const StyledTable = ({ columns, data, onRowClick, topProps, ...restProps }) => {
     download(csvConfig)(csv);
   };
 
+  console.log("topProps", topProps);
+
   return (
     <ThemeProvider theme={localTheme}>
       <MaterialReactTable
