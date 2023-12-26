@@ -13,7 +13,10 @@ export class CampaignService {
 
   async getCampaignsForCustomer(
     customerId: string,
+    currentKeywords?: string[],
   ) {
+    const keywordIds = new Set<string>();
+
     const customerKeywords =
       await this.prisma.customer.findUnique({
         where: { id: customerId },
@@ -26,15 +29,28 @@ export class CampaignService {
         },
       });
 
+    customerKeywords?.keywords.forEach((k) =>
+      keywordIds.add(k.id),
+    );
+
     if (
-      !customerKeywords ||
-      customerKeywords.keywords.length === 0
+      currentKeywords &&
+      currentKeywords.length > 0
     ) {
-      return [];
+      for (const keywordId of currentKeywords) {
+        const existingKeyword =
+          await this.prisma.keyword.findUnique({
+            where: { id: keywordId },
+          });
+        if (existingKeyword) {
+          keywordIds.add(existingKeyword.id);
+        }
+      }
     }
 
-    const keywordIds =
-      customerKeywords.keywords.map((k) => k.id);
+    if (keywordIds.size === 0) {
+      return [];
+    }
 
     const campaigns =
       await this.prisma.campaign.findMany({
@@ -42,7 +58,7 @@ export class CampaignService {
           keywords: {
             some: {
               keywordId: {
-                in: keywordIds,
+                in: [...keywordIds],
               },
             },
           },
