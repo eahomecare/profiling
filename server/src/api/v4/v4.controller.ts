@@ -544,6 +544,7 @@ export class V4Controller {
       const campaigns =
         await this.campaignService.getCampaignsForCustomer(
           customer.id,
+          GetCampaignsDto.currentKeywords,
         );
 
       res
