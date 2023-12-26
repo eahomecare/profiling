@@ -120,6 +120,20 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
     onUpdate(results);
   }, [results]);
 
+  useEffect(() => {
+    // Check if the Redux state `eventDate` is different from the local state `endDate`
+    // and if so, update the local state to match the Redux state
+    if (eventDate && (!results.endDate || results.endDate !== eventDate)) {
+      setResults((prevState) => ({
+        ...prevState,
+        endDate: eventDate,
+      }));
+
+      // Optionally, if you want to update the Redux state as well
+      dispatch(setEventDate(eventDate));
+    }
+  }, [eventDate, dispatch, results.endDate]);
+
   const handleDateChange = (field, date) => {
     setResults((prevState) => ({
       ...prevState,
