@@ -52,6 +52,11 @@ export class CampaignService {
       return [];
     }
 
+    console.log(
+      'keywordIds for campaign list',
+      keywordIds,
+    );
+
     const campaigns =
       await this.prisma.campaign.findMany({
         where: {
@@ -74,6 +79,11 @@ export class CampaignService {
         },
       });
 
+    console.log(
+      'Campaigns found before date check',
+      campaigns,
+    );
+
     const today = new Date();
 
     const enhancedCampaigns = campaigns
@@ -91,6 +101,11 @@ export class CampaignService {
             customerId,
           ),
       }));
+
+    console.log(
+      'Enhanced Campaigns found after date check',
+      enhancedCampaigns,
+    );
 
     return enhancedCampaigns;
   }
