@@ -8,34 +8,44 @@ export class ValuationService {
   async isCustomerHNI(
     customerId: string,
   ): Promise<boolean> {
-    const customerHomecareMapping =
-      await this.prisma.customerHomecareMapping.findFirst(
-        {
-          where: {
-            master_customer_id: customerId,
-          },
-          include: {
-            customer_homecare: {
-              include: {
-                personalDetails: true,
+    const customer =
+      await this.prisma.customer.findUnique({
+        where: {
+          id: customerId,
+        },
+        include: {
+          CustomerHomecareMapping: {
+            include: {
+              customer_homecare: {
+                include: {
+                  personalDetails: true,
+                },
               },
             },
           },
+          keywords: true,
         },
-      );
+      });
 
-    if (!customerHomecareMapping) {
+    if (!customer) {
       return false;
     }
 
     const planId =
-      customerHomecareMapping.customer_homecare
-        ?.personalDetails?.planId;
+      customer.CustomerHomecareMapping
+        ?.customer_homecare?.personalDetails
+        ?.planId;
     const hniPlanIds = [
       'Plan014',
       'Plan007',
       'Plan008',
     ];
-    return hniPlanIds.includes(planId);
+    const isHNIPlan = hniPlanIds.includes(planId);
+
+    const hasHNIKeyword = customer.keywords.some(
+      (keyword) => keyword.value === 'HNI',
+    );
+
+    return isHNIPlan || hasHNIKeyword;
   }
 }
