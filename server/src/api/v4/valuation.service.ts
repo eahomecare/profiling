@@ -8,44 +8,50 @@ export class ValuationService {
   async isCustomerHNI(
     customerId: string,
   ): Promise<boolean> {
-    const customer =
-      await this.prisma.customer.findUnique({
-        where: {
-          id: customerId,
-        },
-        include: {
-          CustomerHomecareMapping: {
-            include: {
-              customer_homecare: {
-                include: {
-                  personalDetails: true,
-                },
+    // Check for customer's plan ID
+    const customerHomecareMapping =
+      await this.prisma.customerHomecareMapping.findFirst(
+        {
+          where: {
+            master_customer_id: customerId,
+          },
+          include: {
+            customer_homecare: {
+              include: {
+                personalDetails: true,
               },
             },
           },
-          keywords: true,
+        },
+      );
+
+    if (customerHomecareMapping) {
+      const planId =
+        customerHomecareMapping.customer_homecare
+          ?.personalDetails?.planId;
+      const hniPlanIds = [
+        'Plan014',
+        'Plan007',
+        'Plan008',
+      ];
+      if (hniPlanIds.includes(planId)) {
+        return true;
+      }
+    }
+
+    // Check for HNI keyword
+    const customerWithHNIKeyword =
+      await this.prisma.customer.findFirst({
+        where: {
+          id: customerId,
+          keywords: {
+            some: {
+              value: 'HNI',
+            },
+          },
         },
       });
 
-    if (!customer) {
-      return false;
-    }
-
-    const planId =
-      customer.CustomerHomecareMapping
-        ?.customer_homecare?.personalDetails
-        ?.planId;
-    const hniPlanIds = [
-      'Plan014',
-      'Plan007',
-      'Plan008',
-    ];
-    const isHNIPlan = hniPlanIds.includes(planId);
-
-    const hasHNIKeyword = customer.keywords.some(
-      (keyword) => keyword.value === 'HNI',
-    );
-
-    return isHNIPlan || hasHNIKeyword;
+    return !!customerWithHNIKeyword;
   }
 }
