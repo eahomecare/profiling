@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
 export class GetCampaignsDto {
@@ -9,6 +10,7 @@ export class GetCampaignsDto {
   })
   customerCRMId: string;
 
+  @IsOptional()
   @IsArray({
     message: 'currentKeywords should be an array',
   })
