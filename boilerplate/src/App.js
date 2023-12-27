@@ -22,6 +22,7 @@ import Security from "./AppShell/UserMenuItems/SecuritySettings/Security";
 import Root from "./pages/Root/Root";
 import { setAuth } from "./redux/authSlice";
 import Profile from './pages/Profile/Profile'
+import AllCampaigns from "./pages/Campaign/components/AllCampaigns/AllCampaigns";
 // const Analysis = lazy(() =>
 //   import("./pages/Campaign/components/Analysis/Analysis"),
 // );
@@ -110,10 +111,7 @@ function App() {
               {hasPermission(userPermissions, "user_view") ? (
                 <PrivateRoute path="/users" element={<Users />} />
               ) : (
-                <PrivateRoute
-                  path="/users"
-                  element={<PermissionDenied />}
-                />
+                <PrivateRoute path="/users" element={<PermissionDenied />} />
               )}
               {hasPermission(userPermissions, "customer_dashboard") ? (
                 <PrivateRoute path="/dashboard/*" element={<Dashboard />} />

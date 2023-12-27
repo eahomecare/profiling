@@ -34,6 +34,7 @@ import { CampaignService } from './campaign.service';
 import { CampaignDto } from './dto/campaign.dto';
 import { GetCampaignsDto } from './dto/get-campaign.dto';
 import { ValuationService } from './valuation.service';
+import { HashService } from './hash.service';
 
 @Controller('api/v4')
 export class V4Controller {
@@ -52,6 +53,7 @@ export class V4Controller {
     private readonly profileTypeService: ProfileTypeService,
     private readonly campaignService: CampaignService,
     private readonly valuationService: ValuationService,
+    private readonly hashService: HashService,
   ) {}
 
   @Post('/register')
@@ -453,6 +455,20 @@ export class V4Controller {
         questions: [],
         keywords: [],
       };
+
+      const {
+        selectedKeywords: updatedSelectedKeywords,
+        updatedCreatedKeywords,
+      } = await this.hashService.hashProcessing(
+        customer.id,
+        selectedKeywords || [],
+        createdKeywords || [],
+      );
+
+      submitDataDto.selectedKeywords =
+        updatedSelectedKeywords;
+      submitDataDto.createdKeywords =
+        updatedCreatedKeywords;
 
       if (
         submitDataDto.selectedKeywords &&

@@ -19,6 +19,7 @@ import {
 import Demographic from "./Demographic";
 import BarStackedView from "../../../HomeDashBoard/BarStackedCampaign";
 import BoardStats from "../../../HomeDashBoard/BoardStats";
+import AllCampaigns from "../AllCampaigns/AllCampaigns";
 
 const Analysis = () => {
   const dispatch = useDispatch();
@@ -207,6 +208,7 @@ const Analysis = () => {
           <Demographic />
         </div>
       </Card>
+      <AllCampaigns />
     </>
   );
 };
