@@ -131,7 +131,7 @@ function App() {
               {/* Agent specific routes not required */}
               <Route path="/mobileSimulation" element={<SimulateCall />} />
               <Route path="/agent" element={<AgentEntry />} />
-              <Route path="/profile" element={<Profile />} />
+              <PrivateRoute path="/profile" element={<Profile />} />
             </Routes>
           </MainAppShell>
         </Routes>

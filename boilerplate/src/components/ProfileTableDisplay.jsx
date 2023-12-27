@@ -53,7 +53,7 @@ export default function ProfileTableDisplay({ customerList }) {
 
 
   return (
-    <Box>
+    <Box style={{ marginTop: "30px" }}>
       <StyledTable columns={columns} data={customerList} onRowClick={handleRowClick} />
     </Box>
   );
