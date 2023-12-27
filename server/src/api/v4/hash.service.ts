@@ -102,30 +102,54 @@ export class HashService {
     keyword: string,
     customerID: string,
   ) {
-    const [hashKey, value] = keyword.split('-');
-    const trimmedValue = value.trim();
+    const [hashKey, value] =
+      keyword.startsWith('#male') ||
+      keyword.startsWith('#female') ||
+      keyword.startsWith('#trans')
+        ? [keyword, null]
+        : keyword.split('-');
+
+    if (
+      hashKey !== '#male' &&
+      hashKey !== '#female' &&
+      hashKey !== '#trans' &&
+      value === undefined
+    ) {
+      this.logger.warn(
+        `Value for keyword '${keyword}' is undefined`,
+      );
+      return false;
+    }
 
     let fieldToUpdate = null;
     switch (hashKey) {
       case '#name':
-        fieldToUpdate = {
-          full_name: trimmedValue,
-        };
-        break;
       case '#dob':
-        fieldToUpdate = {
-          date_of_birth: new Date(trimmedValue),
-        };
-        break;
       case '#phone':
-        fieldToUpdate = {
-          phone_number: trimmedValue,
-        };
-        break;
       case '#email':
-        fieldToUpdate = {
-          email_address: trimmedValue,
-        };
+        if (!value) {
+          this.logger.warn(
+            `Value missing for keyword '${keyword}'`,
+          );
+          return false;
+        }
+        const trimmedValue = value.trim();
+        if (hashKey === '#name')
+          fieldToUpdate = {
+            full_name: trimmedValue,
+          };
+        if (hashKey === '#dob')
+          fieldToUpdate = {
+            date_of_birth: new Date(trimmedValue),
+          };
+        if (hashKey === '#phone')
+          fieldToUpdate = {
+            phone_number: trimmedValue,
+          };
+        if (hashKey === '#email')
+          fieldToUpdate = {
+            email_address: trimmedValue,
+          };
         break;
       case '#male':
       case '#female':
@@ -167,7 +191,23 @@ export class HashService {
       }
 
       for (const field in fieldToUpdate) {
-        if (customer.personal_details[field]) {
+        if (
+          field === 'full_name' &&
+          (!customer.personal_details[field] ||
+            !customer.personal_details[
+              field
+            ].trim())
+        ) {
+          continue;
+        } else if (
+          field === 'gender' &&
+          customer.personal_details[field] ===
+            'other'
+        ) {
+          continue;
+        } else if (
+          customer.personal_details[field]
+        ) {
           delete fieldToUpdate[field];
         }
       }
