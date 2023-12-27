@@ -10,6 +10,7 @@ import {
   UnauthorizedException,
   BadRequestException,
   Get,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RegisterAgentDto } from './dto/register-agent.dto';
@@ -38,6 +39,9 @@ import { HashService } from './hash.service';
 
 @Controller('api/v4')
 export class V4Controller {
+  private readonly logger = new Logger(
+    V4Controller.name,
+  );
   constructor(
     private readonly registerAgentService: RegisterAgentService,
     private readonly createAgentSessionService: CreateAgentSessionService,
@@ -72,6 +76,7 @@ export class V4Controller {
     @Res() res: Response,
   ) {
     try {
+      this.logger.log('Registering agent');
       const staticKey =
         this.authorizationService.validateAndDecodeStaticKey(
           request,
@@ -113,6 +118,7 @@ export class V4Controller {
     createAgentSessionDto: CreateAgentSessionDto,
     @Res() res: Response,
   ) {
+    this.logger.log('Agent Logging In');
     try {
       const staticKey =
         this.authorizationService.validateAndDecodeStaticKey(
@@ -143,6 +149,7 @@ export class V4Controller {
     @Req() request: Request,
     @Res() res: Response,
   ) {
+    this.logger.log('Agent Logging Out');
     try {
       const staticKey =
         this.authorizationService.validateAndDecodeStaticKey(
@@ -216,6 +223,7 @@ export class V4Controller {
     keywordsDto: KeywordsDto,
     @Res() res: Response,
   ) {
+    this.logger.log('Getting Customer Info');
     try {
       const decodedAuthorizationToken =
         this.authorizationService.decodeAuthorizationToken(
@@ -291,7 +299,7 @@ export class V4Controller {
     },
     @Res() res: Response,
   ) {
-    console.log('body', searchDto);
+    this.logger.log('Searching for Keywords');
     try {
       const decodedAuthorizationToken =
         this.authorizationService.decodeAuthorizationToken(
@@ -339,6 +347,7 @@ export class V4Controller {
     questionsDto: QuestionDto,
     @Res() res: Response,
   ) {
+    this.logger.log('Questions API hit by agent');
     try {
       const decodedAuthorizationToken =
         this.authorizationService.decodeAuthorizationToken(
@@ -394,8 +403,7 @@ export class V4Controller {
     submitDataDto: SubmitDataDto,
     @Res() res: Response,
   ) {
-    console.log('submits', submitDataDto);
-
+    this.logger.log('Agent has submitted');
     try {
       const {
         selectedKeywords,
@@ -535,6 +543,9 @@ export class V4Controller {
     @Body() GetCampaignsDto: GetCampaignsDto,
     @Res() res: Response,
   ) {
+    this.logger.log(
+      'Campaign List fetched by agent',
+    );
     try {
       const decodedToken =
         this.authorizationService.decodeAuthorizationToken(
@@ -577,6 +588,9 @@ export class V4Controller {
     @Body() campaignDto: CampaignDto,
     @Res() res: Response,
   ) {
+    this.logger.log(
+      'Campaign message sent to customer',
+    );
     try {
       const decodedToken =
         this.authorizationService.decodeAuthorizationToken(
@@ -627,6 +641,10 @@ export class V4Controller {
       message = error.message;
     }
 
+    this.logger.error(
+      'Exception handled',
+      error.stack,
+    );
     res.status(200).json({
       success: false,
       status: statusCode,
