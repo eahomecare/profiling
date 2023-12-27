@@ -136,7 +136,7 @@ export default function Login() {
 
                       <StyledButton
                         type="submit"
-                        // disabled={!captchaStatus}
+                        disabled={!captchaStatus}
                         onClick={handleSubmit}
                       >
                         {status === "loading" ? <>Signing in</> : <>Sign in</>}
