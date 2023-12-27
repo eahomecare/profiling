@@ -86,7 +86,6 @@ export class HashService {
           data: {
             value: hashKey,
             category: 'personal',
-            level: 1,
           },
         });
       return newKeyword.id;
