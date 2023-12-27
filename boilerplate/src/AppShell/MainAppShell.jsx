@@ -20,7 +20,7 @@ import {
   IconSettingsAutomation,
   IconAnalyze,
   IconSettings,
-  IconBell,
+  IconBell
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import LightDarkButton from "../components/LightDarkButton";
@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../components/assets/eaLogoRotate.svg";
 import User from "./_user";
+import { IconUserDollar } from "@tabler/icons-react";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -341,6 +342,34 @@ const MainAppShell = ({ children }) => {
                       activeNavLink === "/customers" ||
                       activeNavLink === "/dashboard",
                   })}
+
+
+                />
+              )}
+
+
+              {true && (
+                <NavLink
+                  styles={{
+                    root: {
+                      boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                      transition: "transform 0.3s ease",
+                      "&:hover": {
+                        transform: "translateY(5px)",
+                      },
+                    },
+                  }}
+                  component={Link}
+                  to="/profile"
+                  label="Profiles"
+                  icon={<IconUserDollar size="2rem" stroke={2} />}
+                  className={cx(classes.link, {
+                    [classes.linkActive]:
+                      activeNavLink === "/profile" ||
+                      activeNavLink === "/dashboard",
+                  })}
+
+
                 />
               )}
             </Stack>

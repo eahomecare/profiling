@@ -171,9 +171,9 @@ const Dashboard = () => {
                         <IconUser size="lg" />
                       </Avatar>
                     </Grid.Col>
-                    <Grid.Col span={12}>
+                    {/* <Grid.Col span={12}>
                       <Badge color="yellow" variant="filled" size="lg">HNI</Badge>
-                    </Grid.Col>
+                    </Grid.Col> */}
 
                   </Grid.Col>
 
