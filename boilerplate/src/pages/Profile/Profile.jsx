@@ -6,6 +6,8 @@ import ProfileTableDisplay from '../../components/ProfileTableDisplay';
 import { Button } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons-react';
 import { clearCurrentCustomer } from '../../redux/customerSlice';
+import assets from "./assets";
+
 
 const Profile = () => {
   const [checked, setChecked] = React.useState(false);
@@ -39,7 +41,6 @@ const Profile = () => {
       return <>Something went wrong</>
     } else if (profileMappingsStatus == 'succeeded') {
       return <>
-        {console.log("ok")}
         <ProfileTableDisplay customerList={profileMappings} />
 
       </>
@@ -63,7 +64,8 @@ const Profile = () => {
             <Card shadow="sm" padding="lg" component="a" target="_blank">
               <Card.Section>
                 <Image
-                  src="https://st3.depositphotos.com/9998432/13335/v/450/depositphotos_133351928-stock-illustration-default-placeholder-man-and-woman.jpg"
+                  src={assets[profileType.name]}
+                  style={{ width: '200px', height: '200px' }} // Set fixed width and height
                 />
               </Card.Section>
 
@@ -85,7 +87,7 @@ const Profile = () => {
               </Card.Section>
             </Card>
           </Grid.Col>
-        )) : <><Button onClick={() => setShowTable(false)}><IconArrowBack /> Back </Button> <br /> {handleTableRender()}</>}
+        )) : <><Button onClick={() => setShowTable(false)} variant='text'><IconArrowBack /> Back </Button> <br /> {handleTableRender()}</>}
       </Grid>
     </div>
   );
