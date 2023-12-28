@@ -171,13 +171,16 @@ const Dashboard = () => {
                         <IconUser size="lg" />
                       </Avatar>
                     </Grid.Col>
-                    {/* <Grid.Col span={12}>
-                      <Badge color="yellow" variant="filled" size="lg">HNI</Badge>
-                    </Grid.Col> */}
+                    {customerDetails.isHNI &&
+                      <Grid.Col span={12}>
+                        <Badge color="yellow" variant="filled" size="lg">HNI</Badge>
+                      </Grid.Col>
+                    }
+
 
                   </Grid.Col>
 
-                  <Grid.Col span={4}>
+                  <Grid.Col span={6}>
                     <Text fw={500}>Basic Info</Text>
                     <Grid.Col span={12}>
                       <InfoTag title={"Name"} subject={profile.full_name} />
@@ -192,7 +195,7 @@ const Dashboard = () => {
                       <InfoTag title={"Gender"} subject={profile.gender} />
                     </Grid.Col>
                   </Grid.Col>
-                  <Grid.Col span={6}>
+                  <Grid.Col span={4}>
                     <Grid.Col span={12} >
                       <Center> {profileCompletion(profile_completion)}</Center>
                     </Grid.Col>
