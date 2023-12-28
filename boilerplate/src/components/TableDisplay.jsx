@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setCurrentCustomer } from "../redux/customerSlice";
+import { useSelector } from "react-redux";
+import { getCustomerDetails } from "../redux/customerSlice";
 
 import { RingProgress, Text, Box, Loader } from "@mantine/core";
 import StyledTable from "../StyledComponents/StyledTable";
@@ -13,6 +14,9 @@ export default function TableDisplay({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const customerDetailsStatus = useSelector(state => state.customer.customerDetailsStatus)
+
 
   const profileCompletion = (percentage) => {
     return (
@@ -27,8 +31,8 @@ export default function TableDisplay({
                 percentage > 25
                   ? "#1D9B25"
                   : percentage > 50
-                  ? "#CFA400"
-                  : "#D85972",
+                    ? "#CFA400"
+                    : "#D85972",
             },
           ]}
           label={
@@ -42,9 +46,16 @@ export default function TableDisplay({
   };
 
   const handleRowClick = (customer) => {
-    navigate("/dashboard");
-    dispatch(setCurrentCustomer(customer));
+    console.log(customer);
+    dispatch(getCustomerDetails(customer.id));
   };
+
+
+  useEffect(() => {
+    if (customerDetailsStatus === "success") {
+      navigate("/dashboard");
+    }
+  }, [customerDetailsStatus, navigate]);
 
   const columns = useMemo(
     () => [

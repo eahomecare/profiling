@@ -171,6 +171,9 @@ export class CustomerService {
     }
   }
 
+
+
+
   // async fetchCustomerDetails() {
   //   const customerDetails = {
   //     customer_details:
@@ -178,6 +181,56 @@ export class CustomerService {
   //   };
   //   return customerDetails;
   // }
+
+  async isCustomerHNI(
+    customerId: string,
+  ): Promise<boolean> {
+    // Check for customer's plan ID
+    const customerHomecareMapping =
+      await this.prisma.customerHomecareMapping.findFirst(
+        {
+          where: {
+            master_customer_id: customerId,
+          },
+          include: {
+            customer_homecare: {
+              include: {
+                personalDetails: true,
+              },
+            },
+          },
+        },
+      );
+
+    if (customerHomecareMapping) {
+      const planId =
+        customerHomecareMapping.customer_homecare
+          ?.personalDetails?.planId;
+      const hniPlanIds = [
+        'Plan014',
+        'Plan007',
+        'Plan008',
+      ];
+      if (hniPlanIds.includes(planId)) {
+        return true;
+      }
+    }
+
+    // Check for HNI keyword
+    const customerWithHNIKeyword =
+      await this.prisma.customer.findFirst({
+        where: {
+          id: customerId,
+          keywords: {
+            some: {
+              value: 'HNI',
+            },
+          },
+        },
+      });
+
+    return !!customerWithHNIKeyword;
+  }
 
   async fetchCustomerDetails() {
     const customerDetails =
@@ -216,8 +269,11 @@ export class CustomerService {
         }),
     };
 
+    const isHNI = await this.isCustomerHNI(customerId);
+
     const { personal_details, ...rest } = customerDetails.customer_details;
     const formattedCustomerDetails = { ...rest, profiling: { personal_details } }
+    formattedCustomerDetails["isHNI"] = isHNI
     return formattedCustomerDetails
 
   }
