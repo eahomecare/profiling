@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import {
   getCustomers,
   getCustomersProfileCompleteness,
+  clearCurrentCustomer
 } from "../../redux/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay";
@@ -15,6 +16,7 @@ const Customers = () => {
   );
 
   useEffect(() => {
+    dispatch(clearCurrentCustomer())
     dispatch(getCustomers());
     dispatch(getCustomersProfileCompleteness());
   }, [dispatch]);
