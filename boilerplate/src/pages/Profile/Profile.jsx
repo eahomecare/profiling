@@ -64,7 +64,7 @@ const Profile = () => {
             <Card shadow="sm" padding="lg" component="a" target="_blank">
               <Card.Section>
                 <Image
-                  src={assets[profileType.name]}
+                  src={assets[profileType.name] ? assets[profileType.name] : ""}
                   style={{ width: '200px', height: '200px' }} // Set fixed width and height
                 />
               </Card.Section>
