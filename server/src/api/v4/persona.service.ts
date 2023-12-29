@@ -255,9 +255,23 @@ export class PersonaService {
             personalDetails.date_of_birth,
           )
         ) {
-          return {
-            date_of_birth: new Date(value),
-          };
+          const dateParts = value
+            .split('/')
+            .map((part) => parseInt(part, 10));
+          if (dateParts.length === 3) {
+            const [day, month, year] = dateParts;
+            const parsedDate = new Date(
+              year,
+              month - 1,
+              day,
+            );
+            return { date_of_birth: parsedDate };
+          } else {
+            this.logger.warn(
+              `Invalid date format for dob: ${value}`,
+            );
+            return null;
+          }
         }
         break;
       case 'name':
