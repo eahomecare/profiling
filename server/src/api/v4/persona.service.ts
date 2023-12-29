@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Personal_Details } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CurrentKeywordsDto } from './dto/agent-question.dto';
 
 @Injectable()
 export class PersonaService {
@@ -329,5 +330,159 @@ export class PersonaService {
       `Checking if keyword is processed: ${keyword}, Result: ${isProcessed}`,
     );
     return isProcessed;
+  }
+
+  //simulations for questions api
+  async simulateKeywordProcessing(
+    customerId: string,
+    currentKeywords: CurrentKeywordsDto[],
+  ): Promise<CurrentKeywordsDto[]> {
+    this.logger.log(
+      `Simulating keyword processing for customer ID: ${customerId}`,
+    );
+
+    try {
+      const remainingKeywords = await Promise.all(
+        [
+          this.simulateProcessPersonaKeywords(
+            customerId,
+            currentKeywords,
+          ),
+          this.simulateProcessCreatedKeywords(
+            customerId,
+            currentKeywords,
+          ),
+        ],
+      );
+
+      const combinedRemainingKeywords =
+        remainingKeywords[0].concat(
+          remainingKeywords[1],
+        );
+      this.logger.log(
+        'Completed simulating keyword processing',
+      );
+      return combinedRemainingKeywords;
+    } catch (error) {
+      this.logger.error(
+        `Error in simulating keyword processing: ${error.message}`,
+      );
+      throw new InternalServerErrorException(
+        `Error in simulating keyword processing: ${error.message}`,
+      );
+    }
+  }
+
+  private async simulateProcessPersonaKeywords(
+    customerId: string,
+    currentKeywords: CurrentKeywordsDto[],
+  ): Promise<CurrentKeywordsDto[]> {
+    this.logger.log(
+      'Simulating process for persona keywords',
+    );
+
+    const keywordIds = currentKeywords
+      .filter((kw) => kw.id)
+      .map((kw) => kw.id);
+    const keywords =
+      await this.prisma.keyword.findMany({
+        where: {
+          id: { in: keywordIds },
+          category: 'persona',
+        },
+      });
+
+    const personalDetails =
+      await this.prisma.personal_Details.findUnique(
+        {
+          where: { customer_id: customerId },
+        },
+      );
+
+    if (!personalDetails) {
+      this.logger.error(
+        `Personal details not found for customer ID ${customerId}`,
+      );
+      return currentKeywords;
+    }
+
+    const processedKeywordIds = new Set(
+      keywords
+        .filter((keyword) =>
+          this.mapKeywordToPersonalDetails(
+            personalDetails,
+            keyword,
+          ),
+        )
+        .map((kw) => kw.id),
+    );
+
+    return currentKeywords.filter(
+      (kw) => !processedKeywordIds.has(kw.id),
+    );
+  }
+
+  private async simulateProcessCreatedKeywords(
+    customerId: string,
+    currentKeywords: CurrentKeywordsDto[],
+  ): Promise<CurrentKeywordsDto[]> {
+    this.logger.log(
+      'Simulating process for created keywords',
+    );
+
+    const personalDetails =
+      await this.prisma.personal_Details.findUnique(
+        {
+          where: { customer_id: customerId },
+        },
+      );
+
+    if (!personalDetails) {
+      this.logger.error(
+        `Personal details not found for customer ID ${customerId}`,
+      );
+      return currentKeywords;
+    }
+
+    let tempTrackerId = 0;
+    const keywordsWithTracker =
+      currentKeywords.map((kw) => ({
+        ...kw,
+        tempTrackerId: kw.id
+          ? null
+          : tempTrackerId++,
+      }));
+
+    const processedTrackerIds = new Set(
+      keywordsWithTracker
+        .filter((kw) => !kw.id)
+        .filter((kw) => {
+          const [key, val] = this.parseKeyword(
+            kw.value,
+          );
+          return (
+            key &&
+            val &&
+            this.mapCreatedKeywordToPersonalDetails(
+              personalDetails,
+              key,
+              val,
+            )
+          );
+        })
+        .map((kw) => kw.tempTrackerId),
+    );
+
+    return keywordsWithTracker
+      .filter(
+        (kw) =>
+          !processedTrackerIds.has(
+            kw.tempTrackerId,
+          ),
+      )
+      .map((kw) => {
+        const { tempTrackerId, ...rest } = kw;
+        return rest;
+      });
   }
 }
