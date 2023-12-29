@@ -8,7 +8,6 @@ export class ValuationService {
   async isCustomerHNI(
     customerId: string,
   ): Promise<boolean> {
-    // Check for customer's plan ID
     const customerHomecareMapping =
       await this.prisma.customerHomecareMapping.findFirst(
         {

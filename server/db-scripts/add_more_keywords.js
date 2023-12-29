@@ -1645,6 +1645,7 @@ const newKeywords = {
     'IndyCar',
     'Formula E Car',
   ],
+  persona: ['male', 'female', 'trans'],
 };
 
 async function addNewKeywords() {
