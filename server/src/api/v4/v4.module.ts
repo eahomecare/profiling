@@ -26,7 +26,7 @@ import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-map
 import { ServiceResolverService } from './questionServices/serviceResolver.service';
 import { CampaignService } from './campaign.service';
 import { ValuationService } from './valuation.service';
-import { HashService } from './hash.service';
+import { PersonaService } from './persona.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
@@ -56,7 +56,7 @@ import { HashService } from './hash.service';
     ServiceResolverService,
     CampaignService,
     ValuationService,
-    HashService,
+    PersonaService,
   ],
 })
 export class V4Module {}
