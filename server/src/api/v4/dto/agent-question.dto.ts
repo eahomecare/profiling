@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class CurrentKeywordsDto {
+export class CurrentKeywordsDto {
   @IsOptional()
   @IsString()
   id: string;

@@ -370,6 +370,16 @@ export class V4Controller {
           questionsDto.customerCRMId,
           crmName,
         );
+
+      const remainingKeywords =
+        await this.personaService.simulateKeywordProcessing(
+          customer.id,
+          questionsDto.currentKeywords || [],
+        );
+
+      questionsDto.currentKeywords =
+        remainingKeywords;
+
       const questions =
         await this.agentQuestionService.getQuestionsForCustomer(
           customer,
