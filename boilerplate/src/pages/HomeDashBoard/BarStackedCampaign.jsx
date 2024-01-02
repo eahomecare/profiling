@@ -91,7 +91,9 @@ const BarStackedView = () => {
               maw={320}
               mx="auto"
               data={campaignNames}
+              placeholder={"All"}
               label={<Text c={"dimmed"}>Campaign(s)</Text>}
+              searchable
               rightSection={
                 <ActionIcon>
                   <IconChevronDown />
