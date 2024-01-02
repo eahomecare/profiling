@@ -19,18 +19,18 @@ import ArrowLabel from "./ArrowLabel";
 import assets from "./assets";
 
 const ProfileDataCard = () => {
-  const dispatch = useDispatch();
-  const hoveredItem = useSelector(selectHoveredItem);
+  // const dispatch = useDispatch();
+  // const hoveredItem = useSelector(selectHoveredItem);
   const data = useSelector(selectProfileData);
 
   console.log("data from ProfileDataCard", data);
 
   const handleMouseEnter = (name) => {
-    dispatch(setHoveredItem(name));
+    // dispatch(setHoveredItem(name));
   };
 
   const handleMouseLeave = () => {
-    dispatch(clearHoveredItem());
+    // dispatch(clearHoveredItem());
   };
 
   const totalValue = data.reduce((acc, cur) => acc + cur.value, 0);
@@ -53,23 +53,23 @@ const ProfileDataCard = () => {
         {data.map((entry, index) => (
           <Group
             spacing={0}
-            onMouseEnter={() => handleMouseEnter(entry.name)}
-            onMouseLeave={handleMouseLeave}
+            // onMouseEnter={() => handleMouseEnter(entry.name)}
+            // onMouseLeave={handleMouseLeave}
           >
             <Group spacing={0}>
               <Avatar
                 key={entry.src}
                 src={assets[entry.src]}
                 alt="type"
-                sx={{
-                  transition: "transform 0.3s ease",
-                  transform:
-                    hoveredItem === entry.name ? "scale(1.1)" : "scale(1)",
-                  backgroundImage:
-                    hoveredItem === entry.name
-                      ? "radial-gradient(#000000 20% ,#0d5ff9)"
-                      : "none",
-                }}
+                // sx={{
+                //   transition: "transform 0.3s ease",
+                //   transform:
+                //     hoveredItem === entry.name ? "scale(1.1)" : "scale(1)",
+                //   backgroundImage:
+                //     hoveredItem === entry.name
+                //       ? "radial-gradient(#000000 20% ,#0d5ff9)"
+                //       : "none",
+                // }}
                 radius={"xl"}
                 size={"lg"}
               />
