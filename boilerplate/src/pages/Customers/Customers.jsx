@@ -1,9 +1,17 @@
-import { LoadingOverlay, Title, Button, ActionIcon } from "@mantine/core";
+import {
+  LoadingOverlay,
+  Title,
+  Button,
+  ActionIcon,
+  Loader,
+  Center,
+  Stack,
+} from "@mantine/core";
 import { useEffect } from "react";
 import {
   getCustomers,
   getCustomersProfileCompleteness,
-  clearCurrentCustomer
+  clearCurrentCustomer,
 } from "../../redux/customerSlice";
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay";
@@ -16,7 +24,7 @@ const Customers = () => {
   );
 
   useEffect(() => {
-    dispatch(clearCurrentCustomer())
+    dispatch(clearCurrentCustomer());
     dispatch(getCustomers());
     dispatch(getCustomersProfileCompleteness());
   }, [dispatch]);
@@ -34,16 +42,19 @@ const Customers = () => {
 
   if (status === "loading") {
     return (
-      <LoadingOverlay
-        visible
-        overlayBlur={2}
-        overlayColor={"#F3F6FF"}
-        loaderProps={{
-          color: "#0d5ff9",
-          size: "xl",
-          variant: "dots",
-        }}
-      />
+      <Center>
+        <Loader c="#0d5ff9" size="lg" />
+      </Center>
+      // <LoadingOverlay
+      //   visible
+      //   overlayBlur={2}
+      //   overlayColor={"#F3F6FF"}
+      //   loaderProps={{
+      //     color: "#0d5ff9",
+      //     size: "xl",
+      //     variant: "dots",
+      //   }}
+      // />
     );
   } else {
     return (

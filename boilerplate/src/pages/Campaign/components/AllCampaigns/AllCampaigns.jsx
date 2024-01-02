@@ -1,39 +1,64 @@
-import {
-  Card,
-  createStyles,
-  Table,
-  ScrollArea,
-  Flex,
-  ActionIcon,
-} from "@mantine/core";
+import { ActionIcon, Flex } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCampaigns } from "../../../../redux/campaignListSlice";
-
-const useStyles = createStyles((theme) => ({
-  header: {
-    backgroundColor: theme.colors.blue[1],
-    "& th": {
-      borderColor: theme.colors.gray[4],
-    },
-  },
-  cell: {
-    borderColor: theme.colors.gray[4],
-    "&:not(:last-of-type)": {
-      marginRight: theme.spacing.xs,
-    },
-  },
-}));
+import StyledTable from "../../../../StyledComponents/StyledTable";
 
 const AllCampaigns = () => {
   const dispatch = useDispatch();
   const campaignState = useSelector((state) => state.campaignListSlice);
-  const { classes } = useStyles();
 
   useEffect(() => {
     dispatch(fetchCampaigns());
   }, [dispatch]);
+
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Campaign Name",
+      },
+      {
+        accessorKey: "type",
+        header: "Communication Type",
+      },
+      {
+        accessorKey: "customers",
+        header: "Total No. of Customers",
+        accessorFn: (row) => row.customers.length,
+      },
+      {
+        accessorKey: "created_at",
+        header: "Create Campaign Date",
+        accessorFn: (row) => new Date(row.created_at).toLocaleDateString(),
+      },
+      {
+        accessorKey: "end",
+        header: "Event Date",
+        accessorFn: (row) => new Date(row.end).toLocaleDateString(),
+      },
+      {
+        accessorKey: "status",
+        header: "Campaign Status",
+      },
+      {
+        accessorKey: "actions",
+        header: "Action",
+        Cell: ({ row }) => (
+          <Flex>
+            <ActionIcon color="lightblue">
+              <IconEdit />
+            </ActionIcon>
+            <ActionIcon color="red">
+              <IconTrash />
+            </ActionIcon>
+          </Flex>
+        ),
+      },
+    ],
+    [],
+  );
 
   if (campaignState.campaignStatus === "loading") {
     return <p>Loading...</p>;
@@ -41,61 +66,17 @@ const AllCampaigns = () => {
   if (campaignState.campaignStatus === "failed") {
     return <p>Error loading campaigns. Details: {campaignState.error}</p>;
   }
+  const reversedData = [...campaignState.campaigns].reverse();
+  const handleRowClick = () => {
+    console.log("Row clicked");
+  };
 
   return (
-    <Card>
-      <ScrollArea>
-        <Table striped highlightOnHover>
-          <thead className={classes.header}>
-            <tr>
-              <th>Campaign Name</th>
-              <th>Communication Type</th>
-              <th>Total No. of Customers</th>
-              <th>Create Campaign Date</th>
-              <th>Event Date</th>
-              <th>Campaign Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {campaignState.campaigns && campaignState.campaigns.length > 0 ? (
-              campaignState.campaigns.map((campaign) => (
-                <tr key={campaign.id}>
-                  <td className={classes.cell}>{campaign.name}</td>
-                  <td className={classes.cell}>{campaign.type}</td>
-                  <td className={classes.cell}>{campaign.customers.length}</td>
-                  <td className={classes.cell}>
-                    {new Date(campaign.created_at).toLocaleDateString()}
-                  </td>
-                  <td className={classes.cell}>
-                    {new Date(campaign.end).toLocaleDateString()}
-                  </td>
-                  <td className={classes.cell}>{campaign.status}</td>
-                  <td className={classes.cell}>
-                    {campaign.status !== "Closed" && (
-                      <>
-                        <Flex>
-                          <ActionIcon c="lightblue">
-                            <IconEdit />
-                          </ActionIcon>
-                          <ActionIcon c="red">
-                            <IconTrash />
-                          </ActionIcon>
-                        </Flex>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7">No campaigns available</td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </ScrollArea>
-    </Card>
+    <StyledTable
+      columns={columns}
+      data={reversedData}
+      onRowClick={handleRowClick}
+    />
   );
 };
 
