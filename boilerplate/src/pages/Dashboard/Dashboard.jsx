@@ -12,7 +12,7 @@ import {
   Badge
 } from "@mantine/core";
 import { useLocation } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 // import KeywordsEntry from '../KeywordsEntry/KeywordsEntry';
 // import Interests from '../Interests/Interests';
 import DashboardNavbar from "./DashboardNavbar";
@@ -41,10 +41,13 @@ import InfoTag from "./InfoTag";
 
 
 const Dashboard = () => {
-  const { status, customerDetails } = useSelector((state) => state.customer);
+  const navigate = useNavigate();
+
+  const { status, customerDetails, customerProfileCompletion } = useSelector((state) => state.customer);
   const [profile, setProfile] = useState({
-    ...customerDetails.profiling.personal_details,
+    ...customerDetails.profiling?.personal_details,
   });
+
   const { profile_completion } = customerDetails;
 
   const { updateKeywordsStatus } = useSelector((state) => state.keyword);
@@ -70,6 +73,15 @@ const Dashboard = () => {
   //         }
   //     }, 2000)
   // }, [])
+
+
+  useEffect(() => {
+    if (!customerDetails || Object.keys(customerDetails).length === 0) {
+      navigate("/customers");
+    }
+  }, [customerDetails, navigate]);
+
+
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
 
@@ -197,7 +209,7 @@ const Dashboard = () => {
                   </Grid.Col>
                   <Grid.Col span={4}>
                     <Grid.Col span={12} >
-                      <Center> {profileCompletion(profile_completion)}</Center>
+                      <Center> {profileCompletion(customerProfileCompletion)}</Center>
                     </Grid.Col>
                   </Grid.Col>
 

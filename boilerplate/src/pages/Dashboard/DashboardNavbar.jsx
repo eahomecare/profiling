@@ -213,8 +213,7 @@ const DashboardNavbar = () => {
             icon={<IconArrowNarrowLeft />}
             component={Link}
             variant="subtle"
-            to={"/dashboard"}
-            onClick={console.log(location)}
+            to={"/customers"}
             c="#0d5ff9"
             sx={{
               cursor: "pointer",
