@@ -5,13 +5,13 @@ import {
 } from "../../redux/profileDataCardSlice";
 
 const Arrow = ({ bgColor = "#eee", textColor = "#333", text = "" }) => {
-  const hoveredItem = useSelector((state) => state.profileDataCard.hoveredItem);
+  // const hoveredItem = useSelector((state) => state.profileDataCard.hoveredItem);
   const dispatch = useDispatch();
 
-  const isHovered = hoveredItem === text;
+  // const isHovered = hoveredItem === text;
 
   const transparentBgColor = (color) => {
-    if (isHovered) return color; // No transparency when hovered
+    // if (isHovered) return color; // No transparency when hovered
 
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = 1;
@@ -27,22 +27,22 @@ const Arrow = ({ bgColor = "#eee", textColor = "#333", text = "" }) => {
       width="150"
       height="50"
       viewBox="0 0 250 30"
-      onMouseEnter={() => dispatch(setHoveredItem(text))}
-      onMouseLeave={() => dispatch(clearHoveredItem())}
+      // onMouseEnter={() => dispatch(setHoveredItem(text))}
+      // onMouseLeave={() => dispatch(clearHoveredItem())}
       style={{ cursor: "pointer" }}
     >
       {/* Arrow Body (Transparent Section) */}
       <polygon
         points="240,2.5 45,2.5 45,27.5 240,27.5"
         fill={transparentBgColor(bgColor)}
-        transform={isHovered ? "translate(10, 0)" : ""}
-        style={{ transition: "transform 0.5s" }}
+        // transform={isHovered ? "translate(10, 0)" : ""}
+        // style={{ transition: "transform 0.5s" }}
       />
       {/* Arrow Tip (Opaque Section) */}
       <polygon
         points="45,2.5 15,15 45,27.5"
         fill={bgColor}
-        transform={isHovered ? "translate(-15, 0)" : ""}
+        // transform={isHovered ? "translate(-15, 0)" : ""}
         style={{ transition: "transform 0.5s" }}
       />
       <text
@@ -50,11 +50,11 @@ const Arrow = ({ bgColor = "#eee", textColor = "#333", text = "" }) => {
         y="50%"
         dominant-baseline="middle"
         text-anchor="middle"
-        fill={isHovered ? "#fff" : textColor}
+        // fill={isHovered ? "#fff" : textColor}
         font-family="Arial"
         font-weight="bold"
         font-size="20px"
-        transform={isHovered ? "scale(1.05, 1)" : ""}
+        // transform={isHovered ? "scale(1.05, 1)" : ""}
         style={{ transition: "transform 0.5s" }}
       >
         {text}
