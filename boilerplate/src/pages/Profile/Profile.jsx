@@ -6,7 +6,7 @@ import ProfileTableDisplay from '../../components/ProfileTableDisplay';
 import { Button } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons-react';
 import { clearCurrentCustomer } from '../../redux/customerSlice';
-import assets from "./assets";
+// import assets from "./assets";
 
 
 const Profile = () => {
@@ -63,10 +63,10 @@ const Profile = () => {
           <Grid.Col span={3} key={profileType.id}>
             <Card shadow="sm" padding="lg" component="a" target="_blank">
               <Card.Section>
-                <Image
+                {/* <Image
                   src={assets[profileType.name] ? assets[profileType.name] : ""}
                   style={{ width: '200px', height: '200px' }} // Set fixed width and height
-                />
+                /> */}
               </Card.Section>
 
               <Card.Section style={{ padding: '10px' }}>
