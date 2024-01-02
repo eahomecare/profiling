@@ -2,7 +2,7 @@ import { useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getCustomerDetails } from "../redux/customerSlice";
+import { getCustomerDetails, setCurrentCustomerProfileCompletion } from "../redux/customerSlice";
 
 import { RingProgress, Text, Box, Loader } from "@mantine/core";
 import StyledTable from "../StyledComponents/StyledTable";
@@ -48,6 +48,7 @@ export default function TableDisplay({
   const handleRowClick = (customer) => {
     console.log(customer);
     dispatch(getCustomerDetails(customer.id));
+    dispatch(setCurrentCustomerProfileCompletion(customer.profile_completion))
   };
 
 
@@ -87,10 +88,10 @@ export default function TableDisplay({
           !fetchedPofileCompleteness ? (
             <Loader type={"dots"} color="#0d5ff9" />
           ) : (
-            profileCompletion(row.profile_completion)
+            row.profile_completion
           ),
         id: "profileCompletion",
-        header: "Profile Completion",
+        header: "Profile Completion(in %)",
       },
     ],
     [fetchedPofileCompleteness],
