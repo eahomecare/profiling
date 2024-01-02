@@ -1,12 +1,14 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   ActionIcon,
   Box,
   Flex,
-  Select,
+  MultiSelect,
   Text,
   Title,
   Loader,
-  Group,
 } from "@mantine/core";
 import { IconArrowRight, IconChevronDown } from "@tabler/icons-react";
 import {
@@ -20,30 +22,20 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import {
-  fetchData,
-  fetchSources,
-  fetchCampaignNames,
-  selectCampaign,
-} from "../../redux/campaignSlice";
-import { Link } from "react-router-dom";
+import { fetchData, selectCampaign } from "../../redux/campaignSlice";
 
 const BarStackedView = () => {
   const dispatch = useDispatch();
-
   const data = useSelector((state) => state.campaign.data);
-  const sources = useSelector((state) => state.campaign.sources);
   const campaignNames = useSelector((state) => state.campaign.campaignNames);
   const status = useSelector((state) => state.campaign.status);
   const error = useSelector((state) => state.campaign.error);
 
+  const [selectedCampaigns, setSelectedCampaigns] = useState([]);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchData());
-      dispatch(fetchSources());
-      dispatch(fetchCampaignNames());
     }
   }, [status, dispatch]);
 
@@ -61,6 +53,27 @@ const BarStackedView = () => {
     return <div>Error: {error}</div>;
   }
 
+  const handleCampaignSelect = (selected) => {
+    setSelectedCampaigns(selected);
+    dispatch(selectCampaign(selected));
+  };
+
+  const filteredData =
+    selectedCampaigns.length > 0
+      ? data.filter((campaign) =>
+          selectedCampaigns.includes(campaign.campaignName),
+        )
+      : data;
+
+  // Map API data to chart data
+  const chartData = filteredData.map((item) => ({
+    ...item,
+    delivered: item.totalSent,
+    converted: item.success,
+    interested: item.success,
+    failure: item.failed,
+  }));
+
   return (
     <>
       <Box p={30}>
@@ -74,47 +87,25 @@ const BarStackedView = () => {
         </Flex>
         <Box>
           <Flex>
-            <Select
+            <MultiSelect
               maw={320}
               mx="auto"
+              data={campaignNames}
               label={<Text c={"dimmed"}>Campaign(s)</Text>}
-              data={["All", ...campaignNames]}
-              transitionProps={{
-                transition: "pop-top-left",
-                duration: 80,
-                timingFunction: "ease",
-              }}
-              withinPortal
               rightSection={
                 <ActionIcon>
                   <IconChevronDown />
                 </ActionIcon>
               }
-              onChange={(value) => dispatch(selectCampaign(value))}
-            />
-            <Select
-              maw={320}
-              mx="auto"
-              label={<Text c={"dimmed"}>Source(s)</Text>}
-              data={sources}
-              transitionProps={{
-                transition: "pop-top-left",
-                duration: 80,
-                timingFunction: "ease",
-              }}
-              withinPortal
-              rightSection={
-                <ActionIcon>
-                  <IconChevronDown />
-                </ActionIcon>
-              }
+              onChange={handleCampaignSelect}
+              value={selectedCampaigns}
             />
           </Flex>
         </Box>
         <Box h={500} w={"100%"}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
+              data={chartData}
               margin={{
                 top: 20,
                 right: 30,
@@ -130,7 +121,7 @@ const BarStackedView = () => {
                 }
                 vertical={false}
               />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="campaignName" />
               <YAxis
                 label={{
                   value: "No. of Customers",
