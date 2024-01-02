@@ -348,7 +348,7 @@ const MainAppShell = ({ children }) => {
               )}
 
 
-              {/* {true && (
+              {true && (
                 <NavLink
                   styles={{
                     root: {
@@ -371,7 +371,7 @@ const MainAppShell = ({ children }) => {
 
 
                 />
-              )} */}
+              )}
             </Stack>
           </Navbar>
         </Card>
