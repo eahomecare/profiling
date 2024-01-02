@@ -163,6 +163,7 @@ const Timeline = ({ initialState, onUpdate, onApplyForAll }) => {
   };
 
   const handleRecurrenceChange = (field, value) => {
+    setRecurrenceTime("");
     setResults((prevState) => ({
       ...prevState,
       recurrence: {
