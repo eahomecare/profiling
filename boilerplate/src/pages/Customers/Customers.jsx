@@ -17,10 +17,6 @@ const Customers = () => {
 
   useEffect(() => {
     dispatch(clearCurrentCustomer())
-  }, [])
-
-  useEffect(() => {
-
     dispatch(getCustomers());
     dispatch(getCustomersProfileCompleteness());
   }, [dispatch]);

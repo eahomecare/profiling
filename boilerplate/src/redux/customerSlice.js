@@ -6,7 +6,6 @@ const initialState = {
   status: "idle",
   customers: [],
   customerDetails: {},
-  customerProfileCompletion: null,
   customerServiceHistory: [],
   fetchedPofileCompleteness: false,
   customerServiceHistoryStatus: "idle",
@@ -65,9 +64,6 @@ const customerSlice = createSlice({
   reducers: {
     setCurrentCustomer: (state, action) => {
       state.customerDetails = action.payload;
-    },
-    setCurrentCustomerProfileCompletion: (state, action) => {
-      state.customerProfileCompletion = action.payload;
     },
     clearCurrentCustomer: (state, action) => {
       state.customerDetails = []
@@ -143,4 +139,4 @@ const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
-export const { setCurrentCustomer, clearCurrentCustomer, setCurrentCustomerProfileCompletion } = customerSlice.actions;
+export const { setCurrentCustomer, clearCurrentCustomer } = customerSlice.actions;
