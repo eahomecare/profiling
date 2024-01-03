@@ -7,6 +7,7 @@ import {
 import { Personal_Details } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CurrentKeywordsDto } from './dto/agent-question.dto';
+import Filter = require('bad-words');
 
 @Injectable()
 export class PersonaService {
@@ -15,8 +16,11 @@ export class PersonaService {
   );
   private processedKeywordsSet: Set<string> =
     new Set();
+  private filter: Filter;
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+    this.filter = new Filter();
+  }
 
   async processPersonaKeywords(
     customerId: string,
@@ -132,18 +136,18 @@ export class PersonaService {
       `processCreatedKeywords entered, currentKeywords are ${currentKeywords}`,
     );
     try {
+      const cleanedKeywords =
+        currentKeywords.filter(
+          (keyword) =>
+            !this.filter.isProfane(keyword),
+        );
+
       const personalDetails =
         await this.prisma.personal_Details.findUnique(
           {
             where: { customer_id: customerId },
           },
         );
-
-      this.logger.debug(
-        `Personal Details before are ${JSON.stringify(
-          personalDetails,
-        )}`,
-      );
 
       if (!personalDetails) {
         throw new NotFoundException(
@@ -152,7 +156,7 @@ export class PersonaService {
       }
 
       this.processedKeywordsSet.clear();
-      for (const keyword of currentKeywords) {
+      for (const keyword of cleanedKeywords) {
         const [key, value] =
           this.parseKeyword(keyword);
         if (key && value) {
@@ -174,6 +178,7 @@ export class PersonaService {
       this.logger.log(
         'Processed created keywords successfully',
       );
+
       return currentKeywords.filter(
         (keyword) =>
           !this.isProcessedKeyword(keyword),
@@ -193,7 +198,7 @@ export class PersonaService {
   ): [string, string] {
     const firstDashIndex = keyword.indexOf('-');
     if (firstDashIndex === -1) {
-      return [null, null]; // No '-' found, return nulls
+      return [null, null];
     }
 
     const key = keyword
