@@ -38,13 +38,14 @@ const PersonalInformation = ({ selectedCustomer }) => {
   }, [memoizedSelectedCustomer]);
 
 
+
   if (profile) {
     return (
       <>
         <Container>
 
           <div>
-            <Text fw={500}>Address</Text>
+            <Text fw={500}>Address & Other Info</Text>
             <Grid gutter="xl">
               <Grid.Col span={6}>
                 <InfoTag
@@ -70,6 +71,36 @@ const PersonalInformation = ({ selectedCustomer }) => {
                   subject={randomDetails.randomAddress}
                 />
               </Grid.Col>
+
+
+            </Grid>
+          </div>
+          <div>
+            <Grid gutter="xl">
+              <Grid.Col span={6}>
+                <InfoTag
+                  title={"Marital status"}
+                  subject={profile.marital_status}
+                />
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <InfoTag title={"Travel Address"} subject={profile.travel_address} />
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <InfoTag
+                  title={"Anniversary"}
+                  subject={profile.anniversary}
+                />
+              </Grid.Col>
+
+              <Grid.Col span={6}>
+                <InfoTag
+                  title={"Employment"}
+                  subject={profile.employment}
+                />
+              </Grid.Col>
+
+
             </Grid>
           </div>
         </Container>
