@@ -16,6 +16,8 @@ export class RolesService {
         });
       return createdRole;
     } catch (error) {
+      console.log(error);
+
       throw new Error('Failed to create role');
     }
   }
