@@ -191,17 +191,22 @@ export class PersonaService {
   private parseKeyword(
     keyword: string,
   ): [string, string] {
-    const parts = keyword
-      .split('-')
-      .map((part) => part.trim());
+    const firstDashIndex = keyword.indexOf('-');
+    if (firstDashIndex === -1) {
+      return [null, null]; // No '-' found, return nulls
+    }
+
+    const key = keyword
+      .substring(0, firstDashIndex)
+      .trim();
+    const value = keyword
+      .substring(firstDashIndex + 1)
+      .trim();
     this.logger.debug(
-      `Parsing keyword: ${keyword}, Result: ${parts.join(
-        ', ',
-      )}`,
+      `Parsing keyword: ${keyword}, Result: ${key}, ${value}`,
     );
-    return parts.length === 2
-      ? [parts[0], parts[1]]
-      : [null, null];
+
+    return [key, value];
   }
 
   private async updateCreatedKeywordPersonalDetails(
@@ -249,6 +254,8 @@ export class PersonaService {
     this.logger.debug(
       `Mapping created keyword to personal details: key=${key}, value=${value}`,
     );
+    key = key.trim();
+    value = value.trim();
     switch (key) {
       case 'dob':
         if (
@@ -302,7 +309,21 @@ export class PersonaService {
           return { phone_number: value };
         }
         break;
-      // Other cases ...
+      case 'current':
+        return { current_address: value };
+      case 'travel':
+        return { travel_address: value };
+      case 'marital':
+        return { marital_status: value };
+      case 'home':
+        if (
+          this.isValueEmpty(
+            personalDetails.address,
+          )
+        ) {
+          return { address: value };
+        }
+        break;
     }
 
     this.logger.debug(

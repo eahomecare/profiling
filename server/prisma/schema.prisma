@@ -82,6 +82,9 @@ model Personal_Details {
   location      String?
   anniversary   String?
   gender        String?
+  marital_status String?
+  current_address String?
+  travel_address String?
 }
 
 model Keyword {
