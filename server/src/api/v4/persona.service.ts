@@ -320,6 +320,10 @@ export class PersonaService {
         return { travel_address: value };
       case 'marital':
         return { marital_status: value };
+      case 'emp':
+        return { employment: value };
+      case 'ann':
+        return { anniversary: value };
       case 'home':
         if (
           this.isValueEmpty(
