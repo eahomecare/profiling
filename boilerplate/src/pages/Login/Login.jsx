@@ -32,6 +32,13 @@ export default function Login() {
 
   const { status, isLoggedIn, user } = useSelector((state) => state.auth);
 
+  const {
+    rolesPermissionsStatus,
+    rolesPermissions,
+    userPermissions,
+    getAllRolesPermissionsMappingsByUserStatus,
+  } = useSelector((state) => state.rolePermission);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser({ email, password }));
@@ -43,13 +50,25 @@ export default function Login() {
   //     }
   // },[status,isLoggedIn])
 
+
+  const route_permission = {
+    "profile_dashboard": "/",
+    "customer_dashboard": "/customers"
+  }
+
   useEffect(() => {
     if (status === "success" && isLoggedIn) {
       dispatch(getAllRolesPermissionsMappingsByUser(user._id));
       dispatch(getUsers());
-      navigate("/");
     }
-  }, [status, navigate]);
+  }, [status]);
+
+  useEffect(() => {
+    if (getAllRolesPermissionsMappingsByUserStatus == "success") {
+      userPermissions.length > 0 && route_permission[userPermissions[0].name] ? navigate(route_permission[userPermissions[0].name]) : navigate("/pd")
+
+    }
+  }, [getAllRolesPermissionsMappingsByUserStatus, navigate])
 
   return (
     <>
