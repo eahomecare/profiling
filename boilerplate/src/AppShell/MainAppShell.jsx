@@ -23,12 +23,14 @@ import {
   IconBell
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import LightDarkButton from "../components/LightDarkButton";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "../components/assets/eaLogoRotate.svg";
 import User from "./_user";
 import { IconUserDollar } from "@tabler/icons-react";
+import { setMyRole } from "../redux/authSlice";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -87,6 +89,7 @@ const useStyles = createStyles((theme) => ({
 
 const MainAppShell = ({ children }) => {
   const { classes, cx } = useStyles();
+  const dispatch = useDispatch()
   const location = useLocation();
   const [activeNavLink, setActiveNavLink] = useState("");
   const { user, users } = useSelector((state) => state.auth);
@@ -104,6 +107,7 @@ const MainAppShell = ({ children }) => {
   function findUserRoleNameById(userId) {
     const user = users.find((user) => user.id === userId);
     if (user) {
+      dispatch(setMyRole(user.role.name))
       return user.role.name;
     } else {
       return "User not found";

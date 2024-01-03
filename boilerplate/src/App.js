@@ -91,12 +91,14 @@ function App() {
 
           <MainAppShell>
             <Routes>
-              {/* {hasPermission(userPermissions, "user_view") ? (
-                <PrivateRoute path="/" element={<BoardStats />} />
+              {hasPermission(userPermissions, "profile_dashboard") ? (
+                <PrivateRoute path="/" element={<Root />} />
               ) : (
-                <PrivateRoute path="/" element={<PermissionDenied />} />
-              )} */}
-              <PrivateRoute path="/" element={<Root />} />
+                <PrivateRoute
+                  path="/"
+                  element={<PermissionDenied />}
+                />
+              )}
               {hasPermission(userPermissions, "customer_dashboard") ? (
                 <PrivateRoute path="/customers" element={<Customers />} />
               ) : (
@@ -129,6 +131,7 @@ function App() {
               {/* Agent specific routes not required */}
               <Route path="/mobileSimulation" element={<SimulateCall />} />
               <Route path="/agent" element={<AgentEntry />} />
+              <PrivateRoute path="/pd" element={<PermissionDenied />} />
               <PrivateRoute path="/profile" element={<Profile />} />
             </Routes>
           </MainAppShell>

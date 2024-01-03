@@ -13,6 +13,7 @@ function parseJwt(token) {
 
 const initialState = {
   status: "idle",
+  myRole: null,
   isLoggedIn: false,
   user: {},
   profile: {},
@@ -82,6 +83,10 @@ export const authSlice = createSlice({
         state.isLoggedIn = false;
       }
     },
+
+    setMyRole: (state, action) => {
+      state.myRole = action.payload
+    }
   },
   extraReducers: {
     [loginUser.pending]: (state, action) => {
@@ -169,4 +174,4 @@ export const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-export const { setAuth, logout } = authSlice.actions;
+export const { setAuth, logout, setMyRole } = authSlice.actions;
