@@ -30,7 +30,6 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 
 const useStyles = createStyles((theme) => ({
@@ -179,27 +178,24 @@ const DashboardNavbar = () => {
   const theme = useMantineTheme();
 
   const location = useLocation();
-  const { myRole } = useSelector((state) => state.auth);
 
+  const links = data.map((item) => (
+    <NavLink
+      className={cx(classes.link, {
+        [classes.linkActive]: item.label === active,
+      })}
+      icon={item.icon}
+      component={Link}
+      variant="subtle"
+      to={item.link}
+      label={item.label}
+      key={item.label}
+      onClick={(event) => {
+        setActive(item.label);
+      }}
+    />
+  ));
 
-  const links = data
-    .filter((item, index) => (myRole === 'qc' ? index < 2 : true))
-    .map((item) => (
-      <NavLink
-        className={cx(classes.link, {
-          [classes.linkActive]: item.label === active,
-        })}
-        icon={item.icon}
-        component={Link}
-        variant="subtle"
-        to={item.link}
-        label={item.label}
-        key={item.label}
-        onClick={(event) => {
-          setActive(item.label);
-        }}
-      />
-    ));
   return (
     <Box height={700} p="md" width={{ sm: 200, lg: 300 }} withBorder={false}>
       <Stack>

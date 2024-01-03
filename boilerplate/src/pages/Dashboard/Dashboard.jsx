@@ -39,6 +39,7 @@ import InfoTag from "./InfoTag";
 
 
 
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -62,9 +63,6 @@ const Dashboard = () => {
   let customer;
   const location = useLocation();
   const dispatch = useDispatch();
-
-
-
 
   // useEffect(() => {
   //     setTimeout(() => {
