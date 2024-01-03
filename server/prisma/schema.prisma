@@ -69,7 +69,7 @@ model Customer {
   @@map("customers")
 }
 
-model Personal_Details { // These personal details are related to customer
+model Personal_Details {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   customer      Customer  @relation(fields: [customer_id], references: [id])
   customer_id   String    @unique @db.ObjectId
@@ -98,7 +98,7 @@ model Keyword {
   // created_at     DateTime      @default(now())
   // updated_at     DateTime      @updatedAt
   agentSubmits   AgentSubmitKeywordsMapping[]
-  campaigns  CampaignKeywordMapping[]
+  campaigns      CampaignKeywordMapping[]
 
   @@unique([value, category])
   @@map("keywords")
@@ -256,6 +256,7 @@ enum RoleNames {
   agent
   campaign_manager
   team_lead
+  qc
 }
 
 enum PermissionNames {
@@ -350,26 +351,26 @@ model agentSubmits {
 }
 
 model Campaign {
-  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  id             String                   @id @default(auto()) @map("_id") @db.ObjectId
   name           String
-  eventBased     Boolean         @default(false)
+  eventBased     Boolean                  @default(false)
   triggerTime    String
   start          DateTime
   end            DateTime
-  isActive       Boolean         @default(true)
+  isActive       Boolean                  @default(true)
   type           CampaignType
   recurrenceType RecurrenceType
-  customerIDs    String[]        @db.ObjectId
-  customers      Customer[]      @relation(fields: [customerIDs], references: [id])
-  createdBy      String?         @db.ObjectId
-  updatedBy      String?         @db.ObjectId
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  eventIDs       String[]        @db.ObjectId
-  events         Event[]         @relation(fields: [eventIDs], references: [id])
-  template       Template?       @relation(fields: [templateId], references: [id])
-  templateId     String?         @db.ObjectId
-  keywords   CampaignKeywordMapping[]
+  customerIDs    String[]                 @db.ObjectId
+  customers      Customer[]               @relation(fields: [customerIDs], references: [id])
+  createdBy      String?                  @db.ObjectId
+  updatedBy      String?                  @db.ObjectId
+  created_at     DateTime                 @default(now())
+  updated_at     DateTime                 @updatedAt
+  eventIDs       String[]                 @db.ObjectId
+  events         Event[]                  @relation(fields: [eventIDs], references: [id])
+  template       Template?                @relation(fields: [templateId], references: [id])
+  templateId     String?                  @db.ObjectId
+  keywords       CampaignKeywordMapping[]
   campaignReport CampaignReport?
 }
 
@@ -526,11 +527,11 @@ model CustomerSession {
 }
 
 model CampaignKeywordMapping {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  campaign    Campaign @relation(fields: [campaignId], references: [id])
-  campaignId  String   @db.ObjectId
-  keyword     Keyword  @relation(fields: [keywordId], references: [id])
-  keywordId   String   @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId String   @db.ObjectId
+  keyword    Keyword  @relation(fields: [keywordId], references: [id])
+  keywordId  String   @db.ObjectId
 
   @@unique([campaignId, keywordId])
   @@map("campaign_keyword_mapping")
