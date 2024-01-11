@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
 } from 'class-validator';
@@ -58,4 +59,7 @@ export class QuestionResponseDto {
   @IsNotEmpty()
   @IsArray()
   selectedOptions: string[];
+
+  @IsBoolean()
+  isNotRelevant: boolean;
 }

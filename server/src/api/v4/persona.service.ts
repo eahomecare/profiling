@@ -159,7 +159,11 @@ export class PersonaService {
       for (const keyword of cleanedKeywords) {
         const [key, value] =
           this.parseKeyword(keyword);
-        if (key && value) {
+        if (
+          key &&
+          value &&
+          typeof value === 'string'
+        ) {
           await this.updateCreatedKeywordPersonalDetails(
             personalDetails,
             key,
@@ -207,10 +211,6 @@ export class PersonaService {
     const value = keyword
       .substring(firstDashIndex + 1)
       .trim();
-    this.logger.debug(
-      `Parsing keyword: ${keyword}, Result: ${key}, ${value}`,
-    );
-
     return [key, value];
   }
 
