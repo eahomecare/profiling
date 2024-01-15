@@ -355,7 +355,7 @@ model agentSubmits {
 
 model Campaign {
   id             String                   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
+  name           String                   @db.String(50) // Limited to 50 characters
   description    String?
   eventBased     Boolean                  @default(false)
   triggerTime    String
