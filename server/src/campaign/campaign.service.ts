@@ -81,18 +81,13 @@ export class CampaignService {
 
   async create(data: any): Promise<Campaign> {
     try {
-      console.log('campaign create data', data);
+      data.name = data.name.substring(0, 50);
+
       data.start = new Date(data.start);
       data.end = new Date(data.end);
-      console.log(
-        'Data.end before new date',
-        data.end,
-      );
-      data.end = new Date(data.end);
-      console.log(
-        'Data.end before new date',
-        data.end,
-      );
+      data.eventDate = data.eventDate
+        ? new Date(data.eventDate)
+        : null;
 
       const eventPayload: Prisma.EventCreateInput =
         {
@@ -113,7 +108,6 @@ export class CampaignService {
         await this.prisma.event.create({
           data: eventPayload,
         });
-
       const createdTemplate =
         await this.prisma.template.create({
           data: templatePayload,
@@ -122,6 +116,8 @@ export class CampaignService {
       const campaignPayload: Prisma.CampaignCreateInput =
         {
           name: data.name,
+          description: data.description,
+          eventDate: data.eventDate,
           eventBased: true,
           triggerTime: data.triggerTime,
           type: data.type,
