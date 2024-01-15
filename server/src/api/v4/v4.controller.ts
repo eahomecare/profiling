@@ -36,6 +36,7 @@ import { CampaignDto } from './dto/campaign.dto';
 import { GetCampaignsDto } from './dto/get-campaign.dto';
 import { ValuationService } from './valuation.service';
 import { PersonaService } from './persona.service';
+import { ContextService } from './context.service';
 
 @Controller('api/v4')
 export class V4Controller {
@@ -58,6 +59,7 @@ export class V4Controller {
     private readonly campaignService: CampaignService,
     private readonly valuationService: ValuationService,
     private readonly personaService: PersonaService,
+    private readonly contextService: ContextService,
   ) {}
 
   @Post('/register')
@@ -316,9 +318,25 @@ export class V4Controller {
         );
       }
 
+      const contextType =
+        this.contextService.identifyContext(
+          searchDto.term,
+        );
+
+      if (contextType === 'date') {
+        const dateSuggestions =
+          this.contextService.generateDateSuggestions(
+            searchDto.term,
+          );
+        res.status(HttpStatus.OK).json({
+          success: true,
+          results: dateSuggestions,
+        });
+        return;
+      }
+
       const results =
         await this.searchService.autocomplete(
-          // 'eaprofiling.keywords',
           'keywords',
           searchDto.term,
           searchDto.field,
