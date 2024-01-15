@@ -287,6 +287,31 @@ export class PersonaService {
           }
         }
         break;
+      case 'ann':
+        if (
+          this.isValueEmpty(
+            personalDetails.anniversary,
+          )
+        ) {
+          const dateParts = value
+            .split('/')
+            .map((part) => parseInt(part, 10));
+          if (dateParts.length === 3) {
+            const [day, month, year] = dateParts;
+            const parsedDate = new Date(
+              year,
+              month - 1,
+              day,
+            );
+            return { anniversary: parsedDate };
+          } else {
+            this.logger.warn(
+              `Invalid date format for ann: ${value}`,
+            );
+            return null;
+          }
+        }
+        break;
       case 'name':
         if (
           this.isValueEmpty(
@@ -322,8 +347,6 @@ export class PersonaService {
         return { marital_status: value };
       case 'emp':
         return { employment: value };
-      case 'ann':
-        return { anniversary: value };
       case 'home':
         if (
           this.isValueEmpty(

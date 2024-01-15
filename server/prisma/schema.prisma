@@ -80,7 +80,7 @@ model Personal_Details {
   date_of_birth DateTime?
   employment    String?
   location      String?
-  anniversary   String?
+  anniversary   DateTime?
   gender        String?
   marital_status String?
   current_address String?
