@@ -492,11 +492,21 @@ export class V4Controller {
         keywords: [],
       };
 
-      submitDataDto.selectedKeywords =
+      const [
+        remainingKeywordIds,
+        keywordsToAddToCreated,
+      ] =
         await this.personaService.processPersonaKeywords(
           customer.id,
           selectedKeywords,
         );
+
+      submitDataDto.selectedKeywords =
+        remainingKeywordIds;
+      submitDataDto.createdKeywords = [
+        ...(submitDataDto.createdKeywords || []),
+        ...keywordsToAddToCreated,
+      ];
       submitDataDto.createdKeywords =
         await this.personaService.processCreatedKeywords(
           customer.id,

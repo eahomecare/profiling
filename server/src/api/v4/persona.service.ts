@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Personal_Details } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CurrentKeywordsDto } from './dto/agent-question.dto';
 import Filter = require('bad-words');
+import { CurrentKeywordsDto } from './dto/agent-question.dto';
 
 @Injectable()
 export class PersonaService {
@@ -25,11 +25,11 @@ export class PersonaService {
   async processPersonaKeywords(
     customerId: string,
     keywordIds: string[],
-  ): Promise<string[]> {
+  ): Promise<[string[], string[]]> {
+    this.logger.log(
+      `processPersonaKeywords entered, keywordIds are ${keywordIds}`,
+    );
     try {
-      this.logger.log(
-        `processPersonaKeywords entered, keywordIds are ${keywordIds}`,
-      );
       const keywords =
         await this.prisma.keyword.findMany({
           where: {
@@ -51,20 +51,31 @@ export class PersonaService {
         );
       }
 
+      const processedKeywordIds = [];
+      const keywordsToCreate = [];
       for (const keyword of keywords) {
-        await this.updateCustomerPersonalDetails(
-          personalDetails,
-          keyword,
-        );
+        const updateResult =
+          await this.processKeywordForPersonalDetails(
+            personalDetails,
+            keyword,
+          );
+        if (updateResult) {
+          processedKeywordIds.push(keyword.id);
+        } else {
+          keywordsToCreate.push(keyword.value);
+        }
       }
 
       this.logger.log(
         'Processed persona keywords successfully',
       );
-      return keywordIds.filter(
-        (id) =>
-          !keywords.some((kw) => kw.id === id),
-      );
+      return [
+        keywordIds.filter(
+          (id) =>
+            !processedKeywordIds.includes(id),
+        ),
+        keywordsToCreate,
+      ];
     } catch (error) {
       this.logger.error(
         `Error processing persona keywords: ${error.message}`,
@@ -75,57 +86,144 @@ export class PersonaService {
     }
   }
 
-  private async updateCustomerPersonalDetails(
-    personalDetails: any,
+  private async processKeywordForPersonalDetails(
+    personalDetails: Personal_Details,
     keyword: { value: string; category: string },
-  ) {
-    const personalDetailUpdates =
-      this.mapKeywordToPersonalDetails(
-        personalDetails,
+  ): Promise<boolean> {
+    this.logger.log(
+      `Processing keyword for personal details: ${JSON.stringify(
         keyword,
-      );
+      )}`,
+    );
+    const bracketValue =
+      keyword.value.match(/\((.*?)\)/)?.[1];
+    const pureValue = keyword.value.replace(
+      /\s*\(.*?\)\s*/,
+      '',
+    );
 
-    if (personalDetailUpdates) {
+    switch (bracketValue) {
+      case 'current location':
+        return await this.updateFieldIfEmpty(
+          personalDetails,
+          'current_address',
+          pureValue,
+        );
+      case 'travel destination':
+        return await this.updateFieldIfEmpty(
+          personalDetails,
+          'travel_address',
+          pureValue,
+        );
+      case 'home address':
+        return await this.updateFieldIfEmpty(
+          personalDetails,
+          'address',
+          pureValue,
+        );
+      default:
+        const updates =
+          this.mapKeywordToPersonalDetails(
+            personalDetails,
+            keyword,
+          );
+        if (updates) {
+          await this.prisma.personal_Details.update(
+            {
+              where: {
+                customer_id:
+                  personalDetails.customer_id,
+              },
+              data: updates,
+            },
+          );
+          return true;
+        }
+        return false;
+    }
+  }
+
+  private async updateFieldIfEmpty(
+    personalDetails: Personal_Details,
+    field: string,
+    value: string,
+  ): Promise<boolean> {
+    if (
+      this.isValueEmpty(personalDetails[field])
+    ) {
       await this.prisma.personal_Details.update({
         where: {
           customer_id:
             personalDetails.customer_id,
         },
-        data: personalDetailUpdates,
+        data: { [field]: value },
       });
+      return true;
     }
+    return false;
   }
 
   private mapKeywordToPersonalDetails(
-    personalDetails: any,
+    personalDetails: Personal_Details,
     keyword: { value: string; category: string },
   ): Partial<Personal_Details> | null {
+    this.logger.log(
+      `Mapping keyword to personal details: ${JSON.stringify(
+        keyword,
+      )}`,
+    );
+    if (keyword.category !== 'persona') {
+      this.logger.debug(
+        `Skipping non-persona keyword: ${keyword.value}`,
+      );
+      return null;
+    }
+
+    const genderValues = [
+      'male',
+      'female',
+      'trans',
+    ];
     if (
-      keyword.category === 'persona' &&
-      this.isEligibleForUpdate(
+      genderValues.includes(keyword.value) ||
+      this.isGenderFieldEligibleForUpdate(
         personalDetails.gender,
-        ['male', 'female', 'trans'],
-        keyword.value,
       )
     ) {
+      this.logger.debug(
+        `Updating gender field with value: ${keyword.value}`,
+      );
       return { gender: keyword.value };
+    } else {
+      this.logger.debug(
+        `Gender value ${keyword.value} is not eligible for update.`,
+      );
     }
 
     return null;
   }
 
-  private isEligibleForUpdate(
-    currentValue: string | null,
-    validValues: string[],
-    newValue: string,
+  private isGenderFieldEligibleForUpdate(
+    currentGender: string | null,
   ): boolean {
-    return (
-      !validValues.includes(
-        currentValue?.toLowerCase(),
-      ) ||
-      currentValue === null ||
-      currentValue === ''
+    this.logger.log(
+      `Checking if gender field is eligible for update. Current value: ${currentGender}`,
     );
+    return (
+      !currentGender ||
+      currentGender.trim() === '' ||
+      currentGender === 'other'
+    );
+  }
+
+  private isValueEmpty(
+    value: string | null,
+  ): boolean {
+    const isEmpty = !value || value.trim() === '';
+    this.logger.debug(
+      `Checking if value is empty: '${value}', Result: ${isEmpty}`,
+    );
+    return isEmpty;
   }
 
   async processCreatedKeywords(
@@ -362,16 +460,6 @@ export class PersonaService {
       `No mapping found for key: ${key}`,
     );
     return null;
-  }
-
-  private isValueEmpty(
-    value: string | null,
-  ): boolean {
-    const isEmpty = !value || value.trim() === '';
-    this.logger.debug(
-      `Checking if value is empty: '${value}', Result: ${isEmpty}`,
-    );
-    return isEmpty;
   }
 
   private isProcessedKeyword(
