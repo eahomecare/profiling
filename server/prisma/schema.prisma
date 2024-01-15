@@ -356,10 +356,12 @@ model agentSubmits {
 model Campaign {
   id             String                   @id @default(auto()) @map("_id") @db.ObjectId
   name           String
+  description    String?
   eventBased     Boolean                  @default(false)
   triggerTime    String
   start          DateTime
   end            DateTime
+  eventDate      DateTime?
   isActive       Boolean                  @default(true)
   type           CampaignType
   recurrenceType RecurrenceType

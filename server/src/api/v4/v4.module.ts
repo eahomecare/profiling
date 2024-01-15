@@ -27,6 +27,7 @@ import { ServiceResolverService } from './questionServices/serviceResolver.servi
 import { CampaignService } from './campaign.service';
 import { ValuationService } from './valuation.service';
 import { PersonaService } from './persona.service';
+import { ContextService } from './context.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
@@ -57,6 +58,7 @@ import { PersonaService } from './persona.service';
     CampaignService,
     ValuationService,
     PersonaService,
+    ContextService,
   ],
 })
 export class V4Module {}
