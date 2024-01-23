@@ -100,18 +100,14 @@ export class CampaignService {
           campaign.customerIDs.includes(
             customerId,
           ),
-        description: `Description about ${campaign.name}`,
-        startDate: new Date(),
-        endDate: new Date(
-          new Date().setDate(
-            new Date().getDate() + 30,
-          ),
-        ),
-        eventDate: new Date(
-          new Date().setDate(
-            new Date().getDate() + 32,
-          ),
-        ),
+        description:
+          campaign.description ||
+          `Description about ${campaign.name}`,
+        startDate: campaign.start,
+        endDate: campaign.end,
+        eventDate:
+          campaign.eventDate ||
+          new Date(campaign.end),
       }));
 
     console.log(

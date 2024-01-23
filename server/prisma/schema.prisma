@@ -204,6 +204,7 @@ model ProfileTypeCustomerMapping {
   customerId    String      @db.ObjectId
   customer      Customer    @relation(fields: [customerId], references: [id])
   level         Int         @default(1)
+  isEnabled     Boolean     @default(true)
 
   @@map("profile_type_customer_mapping")
 }
@@ -355,7 +356,7 @@ model agentSubmits {
 
 model Campaign {
   id             String                   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String                   @db.String(50) // Limited to 50 characters
+  name           String                 
   description    String?
   eventBased     Boolean                  @default(false)
   triggerTime    String

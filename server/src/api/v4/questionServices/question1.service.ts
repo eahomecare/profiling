@@ -66,38 +66,40 @@ export class Question1Service {
         );
         usedServiceResolver = true;
       } else {
-        const allCategories =
-          await this.prisma.profileType.findMany({
-            select: { category: true },
-          });
+        const enabledProfileTypes =
+          await this.prisma.profileTypeCustomerMapping.findMany(
+            {
+              where: {
+                customerId: customer.id,
+                isEnabled: true,
+              },
+              select: {
+                profileType: {
+                  select: {
+                    category: true,
+                  },
+                },
+              },
+            },
+          );
 
-        this.logger.log(
-          `Random Category Selection- got all categories: ${allCategories}`,
-        );
-        const uniqueCategories = Array.from(
-          new Set(
-            allCategories
-              .map((pt) =>
-                pt.category.toLowerCase(),
-              )
-              .filter((cat) => cat !== 'unknown'),
-          ),
-        );
-        this.logger.log(
-          `Random Category Selection- got all categories: ${allCategories}`,
-        );
+        const enabledCategories =
+          enabledProfileTypes
+            .map((ptcm) =>
+              ptcm.profileType.category.toLowerCase(),
+            )
+            .filter((cat) => cat !== 'unknown');
+
+        const uniqueEnabledCategories =
+          Array.from(new Set(enabledCategories));
 
         const nonRepeatedCategories =
-          uniqueCategories.filter(
+          uniqueEnabledCategories.filter(
             (cat) =>
               !Object.values(
                 sessionObject,
               ).includes(cat),
           );
-
-        this.logger.log(
-          `Random Category Selection- non repeated categories: ${nonRepeatedCategories}`,
-        );
 
         if (nonRepeatedCategories.length === 0) {
           throw new NotFoundException(

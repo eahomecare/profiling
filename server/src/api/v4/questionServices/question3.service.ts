@@ -22,10 +22,33 @@ export class Question3Service {
     sessionObject: Record<number, string>,
     serviceObject: ServiceObject,
   ) {
+    const enabledProfileTypes =
+      await this.prisma.profileTypeCustomerMapping.findMany(
+        {
+          where: {
+            customerId: customer.id,
+            isEnabled: true,
+          },
+          select: {
+            profileType: {
+              select: {
+                category: true,
+              },
+            },
+          },
+        },
+      );
+
+    const enabledCategories =
+      enabledProfileTypes.map(
+        (pt) => pt.profileType.category,
+      );
+
     const keywords =
       await this.prisma.keyword.findMany({
         where: {
           customerIDs: { hasSome: [customer.id] },
+          category: { in: enabledCategories },
         },
         select: {
           value: true,
@@ -39,16 +62,9 @@ export class Question3Service {
     const categoriesWithKeywords = new Set(
       keywords.map((kw) => kw.category),
     );
-    const allCategories =
-      await this.prisma.profileType.findMany({
-        select: { category: true },
-      });
-    const uniqueCategories = allCategories.map(
-      (pt) => pt.category,
-    );
 
     const randomizedCategories = shuffle(
-      uniqueCategories,
+      enabledCategories,
     );
 
     let selectedCategory =
@@ -110,7 +126,7 @@ export class Question3Service {
 
       if (!selectedCategory) {
         const nonRepeatedCategories =
-          uniqueCategories.filter(
+          enabledCategories.filter(
             (cat) =>
               !Object.values(
                 sessionObject,
