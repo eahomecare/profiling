@@ -31,7 +31,7 @@ export class AiEngineService {
     this.chat = new ChatOpenAI({
       openAIApiKey: openAIKey,
       modelName:
-        'ft:gpt-3.5-turbo-0613:personal::8HX9SF8g',
+        'ft:gpt-3.5-turbo-0613:personal::8k4kNGyg',
       temperature: 0.8,
     });
   }

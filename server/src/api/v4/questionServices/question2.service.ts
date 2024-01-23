@@ -36,31 +36,40 @@ export class Question2Service {
 
     console.log(keywords);
 
+    const enabledProfileTypes =
+      await this.prisma.profileTypeCustomerMapping.findMany(
+        {
+          where: {
+            customerId: customer.id,
+            isEnabled: true,
+          },
+          select: {
+            profileType: {
+              select: {
+                category: true,
+              },
+            },
+          },
+        },
+      );
+    const enabledCategories =
+      enabledProfileTypes.map((pt) =>
+        pt.profileType.category.toLowerCase(),
+      );
+
     const filteredKeywords = keywords.filter(
       (kw) =>
+        enabledCategories.includes(
+          kw.category.toLowerCase(),
+        ) &&
         kw.category.toLowerCase() !== 'unknown',
     );
 
     let selectedCategory = '';
     if (filteredKeywords.length === 0) {
-      const allCategories =
-        await this.prisma.profileType.findMany({
-          select: { category: true },
-        });
-      const uniqueCategories = Array.from(
-        new Set(
-          allCategories
-            .map((pt) =>
-              pt.category.toLowerCase(),
-            )
-            .filter((cat) => cat !== 'unknown'),
-        ),
-      );
-
       const randomizedCategories = shuffle(
-        uniqueCategories,
+        enabledCategories,
       );
-
       const nonRepeatedCategories =
         randomizedCategories.filter(
           (cat) =>
@@ -127,21 +136,8 @@ export class Question2Service {
       }
 
       if (!selectedCategory) {
-        const allCategories =
-          await this.prisma.profileType.findMany({
-            select: { category: true },
-          });
-        const uniqueCategories = Array.from(
-          new Set(
-            allCategories
-              .map((pt) =>
-                pt.category.toLowerCase(),
-              )
-              .filter((cat) => cat !== 'unknown'),
-          ),
-        );
         const randomizedCategories = shuffle(
-          uniqueCategories,
+          enabledCategories,
         );
         const nonRepeatedCategories =
           randomizedCategories.filter(

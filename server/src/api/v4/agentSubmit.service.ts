@@ -37,7 +37,26 @@ export class SubmitService {
                 connect: { id: customerId },
               },
             },
+            include: {
+              profile_types: true,
+            },
           });
+
+        for (const profileType of updatedKeyword.profile_types) {
+          await this.prisma.profileTypeCustomerMapping.updateMany(
+            {
+              where: {
+                customerId: customerId,
+                profileTypeId: profileType.id,
+                isEnabled: false,
+              },
+              data: {
+                isEnabled: true,
+              },
+            },
+          );
+        }
+
         connectedKeywords.push(updatedKeyword);
       }
       return connectedKeywords;
@@ -104,6 +123,7 @@ export class SubmitService {
           type,
           options,
           selectedOptions,
+          isNotRelevant,
         } = item;
 
         const createdQuestion =
@@ -120,6 +140,22 @@ export class SubmitService {
             },
           });
         createdQuestions.push(createdQuestion.id);
+
+        if (isNotRelevant) {
+          await this.prisma.profileTypeCustomerMapping.updateMany(
+            {
+              where: {
+                customerId: customerId,
+                profileType: {
+                  category: category,
+                },
+              },
+              data: {
+                isEnabled: false,
+              },
+            },
+          );
+        }
 
         for (const option of options) {
           if (selectedOptions.includes(option)) {
