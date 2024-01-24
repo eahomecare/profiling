@@ -32,7 +32,7 @@ export class AiEngineService {
       openAIApiKey: openAIKey,
       modelName:
         'ft:gpt-3.5-turbo-0613:personal::8k4kNGyg',
-      temperature: 0.8,
+      temperature: 0.5,
     });
   }
 
@@ -67,6 +67,11 @@ export class AiEngineService {
         'past questions and answers selected':
           pastQuestionsAnswers,
       });
+
+      this.logger.debug(
+        'User Message to AI',
+        userMessage,
+      );
 
       const systemMessage = `
         assistant generates questions used to profile customers based on their past keywords, 
