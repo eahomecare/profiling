@@ -6,15 +6,20 @@ import {
   Delete,
   Param,
   Body,
+  InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
 import { ProfileTypeCustomerMappingService } from './profile-type-customer-mapping.service';
 import { ProfileTypeCustomerMapping } from '@prisma/client';
 
 @Controller('profile-type-customer-mapping')
 export class ProfileTypeCustomerMappingController {
+  private readonly logger = new Logger(
+    ProfileTypeCustomerMappingController.name,
+  );
   constructor(
     private readonly profileTypeCustomerMappingService: ProfileTypeCustomerMappingService,
-  ) { }
+  ) {}
 
   @Post()
   create(
@@ -55,7 +60,9 @@ export class ProfileTypeCustomerMappingController {
 
   @Get('profile-customer-mappings-by-profile/:id')
   fetchMappings(@Param('id') id: string) {
-    return this.profileTypeCustomerMappingService.findAllByProfileTypeId(id)
+    return this.profileTypeCustomerMappingService.findAllByProfileTypeId(
+      id,
+    );
   }
 
   @Get('grouped-counts-by-profile-type-name')
@@ -102,6 +109,29 @@ export class ProfileTypeCustomerMappingController {
     return this.profileTypeCustomerMappingService.updateProfileTypeCustomerMappingGeneric(
       customer_id,
     );
+  }
+
+  @Get('/by-customer/:customerId')
+  async getProfileTypeMappingsByCustomerId(
+    @Param('customerId') customerId: string,
+  ) {
+    this.logger.log(
+      `Fetching profile type mappings for customer ID: ${customerId}`,
+    );
+    try {
+      const mappings =
+        await this.profileTypeCustomerMappingService.findAllByCustomerId(
+          customerId,
+        );
+      return mappings;
+    } catch (error) {
+      this.logger.error(
+        `Error fetching profile type mappings for customer ID ${customerId}: ${error.message}`,
+      );
+      throw new InternalServerErrorException(
+        'Could not fetch profile type mappings',
+      );
+    }
   }
 
   @Get('customer-mapping/:customerId')

@@ -29,6 +29,17 @@ export class ProfileTypeCustomerMappingService {
     return this.prisma.profileTypeCustomerMapping.findMany();
   }
 
+  async findAllByCustomerId(
+    customerId: string,
+  ): Promise<ProfileTypeCustomerMapping[]> {
+    return this.prisma.profileTypeCustomerMapping.findMany(
+      {
+        where: { customerId },
+        include: { profileType: true },
+      },
+    );
+  }
+
   // async findOne(id: string): Promise<ProfileTypeCustomerMapping | null> {
   //     return this.prisma.profileTypeCustomerMapping.findUnique({ where: { id } });
   // }

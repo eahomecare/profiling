@@ -4,9 +4,11 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Param,
   Patch,
   Post,
+  Query,
   Response,
   UseGuards,
 } from '@nestjs/common';
@@ -18,9 +20,12 @@ import { CreateCustomerHomecarePayload } from './types';
 // @UseGuards(JwtGuard)
 @Controller('customers')
 export class CustomerController {
+  private readonly logger = new Logger(
+    CustomerController.name,
+  );
   constructor(
     private customerService: CustomerService,
-  ) { }
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
@@ -50,6 +55,27 @@ export class CustomerController {
     return await this.customerService.fetchCustomerRemarks(
       customerId,
     );
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('paginated')
+  getCustomerDetailsPaginated(
+    @Query('page') page = '1',
+    @Query('pageSize') pageSize = '10',
+  ) {
+    this.logger.debug(
+      'Pagination details',
+      'page',
+      page,
+      'pageSize',
+      pageSize,
+    );
+    const paginatedResponse =
+      this.customerService.fetchCustomerDetailsPaginated(
+        page,
+        pageSize,
+      );
+    return paginatedResponse;
   }
 
   @HttpCode(HttpStatus.OK)
@@ -99,9 +125,11 @@ export class CustomerController {
 
   @Get('/count/monthly/:source')
   getMonthlyCounts(
-    @Param('source') source: string
+    @Param('source') source: string,
   ) {
-    return this.customerService.countCustomersByMonth(source);
+    return this.customerService.countCustomersByMonth(
+      source,
+    );
   }
 
   @Post('/add/customer/generic')

@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   PreconditionFailedException,
   UnprocessableEntityException,
@@ -15,6 +16,9 @@ import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-map
 @Injectable()
 export class SubmitService {
   private filter: Filter;
+  private readonly logger = new Logger(
+    SubmitService.name,
+  );
   constructor(
     private prisma: PrismaService,
     private profileTypeCustomerMapping: ProfileTypeCustomerMappingService,
@@ -26,9 +30,23 @@ export class SubmitService {
     customerId: string,
     keywordIds: string[],
   ): Promise<any[]> {
+    this.logger.log(
+      `Connecting customer with ID ${customerId} to keyword IDs: ${keywordIds.join(
+        ', ',
+      )}`,
+    );
     const connectedKeywords = [];
+
     try {
       for (const keywordId of keywordIds) {
+        this.logger.log(
+          `Processing keyword ID: ${keywordId}`,
+        );
+
+        // Updating the keyword
+        this.logger.log(
+          `Updating keyword with ID: ${keywordId} for customer ID: ${customerId}`,
+        );
         const updatedKeyword =
           await this.prisma.keyword.update({
             where: { id: keywordId },
@@ -41,8 +59,26 @@ export class SubmitService {
               profile_types: true,
             },
           });
+        this.logger.log(
+          `Updated keyword: ${JSON.stringify(
+            updatedKeyword,
+          )}`,
+        );
 
-        for (const profileType of updatedKeyword.profile_types) {
+        // Find ProfileType based on keyword category
+        const profileType =
+          await this.prisma.profileType.findFirst(
+            {
+              where: {
+                category: updatedKeyword.category,
+              },
+            },
+          );
+
+        if (profileType) {
+          this.logger.debug(
+            `Updating ProfileTypeCustomerMapping for profile type ID: ${profileType.id} and customer ID: ${customerId}`,
+          );
           await this.prisma.profileTypeCustomerMapping.updateMany(
             {
               where: {
@@ -55,18 +91,26 @@ export class SubmitService {
               },
             },
           );
+          this.logger.debug(
+            `Updated ProfileTypeCustomerMapping for profile type ID: ${profileType.id}`,
+          );
+        } else {
+          this.logger.warn(
+            `No ProfileType found for category: ${updatedKeyword.category}`,
+          );
+          // Optionally handle the case where no matching ProfileType is found
         }
 
         connectedKeywords.push(updatedKeyword);
       }
+
       return connectedKeywords;
     } catch (error) {
-      console.error(
-        'Error in connectCustomerToKeywords:',
-        error,
+      this.logger.error(
+        `Error in connectCustomerToKeywords for customer ID ${customerId}: ${error.message}`,
       );
       throw new PreconditionFailedException(
-        'Keywords and Customers seem to not exist. Check and try again',
+        'Error connecting customer to keywords. Please check the provided data and try again.',
       );
     }
   }

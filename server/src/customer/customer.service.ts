@@ -21,7 +21,7 @@ export class CustomerService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
-  ) { }
+  ) {}
 
   async countCustomersByMonth(source: string) {
     const query: any = {
@@ -59,9 +59,9 @@ export class CustomerService {
       customers,
       (customer: any) =>
         monthNames[
-        customer.created_at
-          .toISOString()
-          .slice(5, 7)
+          customer.created_at
+            .toISOString()
+            .slice(5, 7)
         ] +
         ' ' +
         customer.created_at
@@ -171,9 +171,6 @@ export class CustomerService {
     }
   }
 
-
-
-
   // async fetchCustomerDetails() {
   //   const customerDetails = {
   //     customer_details:
@@ -260,6 +257,39 @@ export class CustomerService {
     };
   }
 
+  async fetchCustomerDetailsPaginated(
+    page: string,
+    pageSize: string,
+  ) {
+    const pageNumber = parseInt(page, 10);
+    const pageSizeNumber = parseInt(pageSize, 10);
+    const skip =
+      (pageNumber - 1) * pageSizeNumber;
+
+    const customers =
+      await this.prisma.customer.findMany({
+        skip,
+        take: pageSizeNumber,
+        include: {
+          personal_details: true,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+
+    // Optionally, you can also return the total count of customers for pagination purposes
+    const totalCount =
+      await this.prisma.customer.count();
+
+    return {
+      customers,
+      totalCount,
+      page,
+      pageSize,
+    };
+  }
+
   async fetchCustomerInfo(customerId: string) {
     const customerDetails = {
       customer_details:
@@ -269,13 +299,18 @@ export class CustomerService {
         }),
     };
 
-    const isHNI = await this.isCustomerHNI(customerId);
+    const isHNI = await this.isCustomerHNI(
+      customerId,
+    );
 
-    const { personal_details, ...rest } = customerDetails.customer_details;
-    const formattedCustomerDetails = { ...rest, profiling: { personal_details } }
-    formattedCustomerDetails["isHNI"] = isHNI
-    return formattedCustomerDetails
-
+    const { personal_details, ...rest } =
+      customerDetails.customer_details;
+    const formattedCustomerDetails = {
+      ...rest,
+      profiling: { personal_details },
+    };
+    formattedCustomerDetails['isHNI'] = isHNI;
+    return formattedCustomerDetails;
   }
 
   async patchCustomerDetails(
@@ -502,8 +537,8 @@ export class CustomerService {
       const dateOfBirth =
         personalDetailsInput.date_of_birth
           ? new Date(
-            personalDetailsInput.date_of_birth,
-          )
+              personalDetailsInput.date_of_birth,
+            )
           : null;
 
       const customer =
@@ -704,13 +739,13 @@ export class CustomerService {
         agentName: data?.agent?.agentName,
         date: isValidDate
           ? data.created_at
-            .toISOString()
-            .split('T')[0]
+              .toISOString()
+              .split('T')[0]
           : 'N/A',
         time: isValidDate
           ? data.created_at
-            .toTimeString()
-            .split(' ')[0]
+              .toTimeString()
+              .split(' ')[0]
           : 'N/A',
         remark: data.remarks,
       };
