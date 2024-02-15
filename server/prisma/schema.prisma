@@ -45,6 +45,7 @@ model Customer {
   other_email                 Json?
   source                      String
   profiling                   Json?
+  profile_percentage          Int?                          @default(0) // New profile calculation method's storage 
   keys                        String[]                      @default([])
   profile_completion          Int?
   created_at                  DateTime                      @default(now())

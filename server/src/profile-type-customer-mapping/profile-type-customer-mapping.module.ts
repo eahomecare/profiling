@@ -3,7 +3,10 @@ import { ProfileTypeCustomerMappingController } from './profile-type-customer-ma
 import { ProfileTypeCustomerMappingService } from './profile-type-customer-mapping.service';
 
 @Module({
-  controllers: [ProfileTypeCustomerMappingController],
-  providers: [ProfileTypeCustomerMappingService]
+  controllers: [
+    ProfileTypeCustomerMappingController,
+  ],
+  providers: [ProfileTypeCustomerMappingService],
+  exports: [ProfileTypeCustomerMappingService],
 })
 export class ProfileTypeCustomerMappingModule {}

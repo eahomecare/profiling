@@ -15,12 +15,14 @@ import { tryCatch } from 'bullmq';
 import { CreateCustomerHomecarePayload } from './types';
 import { log } from 'console';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
+import { CustomerElasticService } from './customerElastic.service';
 
 @Injectable()
 export class CustomerService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
+    private readonly customerElasticService: CustomerElasticService,
   ) {}
 
   async countCustomersByMonth(source: string) {
@@ -706,6 +708,12 @@ export class CustomerService {
           },
         );
       }
+
+      //update customerElastic
+      await this.customerElasticService.indexOrUpdateCustomer(
+        'customertable',
+        customerMaster.id,
+      );
 
       return customerHomecareMapping;
     } catch (error) {
