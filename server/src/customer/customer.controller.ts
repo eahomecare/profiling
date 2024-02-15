@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Logger,
   Param,
@@ -16,6 +17,12 @@ import { JwtGuard } from '../auth/guard';
 import { CustomerService } from './customer.service';
 import { Customer, Prisma } from '@prisma/client';
 import { CreateCustomerHomecarePayload } from './types';
+import { CustomerElasticService } from './customerElastic.service';
+import {
+  ColumnSearchDto,
+  CompoundSearchDto,
+  GlobalSearchDto,
+} from './customer.dto';
 
 // @UseGuards(JwtGuard)
 @Controller('customers')
@@ -25,6 +32,7 @@ export class CustomerController {
   );
   constructor(
     private customerService: CustomerService,
+    private customerElasticService: CustomerElasticService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -183,6 +191,126 @@ export class CustomerController {
         message: 'Failed to create customer',
         status: 500,
       };
+    }
+  }
+
+  //Elastic Routes
+  @Get('elastic/global-search')
+  async globalSearch(
+    @Query('searchTerm') searchTerm: string,
+    @Query('from') from?: number,
+    @Query('size') size?: number,
+  ) {
+    try {
+      const results =
+        await this.customerElasticService.globalSearch(
+          'customertable',
+          searchTerm,
+          from,
+          size,
+        );
+      return results;
+    } catch (error) {
+      this.logger.error(
+        `Global search failed: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
+
+  @Get('elastic/column-search')
+  async columnSearch(
+    @Query('field') field: string,
+    @Query('searchTerm') searchTerm: string,
+    @Query('from') from?: number,
+    @Query('size') size?: number,
+  ) {
+    try {
+      const results =
+        await this.customerElasticService.columnSearch(
+          'customertable',
+          field,
+          searchTerm,
+          from,
+          size,
+        );
+      return results;
+    } catch (error) {
+      this.logger.error(
+        `Column search failed: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
+
+  @Get('elastic/compound-search')
+  async compoundSearch(
+    @Query()
+    searchTerms: { [key: string]: string },
+    @Query('from') from?: number,
+    @Query('size') size?: number,
+  ) {
+    try {
+      // Filter out empty string values from searchTerms
+      const filteredTerms = Object.entries(
+        searchTerms,
+      ).reduce((acc, [key, value]) => {
+        if (
+          value !== '' &&
+          key !== 'from' &&
+          key !== 'size'
+        ) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
+
+      // Ensure 'from' and 'size' are converted to numbers, if defined
+      const numericFrom = from
+        ? Number(from)
+        : undefined;
+      const numericSize = size
+        ? Number(size)
+        : undefined;
+
+      const results =
+        await this.customerElasticService.compoundSearch(
+          'customertable',
+          filteredTerms,
+          numericFrom,
+          numericSize,
+        );
+      return results;
+    } catch (error) {
+      this.logger.error(
+        `Compound search failed: ${error.message}`,
+        error.stack,
+      );
+      throw error; // Or return a more user-friendly error message/object
+    }
+  }
+
+  @Get('elastic/fetch-paginated-results')
+  async fetchPaginatedResults(
+    @Query('from') from?: number,
+    @Query('size') size?: number,
+  ) {
+    try {
+      const results =
+        await this.customerElasticService.fetchPaginatedResults(
+          'customertable',
+          from,
+          size,
+        );
+      return results;
+    } catch (error) {
+      this.logger.error(
+        `Fetching paginated results failed: ${error.message}`,
+        error.stack,
+      );
+      throw error;
     }
   }
 }
