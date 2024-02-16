@@ -15,7 +15,6 @@ export class CustomerElasticService
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
     private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => ProfileService))
     private readonly profileService: ProfileService,
   ) {}
 
@@ -224,7 +223,6 @@ export class CustomerElasticService
     size = 10,
   ) {
     try {
-      // Ensure the field is one of the autocomplete-enabled fields
       if (
         ![
           'name',
@@ -278,7 +276,6 @@ export class CustomerElasticService
       const mustQueries = Object.keys(
         searchTerms,
       ).map((field) => {
-        // Ensure only searchable fields are included
         if (
           ![
             'name',
