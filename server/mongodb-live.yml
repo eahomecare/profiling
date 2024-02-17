@@ -9,10 +9,10 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example_live # Root password for MongoDB
       MONGO_INITDB_ROOT_DATABASE: mongo_live # Default database to be created
       MONGO_REPLICA_PORT: 27018 # Custom port for MongoDB
-    command: mongod --port 27018 --replSet rs0 --bind_ip 0.0.0.0 # Command to start MongoDB on custom port and initialize replica set
     network_mode: 'host' # Using the host network mode
     volumes:
       - mongo_data_live:/data/db # Volume for MongoDB data persistence
 
 volumes:
-  mongo_data_live: # Definition of the named volume
+  mongo_data_live:
+    external: false
