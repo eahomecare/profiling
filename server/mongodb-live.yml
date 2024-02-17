@@ -1,0 +1,18 @@
+version: '3.1'
+services:
+  mongo-live:
+    build: ./mongodb_rs
+    restart: always
+    container_name: mongodb_live
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo_live
+      MONGO_INITDB_ROOT_PASSWORD: example_live
+      MONGO_INITDB_ROOT_DATABASE: mongo_live
+    volumes:
+      - mongo_data_live:/data/db
+    ports:
+      - '27018:27017'
+    network_mode: 'host'
+
+volumes:
+  mongo_data_live:
