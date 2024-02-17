@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  elasticsearch-live:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    container_name: elasticsearch_live
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata_live:/usr/share/elasticsearch/data
+    ports:
+      - 9201:9200
+    network_mode: 'host'
+
+volumes:
+  esdata_live:
