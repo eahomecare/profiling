@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   OnModuleInit,
+  Logger,
 } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ProfileService } from 'src/profile/profile.service';
@@ -12,32 +13,53 @@ import { PrismaService } from '../prisma/prisma.service';
 export class CustomerElasticService
   implements OnModuleInit
 {
+  private readonly logger = new Logger(
+    CustomerElasticService.name,
+  );
+
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
     private readonly prisma: PrismaService,
     @Inject(forwardRef(() => ProfileService))
     private readonly profileService: ProfileService,
-  ) {}
+  ) {
+    this.logger.log(
+      'CustomerElasticService instantiated',
+    );
+  }
 
   async onModuleInit() {
+    this.logger.log(
+      'Initializing CustomerElasticService module...',
+    );
     await this.initCustomerIndex();
   }
 
   private async initCustomerIndex() {
     const indexName = 'customertable';
     try {
+      this.logger.log(
+        `Checking if index "${indexName}" exists...`,
+      );
       const indexExists =
         await this.elasticsearchService.indices.exists(
           { index: indexName },
         );
       if (!indexExists.body) {
+        this.logger.log(
+          `Index "${indexName}" does not exist. Creating it...`,
+        );
         await this.createCustomerIndex(indexName);
         await this.indexExistingCustomers(
           indexName,
         );
+      } else {
+        this.logger.log(
+          `Index "${indexName}" already exists.`,
+        );
       }
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Failed to initialize customer index: ${error.message}`,
       );
     }
@@ -47,6 +69,9 @@ export class CustomerElasticService
     indexName: string,
   ) {
     try {
+      this.logger.log(
+        `Creating index "${indexName}"...`,
+      );
       await this.elasticsearchService.indices.create(
         {
           index: indexName,
@@ -104,8 +129,11 @@ export class CustomerElasticService
           },
         },
       );
+      this.logger.log(
+        `Index "${indexName}" created successfully.`,
+      );
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Failed to create customer index: ${error.message}`,
       );
     }
@@ -114,6 +142,9 @@ export class CustomerElasticService
   private async indexExistingCustomers(
     indexName: string,
   ) {
+    this.logger.log(
+      'Indexing existing customers...',
+    );
     try {
       const customers =
         await this.prisma.customer.findMany();
@@ -126,8 +157,11 @@ export class CustomerElasticService
           customer.id,
         );
       }
+      this.logger.log(
+        'Existing customers indexed successfully.',
+      );
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Failed to index existing customers: ${error.message}`,
       );
     }
@@ -137,6 +171,9 @@ export class CustomerElasticService
     indexName: string,
     customerId: string,
   ) {
+    this.logger.log(
+      `Indexing or updating customer with ID: ${customerId}`,
+    );
     try {
       const customer =
         await this.prisma.customer.findUnique({
@@ -147,7 +184,7 @@ export class CustomerElasticService
         });
 
       if (!customer) {
-        console.error(
+        this.logger.error(
           `Customer not found with ID: ${customerId}`,
         );
         return;
@@ -169,8 +206,11 @@ export class CustomerElasticService
           createdDate: customer.created_at,
         },
       });
+      this.logger.log(
+        `Customer with ID: ${customerId} indexed/updated successfully.`,
+      );
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Failed to index or update customer: ${error.message}`,
       );
     }
@@ -182,6 +222,9 @@ export class CustomerElasticService
     from = 0,
     size = 10,
   ) {
+    this.logger.log(
+      `Performing global search for term: "${searchTerm}"...`,
+    );
     try {
       const response =
         await this.elasticsearchService.search({
@@ -205,9 +248,12 @@ export class CustomerElasticService
             ],
           },
         });
+      this.logger.log(
+        'Global search executed successfully.',
+      );
       return response;
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Global search error: ${error.message}`,
       );
       throw new Error(
@@ -223,6 +269,9 @@ export class CustomerElasticService
     from = 0,
     size = 10,
   ) {
+    this.logger.log(
+      `Performing column search for term: "${searchTerm}" in field: "${field}"...`,
+    );
     try {
       // Ensure the field is one of the autocomplete-enabled fields
       if (
@@ -257,9 +306,12 @@ export class CustomerElasticService
             ],
           },
         });
+      this.logger.log(
+        'Column search executed successfully.',
+      );
       return response;
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Column search error: ${error.message}`,
       );
       throw new Error(
@@ -274,6 +326,9 @@ export class CustomerElasticService
     from = 0,
     size = 10,
   ) {
+    this.logger.log(
+      'Performing compound search with multiple terms...',
+    );
     try {
       const mustQueries = Object.keys(
         searchTerms,
@@ -317,9 +372,12 @@ export class CustomerElasticService
             ],
           },
         });
+      this.logger.log(
+        'Compound search executed successfully.',
+      );
       return response;
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Compound search error: ${error.message}`,
       );
       throw new Error(
@@ -333,6 +391,9 @@ export class CustomerElasticService
     from = 0,
     size = 10,
   ) {
+    this.logger.log(
+      'Fetching paginated results...',
+    );
     try {
       const response =
         await this.elasticsearchService.search({
@@ -348,9 +409,12 @@ export class CustomerElasticService
             ],
           },
         });
+      this.logger.log(
+        'Paginated results fetched successfully.',
+      );
       return response;
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Fetch paginated results error: ${error.message}`,
       );
       throw new Error(
