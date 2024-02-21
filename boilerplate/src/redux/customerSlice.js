@@ -70,9 +70,9 @@ const customerSlice = createSlice({
       state.customerProfileCompletion = action.payload;
     },
     clearCurrentCustomer: (state, action) => {
-      state.customerDetails = []
-      state.customerDetailsStatus = "idle"
-    }
+      // state.customerDetails = [];
+      state.customerDetailsStatus = "idle";
+    },
   },
   extraReducers: {
     [getCustomers.pending]: (state) => {
@@ -143,4 +143,8 @@ const customerSlice = createSlice({
 });
 
 export default customerSlice.reducer;
-export const { setCurrentCustomer, clearCurrentCustomer, setCurrentCustomerProfileCompletion } = customerSlice.actions;
+export const {
+  setCurrentCustomer,
+  clearCurrentCustomer,
+  setCurrentCustomerProfileCompletion,
+} = customerSlice.actions;

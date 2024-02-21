@@ -37,13 +37,10 @@ const PersonalInformation = ({ selectedCustomer }) => {
     };
   }, [memoizedSelectedCustomer]);
 
-
-
   if (profile) {
     return (
       <>
         <Container>
-
           <div>
             <Text fw={500}>Address & Other Info</Text>
             <Grid gutter="xl">
@@ -71,8 +68,6 @@ const PersonalInformation = ({ selectedCustomer }) => {
                   subject={randomDetails.randomAddress}
                 />
               </Grid.Col>
-
-
             </Grid>
           </div>
           <div>
@@ -84,36 +79,26 @@ const PersonalInformation = ({ selectedCustomer }) => {
                 />
               </Grid.Col>
               <Grid.Col span={6}>
-                <InfoTag title={"Travel Address"} subject={profile.travel_address} />
-              </Grid.Col>
-              <Grid.Col span={6}>
                 <InfoTag
-                  title={"Anniversary"}
-                  subject={profile.anniversary}
+                  title={"Travel Address"}
+                  subject={profile.travel_address}
                 />
               </Grid.Col>
-
               <Grid.Col span={6}>
-                <InfoTag
-                  title={"Employment"}
-                  subject={profile.employment}
-                />
+                <InfoTag title={"Anniversary"} subject={profile.anniversary} />
               </Grid.Col>
 
-
+              <Grid.Col span={6}>
+                <InfoTag title={"Employment"} subject={profile.employment} />
+              </Grid.Col>
             </Grid>
           </div>
         </Container>
       </>
     );
-
   } else {
-    return (
-      <>Fetching profile ...</>
-    )
+    return <>Fetching profile ...</>;
   }
-
-
 };
 
 export default PersonalInformation;
