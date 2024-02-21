@@ -10,6 +10,7 @@ import customerProfileSlice from "./customerProfileSlice";
 import profileAnalysisSlice from "./profileAnalysisSlice";
 import profilingSlice from "./profileTypesSlice";
 import campaignListSlice from "./campaignListSlice";
+import elasticCustomersSlice from "./elasticCustomersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +25,6 @@ export const store = configureStore({
     profileCount: profileAnalysisSlice,
     profileTypesCustomerMapping: profilingSlice,
     campaignListSlice: campaignListSlice,
+    elasticCustomers: elasticCustomersSlice,
   },
 });
