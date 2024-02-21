@@ -17,7 +17,6 @@ import { loadingStateElasticCustomers } from "../../redux/elasticCustomersSlice.
 import { useDispatch, useSelector } from "react-redux";
 import TableDisplay from "../../components/TableDisplay";
 import { IconRefresh } from "@tabler/icons-react";
-import TableDisplay2 from "../../components/TableDisplay2";
 import StyledTable3 from "../../StyledComponents/StyledTable3";
 import { fetchPaginatedResults } from "../../redux/elasticCustomersSlice";
 
@@ -86,7 +85,6 @@ const Customers = () => {
             {/*   fetchedPofileCompleteness={fetchedPofileCompleteness} */}
             {/*   topProps={() => refreshButton} */}
             {/* /> */}
-            {/* <TableDisplay2 /> */}
             <StyledTable3 />
           </div>
         </span>
