@@ -686,34 +686,36 @@ export class CustomerService {
           },
         );
 
-      const allProfileTypes =
-        await this.prisma.profileType.findMany();
-
-      for (const profileType of allProfileTypes) {
-        await this.prisma.profileTypeCustomerMapping.create(
-          {
-            data: {
-              profileType: {
-                connect: {
-                  id: profileType.id,
-                },
-              },
-              customer: {
-                connect: {
-                  id: customerMaster.id,
-                },
-              },
-              level: 1,
-            },
-          },
-        );
-      }
+      //comment before live customer transfer
+      //-------------------------------------
+      // const allProfileTypes =
+      //   await this.prisma.profileType.findMany();
+      //
+      // for (const profileType of allProfileTypes) {
+      //   await this.prisma.profileTypeCustomerMapping.create(
+      //     {
+      //       data: {
+      //         profileType: {
+      //           connect: {
+      //             id: profileType.id,
+      //           },
+      //         },
+      //         customer: {
+      //           connect: {
+      //             id: customerMaster.id,
+      //           },
+      //         },
+      //         level: 1,
+      //       },
+      //     },
+      //   );
+      // }
 
       //update customerElastic
-      await this.customerElasticService.indexOrUpdateCustomer(
-        'customertable',
-        customerMaster.id,
-      );
+      // await this.customerElasticService.indexOrUpdateCustomer(
+      //   'customertable',
+      //   customerMaster.id,
+      // );
 
       return customerHomecareMapping;
     } catch (error) {
