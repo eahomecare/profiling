@@ -32,7 +32,18 @@ export class UserService {
         },
       });
 
-      const permissions = await this.permissionsService.findPermissionsByRoleId(roleId);
+      const found_role = await this.prisma.role.findUnique({
+        where: {
+          id: roleId,
+        },
+      })
+
+      let permissions;
+      if (found_role.name == 'superadmin') {
+        permissions = await this.prisma.permission.findMany()
+      } else {
+        permissions = await this.permissionsService.findPermissionsByRoleId(roleId);
+      }
       const mappingIds = [];
 
       for (const permission of permissions) {
@@ -61,11 +72,12 @@ export class UserService {
       const updatedUser = await this.prisma.user.findUnique({
         where: {
           id: createdUser.id,
-        },include:{role:true}
+        }, include: { role: true }
       });
 
       return updatedUser;
     } catch (error) {
+      console.log(error);
       throw new Error('Failed to create user');
     }
   }
