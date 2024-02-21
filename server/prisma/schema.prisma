@@ -71,21 +71,21 @@ model Customer {
 }
 
 model Personal_Details {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  customer      Customer  @relation(fields: [customer_id], references: [id])
-  customer_id   String    @unique @db.ObjectId
-  full_name     String?
-  address       String?
-  phone_number  String?
-  email_address String?
-  date_of_birth DateTime?
-  employment    String?
-  location      String?
-  anniversary   DateTime?
-  gender        String?
-  marital_status String?
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  customer        Customer  @relation(fields: [customer_id], references: [id])
+  customer_id     String    @unique @db.ObjectId
+  full_name       String?
+  address         String?
+  phone_number    String?
+  email_address   String?
+  date_of_birth   DateTime?
+  employment      String?
+  location        String?
+  anniversary     DateTime?
+  gender          String?
+  marital_status  String?
   current_address String?
-  travel_address String?
+  travel_address  String?
 }
 
 model Keyword {
@@ -262,6 +262,7 @@ enum RoleNames {
   campaign_manager
   team_lead
   qc
+  superadmin
 }
 
 enum PermissionNames {
@@ -357,7 +358,7 @@ model agentSubmits {
 
 model Campaign {
   id             String                   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String                 
+  name           String
   description    String?
   eventBased     Boolean                  @default(false)
   triggerTime    String
