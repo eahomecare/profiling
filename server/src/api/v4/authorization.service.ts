@@ -85,13 +85,13 @@ export class AuthorizationService {
         HttpStatus.UNAUTHORIZED,
       );
 
-    const base64Regex =
-      /^(?:[A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{2}[A-Za-z0-9+\/]|[A-Za-z0-9+\/]{3})?=$/;
-    if (!base64Regex.test(encodedToken))
-      throw new HttpException(
-        'Invalid Base64 Encoding',
-        HttpStatus.UNAUTHORIZED,
-      );
+    // const base64Regex =
+    //   /^(?:[A-Za-z0-9+\/]{4})*([A-Za-z0-9+\/]{2}[A-Za-z0-9+\/]|[A-Za-z0-9+\/]{3})?=$/;
+    // if (!base64Regex.test(encodedToken))
+    //   throw new HttpException(
+    //     'Invalid Base64 Encoding',
+    //     HttpStatus.UNAUTHORIZED,
+    //   );
 
     return Buffer.from(
       encodedToken,
