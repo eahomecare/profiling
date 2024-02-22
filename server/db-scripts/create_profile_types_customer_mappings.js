@@ -11,9 +11,10 @@ async function createProfileTypeCustomerMappings() {
 
   const parallelCustomers = 1000;
 
+  let i = 0;
   const customerChunks = [];
   for (
-    let i = 0;
+    i = 0;
     i < customers.length;
     i += parallelCustomers
   ) {
@@ -36,10 +37,11 @@ async function createProfileTypeCustomerMappings() {
             },
           );
 
-          console.log(
-            `ProfileTypeCustomerMapping created for customer ${customer.id} and profile type ${profileType.id}`,
-          );
+          // console.log(
+          //   `ProfileTypeCustomerMapping created for customer ${customer.id} and profile type ${profileType.id}`,
+          // );
         }
+        console.log(`${i} customers completed`);
       }
     }),
   );
