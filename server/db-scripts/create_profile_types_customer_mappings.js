@@ -11,16 +11,16 @@ async function createProfileTypeCustomerMappings() {
 
   const parallelCustomers = 1000;
 
-  let i = 0;
   const customerChunks = [];
   for (
-    i = 0;
+    let i = 0;
     i < customers.length;
     i += parallelCustomers
   ) {
     customerChunks.push(
       customers.slice(i, i + parallelCustomers),
     );
+    console.log(`${i} customers started`);
   }
 
   await Promise.all(
@@ -41,7 +41,6 @@ async function createProfileTypeCustomerMappings() {
           //   `ProfileTypeCustomerMapping created for customer ${customer.id} and profile type ${profileType.id}`,
           // );
         }
-        console.log(`${i} customers completed`);
       }
     }),
   );
