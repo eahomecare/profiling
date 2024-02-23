@@ -20,6 +20,7 @@ export class CustomerElasticService
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
     private readonly prisma: PrismaService,
+    @Inject(forwardRef(() => ProfileService))
     private readonly profileService: ProfileService,
   ) {
     this.logger.log(
@@ -142,26 +143,56 @@ export class CustomerElasticService
     indexName: string,
   ) {
     this.logger.log(
-      'Indexing existing customers...',
+      'Indexing existing customers in batches...',
     );
     try {
       const customers =
-        await this.prisma.customer.findMany();
-      for (const customer of customers) {
-        await this.profileService.calculateAndSaveProfileCompletion(
-          customer.id,
+        await this.prisma.customer.findMany({
+          include: {
+            personal_details: true,
+          },
+        });
+      const batchSize = 1000; // Adjust based on performance
+      for (
+        let i = 0;
+        i < customers.length;
+        i += batchSize
+      ) {
+        const batch = customers.slice(
+          i,
+          i + batchSize,
         );
-        await this.indexOrUpdateCustomer(
-          indexName,
-          customer.id,
-        );
+        const body = batch.flatMap((customer) => [
+          {
+            index: {
+              _index: indexName,
+              _id: customer.id,
+            },
+          },
+          {
+            name:
+              customer.personal_details
+                ?.full_name || '',
+            customerId: customer.id,
+            email: customer.email || '',
+            source: customer.source || '',
+            mobile: customer.mobile || '',
+            profile_percentage:
+              customer.profile_percentage || 0,
+            createdDate: customer.created_at,
+          },
+        ]);
+        await this.elasticsearchService.bulk({
+          refresh: true,
+          body,
+        });
       }
       this.logger.log(
-        'Existing customers indexed successfully.',
+        'Existing customers indexed in batches successfully.',
       );
     } catch (error) {
       this.logger.error(
-        `Failed to index existing customers: ${error.message}`,
+        `Failed to index existing customers in batches: ${error.message}`,
       );
     }
   }
@@ -272,6 +303,20 @@ export class CustomerElasticService
       `Performing column search for term: "${searchTerm}" in field: "${field}"...`,
     );
     try {
+      // Ensure the field is one of the autocomplete-enabled fields
+      if (
+        ![
+          'name',
+          'email',
+          'source',
+          'mobile',
+        ].includes(field)
+      ) {
+        throw new Error(
+          `Invalid search field: ${field}`,
+        );
+      }
+
       const response =
         await this.elasticsearchService.search({
           index: indexName,
@@ -318,6 +363,19 @@ export class CustomerElasticService
       const mustQueries = Object.keys(
         searchTerms,
       ).map((field) => {
+        // Ensure only searchable fields are included
+        if (
+          ![
+            'name',
+            'email',
+            'source',
+            'mobile',
+          ].includes(field)
+        ) {
+          throw new Error(
+            `Invalid search field: ${field}`,
+          );
+        }
         return {
           match: {
             [field]: {
