@@ -202,20 +202,25 @@ export class CustomerController {
     @Query('size') size?: number,
   ) {
     try {
-      const results =
+      const { body } =
         await this.customerElasticService.globalSearch(
           'customertable',
           searchTerm,
           from,
           size,
         );
-      return results;
+      return body.hits.hits.map(
+        (hit) => hit._source,
+      );
     } catch (error) {
       this.logger.error(
         `Global search failed: ${error.message}`,
         error.stack,
       );
-      throw error;
+      return {
+        error:
+          'Failed to execute global search. Please try again later.',
+      };
     }
   }
 
@@ -227,7 +232,7 @@ export class CustomerController {
     @Query('size') size?: number,
   ) {
     try {
-      const results =
+      const { body } =
         await this.customerElasticService.columnSearch(
           'customertable',
           field,
@@ -235,13 +240,18 @@ export class CustomerController {
           from,
           size,
         );
-      return results;
+      return body.hits.hits.map(
+        (hit) => hit._source,
+      );
     } catch (error) {
       this.logger.error(
         `Column search failed: ${error.message}`,
         error.stack,
       );
-      throw error;
+      return {
+        error:
+          'Failed to execute column search. Please try again later.',
+      };
     }
   }
 
@@ -253,42 +263,37 @@ export class CustomerController {
     @Query('size') size?: number,
   ) {
     try {
-      // Filter out empty string values from searchTerms
+      const {
+        from: queryFrom,
+        size: querySize,
+        ...terms
+      } = searchTerms;
       const filteredTerms = Object.entries(
-        searchTerms,
+        terms,
       ).reduce((acc, [key, value]) => {
-        if (
-          value !== '' &&
-          key !== 'from' &&
-          key !== 'size'
-        ) {
-          acc[key] = value;
-        }
+        if (value !== '') acc[key] = value;
         return acc;
       }, {});
 
-      // Ensure 'from' and 'size' are converted to numbers, if defined
-      const numericFrom = from
-        ? Number(from)
-        : undefined;
-      const numericSize = size
-        ? Number(size)
-        : undefined;
-
-      const results =
+      const { body } =
         await this.customerElasticService.compoundSearch(
           'customertable',
           filteredTerms,
-          numericFrom,
-          numericSize,
+          Number(from),
+          Number(size),
         );
-      return results;
+      return body.hits.hits.map(
+        (hit) => hit._source,
+      );
     } catch (error) {
       this.logger.error(
         `Compound search failed: ${error.message}`,
         error.stack,
       );
-      throw error; // Or return a more user-friendly error message/object
+      return {
+        error:
+          'Failed to execute compound search. Please try again later.',
+      };
     }
   }
 
@@ -298,19 +303,24 @@ export class CustomerController {
     @Query('size') size?: number,
   ) {
     try {
-      const results =
+      const { body } =
         await this.customerElasticService.fetchPaginatedResults(
           'customertable',
           from,
           size,
         );
-      return results;
+      return body.hits.hits.length > 0
+        ? body.hits.hits.map((hit) => hit._source)
+        : [];
     } catch (error) {
       this.logger.error(
         `Fetching paginated results failed: ${error.message}`,
         error.stack,
       );
-      throw error;
+      return {
+        error:
+          'Failed to fetch paginated results. Please try again later.',
+      };
     }
   }
 }
