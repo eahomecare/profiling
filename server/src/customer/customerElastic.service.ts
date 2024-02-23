@@ -186,6 +186,9 @@ export class CustomerElasticService
           refresh: true,
           body,
         });
+        this.logger.log(
+          `Batch ${i + 1} completed`,
+        );
       }
       this.logger.log(
         'Existing customers indexed in batches successfully.',
