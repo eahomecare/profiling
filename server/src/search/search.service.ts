@@ -55,9 +55,7 @@ export class SearchService
           body: {
             mappings: {
               properties: {
-                id: {
-                  type: 'keyword',
-                },
+                id: { type: 'keyword' },
                 category: {
                   type: 'text',
                   fields: {
@@ -74,9 +72,7 @@ export class SearchService
                     },
                   },
                 },
-                level: {
-                  type: 'integer',
-                },
+                level: { type: 'integer' },
               },
             },
           },
@@ -103,10 +99,10 @@ export class SearchService
 
     switch (field) {
       case 'category':
-        suggestField = 'category_suggest';
+        suggestField = 'category.suggest'; // Corrected to dot notation
         break;
       case 'value':
-        suggestField = 'value_suggest';
+        suggestField = 'value.suggest'; // Corrected to dot notation
         break;
       case 'both':
         return await this.autocompleteBothFields(
@@ -114,7 +110,7 @@ export class SearchService
           term,
         );
       default:
-        suggestField = 'value_suggest';
+        suggestField = 'value.suggest'; // Corrected to dot notation
         break;
     }
 
@@ -165,8 +161,8 @@ export class SearchService
               label_suggestion: {
                 prefix: term,
                 completion: {
-                  field: 'category_suggest',
-                },
+                  field: 'category.suggest',
+                }, // Corrected to dot notation
               },
             },
           },
@@ -182,8 +178,8 @@ export class SearchService
               label_suggestion: {
                 prefix: term,
                 completion: {
-                  field: 'value_suggest',
-                },
+                  field: 'value.suggest',
+                }, // Corrected to dot notation
               },
             },
           },
