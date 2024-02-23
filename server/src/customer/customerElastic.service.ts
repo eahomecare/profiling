@@ -152,7 +152,7 @@ export class CustomerElasticService
             personal_details: true,
           },
         });
-      const batchSize = 1000; // Adjust based on performance
+      const batchSize = 10000; // Adjust based on performance
       for (
         let i = 0;
         i < customers.length;
