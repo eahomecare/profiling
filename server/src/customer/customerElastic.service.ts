@@ -145,51 +145,61 @@ export class CustomerElasticService
     this.logger.log(
       'Indexing existing customers in batches...',
     );
+
     try {
-      const customers =
-        await this.prisma.customer.findMany({
-          include: {
-            personal_details: true,
-          },
-        });
       const batchSize = 10000; // Adjust based on performance
-      for (
-        let i = 0;
-        i < customers.length;
-        i += batchSize
-      ) {
-        const batch = customers.slice(
-          i,
-          i + batchSize,
-        );
-        const body = batch.flatMap((customer) => [
-          {
-            index: {
-              _index: indexName,
-              _id: customer.id,
+      let skip = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const customers =
+          await this.prisma.customer.findMany({
+            skip: skip,
+            take: batchSize,
+            include: {
+              personal_details: true, // Ensure personal details are included
             },
-          },
-          {
-            name:
-              customer.personal_details
-                ?.full_name || '',
-            customerId: customer.id,
-            email: customer.email || '',
-            source: customer.source || '',
-            mobile: customer.mobile || '',
-            profile_percentage:
-              customer.profile_percentage || 0,
-            createdDate: customer.created_at,
-          },
-        ]);
+          });
+
+        if (customers.length === 0) {
+          hasMore = false; // Exit loop if no more customers are found
+          continue;
+        }
+
+        const body = customers.flatMap(
+          (customer) => [
+            {
+              index: {
+                _index: indexName,
+                _id: customer.id, // ID is already a string
+              },
+            },
+            {
+              name:
+                customer.personal_details
+                  ?.full_name || '',
+              customerId: customer.id,
+              email: customer.email || '',
+              source: customer.source || '',
+              mobile: customer.mobile || '',
+              profile_percentage:
+                customer.profile_percentage || 0,
+              createdDate: customer.created_at,
+            },
+          ],
+        );
+
         await this.elasticsearchService.bulk({
           refresh: true,
           body,
         });
+
         this.logger.log(
-          `Batch ${i + 1} completed`,
+          `Batch processed with skip count: ${skip}`,
         );
+        skip += batchSize; // Increment skip for the next batch
       }
+
       this.logger.log(
         'Existing customers indexed in batches successfully.',
       );
