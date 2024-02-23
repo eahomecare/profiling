@@ -20,7 +20,6 @@ export class CustomerElasticService
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
     private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => ProfileService))
     private readonly profileService: ProfileService,
   ) {
     this.logger.log(
@@ -273,20 +272,6 @@ export class CustomerElasticService
       `Performing column search for term: "${searchTerm}" in field: "${field}"...`,
     );
     try {
-      // Ensure the field is one of the autocomplete-enabled fields
-      if (
-        ![
-          'name',
-          'email',
-          'source',
-          'mobile',
-        ].includes(field)
-      ) {
-        throw new Error(
-          `Invalid search field: ${field}`,
-        );
-      }
-
       const response =
         await this.elasticsearchService.search({
           index: indexName,
@@ -333,19 +318,6 @@ export class CustomerElasticService
       const mustQueries = Object.keys(
         searchTerms,
       ).map((field) => {
-        // Ensure only searchable fields are included
-        if (
-          ![
-            'name',
-            'email',
-            'source',
-            'mobile',
-          ].includes(field)
-        ) {
-          throw new Error(
-            `Invalid search field: ${field}`,
-          );
-        }
         return {
           match: {
             [field]: {
