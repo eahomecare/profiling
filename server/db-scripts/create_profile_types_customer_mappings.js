@@ -1,32 +1,49 @@
-const { PrismaClient } = require('@prisma/client');
+const {
+  PrismaClient,
+} = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function createProfileTypeCustomerMappings() {
-  const customers = await prisma.customer.findMany();
-  const profileTypes = await prisma.profileType.findMany();
+  const customers =
+    await prisma.customer.findMany();
+  const profileTypes =
+    await prisma.profileType.findMany();
 
-  const parallelCustomers = 200;
+  const parallelCustomers = 1000;
 
   const customerChunks = [];
-  for (let i = 0; i < customers.length; i += parallelCustomers) {
-    customerChunks.push(customers.slice(i, i + parallelCustomers));
+  for (
+    let i = 0;
+    i < customers.length;
+    i += parallelCustomers
+  ) {
+    customerChunks.push(
+      customers.slice(i, i + parallelCustomers),
+    );
+    console.log(`${i} customers started`);
   }
 
-  await Promise.all(customerChunks.map(async (chunk) => {
-    for (const customer of chunk) {
+  await Promise.all(
+    customerChunks.map(async (chunk) => {
       for (const profileType of profileTypes) {
-        await prisma.profileTypeCustomerMapping.create({
-          data: {
-            profileTypeId: profileType.id,
-            customerId: customer.id,
-            level: 1,
-          },
-        });
+        for (const customer of chunk) {
+          await prisma.profileTypeCustomerMapping.create(
+            {
+              data: {
+                profileTypeId: profileType.id,
+                customerId: customer.id,
+                level: 1,
+              },
+            },
+          );
 
-        console.log(`ProfileTypeCustomerMapping created for customer ${customer.id} and profile type ${profileType.id}`);
+          // console.log(
+          //   `ProfileTypeCustomerMapping created for customer ${customer.id} and profile type ${profileType.id}`,
+          // );
+        }
       }
-    }
-  }));
+    }),
+  );
 }
 
 createProfileTypeCustomerMappings()
