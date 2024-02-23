@@ -189,6 +189,30 @@ export class CustomerElasticService
         this.logger.log(
           `Batch ${i + 1} completed`,
         );
+        const body = batch.flatMap((customer) => [
+          {
+            index: {
+              _index: indexName,
+              _id: customer.id,
+            },
+          },
+          {
+            name:
+              customer.personal_details
+                ?.full_name || '',
+            customerId: customer.id,
+            email: customer.email || '',
+            source: customer.source || '',
+            mobile: customer.mobile || '',
+            profile_percentage:
+              customer.profile_percentage || 0,
+            createdDate: customer.created_at,
+          },
+        ]);
+        await this.elasticsearchService.bulk({
+          refresh: true,
+          body,
+        });
       }
       this.logger.log(
         'Existing customers indexed in batches successfully.',
