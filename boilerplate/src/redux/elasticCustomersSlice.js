@@ -8,11 +8,12 @@ import axios from "axios";
 // Define initial state
 const initialState = {
   customers: [],
+  total: 0,
   loading: false,
   error: null,
-  pagination: { from: 0, size: 10 }, // Default pagination settings
-  searchQuery: "", // Tracks the global search query
-  columnSearchQuery: {}, // Tracks the column-specific search queries
+  pagination: { from: 0, size: 10 },
+  searchQuery: "",
+  columnSearchQuery: {},
 };
 
 console.log(
@@ -104,7 +105,8 @@ const elasticCustomerSlice = createSlice({
       })
       .addCase(fetchPaginatedResults.fulfilled, (state, action) => {
         console.log("Fetching paginated results fulfilled");
-        state.customers = action.payload;
+        state.customers = action.payload.hits;
+        state.total = action.payload.total;
         state.loading = false;
         state.error = null;
       })
@@ -113,17 +115,33 @@ const elasticCustomerSlice = createSlice({
         state.error = action.payload;
         state.loading = false;
       })
+      .addCase(performGlobalSearch.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(performGlobalSearch.fulfilled, (state, action) => {
         console.log("Global search fulfilled");
-        state.customers = action.payload;
+        state.customers = action.payload.hits;
+        state.total = action.payload.total;
         state.loading = false;
         state.error = null;
       })
+      .addCase(performGlobalSearch.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(performCompoundSearch.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(performCompoundSearch.fulfilled, (state, action) => {
         console.log("Compound search fulfilled");
-        state.customers = action.payload;
+        state.customers = action.payload.hits;
+        state.total = action.payload.total;
         state.loading = false;
         state.error = null;
+      })
+      .addCase(performCompoundSearch.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -137,6 +155,10 @@ export default elasticCustomerSlice.reducer;
 export const selectCustomers = (state) => {
   console.log("Selecting customers");
   return state.elasticCustomers.customers;
+};
+export const selectTotal = (state) => {
+  console.log("Selecting total hits");
+  return state.elasticCustomers.total;
 };
 export const isLoading = (state) => {
   console.log("Checking if loading");

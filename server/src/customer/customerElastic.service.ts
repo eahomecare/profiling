@@ -6,7 +6,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { ProfileService } from 'src/profile/profile.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -20,8 +19,6 @@ export class CustomerElasticService
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
     private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => ProfileService))
-    private readonly profileService: ProfileService,
   ) {
     this.logger.log(
       'CustomerElasticService instantiated',
@@ -147,7 +144,7 @@ export class CustomerElasticService
     );
 
     try {
-      const batchSize = 10000; // Adjust based on performance
+      const batchSize = 10000;
       let skip = 0;
       let hasMore = true;
 
@@ -157,12 +154,12 @@ export class CustomerElasticService
             skip: skip,
             take: batchSize,
             include: {
-              personal_details: true, // Ensure personal details are included
+              personal_details: true,
             },
           });
 
         if (customers.length === 0) {
-          hasMore = false; // Exit loop if no more customers are found
+          hasMore = false;
           continue;
         }
 
@@ -171,7 +168,7 @@ export class CustomerElasticService
             {
               index: {
                 _index: indexName,
-                _id: customer.id, // ID is already a string
+                _id: customer.id,
               },
             },
             {
@@ -197,7 +194,7 @@ export class CustomerElasticService
         this.logger.log(
           `Batch processed with skip count: ${skip}`,
         );
-        skip += batchSize; // Increment skip for the next batch
+        skip += batchSize;
       }
 
       this.logger.log(
@@ -316,7 +313,6 @@ export class CustomerElasticService
       `Performing column search for term: "${searchTerm}" in field: "${field}"...`,
     );
     try {
-      // Ensure the field is one of the autocomplete-enabled fields
       if (
         ![
           'name',
@@ -376,7 +372,6 @@ export class CustomerElasticService
       const mustQueries = Object.keys(
         searchTerms,
       ).map((field) => {
-        // Ensure only searchable fields are included
         if (
           ![
             'name',

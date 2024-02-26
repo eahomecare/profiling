@@ -209,9 +209,12 @@ export class CustomerController {
           from,
           size,
         );
-      return body.hits.hits.map(
-        (hit) => hit._source,
-      );
+      return {
+        hits: body.hits.hits.map(
+          (hit) => hit._source,
+        ),
+        total: body.hits.total.value,
+      };
     } catch (error) {
       this.logger.error(
         `Global search failed: ${error.message}`,
@@ -309,9 +312,15 @@ export class CustomerController {
           from,
           size,
         );
-      return body.hits.hits.length > 0
-        ? body.hits.hits.map((hit) => hit._source)
-        : [];
+      return {
+        hits:
+          body.hits.hits.length > 0
+            ? body.hits.hits.map(
+                (hit) => hit._source,
+              )
+            : [],
+        total: body.hits.total.value,
+      };
     } catch (error) {
       this.logger.error(
         `Fetching paginated results failed: ${error.message}`,
