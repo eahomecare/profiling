@@ -4,20 +4,17 @@ import { useNavigate } from "react-router-dom";
 import {
   fetchPaginatedResults,
   performGlobalSearch,
-  performCompoundSearch,
   selectCustomers,
   isLoading,
-  selectPagination,
   resetSearch,
+  selectTotal,
 } from "../redux/elasticCustomersSlice";
-import { clearCurrentCustomer } from "../redux/customerSlice";
 import {
-  MaterialReactTable,
-  MRT_FullScreenToggleButton,
-  MRT_ShowHideColumnsButton,
-  MRT_ToggleFiltersButton,
-  MRT_ToggleGlobalFilterButton,
-} from "material-react-table";
+  clearCurrentCustomer,
+  getCustomerDetails,
+  setCurrentCustomerProfileCompletion,
+} from "../redux/customerSlice";
+import { MaterialReactTable } from "material-react-table";
 import { mkConfig, generateCsv, download } from "export-to-csv";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { IconTableExport } from "@tabler/icons-react";
@@ -27,13 +24,8 @@ import {
   ActionIcon,
   Text,
   useMantineTheme,
-  Group,
   Center,
 } from "@mantine/core";
-import {
-  getCustomerDetails,
-  setCurrentCustomerProfileCompletion,
-} from "../redux/customerSlice";
 
 const StyledTable3 = () => {
   const theme = useMantineTheme();
@@ -42,29 +34,28 @@ const StyledTable3 = () => {
 
   const customers = useSelector(selectCustomers);
   const loading = useSelector(isLoading);
-  const pagination = useSelector(selectPagination);
-  const { from, size } = pagination;
+  const total = useSelector(selectTotal);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [columnSearch, setColumnSearch] = useState({});
-
-  const customerDetailsStatus = useSelector(
-    (state) => state.customer.customerDetailsStatus,
-  );
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
+      const { pageIndex, pageSize } = pagination;
+      const from = pageIndex * pageSize;
+
       if (searchTerm) {
-        // Perform global search if there's a searchTerm
-        dispatch(performGlobalSearch({ searchTerm, from: 0, size }));
+        dispatch(performGlobalSearch({ searchTerm, from, size: pageSize }));
       } else {
-        // Fetch paginated results if there's no searchTerm
-        dispatch(fetchPaginatedResults({ from, size }));
+        dispatch(fetchPaginatedResults({ from, size: pageSize }));
       }
     };
 
     fetchData();
-  }, [dispatch, from, size, searchTerm]);
+  }, [dispatch, pagination, searchTerm]);
 
   useEffect(() => {
     return () => {
@@ -80,11 +71,7 @@ const StyledTable3 = () => {
         id: "customerId",
         header: "Customer ID",
       },
-      {
-        accessorKey: "email",
-        header: "Email",
-        minSize: 300,
-      },
+      { accessorKey: "email", header: "Email", minSize: 300 },
       { accessorKey: "source", header: "Source" },
       { accessorKey: "mobile", header: "Mobile" },
       { accessorKey: "profile_percentage", header: "Profile Completion (%)" },
@@ -92,35 +79,22 @@ const StyledTable3 = () => {
     [],
   );
 
-  const fetchData = useCallback(
-    ({ pageIndex, pageSize, globalFilter, filters = {} }) => {
-      const calculatedFrom = isNaN(pageIndex * pageSize)
-        ? 0
-        : pageIndex * pageSize;
-      if (globalFilter) {
-        dispatch(
-          performGlobalSearch({
-            searchTerm: globalFilter,
-            from: calculatedFrom,
-            size: pageSize,
-          }),
-        );
-      } else if (Object.keys(filters).length) {
-        dispatch(
-          performCompoundSearch({
-            searchTerms: filters,
-            from: calculatedFrom,
-            size: pageSize,
-          }),
-        );
-      } else {
-        dispatch(
-          fetchPaginatedResults({ from: calculatedFrom, size: pageSize }),
-        );
-      }
+  const handleRowClick = useCallback(
+    (row) => {
+      dispatch(getCustomerDetails(row.original.customerId));
+      dispatch(
+        setCurrentCustomerProfileCompletion(row.original.profile_percentage),
+      );
+      navigate("/dashboard");
     },
-    [dispatch],
+    [dispatch, navigate],
   );
+
+  const localTheme = createTheme({
+    palette: {
+      mode: theme.colorScheme === "dark" ? "dark" : "light",
+    },
+  });
 
   const handleExportRows = useCallback((rows) => {
     const csv = generateCsv(
@@ -132,53 +106,25 @@ const StyledTable3 = () => {
     download(csv);
   }, []);
 
-  const handleRowClick = useCallback(
-    (row) => {
-      console.log(row); // Adjust based on what data you need from the clicked row
-      dispatch(getCustomerDetails(row.customerId));
-      dispatch(setCurrentCustomerProfileCompletion(row.profile_percentage)); // Adjust based on actual data structure
-    },
-    [dispatch],
-  );
-
-  // Use useEffect to listen for changes to customerDetailsStatus
-  useEffect(() => {
-    if (customerDetailsStatus === "success") {
-      // Navigate to the dashboard (or wherever you need) once details are successfully fetched
-      dispatch(clearCurrentCustomer());
-      navigate("/dashboard");
-    }
-  }, [customerDetailsStatus, navigate]);
-
-  const localTheme = createTheme({
-    palette: {
-      mode: theme.colorScheme === "dark" ? "dark" : "light",
-    },
-  });
-
   return (
     <ThemeProvider theme={localTheme}>
       <MaterialReactTable
         columns={columns}
         data={customers}
         loading={loading}
-        onRowClick={({ row }) => console.log(row)}
-        defaultColumn={{ maxSize: 300 }}
-        enableColumnActions={false}
-        enableDensityToggle={false}
         enablePagination
         manualPagination
-        rowCount={size}
+        rowCount={total}
         state={{
-          density: "compact",
-          globalFilter: searchTerm,
           pagination: {
-            pageIndex: from / size,
-            pageSize: size,
+            pageIndex: pagination.pageIndex,
+            pageSize: pagination.pageSize,
+            pageCount: Math.ceil(total / pagination.pageSize),
           },
+          globalFilter: searchTerm,
         }}
-        onGlobalFilterChange={(value) => setSearchTerm(value)}
-        onPaginationChange={(state) => fetchData({ ...state })}
+        onGlobalFilterChange={setSearchTerm}
+        onPaginationChange={setPagination}
         muiTableProps={{
           sx: { tableLayout: "fixed" },
         }}
@@ -190,7 +136,7 @@ const StyledTable3 = () => {
           },
         }}
         muiTableBodyRowProps={({ row }) => ({
-          onClick: () => handleRowClick(row.original),
+          onClick: () => handleRowClick(row),
           sx: {
             cursor: "pointer",
             transition: "transform 0.3s ease, background-color 0.3s ease",
@@ -228,30 +174,7 @@ const StyledTable3 = () => {
                   Export
                 </Text>
               </Center>
-              <Center>
-                <Group>{/* Add any top props if needed */}</Group>
-              </Center>
             </Flex>
-          </Box>
-        )}
-        renderToolbarInternalActions={({ table }) => (
-          <Box w={160}>
-            <MRT_ToggleGlobalFilterButton
-              style={{ color: "#0d5ff9" }}
-              table={table}
-            />
-            <MRT_ToggleFiltersButton
-              style={{ color: "#0d5ff9" }}
-              table={table}
-            />
-            <MRT_ShowHideColumnsButton
-              style={{ color: "#0d5ff9" }}
-              table={table}
-            />
-            <MRT_FullScreenToggleButton
-              style={{ color: "#0d5ff9" }}
-              table={table}
-            />
           </Box>
         )}
       />
