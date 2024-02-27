@@ -13,12 +13,18 @@ export class CustomerSessionService {
   );
 
   constructor(private prisma: PrismaService) {}
+
   async upsertCustomerSession(
     customerId: string,
     sessionId: string,
   ): Promise<any> {
-    console.log('sessionId', sessionId);
+    this.logger.log(
+      `Starting upsertCustomerSession for customer ID ${customerId}`,
+    );
     try {
+      this.logger.log(
+        `Finding unique customer session for ID ${customerId}`,
+      );
       let session =
         await this.prisma.customerSession.findUnique(
           {
@@ -30,6 +36,9 @@ export class CustomerSessionService {
         session &&
         session.sessionId !== sessionId
       ) {
+        this.logger.log(
+          `Deleting existing session for customer ID ${customerId}`,
+        );
         await this.prisma.customerSession.delete({
           where: { customerId },
         });
@@ -37,6 +46,9 @@ export class CustomerSessionService {
       }
 
       if (!session) {
+        this.logger.log(
+          `Creating new session for customer ID ${customerId}`,
+        );
         session =
           await this.prisma.customerSession.create(
             {
@@ -51,11 +63,14 @@ export class CustomerSessionService {
           );
       }
 
+      this.logger.log(
+        `Upsert completed successfully for customer ID ${customerId}`,
+      );
       return session;
     } catch (error) {
       this.logger.error(
         `Failed to upsert customer session for customer ID ${customerId}`,
-        error,
+        error.stack,
       );
       throw new InternalServerErrorException(
         'Could not upsert customer session',
@@ -66,6 +81,9 @@ export class CustomerSessionService {
   async getCustomerSession(
     customerId: string,
   ): Promise<any> {
+    this.logger.log(
+      `Starting getCustomerSession for customer ID ${customerId}`,
+    );
     try {
       const session =
         await this.prisma.customerSession.findUnique(
@@ -83,6 +101,9 @@ export class CustomerSessionService {
         );
       }
 
+      this.logger.log(
+        `Session retrieval completed successfully for customer ID ${customerId}`,
+      );
       return session;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -90,7 +111,7 @@ export class CustomerSessionService {
       }
       this.logger.error(
         `Failed to get customer session for customer ID ${customerId}`,
-        error,
+        error.stack,
       );
       throw new InternalServerErrorException(
         'Could not get customer session',
@@ -103,7 +124,13 @@ export class CustomerSessionService {
     questionNumber: number,
     category: string,
   ): Promise<any> {
+    this.logger.log(
+      `Starting updateSessionQuestion for customer ID ${customerId}`,
+    );
     try {
+      this.logger.log(
+        `Retrieving session for update operation for customer ID ${customerId}`,
+      );
       const session =
         await this.getCustomerSession(customerId);
 
@@ -112,6 +139,9 @@ export class CustomerSessionService {
         [questionNumber]: category,
       };
 
+      this.logger.log(
+        `Updating session question for customer ID ${customerId}`,
+      );
       return await this.prisma.customerSession.update(
         {
           where: { customerId },
@@ -123,7 +153,7 @@ export class CustomerSessionService {
     } catch (error) {
       this.logger.error(
         `Failed to update session question for customer ID ${customerId}`,
-        error,
+        error.stack,
       );
       throw new InternalServerErrorException(
         'Could not update session question',
@@ -134,6 +164,9 @@ export class CustomerSessionService {
   async deleteCustomerSession(
     customerId: string,
   ): Promise<any> {
+    this.logger.log(
+      `Starting deleteCustomerSession for customer ID ${customerId}`,
+    );
     try {
       return await this.prisma.customerSession.delete(
         {
@@ -143,7 +176,7 @@ export class CustomerSessionService {
     } catch (error) {
       this.logger.error(
         `Failed to delete customer session for customer ID ${customerId}`,
-        error,
+        error.stack,
       );
       throw new InternalServerErrorException(
         'Could not delete customer session',
@@ -155,7 +188,13 @@ export class CustomerSessionService {
     customerId: string,
     questionNumber: number,
   ): Promise<any> {
+    this.logger.log(
+      `Starting clearSessionQuestion for customer ID ${customerId}`,
+    );
     try {
+      this.logger.log(
+        `Retrieving session for clearing question for customer ID ${customerId}`,
+      );
       const session =
         await this.getCustomerSession(customerId);
 
@@ -166,6 +205,9 @@ export class CustomerSessionService {
         questionNumber
       ];
 
+      this.logger.log(
+        `Clearing session question for customer ID ${customerId}`,
+      );
       return await this.prisma.customerSession.update(
         {
           where: { customerId },
@@ -177,7 +219,7 @@ export class CustomerSessionService {
     } catch (error) {
       this.logger.error(
         `Failed to clear session question for customer ID ${customerId}`,
-        error,
+        error.stack,
       );
       throw new InternalServerErrorException(
         'Could not clear session question',
