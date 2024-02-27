@@ -22,6 +22,10 @@ export class Question2Service {
     sessionObject: Record<number, string>,
     serviceObject: ServiceObject,
   ) {
+    console.log(
+      `Starting to handle question for customer ${customer.id}`,
+    );
+
     const keywords =
       await this.prisma.keyword.findMany({
         where: {
@@ -34,7 +38,10 @@ export class Question2Service {
         },
       });
 
-    console.log(keywords);
+    console.log(
+      `Retrieved keywords for customer ${customer.id}:`,
+      keywords,
+    );
 
     const enabledProfileTypes =
       await this.prisma.profileTypeCustomerMapping.findMany(
@@ -52,10 +59,19 @@ export class Question2Service {
           },
         },
       );
+    console.log(
+      `Enabled profile types for customer ${customer.id}:`,
+      enabledProfileTypes,
+    );
+
     const enabledCategories =
       enabledProfileTypes.map((pt) =>
         pt.profileType.category.toLowerCase(),
       );
+    console.log(
+      `Enabled categories for customer ${customer.id}:`,
+      enabledCategories,
+    );
 
     const filteredKeywords = keywords.filter(
       (kw) =>
@@ -64,9 +80,16 @@ export class Question2Service {
         ) &&
         kw.category.toLowerCase() !== 'unknown',
     );
+    console.log(
+      `Filtered keywords for enabled categories:`,
+      filteredKeywords,
+    );
 
     let selectedCategory = '';
     if (filteredKeywords.length === 0) {
+      console.log(
+        `No filtered keywords found, selecting category randomly.`,
+      );
       const randomizedCategories = shuffle(
         enabledCategories,
       );
@@ -86,6 +109,9 @@ export class Question2Service {
             )
           ];
       }
+      console.log(
+        `Randomly selected category: ${selectedCategory}`,
+      );
     } else {
       const categoryLevels =
         filteredKeywords.reduce(
@@ -118,6 +144,11 @@ export class Question2Service {
             b.averageLevel - a.averageLevel,
         );
 
+      console.log(
+        `Sorted categories by average level:`,
+        sortedCategories,
+      );
+
       for (const category of sortedCategories) {
         const isCategoryUsedInOtherQuestions =
           Object.entries(sessionObject).some(
@@ -136,6 +167,9 @@ export class Question2Service {
       }
 
       if (!selectedCategory) {
+        console.log(
+          `No unused category found in sorted list, selecting randomly among enabled categories.`,
+        );
         const randomizedCategories = shuffle(
           enabledCategories,
         );
@@ -154,12 +188,18 @@ export class Question2Service {
             )
           ];
       }
+      console.log(
+        `Selected category after filtering and checking session object: ${selectedCategory}`,
+      );
     }
 
     await this.customerSessionService.updateSessionQuestion(
       customer.id,
       2,
       selectedCategory,
+    );
+    console.log(
+      `Updated session question for customer ${customer.id} with category ${selectedCategory}`,
     );
 
     const customerKeywords =
@@ -180,15 +220,25 @@ export class Question2Service {
     );
     const maxLevelInCurrentLoop =
       (totalLevel % 5) + 1;
+    console.log(
+      `Total level: ${totalLevel}, Max level in current loop: ${maxLevelInCurrentLoop}`,
+    );
 
     let levelRequired = maxLevelInCurrentLoop;
     if (levelRequired == 1) levelRequired = 2;
+    console.log(
+      `Level required after adjustment: ${levelRequired}`,
+    );
 
     const pastKeywordsAndQuestions =
       await this.getCustomerPastInteractions(
         customer.id,
         selectedCategory,
       );
+    console.log(
+      `Retrieved past interactions for category ${selectedCategory}:`,
+      pastKeywordsAndQuestions,
+    );
 
     const aiEngineResponse =
       await this.aiEngineService.processServiceInformation(
@@ -206,6 +256,11 @@ export class Question2Service {
           [],
       );
 
+    console.log(
+      `AI Engine response:`,
+      aiEngineResponse,
+    );
+
     return aiEngineResponse;
   }
 
@@ -213,6 +268,10 @@ export class Question2Service {
     customerId: string,
     category: string,
   ) {
+    console.log(
+      `Retrieving past interactions for customer ${customerId} and category ${category}`,
+    );
+
     const pastKeywords =
       await this.prisma.keyword.findMany({
         where: {
@@ -221,6 +280,7 @@ export class Question2Service {
         },
         select: { value: true, level: true },
       });
+    console.log(`Past keywords:`, pastKeywords);
 
     const pastQuestions =
       await this.prisma.question.findMany({
@@ -238,6 +298,7 @@ export class Question2Service {
           options: true,
         },
       });
+    console.log(`Past questions:`, pastQuestions);
 
     const pastQuestionsAnswers =
       await Promise.all(
