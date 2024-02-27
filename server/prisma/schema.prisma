@@ -208,6 +208,7 @@ model ProfileTypeCustomerMapping {
   isEnabled     Boolean     @default(true)
 
   @@map("profile_type_customer_mapping")
+  @@index([customerId, isEnabled])
 }
 
 model Service {
