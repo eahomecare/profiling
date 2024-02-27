@@ -206,7 +206,7 @@ export class CustomerService {
         customerHomecareMapping.customer_homecare
           ?.personalDetails?.planId;
       const hniPlanIds = [
-        'Plan014',
+        'Plan013',
         'Plan007',
         'Plan008',
       ];
