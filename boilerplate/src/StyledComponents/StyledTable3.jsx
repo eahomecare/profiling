@@ -80,8 +80,8 @@ const StyledTable3 = () => {
   );
 
   const handleRowClick = useCallback(
-    (row) => {
-      dispatch(getCustomerDetails(row.original.customerId));
+    async (row) => {
+      await dispatch(getCustomerDetails(row.original.customerId)).unwrap();
       dispatch(
         setCurrentCustomerProfileCompletion(row.original.profile_percentage),
       );
