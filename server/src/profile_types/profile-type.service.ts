@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProfileTypeDto } from './dto/create-profile-type.dto';
@@ -8,9 +9,16 @@ import { UpdateProfileTypeDto } from './dto/update-profile-type.dto';
 
 @Injectable()
 export class ProfileTypesService {
+  private readonly logger = new Logger(
+    ProfileTypesService.name,
+  );
+
   constructor(private prisma: PrismaService) {}
 
   async onModuleInit() {
+    this.logger.log(
+      'Initializing profile types...',
+    );
     await this.initProfileTypes();
   }
 
@@ -18,6 +26,9 @@ export class ProfileTypesService {
     const count =
       await this.prisma.profileType.count();
     if (count === 0) {
+      this.logger.log(
+        'No existing profile types found, initializing with defaults...',
+      );
       const initialProfileTypes: CreateProfileTypeDto[] =
         [
           {
@@ -81,33 +92,63 @@ export class ProfileTypesService {
   async createProfileType(
     data: CreateProfileTypeDto,
   ) {
-    return this.prisma.profileType.create({
-      data,
-    });
+    try {
+      this.logger.log(
+        `Creating a new profile type: ${data.name}`,
+      );
+      return await this.prisma.profileType.create(
+        { data },
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to create profile type: ${data.name}, Error: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 
   async updateProfileType(
     id: string,
     data: UpdateProfileTypeDto,
   ) {
-    const profileType =
-      await this.prisma.profileType.update({
-        where: { id },
-        data,
-      });
-
-    console.log('updated profile', profileType);
-
-    if (!profileType) {
-      throw new NotFoundException(
-        `Profile Type with ID ${id} not found`,
+    try {
+      const profileType =
+        await this.prisma.profileType.update({
+          where: { id },
+          data,
+        });
+      this.logger.log(
+        `Updated profile type with ID ${id}`,
       );
+      return profileType;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        this.logger.warn(
+          `Profile Type with ID ${id} not found`,
+        );
+      } else {
+        this.logger.error(
+          `Failed to update profile type with ID ${id}: ${error.message}`,
+          error.stack,
+        );
+      }
+      throw error;
     }
-
-    return profileType;
   }
 
   async getAllProfileTypes() {
-    return this.prisma.profileType.findMany();
+    try {
+      this.logger.log(
+        'Fetching all profile types',
+      );
+      return await this.prisma.profileType.findMany();
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch all profile types: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }

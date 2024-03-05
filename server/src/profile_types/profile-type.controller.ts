@@ -9,6 +9,7 @@ import {
   Res,
   ValidationPipe,
   Get,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateProfileTypeDto } from './dto/create-profile-type.dto';
@@ -17,6 +18,10 @@ import { ProfileTypesService } from './profile-type.service';
 
 @Controller('profile-types')
 export class ProfileTypeController {
+  private readonly logger = new Logger(
+    ProfileTypeController.name,
+  );
+
   constructor(
     private readonly profileTypeService: ProfileTypesService,
   ) {}
@@ -24,12 +29,19 @@ export class ProfileTypeController {
   @Get()
   async getAllProfileTypes(@Res() res: Response) {
     try {
+      this.logger.log(
+        'Fetching all profile types',
+      );
       const profileTypes =
         await this.profileTypeService.getAllProfileTypes();
       res
         .status(HttpStatus.OK)
         .json(profileTypes);
     } catch (error) {
+      this.logger.error(
+        `Failed to fetch all profile types: ${error.message}`,
+        error.stack,
+      );
       this.handleException(error, res);
     }
   }
@@ -49,6 +61,9 @@ export class ProfileTypeController {
     @Res() res: Response,
   ) {
     try {
+      this.logger.log(
+        'Creating a new profile type',
+      );
       const profileType =
         this.profileTypeService.createProfileType(
           createProfileTypeDto,
@@ -57,6 +72,10 @@ export class ProfileTypeController {
         .status(HttpStatus.CREATED)
         .json(profileType);
     } catch (error) {
+      this.logger.error(
+        `Failed to create a new profile type: ${error.message}`,
+        error.stack,
+      );
       this.handleException(error, res);
     }
   }
@@ -76,9 +95,8 @@ export class ProfileTypeController {
     updateProfileTypeDto: UpdateProfileTypeDto,
     @Res() res: Response,
   ) {
-    console.log(
-      'UpdateProfileTypeDto in controller',
-      updateProfileTypeDto,
+    this.logger.log(
+      `Updating profile type with ID ${id}`,
     );
     try {
       const profileType =
@@ -88,6 +106,10 @@ export class ProfileTypeController {
         );
       res.status(HttpStatus.OK).json(profileType);
     } catch (error) {
+      this.logger.error(
+        `Failed to update profile type with ID ${id}: ${error.message}`,
+        error.stack,
+      );
       this.handleException(error, res);
     }
   }
@@ -110,6 +132,10 @@ export class ProfileTypeController {
           : { message: response };
     }
 
+    this.logger.error(
+      `Handling exception: ${message}`,
+      error.stack,
+    );
     res.status(statusCode).json({
       success: false,
       status: statusCode,
