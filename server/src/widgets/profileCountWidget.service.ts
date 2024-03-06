@@ -9,7 +9,7 @@ import {
   mappings,
   indexName,
 } from './profileCountWidgetMappings';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Injectable()
 export class ProfileCountWidgetService
@@ -25,72 +25,90 @@ export class ProfileCountWidgetService
   ) {}
 
   async onModuleInit() {
-    await this.initCustomerIndex();
-    await this.batchIndexExistingCustomers();
+    const indexCreationResult =
+      await this.initCustomerIndex();
+    if (indexCreationResult) {
+      await this.batchIndexExistingCustomers();
+    }
   }
 
   private async initCustomerIndex() {
-    const indexExists =
-      await this.elasticsearchService.indices.exists(
-        { index: indexName },
-      );
-    if (!indexExists.body) {
-      this.logger.log(
-        `Index "${indexName}" does not exist. Creating it...`,
-      );
-      const body = {
-        settings: {
-          number_of_shards: 1,
-          number_of_replicas: 0,
-        },
-        mappings: {
-          properties: {
-            gender: { type: 'keyword' },
-            age: { type: 'keyword' }, // Age is transformed into a range string, hence 'keyword'
-            profiles: {
-              type: 'nested', // For nested objects like profileMapping
-              properties: {
-                profileTypeName: {
-                  type: 'keyword',
+    try {
+      const indexExists =
+        await this.elasticsearchService.indices.exists(
+          { index: indexName },
+        );
+      if (!indexExists.body) {
+        this.logger.log(
+          `Index "${indexName}" does not exist. Creating it...`,
+        );
+        const body = {
+          settings: {
+            number_of_shards: 1,
+            number_of_replicas: 0,
+          },
+          mappings: {
+            properties: {
+              gender: { type: 'keyword' },
+              age: { type: 'keyword' },
+              profiles: {
+                type: 'nested',
+                properties: {
+                  profileTypeName: {
+                    type: 'keyword',
+                  },
+                  isProfiled: { type: 'boolean' },
                 },
-                isProfiled: { type: 'boolean' },
               },
             },
           },
-        },
-      };
-      await this.elasticsearchService.indices.create(
-        { index: indexName, body },
+        };
+        await this.elasticsearchService.indices.create(
+          { index: indexName, body },
+        );
+        this.logger.log(
+          `Index "${indexName}" created successfully.`,
+        );
+        return true; // Index was created
+      } else {
+        this.logger.log(
+          `Index "${indexName}" already exists.`,
+        );
+        return false; // Index already exists
+      }
+    } catch (error) {
+      this.logger.error(
+        `Failed to initialize index "${indexName}": ${error.message}`,
       );
-      this.logger.log(
-        `Index "${indexName}" created successfully.`,
-      );
-    } else {
-      this.logger.log(
-        `Index "${indexName}" already exists.`,
-      );
+      return false;
     }
   }
 
   public async indexOrUpdateCustomerData(
     customerId: string,
   ) {
-    const customerData =
-      await this.fetchAndTransformCustomerData(
-        customerId,
-      );
-    if (customerData) {
-      await this.elasticsearchService.index({
-        index: indexName,
-        id: customerId,
-        body: customerData,
-      });
-      this.logger.log(
-        `Customer with ID: ${customerId} indexed/updated successfully.`,
-      );
-    } else {
-      this.logger.warn(
-        `Customer with ID: ${customerId} not found.`,
+    try {
+      const customerData =
+        await this.fetchAndTransformCustomerData(
+          customerId,
+        );
+      if (customerData) {
+        await this.elasticsearchService.index({
+          index: indexName,
+          id: customerId,
+          body: customerData,
+        });
+        this.logger.log(
+          `Customer with ID: ${customerId} indexed/updated successfully.`,
+        );
+      } else {
+        this.logger.warn(
+          `Customer with ID: ${customerId} not found.`,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Error processing customer with ID: ${customerId} - ${error.message}`,
       );
     }
   }
@@ -157,17 +175,22 @@ export class ProfileCountWidgetService
       }, `above-${mappings.find((m) => m.name === 'age').ranges.slice(-1)[0]}`);
   }
 
-  private async batchIndexExistingCustomers() {
-    let lastId = ''; // MongoDB ObjectId starts with a timestamp, this will get the first in the collection
+  public async batchIndexExistingCustomers() {
+    this.logger.log(
+      'Starting batch indexing of existing customers...',
+    );
+    let lastId = '';
     let hasMore = true;
+    let count = 0;
 
     while (hasMore) {
       const customers =
         await this.prisma.customer.findMany({
           take: 100,
-          where: lastId
-            ? { id: { gt: lastId } }
+          cursor: lastId
+            ? { id: lastId }
             : undefined,
+          skip: lastId ? 1 : 0,
           include: {
             personal_details: true,
             ProfileTypeCustomerMapping: {
@@ -178,11 +201,9 @@ export class ProfileCountWidgetService
           },
         });
 
-      if (customers.length === 0) {
-        hasMore = false;
-      } else {
-        const actions = customers
-          .map((customer) => [
+      if (customers.length) {
+        const actions = customers.flatMap(
+          (customer) => [
             {
               index: {
                 _index: indexName,
@@ -192,21 +213,300 @@ export class ProfileCountWidgetService
             this.transformDataForElasticsearch(
               customer,
             ),
-          ])
-          .flat();
+          ],
+        );
 
         await this.elasticsearchService.bulk({
           refresh: true,
           body: actions,
         });
-
         lastId =
           customers[customers.length - 1].id;
+        count += customers.length;
+        this.logger.log(
+          `Indexed ${count} customers so far...`,
+        );
+      } else {
+        hasMore = false;
       }
     }
 
     this.logger.log(
-      'Completed indexing existing customers.',
+      `Finished indexing ${count} existing customers.`,
     );
+  }
+
+  public async getCustomerDistribution(
+    profileType = '',
+    demographic = '',
+  ): Promise<any> {
+    try {
+      let body;
+
+      // When no profileType is selected, or it's for 'all'
+      if (!profileType || profileType === 'all') {
+        if (
+          !demographic ||
+          demographic === 'all'
+        ) {
+          // Aggregate counts by profile types
+          body = {
+            size: 0,
+            aggs: {
+              profileTypes: {
+                nested: {
+                  path: 'profiles',
+                },
+                aggs: {
+                  names: {
+                    terms: {
+                      field:
+                        'profiles.profileTypeName.keyword',
+                    },
+                  },
+                },
+              },
+            },
+          };
+        } else {
+          // Aggregate counts by demographic for all profile types
+          body = {
+            size: 0,
+            aggs: {
+              demographics: {
+                terms: {
+                  field: demographic + '.keyword',
+                },
+              },
+            },
+          };
+        }
+      } else {
+        // For a specific profileType
+        if (
+          !demographic ||
+          demographic === 'all'
+        ) {
+          // Count of customers profiled for a specific type
+          body = {
+            query: {
+              nested: {
+                path: 'profiles',
+                query: {
+                  bool: {
+                    must: [
+                      {
+                        match: {
+                          'profiles.profileTypeName.keyword':
+                            profileType,
+                        },
+                      },
+                      {
+                        match: {
+                          'profiles.isProfiled':
+                            true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          };
+        } else {
+          // Aggregate counts by demographic for a specific profile type
+          body = {
+            size: 0,
+            query: {
+              nested: {
+                path: 'profiles',
+                query: {
+                  bool: {
+                    must: [
+                      {
+                        match: {
+                          'profiles.profileTypeName.keyword':
+                            profileType,
+                        },
+                      },
+                      {
+                        match: {
+                          'profiles.isProfiled':
+                            true,
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+            aggs: {
+              demographics: {
+                terms: {
+                  field: demographic + '.keyword',
+                },
+              },
+            },
+          };
+        }
+      }
+
+      const {
+        body: { aggregations },
+      } = await this.elasticsearchService.search({
+        index: indexName,
+        body,
+      });
+
+      this.logger.log(
+        'Aggregation query executed successfully.',
+      );
+      // Parsing the Elasticsearch response to structure the aggregation results as desired
+      let result = {};
+      if (aggregations) {
+        if (
+          profileType === 'all' ||
+          !profileType
+        ) {
+          if (
+            demographic === 'all' ||
+            !demographic
+          ) {
+            // Case: No specific profileType or demographic selected, aggregate by profile types
+            const profileBuckets =
+              aggregations.profileTypes.names
+                .buckets;
+            result = profileBuckets.reduce(
+              (acc, bucket) => {
+                acc[bucket.key] =
+                  bucket.doc_count;
+                return acc;
+              },
+              {},
+            );
+          } else {
+            // Case: Aggregate by demographic across all customers
+            const demographicBuckets =
+              aggregations.demographics.buckets;
+            result = demographicBuckets.reduce(
+              (acc, bucket) => {
+                acc[bucket.key] =
+                  bucket.doc_count;
+                return acc;
+              },
+              {},
+            );
+          }
+        } else {
+          // Specific profileType selected, possibly with a specific demographic
+          if (
+            demographic === 'all' ||
+            !demographic
+          ) {
+            // Just need count of customers for the specific profileType
+            result[profileType] =
+              aggregations.doc_count;
+          } else {
+            // Aggregate counts by demographic for the specific profileType
+            const demographicBuckets =
+              aggregations.demographics.buckets;
+            result = demographicBuckets.reduce(
+              (acc, bucket) => {
+                acc[bucket.key] =
+                  bucket.doc_count;
+                return acc;
+              },
+              {},
+            );
+          }
+        }
+      }
+
+      return result;
+    } catch (error) {
+      this.logger.error(
+        'Failed to execute aggregation query: ' +
+          error.message,
+      );
+      throw new Error(
+        'Aggregation query execution failed',
+      );
+    }
+  }
+
+  public async getFirstMenuItems(): Promise<
+    string[]
+  > {
+    try {
+      const { body } =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 1,
+          _source: ['profiles.profileTypeName'],
+        });
+
+      if (body.hits.hits.length > 0) {
+        const profiles =
+          body.hits.hits[0]._source.profiles;
+
+        const uniqueProfileTypes = [
+          ...new Set(
+            profiles.map(
+              (profile) =>
+                profile.profileTypeName,
+            ),
+          ),
+        ] as string[];
+
+        this.logger.log(
+          'First menu items fetched successfully based on the first document.',
+        );
+        return ['All', ...uniqueProfileTypes];
+      } else {
+        this.logger.log(
+          'No documents found in the index.',
+        );
+        return ['All'];
+      }
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch first menu items: ${error.message}`,
+      );
+      throw new Error(
+        'Fetching first menu items failed',
+      );
+    }
+  }
+
+  public async getSecondMenuItems(): Promise<
+    string[]
+  > {
+    // The logic for dynamically fetching fields from the index mapping, excluding nested fields
+    try {
+      const { body } =
+        await this.elasticsearchService.indices.getMapping(
+          { index: indexName },
+        );
+      const mappings =
+        body[indexName].mappings.properties;
+      const menuItems = Object.keys(
+        mappings,
+      ).filter(
+        (key) => mappings[key].type !== 'nested',
+      );
+
+      this.logger.log(
+        'Second menu items fetched successfully.',
+      );
+      return ['all', ...menuItems];
+    } catch (error) {
+      this.logger.error(
+        'Failed to fetch second menu items: ' +
+          error.message,
+      );
+      throw new Error(
+        'Fetching second menu items failed',
+      );
+    }
   }
 }
