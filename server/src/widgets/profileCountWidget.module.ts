@@ -4,6 +4,7 @@ import {
   ConfigService,
 } from '@nestjs/config';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { ProfileCountWidgetController } from './profileCountWidget.controller';
 import { ProfileCountWidgetService } from './profileCountWidget.service';
 
 @Module({
@@ -33,6 +34,7 @@ import { ProfileCountWidgetService } from './profileCountWidget.service';
     }),
     ConfigModule,
   ],
+  controllers: [ProfileCountWidgetController],
   providers: [ProfileCountWidgetService],
   exports: [ProfileCountWidgetService],
 })
