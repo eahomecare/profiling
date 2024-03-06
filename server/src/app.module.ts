@@ -31,6 +31,7 @@ import { V4Module } from './api/v4/v4.module';
 import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mapping/profile-type-customer-mapping.module';
 import { ProfileTypesModule } from './profile_types/profile-type.module';
 import { QueryModule } from './assistant/assistant.module';
+import { ProfileCountWidgetModule } from './widgets/profileCountWidget.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { QueryModule } from './assistant/assistant.module';
     ProfileTypesModule,
     // SearchModule,
     QueryModule,
+    ProfileCountWidgetModule,
   ],
   controllers: [ServiceCustomerController],
 })
