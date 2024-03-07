@@ -240,6 +240,11 @@ export class ProfileCountWidgetService
     profileType = '',
     demographic = '',
   ): Promise<any> {
+    this.logger.debug(
+      'getCustomerDistribution called',
+      { profileType, demographic },
+    );
+
     try {
       let body;
 
@@ -249,7 +254,9 @@ export class ProfileCountWidgetService
           !demographic ||
           demographic === 'all'
         ) {
-          // Aggregate counts by profile types
+          this.logger.debug(
+            'Aggregating counts by profile types',
+          );
           body = {
             size: 0,
             aggs: {
@@ -269,7 +276,9 @@ export class ProfileCountWidgetService
             },
           };
         } else {
-          // Aggregate counts by demographic for all profile types
+          this.logger.debug(
+            'Aggregating counts by demographic for all profile types',
+          );
           body = {
             size: 0,
             aggs: {
@@ -282,12 +291,13 @@ export class ProfileCountWidgetService
           };
         }
       } else {
-        // For a specific profileType
         if (
           !demographic ||
           demographic === 'all'
         ) {
-          // Count of customers profiled for a specific type
+          this.logger.debug(
+            `Counting customers profiled for ${profileType}`,
+          );
           body = {
             query: {
               nested: {
@@ -314,7 +324,9 @@ export class ProfileCountWidgetService
             },
           };
         } else {
-          // Aggregate counts by demographic for a specific profile type
+          this.logger.debug(
+            `Aggregating counts by ${demographic} for ${profileType}`,
+          );
           body = {
             size: 0,
             query: {
@@ -351,19 +363,28 @@ export class ProfileCountWidgetService
         }
       }
 
-      const {
-        body: { aggregations },
-      } = await this.elasticsearchService.search({
-        index: indexName,
-        body,
-      });
-
-      this.logger.log(
-        'Aggregation query executed successfully.',
+      this.logger.debug(
+        'Elasticsearch query body prepared',
+        { body },
       );
+
+      const { body: esResponse } =
+        await this.elasticsearchService.search({
+          index: indexName,
+          body,
+        });
+
+      this.logger.debug(
+        'Elasticsearch response received',
+        { esResponse },
+      );
+
       // Parsing the Elasticsearch response to structure the aggregation results as desired
       let result = {};
-      if (aggregations) {
+      if (esResponse.aggregations) {
+        this.logger.debug(
+          'Processing Elasticsearch aggregations',
+        );
         if (
           profileType === 'all' ||
           !profileType
@@ -372,10 +393,9 @@ export class ProfileCountWidgetService
             demographic === 'all' ||
             !demographic
           ) {
-            // Case: No specific profileType or demographic selected, aggregate by profile types
             const profileBuckets =
-              aggregations.profileTypes.names
-                .buckets;
+              esResponse.aggregations.profileTypes
+                .names.buckets;
             result = profileBuckets.reduce(
               (acc, bucket) => {
                 acc[bucket.key] =
@@ -385,9 +405,9 @@ export class ProfileCountWidgetService
               {},
             );
           } else {
-            // Case: Aggregate by demographic across all customers
             const demographicBuckets =
-              aggregations.demographics.buckets;
+              esResponse.aggregations.demographics
+                .buckets;
             result = demographicBuckets.reduce(
               (acc, bucket) => {
                 acc[bucket.key] =
@@ -398,18 +418,16 @@ export class ProfileCountWidgetService
             );
           }
         } else {
-          // Specific profileType selected, possibly with a specific demographic
           if (
             demographic === 'all' ||
             !demographic
           ) {
-            // Just need count of customers for the specific profileType
             result[profileType] =
-              aggregations.doc_count;
+              esResponse.aggregations.doc_count;
           } else {
-            // Aggregate counts by demographic for the specific profileType
             const demographicBuckets =
-              aggregations.demographics.buckets;
+              esResponse.aggregations.demographics
+                .buckets;
             result = demographicBuckets.reduce(
               (acc, bucket) => {
                 acc[bucket.key] =
@@ -420,13 +438,16 @@ export class ProfileCountWidgetService
             );
           }
         }
+        this.logger.debug('Aggregation result', {
+          result,
+        });
       }
 
       return result;
     } catch (error) {
       this.logger.error(
-        'Failed to execute aggregation query: ' +
-          error.message,
+        'Failed to execute aggregation query',
+        { errorMessage: error.message },
       );
       throw new Error(
         'Aggregation query execution failed',
