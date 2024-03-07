@@ -186,7 +186,7 @@ export class ProfileCountWidgetService
     while (hasMore) {
       const customers =
         await this.prisma.customer.findMany({
-          take: 100,
+          take: 1000,
           cursor: lastId
             ? { id: lastId }
             : undefined,
@@ -297,7 +297,7 @@ export class ProfileCountWidgetService
                     must: [
                       {
                         match: {
-                          'profiles.profileTypeName.keyword':
+                          'profiles.profileTypeName':
                             profileType,
                         },
                       },
@@ -325,7 +325,7 @@ export class ProfileCountWidgetService
                     must: [
                       {
                         match: {
-                          'profiles.profileTypeName.keyword':
+                          'profiles.profileTypeName':
                             profileType,
                         },
                       },
