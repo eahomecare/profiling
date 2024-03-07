@@ -84,7 +84,7 @@ export class ProfileCountWidgetService
     }
   }
 
-  public async indexOrUpdateCustomerData(
+  public async indexOrUpdateCustomerDataProfileCountWidget(
     customerId: string,
   ) {
     try {
@@ -248,27 +248,43 @@ export class ProfileCountWidgetService
     try {
       let body;
 
-      // When no profileType is selected, or it's for 'all'
+      // When no profileType or it's 'all'
       if (!profileType || profileType === 'all') {
         if (
           !demographic ||
           demographic === 'all'
         ) {
-          this.logger.debug(
-            'Aggregating counts by profile types',
-          );
+          // Aggregating counts by profile types where isProfiled is true
           body = {
             size: 0,
             aggs: {
-              profileTypes: {
+              profiles: {
                 nested: {
                   path: 'profiles',
                 },
                 aggs: {
-                  names: {
-                    terms: {
-                      field:
-                        'profiles.profileTypeName',
+                  profiled: {
+                    filter: {
+                      term: {
+                        'profiles.isProfiled':
+                          true,
+                      },
+                    },
+                    aggs: {
+                      profileType: {
+                        terms: {
+                          field:
+                            'profiles.profileTypeName',
+                        },
+                        aggs: {
+                          profileCount: {
+                            value_count: {
+                              field:
+                                'profiles.isProfiled',
+                            },
+                          },
+                        },
+                      },
                     },
                   },
                 },
@@ -276,6 +292,7 @@ export class ProfileCountWidgetService
             },
           };
         } else {
+          // Aggregating counts by demographic for all profile types
           this.logger.debug(
             'Aggregating counts by demographic for all profile types',
           );
@@ -295,10 +312,9 @@ export class ProfileCountWidgetService
           !demographic ||
           demographic === 'all'
         ) {
-          this.logger.debug(
-            `Counting customers profiled for ${profileType}`,
-          );
+          // When a specific profileType but no demographic is selected
           body = {
+            size: 0,
             query: {
               nested: {
                 path: 'profiles',
@@ -306,13 +322,13 @@ export class ProfileCountWidgetService
                   bool: {
                     must: [
                       {
-                        match: {
+                        term: {
                           'profiles.profileTypeName':
                             profileType,
                         },
                       },
                       {
-                        match: {
+                        term: {
                           'profiles.isProfiled':
                             true,
                         },
@@ -322,8 +338,46 @@ export class ProfileCountWidgetService
                 },
               },
             },
+            aggs: {
+              profiles: {
+                nested: {
+                  path: 'profiles',
+                },
+                aggs: {
+                  filteredProfiles: {
+                    filter: {
+                      bool: {
+                        must: [
+                          {
+                            term: {
+                              'profiles.profileTypeName':
+                                profileType,
+                            },
+                          },
+                          {
+                            term: {
+                              'profiles.isProfiled':
+                                true,
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    aggs: {
+                      profileCount: {
+                        value_count: {
+                          field:
+                            'profiles.isProfiled',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
           };
         } else {
+          // Aggregating counts by demographic for a specific profileType
           this.logger.debug(
             `Aggregating counts by ${demographic} for ${profileType}`,
           );
@@ -342,7 +396,7 @@ export class ProfileCountWidgetService
                         },
                       },
                       {
-                        match: {
+                        term: {
                           'profiles.isProfiled':
                             true,
                         },
@@ -379,32 +433,33 @@ export class ProfileCountWidgetService
         { esResponse },
       );
 
-      // Parsing the Elasticsearch response to structure the aggregation results as desired
       let result = {};
       if (esResponse.aggregations) {
         this.logger.debug(
           'Processing Elasticsearch aggregations',
         );
+
         if (
-          profileType === 'all' ||
-          !profileType
+          !profileType ||
+          profileType === 'all'
         ) {
           if (
-            demographic === 'all' ||
-            !demographic
+            !demographic ||
+            demographic === 'all'
           ) {
             const profileBuckets =
-              esResponse.aggregations.profileTypes
-                .names.buckets;
+              esResponse.aggregations.profiles
+                .profiled.profileType.buckets;
             result = profileBuckets.reduce(
               (acc, bucket) => {
                 acc[bucket.key] =
-                  bucket.doc_count;
+                  bucket.profileCount.value;
                 return acc;
               },
               {},
             );
           } else {
+            // Process aggregation result for demographic across all profile types
             const demographicBuckets =
               esResponse.aggregations.demographics
                 .buckets;
@@ -419,12 +474,17 @@ export class ProfileCountWidgetService
           }
         } else {
           if (
-            demographic === 'all' ||
-            !demographic
+            !demographic ||
+            demographic === 'all'
           ) {
-            result[profileType] =
-              esResponse.aggregations.doc_count;
+            // Process result for a specific profileType without demographic
+            const profileCount =
+              esResponse.aggregations.profiles
+                .filteredProfiles.profileCount
+                .value;
+            result[profileType] = profileCount;
           } else {
+            // Process aggregation result for both profileType and demographic specified
             const demographicBuckets =
               esResponse.aggregations.demographics
                 .buckets;
@@ -438,6 +498,7 @@ export class ProfileCountWidgetService
             );
           }
         }
+
         this.logger.debug('Aggregation result', {
           result,
         });
