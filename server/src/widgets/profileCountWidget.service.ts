@@ -36,7 +36,9 @@ export class ProfileCountWidgetService
     try {
       const indexExists =
         await this.elasticsearchService.indices.exists(
-          { index: indexName },
+          {
+            index: indexName,
+          },
         );
       if (!indexExists.body) {
         this.logger.log(
@@ -46,6 +48,9 @@ export class ProfileCountWidgetService
           settings: {
             number_of_shards: 1,
             number_of_replicas: 0,
+            index: {
+              max_result_window: 100000000,
+            },
           },
           mappings: {
             properties: {
@@ -64,17 +69,20 @@ export class ProfileCountWidgetService
           },
         };
         await this.elasticsearchService.indices.create(
-          { index: indexName, body },
+          {
+            index: indexName,
+            body,
+          },
         );
         this.logger.log(
           `Index "${indexName}" created successfully.`,
         );
-        return true; // Index was created
+        return true;
       } else {
         this.logger.log(
           `Index "${indexName}" already exists.`,
         );
-        return false; // Index already exists
+        return false;
       }
     } catch (error) {
       this.logger.error(

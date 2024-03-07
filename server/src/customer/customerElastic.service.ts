@@ -74,22 +74,25 @@ export class CustomerElasticService
           index: indexName,
           body: {
             settings: {
-              analysis: {
-                filter: {
-                  edge_ngram_filter: {
-                    type: 'edge_ngram',
-                    min_gram: 1,
-                    max_gram: 20,
+              index: {
+                max_result_window: 100000000,
+                analysis: {
+                  filter: {
+                    edge_ngram_filter: {
+                      type: 'edge_ngram',
+                      min_gram: 1,
+                      max_gram: 20,
+                    },
                   },
-                },
-                analyzer: {
-                  edge_ngram_analyzer: {
-                    type: 'custom',
-                    tokenizer: 'standard',
-                    filter: [
-                      'lowercase',
-                      'edge_ngram_filter',
-                    ],
+                  analyzer: {
+                    edge_ngram_analyzer: {
+                      type: 'custom',
+                      tokenizer: 'standard',
+                      filter: [
+                        'lowercase',
+                        'edge_ngram_filter',
+                      ],
+                    },
                   },
                 },
               },
