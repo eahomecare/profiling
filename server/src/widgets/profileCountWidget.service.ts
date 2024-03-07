@@ -257,6 +257,7 @@ export class ProfileCountWidgetService
           // Aggregating counts by profile types where isProfiled is true
           body = {
             size: 0,
+            track_total_hits: true,
             aggs: {
               profiles: {
                 nested: {
@@ -298,6 +299,7 @@ export class ProfileCountWidgetService
           );
           body = {
             size: 0,
+            track_total_hits: true,
             aggs: {
               demographics: {
                 terms: {
@@ -315,6 +317,7 @@ export class ProfileCountWidgetService
           // When a specific profileType but no demographic is selected
           body = {
             size: 0,
+            track_total_hits: true,
             query: {
               nested: {
                 path: 'profiles',
@@ -383,6 +386,7 @@ export class ProfileCountWidgetService
           );
           body = {
             size: 0,
+            track_total_hits: true,
             query: {
               nested: {
                 path: 'profiles',
@@ -524,6 +528,7 @@ export class ProfileCountWidgetService
         await this.elasticsearchService.search({
           index: indexName,
           size: 1,
+          track_total_hits: true,
           _source: ['profiles.profileTypeName'],
         });
 

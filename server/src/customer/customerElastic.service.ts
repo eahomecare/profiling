@@ -271,6 +271,7 @@ export class CustomerElasticService
           index: indexName,
           from,
           size,
+          track_total_hits: true,
           body: {
             query: {
               multi_match: {
@@ -331,6 +332,7 @@ export class CustomerElasticService
           index: indexName,
           from,
           size,
+          track_total_hits: true,
           body: {
             query: {
               match: {
@@ -399,6 +401,7 @@ export class CustomerElasticService
           index: indexName,
           from,
           size,
+          track_total_hits: true,
           body: {
             query: {
               bool: {
@@ -438,6 +441,7 @@ export class CustomerElasticService
           index: indexName,
           from,
           size,
+          track_total_hits: true,
           body: {
             query: {
               match_all: {},
