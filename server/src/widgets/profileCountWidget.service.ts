@@ -261,7 +261,7 @@ export class ProfileCountWidgetService
                   names: {
                     terms: {
                       field:
-                        'profiles.profileTypeName.keyword',
+                        'profiles.profileTypeName',
                     },
                   },
                 },
@@ -275,7 +275,7 @@ export class ProfileCountWidgetService
             aggs: {
               demographics: {
                 terms: {
-                  field: demographic + '.keyword',
+                  field: demographic,
                 },
               },
             },
@@ -343,7 +343,7 @@ export class ProfileCountWidgetService
             aggs: {
               demographics: {
                 terms: {
-                  field: demographic + '.keyword',
+                  field: demographic,
                 },
               },
             },
