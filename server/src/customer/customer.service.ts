@@ -15,14 +15,13 @@ import { tryCatch } from 'bullmq';
 import { CreateCustomerHomecarePayload } from './types';
 import { log } from 'console';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
-import { CustomerElasticService } from './customerElastic.service';
+import { ProfileCountWidgetService } from '../widgets/profileCountWidget.service';
 
 @Injectable()
 export class CustomerService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
-    private readonly customerElasticService: CustomerElasticService,
   ) {}
 
   async countCustomersByMonth(source: string) {
@@ -416,9 +415,12 @@ export class CustomerService {
           },
           include: { keywords: true },
         });
+
+      //Update Profile Type mappings
       await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
         customerId,
       );
+
       return customer;
     } catch (error) {
       throw new Error(
@@ -709,9 +711,8 @@ export class CustomerService {
         );
       }
 
-      //update customerElastic
-      await this.customerElasticService.indexOrUpdateCustomer(
-        'customertable',
+      //Update Profile Type mappings
+      await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
         customerMaster.id,
       );
 
