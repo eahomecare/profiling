@@ -10,7 +10,6 @@ import {
   Stack,
   Loader,
   Alert,
-  Button,
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +19,7 @@ import {
 } from "../../redux/profileCountWidgetSlice";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import ProfilePieChart from "./PofilePieChart";
+import StyledButton from "../../StyledComponents/StyledButton";
 
 const ProfileTypeAnalysis = () => {
   const dispatch = useDispatch();
@@ -35,14 +35,12 @@ const ProfileTypeAnalysis = () => {
   }, [dispatch]);
 
   const handleFetchClick = () => {
-    if (selectedProfile && selectedDemographic) {
-      dispatch(
-        fetchDistribution({
-          profileType: selectedProfile,
-          demographic: selectedDemographic,
-        }),
-      );
-    }
+    dispatch(
+      fetchDistribution({
+        profileType: selectedProfile,
+        demographic: selectedDemographic,
+      }),
+    );
   };
 
   const profileOptions = [
@@ -65,8 +63,7 @@ const ProfileTypeAnalysis = () => {
       })),
   ];
 
-  const isFetchDisabled =
-    !selectedProfile || !selectedDemographic || status === "loading";
+  const isFetchDisabled = status === "loading";
 
   return (
     <Flex
@@ -108,13 +105,13 @@ const ProfileTypeAnalysis = () => {
                   value={selectedDemographic}
                   onChange={setSelectedDemographic}
                 />
-                <Button
+                <StyledButton
                   onClick={handleFetchClick}
                   disabled={isFetchDisabled}
                   loading={status === "loading"}
                 >
                   Fetch
-                </Button>
+                </StyledButton>
               </Stack>
             </Grid.Col>
             <Grid.Col span={6}>

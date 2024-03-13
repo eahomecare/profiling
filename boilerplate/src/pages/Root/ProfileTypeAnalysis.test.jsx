@@ -182,7 +182,19 @@ describe("ProfileTypeAnalysis Component", () => {
     expect(demographicSelect).toBeDisabled();
   });
 
-  it("disables fetch button when no options are selected", () => {
+  it("disables fetch button during loading", () => {
+    store = mockStore({
+      profileCountWidget: {
+        menuItems: {
+          profileTypeItems: ["All", "Type1"],
+          demographicItems: ["all", "Demo1"],
+        },
+        distribution: {},
+        status: "loading",
+        error: null,
+      },
+    });
+
     render(
       <Provider store={store}>
         <ProfileTypeAnalysis />
