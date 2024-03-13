@@ -10,10 +10,17 @@ import {
 import * as _ from 'lodash';
 import { PrismaService } from '../prisma/prisma.service';
 import { map } from 'rxjs';
+import { ProfileCountWidgetService } from 'src/widgets/profileCountWidget.service';
+import { CustomerElasticService } from 'src/customer/customerElastic.service';
 
 @Injectable()
 export class ProfileTypeCustomerMappingService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+
+    private customerElasticService: CustomerElasticService,
+    private profileCountWidgetService: ProfileCountWidgetService,
+  ) {}
 
   async create(
     data: ProfileTypeCustomerMapping,
@@ -466,6 +473,19 @@ export class ProfileTypeCustomerMappingService {
           isEnabled: updatedMapping.isEnabled,
         };
       }),
+    );
+
+    //List of elastic updates here
+
+    //update customerElastic table
+    await this.customerElasticService.indexOrUpdateCustomer(
+      'customertable',
+      customerId,
+    );
+
+    //update widget 1
+    await this.profileCountWidgetService.indexOrUpdateCustomerDataProfileCountWidget(
+      customerId,
     );
 
     return updatedMappings;
