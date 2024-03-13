@@ -9,128 +9,126 @@ import {
   ActionIcon,
   Stack,
   Loader,
+  Alert,
+  Button,
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfileData } from "../../redux/profileDataCardSlice.js";
+import {
+  fetchMenuItems,
+  fetchDistribution,
+} from "../../redux/profileCountWidgetSlice";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import ProfilePieChart from "./PofilePieChart";
-import ProfileDataCard from "./ProfileDataCard";
 
 const ProfileTypeAnalysis = () => {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.profileDataCard.status);
-  const displayAndColorMappings = useSelector(
-    (state) => state.profileDataCard.displayAndColorMappings,
+  const { menuItems, distribution, status, error } = useSelector(
+    (state) => state.profileCountWidget,
   );
 
-  const [selectedProfile, setSelectedProfile] = useState("all");
-  const [selectedDemographic, setSelectedDemographic] = useState("all");
+  const [selectedProfile, setSelectedProfile] = useState("");
+  const [selectedDemographic, setSelectedDemographic] = useState("");
 
   useEffect(() => {
-    console.log("dispatching");
-    dispatch(fetchProfileData({}));
+    dispatch(fetchMenuItems());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (selectedProfile === "all" && selectedDemographic === "all") {
-      dispatch(fetchProfileData({}));
-    } else if (selectedProfile !== "all" && selectedDemographic !== "all") {
+  const handleFetchClick = () => {
+    if (selectedProfile && selectedDemographic) {
       dispatch(
-        fetchProfileData({
+        fetchDistribution({
           profileType: selectedProfile,
           demographic: selectedDemographic,
         }),
       );
     }
-  }, [selectedProfile, selectedDemographic, dispatch]);
+  };
 
   const profileOptions = [
-    { value: "all", label: "All" },
-    ...Object.entries(displayAndColorMappings).map(
-      ([key, { displayName }]) => ({ value: key, label: displayName }),
-    ),
+    { value: "", label: "All" },
+    ...menuItems.profileTypeItems
+      .filter((item) => item !== "All")
+      .map((item) => ({
+        value: item,
+        label: item.charAt(0).toUpperCase() + item.slice(1),
+      })),
   ];
 
   const demographicOptions = [
-    { value: "all", label: "All" },
-    { value: "ageRange", label: "Age" },
-    { value: "gender", label: "Gender" },
+    { value: "", label: "All" },
+    ...menuItems.demographicItems
+      .filter((item) => item !== "all")
+      .map((item) => ({
+        value: item,
+        label: item.charAt(0).toUpperCase() + item.slice(1),
+      })),
   ];
+
+  const isFetchDisabled =
+    !selectedProfile || !selectedDemographic || status === "loading";
 
   return (
     <Flex
-      style={{
-        width: "100%",
-        height: "100%",
-        flex: 1,
-        alignItems: "stretch",
-      }}
+      style={{ width: "100%", height: "100%", flex: 1, alignItems: "stretch" }}
     >
-      {/* First Card for Selectors and Pie Chart */}
-      <Flex
-        style={{
-          marginRight: "20px",
-          flex: 3,
-        }}
-      >
-        <Card shadow={"lg"} radius={"md"} style={{ width: "100%" }}>
+      <Flex style={{ marginRight: "20px", flex: 3 }}>
+        <Card shadow="lg" radius="md" style={{ width: "100%" }}>
+          {error && <Alert color="red">{error}</Alert>}
           <Box>
-            <Flex justify={"space-between"}>
+            <Flex justify="space-between">
               <Center>
-                <Text fw={"bold"} c={"#0d5ff9"} size={"sm"}>
+                <Text fw="bold" c="#0d5ff9" size="sm">
                   Profile
                 </Text>
               </Center>
               <Center>
-                <ActionIcon c={"#0d5ff9"} size={"sm"}>
+                <ActionIcon c="#0d5ff9" size="sm">
                   <IconArrowRight />
                 </ActionIcon>
               </Center>
             </Flex>
           </Box>
           <Grid grow>
-            <Grid.Col span={12}>
+            <Grid.Col span={6}>
               <Stack>
                 <StyledSelect
                   disabled={status === "loading"}
-                  label={"Profile"}
-                  placeholder={"Select Profile(s)"}
+                  label="Profile Type"
+                  placeholder="Select Profile Type"
                   data={profileOptions}
-                  onChange={(value) => setSelectedProfile(value)}
+                  value={selectedProfile}
+                  onChange={setSelectedProfile}
                 />
                 <StyledSelect
                   disabled={status === "loading"}
-                  label={"Demographics"}
-                  placeholder={"Select Main Demographics"}
+                  label="Demographics"
+                  placeholder="Select Demographics"
                   data={demographicOptions}
-                  onChange={(value) => setSelectedDemographic(value)}
+                  value={selectedDemographic}
+                  onChange={setSelectedDemographic}
                 />
+                <Button
+                  onClick={handleFetchClick}
+                  disabled={isFetchDisabled}
+                  loading={status === "loading"}
+                >
+                  Fetch
+                </Button>
               </Stack>
             </Grid.Col>
-            <Grid.Col span={12}>
+            <Grid.Col span={6}>
               <Center>
                 {status === "loading" ? (
-                  <Loader c="5c0ff2" size="lg" />
+                  <div data-testid="loader">
+                    <Loader size="lg" />
+                  </div>
                 ) : (
-                  <ProfilePieChart />
+                  <ProfilePieChart distribution={distribution} />
                 )}
               </Center>
             </Grid.Col>
           </Grid>
-        </Card>
-      </Flex>
-
-      {/* Second Card for Profile Data */}
-      <Flex
-        style={{
-          flex: 1,
-        }}
-      >
-        <Card shadow={"lg"} radius={"md"} style={{ width: "100%" }}>
-          <Center style={{ height: "100%" }}>
-            <ProfileDataCard />
-          </Center>
         </Card>
       </Flex>
     </Flex>

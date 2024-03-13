@@ -1,4 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Box } from "@mantine/core";
 import {
   PieChart,
@@ -8,13 +9,6 @@ import {
   Tooltip,
   Sector,
 } from "recharts";
-import {
-  setHoveredItem,
-  clearHoveredItem,
-  selectProfileData,
-  selectRequestBody,
-  selectProfileTypeDemoStats,
-} from "../../redux/profileDataCardSlice";
 
 // Predefined colors
 const COLORS = [
@@ -67,18 +61,6 @@ const RenderActiveShape = (props) => {
 
   return (
     <g>
-      {/* <text */}
-      {/*   x={cx} */}
-      {/*   y={cy + 120} */}
-      {/*   dy={8} */}
-      {/*   textAnchor="middle" */}
-      {/*   fill={"black"} */}
-      {/*   font-family="Arial" */}
-      {/*   font-weight="bold" */}
-      {/*   font-size="14px" */}
-      {/* > */}
-      {/*   {payload.name} */}
-      {/* </text> */}
       <Sector
         cx={cx}
         cy={cy}
@@ -106,18 +88,19 @@ const RenderActiveShape = (props) => {
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
-        style={{
-          fontSize: 15,
-        }}
         textAnchor={textAnchor}
         fill="#333"
-      >{`${payload.name}`}</text>
+        style={{ fontSize: "15px" }}
+      >
+        {payload.name}
+      </text>
       <text
         x={ex + (cos >= 0 ? 1 : -1) * 12}
         y={ey}
         dy={18}
         textAnchor={textAnchor}
         fill="#999"
+        style={{ fontSize: "15px" }}
       >
         {`( ${(percent * 100).toFixed(2)}%)`}
       </text>
@@ -126,67 +109,45 @@ const RenderActiveShape = (props) => {
 };
 
 const ProfilePieChart = () => {
-  const dispatch = useDispatch();
-  const profileData = useSelector(selectProfileData);
-  const requestBody = useSelector(selectRequestBody);
-  const profileTypeDemoStats = useSelector(selectProfileTypeDemoStats);
-
-  let dataToDisplay = profileData;
-
-  if (
-    requestBody &&
-    requestBody.profileType &&
-    requestBody.demographic &&
-    profileTypeDemoStats[requestBody.profileType]
-  ) {
-    const demoData =
-      profileTypeDemoStats[requestBody.profileType][requestBody.demographic] ||
-      [];
-    dataToDisplay = demoData.map((item, index) => ({
-      name: item[requestBody.demographic],
-      value: item.count,
-      color: COLORS[index % COLORS.length],
-    }));
-    console.log("Data to display", dataToDisplay);
-  }
-
-  const handleMouseEnter = (data, index) => {
-    const name = typeof data.name === "string" ? data.name : "Unknown";
-    dispatch(setHoveredItem(name));
-  };
-
-  const handleMouseLeave = () => {
-    dispatch(clearHoveredItem());
-  };
-
-  const hoveredItem = useSelector((state) => state.profileDataCard.hoveredItem);
-  const activeIndex = dataToDisplay.findIndex(
-    (item) => item.name === hoveredItem,
+  const distribution = useSelector(
+    (state) => state.profileCountWidget.distribution,
   );
+  const status = useSelector((state) => state.profileCountWidget.status);
+
+  const dataToDisplay = Object.keys(distribution).map((key, index) => ({
+    name: key,
+    value: distribution[key],
+    color: COLORS[index % COLORS.length], // Assuming COLORS is defined elsewhere or you can define it within this component
+  }));
 
   return (
-    <Box h={300} w={450}>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={300} height={400}>
-          <Pie
-            data={dataToDisplay}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            activeIndex={activeIndex}
-            activeShape={RenderActiveShape}
-          >
-            {dataToDisplay.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+    <Box sx={{ height: 300, width: "100%" }} data-testid="pie-chart">
+      {status === "loading" ? (
+        "Loading..."
+      ) : (
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={dataToDisplay}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              outerRadius={100}
+              fill="#8884d8"
+              dataKey="value"
+              activeShape={RenderActiveShape}
+            >
+              {dataToDisplay.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.color || COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
     </Box>
   );
 };
