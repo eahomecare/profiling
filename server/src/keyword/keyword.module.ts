@@ -4,6 +4,7 @@ import { KeywordController } from './keyword.controller';
 import { CustomerService } from '../customer/customer.service';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 import { CustomerModule } from 'src/customer/customer.module';
+import { ProfileCountWidgetService } from 'src/widgets/profileCountWidget.service';
 
 @Module({
   controllers: [KeywordController],
@@ -12,6 +13,7 @@ import { CustomerModule } from 'src/customer/customer.module';
     KeywordService,
     CustomerService,
     ProfileTypeCustomerMappingService,
+    ProfileCountWidgetService,
   ],
 })
 export class KeywordModule {}

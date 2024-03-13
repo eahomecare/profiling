@@ -28,6 +28,8 @@ import { CampaignService } from './campaign.service';
 import { ValuationService } from './valuation.service';
 import { PersonaService } from './persona.service';
 import { ContextService } from './context.service';
+import { ProfileCountWidgetService } from 'src/widgets/profileCountWidget.service';
+import { CustomerElasticService } from 'src/customer/customerElastic.service';
 
 @Module({
   imports: [ConfigModule, SearchModule],
@@ -59,6 +61,8 @@ import { ContextService } from './context.service';
     ValuationService,
     PersonaService,
     ContextService,
+    CustomerElasticService,
+    ProfileCountWidgetService,
   ],
 })
 export class V4Module {}
