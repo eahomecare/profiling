@@ -32,6 +32,7 @@ import { ProfileTypeCustomerMappingModule } from './profile-type-customer-mappin
 import { ProfileTypesModule } from './profile_types/profile-type.module';
 import { QueryModule } from './assistant/assistant.module';
 import { ProfileCountWidgetModule } from './widgets/profileCountWidget.module';
+import { ElasticsearchConfigModule } from './elasticSearch/elasticSearch.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ProfileCountWidgetModule } from './widgets/profileCountWidget.module';
     // SearchModule,
     QueryModule,
     ProfileCountWidgetModule,
+    ElasticsearchConfigModule,
   ],
   controllers: [ServiceCustomerController],
 })
