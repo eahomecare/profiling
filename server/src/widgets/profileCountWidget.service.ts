@@ -9,7 +9,7 @@ import {
   mappings,
   indexName,
 } from './profileCountWidgetMappings';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Injectable()
 export class ProfileCountWidgetService
