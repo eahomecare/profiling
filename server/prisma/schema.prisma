@@ -48,8 +48,8 @@ model Customer {
   profile_percentage          Int?                          @default(0) // New profile calculation method's storage 
   keys                        String[]                      @default([])
   profile_completion          Int?
-  created_at                  DateTime                      @default(now())
-  updated_at                  DateTime                      @updatedAt
+  created_at                  DateTime?                      @default(now())
+  updated_at                  DateTime?                      @updatedAt
   created_by                  String?
   updated_by                  String?
   personal_details            Personal_Details?
@@ -191,8 +191,8 @@ model ProfileType {
   customers    ProfileTypeCustomerMapping[]
   serviceIDs   String[]                     @db.ObjectId
   services     Service[]                    @relation(fields: [serviceIDs], references: [id])
-  // created_at   DateTime                     @default(now())
-  // updated_at   DateTime                     @updatedAt
+  // created_at   DateTime?                     @default(now())
+  // updated_at   DateTime?                     @updatedAt
 
   @@unique([name])
   @@map("profile_types")
@@ -206,6 +206,8 @@ model ProfileTypeCustomerMapping {
   customer      Customer    @relation(fields: [customerId], references: [id])
   level         Int         @default(1)
   isEnabled     Boolean     @default(true)
+  created_at                  DateTime?                      @default(now())
+  updated_at                  DateTime?                      @updatedAt
 
   @@map("profile_type_customer_mapping")
   @@index([customerId, isEnabled])

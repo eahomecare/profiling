@@ -63,6 +63,15 @@ export class ProfileCountWidgetService
                     type: 'keyword',
                   },
                   isProfiled: { type: 'boolean' },
+                  created_at: { type: 'date' },
+                  updated_at: { type: 'date' },
+                },
+              },
+              info: {
+                type: 'nested',
+                properties: {
+                  source: { type: 'keyword' },
+                  created_at: { type: 'date' },
                 },
               },
             },
@@ -147,6 +156,8 @@ export class ProfileCountWidgetService
   private transformDataForElasticsearch(
     customerData: any,
   ): any {
+    const defaultDate = '2024-02-20T00:00:00Z'; // Default date in ISO format
+
     const transformed = {
       gender:
         customerData.personal_details?.gender,
@@ -160,8 +171,18 @@ export class ProfileCountWidgetService
             profileTypeName:
               mapping.profileType.name,
             isProfiled: mapping.level > 1,
+            created_at: mapping.created_at
+              ? mapping.created_at
+              : defaultDate, // Use defaultDate if created_at is null
+            updated_at: mapping.updated_at, // Assuming date format is compatible with Elasticsearch
           }),
         ),
+      info: {
+        source: customerData.source,
+        created_at: customerData.created_at
+          ? customerData.created_at
+          : defaultDate, // Use defaultDate if created_at is null
+      },
     };
     return transformed;
   }
@@ -601,6 +622,254 @@ export class ProfileCountWidgetService
       );
       throw new Error(
         'Fetching second menu items failed',
+      );
+    }
+  }
+
+  public async getWidget2Distribution(
+    source: string,
+    year?: number,
+    month?: string,
+  ): Promise<any[]> {
+    this.logger.log(
+      `Getting widget distribution for source: ${source}, year: ${year}, month: ${month}`,
+    );
+
+    const query = {
+      bool: {
+        must: [],
+      },
+    };
+
+    if (source !== 'All') {
+      query.bool.must.push({
+        nested: {
+          path: 'info',
+          query: {
+            match: { 'info.source': source },
+          },
+        },
+      });
+    }
+
+    const dateHistogramAgg = {
+      date_histogram: {
+        field: 'info.created_at',
+        calendar_interval: 'month',
+        format: 'MMMM YYYY',
+      },
+    };
+
+    if (year && month) {
+      const monthNumber =
+        parseInt(
+          moment().month(month).format('M'),
+          10,
+        ) - 1;
+      const startDate = moment({
+        year,
+        month: monthNumber,
+        day: 1,
+      }).toISOString();
+      const endDate = moment(startDate)
+        .endOf('month')
+        .toISOString();
+
+      query.bool.must.push({
+        nested: {
+          path: 'info',
+          query: {
+            range: {
+              'info.created_at': {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          },
+        },
+      });
+
+      dateHistogramAgg.date_histogram.calendar_interval =
+        'day';
+      dateHistogramAgg.date_histogram.format =
+        'dd MMMM YYYY';
+    } else if (year) {
+      const startDate = moment({
+        year,
+        month: 0,
+        day: 1,
+      }).toISOString();
+      const endDate = moment({
+        year,
+        month: 11,
+        day: 31,
+      }).toISOString();
+
+      query.bool.must.push({
+        nested: {
+          path: 'info',
+          query: {
+            range: {
+              'info.created_at': {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    try {
+      const response =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            query:
+              query.bool.must.length > 0
+                ? query
+                : { match_all: {} },
+            aggs: {
+              nested_info: {
+                nested: {
+                  path: 'info',
+                },
+                aggs: {
+                  time_buckets: dateHistogramAgg,
+                },
+              },
+            },
+          },
+        });
+
+      this.logger.debug(
+        `Distribution response: ${JSON.stringify(
+          response.body,
+          null,
+          2,
+        )}`,
+      );
+
+      const buckets =
+        response.body.aggregations.nested_info
+          .time_buckets.buckets;
+
+      this.logger.log(
+        `Aggregations fetched successfully. Bucket size: ${buckets.length}`,
+      );
+
+      return buckets.map((bucket) => ({
+        count: bucket.doc_count,
+        label: bucket.key_as_string,
+      }));
+    } catch (error) {
+      this.logger.error(
+        `Error fetching widget2 distribution: ${error.message}`,
+      );
+      throw new Error(
+        'Error fetching widget2 distribution',
+      );
+    }
+  }
+
+  public async getWidget2MenuItems(): Promise<{
+    sources: string[];
+    years: number[];
+    months: string[];
+  }> {
+    try {
+      const sourceResponse =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            aggs: {
+              nested_info: {
+                nested: {
+                  path: 'info',
+                },
+                aggs: {
+                  sources: {
+                    terms: {
+                      field: 'info.source',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      this.logger.debug(
+        `Source aggregation response: ${JSON.stringify(
+          sourceResponse.body,
+          null,
+          2,
+        )}`,
+      );
+
+      const sourcesBuckets =
+        sourceResponse.body.aggregations
+          .nested_info.sources.buckets;
+      const sources = [
+        'All',
+        ...sourcesBuckets.map(
+          (bucket) => bucket.key,
+        ),
+      ];
+
+      const yearResponse =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            aggs: {
+              nested_info: {
+                nested: {
+                  path: 'info',
+                },
+                aggs: {
+                  years: {
+                    date_histogram: {
+                      field: 'info.created_at',
+                      calendar_interval: 'year',
+                      format: 'yyyy',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      this.logger.debug(
+        `Year aggregation response: ${JSON.stringify(
+          yearResponse.body,
+          null,
+          2,
+        )}`,
+      );
+
+      const yearsBuckets =
+        yearResponse.body.aggregations.nested_info
+          .years.buckets;
+      const years = yearsBuckets.map((bucket) =>
+        parseInt(bucket.key_as_string, 10),
+      );
+
+      const months = moment.months();
+
+      this.logger.log(
+        'Successfully fetched widget2 menu items',
+      );
+      return { sources, years, months };
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch widget2 menu items: ${error.message}`,
+      );
+      throw new Error(
+        'Error fetching widget2 menu items',
       );
     }
   }
