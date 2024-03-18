@@ -471,6 +471,10 @@ export class ProfileTypeCustomerMappingService {
             updatedMapping.profileTypeId,
           level: updatedMapping.level,
           isEnabled: updatedMapping.isEnabled,
+          created_at: updatedMapping.created_at
+            ? updatedMapping.created_at
+            : new Date(),
+          updated_at: new Date(),
         };
       }),
     );
