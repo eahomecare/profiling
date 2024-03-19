@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   Sector,
+  Legend,
 } from "recharts";
 
 // Predefined colors
@@ -145,6 +146,12 @@ const ProfilePieChart = () => {
               ))}
             </Pie>
             <Tooltip />
+            <Legend
+              fontWeight="40"
+              align="center"
+              verticalAlign="bottom"
+              layout="horizontal"
+            />
           </PieChart>
         </ResponsiveContainer>
       )}

@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMenuItems, fetchDistribution } from "../../redux/widget2Slice"; // Ensure path matches
 import {
   ActionIcon,
   Box,
@@ -10,13 +13,35 @@ import {
   Text,
 } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
 import StyledSelect from "../../StyledComponents/StyledSelect";
 import CustomerBarChart from "./CustomerBarChart";
-import { useState } from "react";
 
 const CustomerProfileAnalysis = () => {
   const [selectedSource, setSelectedSource] = useState("All");
+  const [selectedYear, setSelectedYear] = useState("All");
+  const [selectedMonth, setSelectedMonth] = useState("All");
+  const dispatch = useDispatch();
+  const { sources, years, months } = useSelector(
+    (state) => state.widget2.menuItems,
+  );
+
+  useEffect(() => {
+    dispatch(fetchMenuItems());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const params = {
+      source: selectedSource,
+    };
+    if (selectedYear !== "All") {
+      params.year = selectedYear;
+      if (selectedMonth !== "All") {
+        params.month = selectedMonth;
+      }
+    }
+    dispatch(fetchDistribution(params));
+  }, [dispatch, selectedSource, selectedYear, selectedMonth]);
+
   return (
     <Card shadow={"md"} radius={"md"}>
       <Box>
@@ -27,11 +52,9 @@ const CustomerProfileAnalysis = () => {
             </Text>
           </Center>
           <Center>
-            {/* <Link to={"/campaign"}> */}
             <ActionIcon c={"#0d5ff9"} size={"sm"}>
               <IconArrowRight />
             </ActionIcon>
-            {/* </Link> */}
           </Center>
         </Flex>
       </Box>
@@ -40,27 +63,35 @@ const CustomerProfileAnalysis = () => {
           <Stack>
             <StyledSelect
               label={"Source(s)"}
-              placeholder={"All"}
-              data={["All", "Call", "homecare", "eportal"]}
+              placeholder={"Select Source"}
+              data={sources}
               value={selectedSource}
               onChange={setSelectedSource}
             />
-            {/* <Group>
+            <Group>
               <StyledSelect
                 label={"Year"}
-                placeholder={"All"}
-                data={["Test"]}
+                placeholder={"Select Year"}
+                data={years}
+                value={selectedYear}
+                onChange={(value) => {
+                  setSelectedYear(value);
+                  if (value === "All") setSelectedMonth("All");
+                }}
               />
               <StyledSelect
                 label={"Month"}
-                placeholder={"All"}
-                data={["Test"]}
+                placeholder={"Select Month"}
+                data={selectedYear !== "All" ? months : ["All"]}
+                value={selectedMonth}
+                onChange={setSelectedMonth}
+                disabled={selectedYear === "All"}
               />
-            </Group> */}
+            </Group>
           </Stack>
         </Grid.Col>
         <Grid.Col span={9}>
-          <CustomerBarChart source={selectedSource} />
+          <CustomerBarChart />
         </Grid.Col>
       </Grid>
     </Card>
