@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Box } from "@mantine/core";
 import {
   BarChart,
@@ -11,26 +10,17 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { fetchCustomerProfileData } from "../../redux/customerProfileSlice"; // Ensure correct path
 
-const CustomerBarChart = ({ source }) => {
-  console.log(source);
-  const dispatch = useDispatch();
+const CustomerBarChart = () => {
+  // Using Redux state for chart data
+  const chartData = useSelector((state) => state.widget2.distribution.data);
+  const status = useSelector((state) => state.widget2.distribution.fetchStatus);
 
-  // Fetching data on component mount
-  useEffect(() => {
-    dispatch(fetchCustomerProfileData(source));
-  }, [dispatch, source]);
-
-  // Get data from the Redux store
-  const chartData = useSelector((state) => state.customerProfileTool.data);
-  const status = useSelector((state) => state.customerProfileTool.status);
-
-  // If data is still loading, display a loading indicator (you can adjust this as per your requirements)
-  if (status === "loading") return <div>Loading...</div>;
+  // Loading indicator
+  if (status === "loading") return <Box>Loading...</Box>;
 
   return (
-    <Box h={"400px"} w={"870px"} pt={20}>
+    <Box h={"400px"} w={"full"} pt={20}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
@@ -41,31 +31,12 @@ const CustomerBarChart = ({ source }) => {
             bottom: 5,
           }}
         >
-          <CartesianGrid vertical={false} strokeDasharray="1" />
-          <XAxis dataKey="name" />
-          <YAxis
-            label={{
-              value: "No. of Entities",
-              angle: -90,
-              position: "insideLeft",
-              offset: 0,
-            }}
-          />
+          <CartesianGrid vertical={false} strokeDasharray="3 3" />
+          <XAxis dataKey="label" />
+          <YAxis />
           <Tooltip />
-          <Legend
-            iconType="circle"
-            verticalAlign="top"
-            align="right"
-            offset={-10}
-            color={"yellow"}
-          />
-          <Bar
-            dataKey="customers"
-            stroke="#7366FF"
-            strokeWidth={2.36}
-            fill="#7366FF"
-            fillOpacity={0.7}
-          />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
     </Box>
