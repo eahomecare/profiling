@@ -156,7 +156,7 @@ export class ProfileCountWidgetService
   private transformDataForElasticsearch(
     customerData: any,
   ): any {
-    const defaultDate = '2024-02-20T00:00:00Z'; // Default date in ISO format
+    const defaultDate = '2024-02-20T00:00:00Z';
 
     const transformed = {
       gender:
@@ -173,15 +173,17 @@ export class ProfileCountWidgetService
             isProfiled: mapping.level > 1,
             created_at: mapping.created_at
               ? mapping.created_at
-              : defaultDate, // Use defaultDate if created_at is null
-            updated_at: mapping.updated_at, // Assuming date format is compatible with Elasticsearch
+              : defaultDate,
+            updated_at: mapping.updated_at
+              ? mapping.updated_at
+              : defaultDate,
           }),
         ),
       info: {
         source: customerData.source,
         created_at: customerData.created_at
           ? customerData.created_at
-          : defaultDate, // Use defaultDate if created_at is null
+          : defaultDate,
       },
     };
     return transformed;
@@ -277,13 +279,11 @@ export class ProfileCountWidgetService
     try {
       let body;
 
-      // When no profileType or it's 'all'
       if (!profileType || profileType === 'all') {
         if (
           !demographic ||
           demographic === 'all'
         ) {
-          // Aggregating counts by profile types where isProfiled is true
           body = {
             size: 0,
             track_total_hits: true,
@@ -322,7 +322,6 @@ export class ProfileCountWidgetService
             },
           };
         } else {
-          // Aggregating counts by demographic for all profile types
           this.logger.debug(
             'Aggregating counts by demographic for all profile types',
           );
@@ -343,7 +342,6 @@ export class ProfileCountWidgetService
           !demographic ||
           demographic === 'all'
         ) {
-          // When a specific profileType but no demographic is selected
           body = {
             size: 0,
             track_total_hits: true,
@@ -409,7 +407,6 @@ export class ProfileCountWidgetService
             },
           };
         } else {
-          // Aggregating counts by demographic for a specific profileType
           this.logger.debug(
             `Aggregating counts by ${demographic} for ${profileType}`,
           );
@@ -492,7 +489,6 @@ export class ProfileCountWidgetService
               {},
             );
           } else {
-            // Process aggregation result for demographic across all profile types
             const demographicBuckets =
               esResponse.aggregations.demographics
                 .buckets;
@@ -510,14 +506,12 @@ export class ProfileCountWidgetService
             !demographic ||
             demographic === 'all'
           ) {
-            // Process result for a specific profileType without demographic
             const profileCount =
               esResponse.aggregations.profiles
                 .filteredProfiles.profileCount
                 .value;
             result[profileType] = profileCount;
           } else {
-            // Process aggregation result for both profileType and demographic specified
             const demographicBuckets =
               esResponse.aggregations.demographics
                 .buckets;
@@ -597,7 +591,6 @@ export class ProfileCountWidgetService
   public async getSecondMenuItems(): Promise<
     string[]
   > {
-    // The logic for dynamically fetching fields from the index mapping, excluding nested fields
     try {
       const { body } =
         await this.elasticsearchService.indices.getMapping(
@@ -870,6 +863,219 @@ export class ProfileCountWidgetService
       );
       throw new Error(
         'Error fetching widget2 menu items',
+      );
+    }
+  }
+
+  public async getWidget3Distribution(
+    source: string,
+    year?: number,
+    month?: string,
+  ): Promise<any[]> {
+    this.logger.log(
+      `Getting profile distribution for source: ${source}, year: ${year}, month: ${month}`,
+    );
+
+    // Build the initial query
+    const query: any = {
+      bool: {
+        must: [],
+      },
+    };
+
+    // Filter by source, if specified
+    if (source !== 'All') {
+      query.bool.must.push({
+        nested: {
+          path: 'info',
+          query: {
+            term: { 'info.source': source },
+          },
+        },
+      });
+    }
+
+    // Adjust query for date range based on year and month
+    let dateFormat = 'MMMM YYYY';
+    let calendarInterval = 'month';
+
+    if (month) {
+      dateFormat = 'dd MMMM YYYY'; // Day, month name, year format
+      calendarInterval = 'day';
+    }
+
+    const dateHistogramAgg = {
+      date_histogram: {
+        field: 'profiles.updated_at',
+        calendar_interval: calendarInterval,
+        format: dateFormat,
+      },
+    };
+
+    // Add nested query for profiles
+    query.bool.must.push({
+      nested: {
+        path: 'profiles',
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  'profiles.isProfiled': true,
+                },
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    // Define aggregations
+    const aggs = {
+      profiles_nested: {
+        nested: { path: 'profiles' },
+        aggs: {
+          profiled_profiles: {
+            filter: {
+              term: {
+                'profiles.isProfiled': true,
+              },
+            },
+            aggs: {
+              updates_over_time: dateHistogramAgg,
+            },
+          },
+        },
+      },
+    };
+
+    try {
+      const { body } =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            query,
+            aggs,
+          },
+        });
+
+      const buckets =
+        body.aggregations.profiles_nested
+          .profiled_profiles.updates_over_time
+          .buckets;
+
+      this.logger.debug(
+        `Profile distribution fetched: ${buckets.length} buckets`,
+      );
+
+      return buckets.map((bucket) => ({
+        label: bucket.key_as_string,
+        count: bucket.doc_count,
+      }));
+    } catch (error) {
+      this.logger.error(
+        `Error fetching profile distribution for Widget3: ${error.message}`,
+      );
+      throw new Error(
+        'Failed to fetch profile distribution for Widget3',
+      );
+    }
+  }
+
+  public async getWidget3MenuItems(): Promise<{
+    sources: string[];
+    years: number[];
+    months: string[];
+  }> {
+    this.logger.log(
+      'Fetching widget3 menu items',
+    );
+    try {
+      const sourceResponse =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            aggs: {
+              nested_info: {
+                nested: {
+                  path: 'info',
+                },
+                aggs: {
+                  sources: {
+                    terms: {
+                      field: 'info.source',
+                      size: 10,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const sources = [
+        'All',
+        ...sourceResponse.body.aggregations.nested_info.sources.buckets.map(
+          (bucket) => bucket.key,
+        ),
+      ];
+
+      const yearResponse =
+        await this.elasticsearchService.search({
+          index: indexName,
+          size: 0,
+          body: {
+            aggs: {
+              nested_profiles: {
+                nested: {
+                  path: 'profiles',
+                },
+                aggs: {
+                  filtered_by_isProfiled: {
+                    filter: {
+                      term: {
+                        'profiles.isProfiled':
+                          true,
+                      },
+                    },
+                    aggs: {
+                      years: {
+                        date_histogram: {
+                          field:
+                            'profiles.updated_at',
+                          calendar_interval:
+                            'year',
+                          format: 'yyyy',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+      const years =
+        yearResponse.body.aggregations.nested_profiles.filtered_by_isProfiled.years.buckets.map(
+          (bucket) =>
+            parseInt(bucket.key_as_string, 10),
+        );
+
+      const months = moment.months();
+
+      this.logger.log(
+        'Successfully fetched widget3 menu items',
+      );
+      return { sources, years, months };
+    } catch (error) {
+      this.logger.error(
+        `Failed to fetch widget3 menu items: ${error.message}`,
+      );
+      throw new Error(
+        'Error fetching widget3 menu items',
       );
     }
   }
