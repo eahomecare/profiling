@@ -8,7 +8,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ProfileCountWidgetService } from './profileCountWidget.service';
-import { Widget3DistributionDto } from './dto/widget3Distribution.dto'; // This needs to be created or reused from widget2 if applicable
+import { Widget3DistributionDto } from './dto/widget3Distribution.dto';
 
 @Controller('widget3')
 export class Widget3Controller {
@@ -42,7 +42,7 @@ export class Widget3Controller {
   )
   async getWidget3Distribution(
     @Body()
-    widget3DistributionDto: Widget3DistributionDto, // Make sure to create or adjust this DTO as necessary
+    widget3DistributionDto: Widget3DistributionDto,
   ) {
     try {
       const distribution =

@@ -876,14 +876,12 @@ export class ProfileCountWidgetService
       `Getting profile distribution for source: ${source}, year: ${year}, month: ${month}`,
     );
 
-    // Build the initial query
     const query: any = {
       bool: {
         must: [],
       },
     };
 
-    // Filter by source, if specified
     if (source !== 'All') {
       query.bool.must.push({
         nested: {
@@ -895,12 +893,11 @@ export class ProfileCountWidgetService
       });
     }
 
-    // Adjust query for date range based on year and month
     let dateFormat = 'MMMM YYYY';
     let calendarInterval = 'month';
 
     if (month) {
-      dateFormat = 'dd MMMM YYYY'; // Day, month name, year format
+      dateFormat = 'dd MMMM YYYY';
       calendarInterval = 'day';
     }
 
@@ -912,7 +909,6 @@ export class ProfileCountWidgetService
       },
     };
 
-    // Add nested query for profiles
     query.bool.must.push({
       nested: {
         path: 'profiles',
@@ -930,7 +926,6 @@ export class ProfileCountWidgetService
       },
     });
 
-    // Define aggregations
     const aggs = {
       profiles_nested: {
         nested: { path: 'profiles' },

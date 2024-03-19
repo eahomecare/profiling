@@ -50,7 +50,7 @@ const CustomerBarChart = () => {
             color={"yellow"}
           />
           <Bar
-            dataKey="circle"
+            dataKey="count"
             stroke="#7366FF"
             strokeWidth={2.36}
             fill="#7366FF"
