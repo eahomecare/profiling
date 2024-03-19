@@ -33,10 +33,29 @@ const CustomerBarChart = () => {
         >
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <XAxis dataKey="label" />
-          <YAxis />
+          <YAxis
+            label={{
+              value: "No. of Entities",
+              angle: -90,
+              position: "insideLeft",
+              offset: 0,
+            }}
+          />
           <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill="#8884d8" />
+          <Legend
+            iconType="circle"
+            verticalAlign="top"
+            align="right"
+            offset={-10}
+            color={"yellow"}
+          />
+          <Bar
+            dataKey="circle"
+            stroke="#7366FF"
+            strokeWidth={2.36}
+            fill="#7366FF"
+            fillOpacity={0.7}
+          />
         </BarChart>
       </ResponsiveContainer>
     </Box>

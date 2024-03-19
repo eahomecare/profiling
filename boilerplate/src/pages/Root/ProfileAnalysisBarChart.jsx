@@ -11,26 +11,21 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { fetchProfileCount } from "../../redux/profileAnalysisSlice"; // Ensure correct path
+import { fetchWidget3Distribution } from "../../redux/widget3Slice"; // Ensure correct path
 
-const ProfileAnalysisBarChart = ({ source }) => {
+const ProfileAnalysisBarChart = () => {
   const dispatch = useDispatch();
-  console.log("source for profiles", source);
-  // Fetching data on component mount
+  const chartData = useSelector((state) => state.widget3.distribution.data);
+  const status = useSelector((state) => state.widget3.distribution.fetchStatus);
+
   useEffect(() => {
-    dispatch(fetchProfileCount(source));
-  }, [dispatch, source]);
+    dispatch(fetchWidget3Distribution({ source: "All" }));
+  }, [dispatch]);
 
-  // Get data from the Redux store
-  const chartData = useSelector((state) => state.profileCount.data);
-  const status = useSelector((state) => state.profileCount.status);
-  console.log("Chart data for profiles", chartData);
-
-  // If data is still loading, display a loading indicator (you can adjust this as per your requirements)
-  if (status === "loading") return <div>Loading...</div>;
+  if (status === "loading") return <Box>Loading...</Box>;
 
   return (
-    <Box h={"400px"} w={"870px"} pt={20}>
+    <Box h={"400px"} w={"full"} pt={20}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={chartData}
@@ -41,8 +36,9 @@ const ProfileAnalysisBarChart = ({ source }) => {
             bottom: 5,
           }}
         >
-          <CartesianGrid vertical={false} strokeDasharray="1" />
-          <XAxis dataKey="name" />
+          <CartesianGrid vertical={false} strokeDasharray="3 3" />
+          <XAxis dataKey="label" />
+
           <YAxis
             label={{
               value: "No. of Entities",
@@ -60,7 +56,7 @@ const ProfileAnalysisBarChart = ({ source }) => {
             color={"yellow"}
           />
           <Bar
-            dataKey="profiles"
+            dataKey="count"
             stroke="#F73164"
             strokeWidth={2.36}
             fill="#F73164"

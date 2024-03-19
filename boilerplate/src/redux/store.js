@@ -13,6 +13,7 @@ import campaignListSlice from "./campaignListSlice";
 import elasticCustomersSlice from "./elasticCustomersSlice";
 import profileCountWidgetReducer from "./profileCountWidgetSlice";
 import widget2Slice from "./widget2Slice";
+import widget3Slice from "./widget3Slice";
 
 export const store = configureStore({
   reducer: {
@@ -30,5 +31,6 @@ export const store = configureStore({
     elasticCustomers: elasticCustomersSlice,
     profileCountWidget: profileCountWidgetReducer,
     widget2: widget2Slice,
+    widget3: widget3Slice,
   },
 });
