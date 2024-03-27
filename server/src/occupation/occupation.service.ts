@@ -11,11 +11,13 @@ interface OccupationCustomerMapping {
   from: Date;
   to: Date;
   occupation?: Occupation;
+  created_at: Date;
+  updated_at: Date;
 }
 
 @Injectable()
 export class OccupationService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findOne(
     vehicleId: string,
