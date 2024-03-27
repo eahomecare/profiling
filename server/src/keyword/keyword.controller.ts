@@ -24,6 +24,8 @@ interface UpdateData {
   profileTypeId: string;
   keywordsPayload: string[];
   level: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface CreateKeywordInput
@@ -38,7 +40,7 @@ export class KeywordController {
   constructor(
     private readonly keywordService: KeywordService,
     private customerService: CustomerService,
-  ) { }
+  ) {}
 
   @Post()
   async create(@Body() data: Keyword): Promise<{
@@ -257,11 +259,20 @@ export class KeywordController {
             level: data.level,
             questionIDs: [data.questionId],
             profileTypeIDs: [data.profileTypeId],
+            created_at: data.created_at
+              ? data.created_at
+              : new Date(),
+            updated_at: new Date(),
           };
 
-          const newCreatedKeywordawait = await this.keywordService.create(newKeyword);
+          const newCreatedKeywordawait =
+            await this.keywordService.create(
+              newKeyword,
+            );
           console.log(newCreatedKeywordawait);
-          keywordIds.push(newCreatedKeywordawait.id);
+          keywordIds.push(
+            newCreatedKeywordawait.id,
+          );
         }
       }
 

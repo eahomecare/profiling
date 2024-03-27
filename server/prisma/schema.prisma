@@ -48,8 +48,8 @@ model Customer {
   profile_percentage          Int?                          @default(0) // New profile calculation method's storage 
   keys                        String[]                      @default([])
   profile_completion          Int?
-  created_at                  DateTime?                      @default(now())
-  updated_at                  DateTime?                      @updatedAt
+  created_at                  DateTime?                     @default(now())
+  updated_at                  DateTime?                     @updatedAt
   created_by                  String?
   updated_by                  String?
   personal_details            Personal_Details?
@@ -86,6 +86,8 @@ model Personal_Details {
   marital_status  String?
   current_address String?
   travel_address  String?
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
 }
 
 model Keyword {
@@ -99,22 +101,22 @@ model Keyword {
   questions      Question[]                   @relation(fields: [questionIDs], references: [id])
   profileTypeIDs String[]                     @db.ObjectId
   profile_types  ProfileType[]                @relation(fields: [profileTypeIDs], references: [id])
-  // created_at     DateTime      @default(now())
-  // updated_at     DateTime      @updatedAt
   agentSubmits   AgentSubmitKeywordsMapping[]
   campaigns      CampaignKeywordMapping[]
+  created_at     DateTime?                    @default(now())
+  updated_at     DateTime?                    @updatedAt
 
   @@unique([value, category])
   @@map("keywords")
 }
 
 model Occupation {
-  id        String                      @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  industry  String
-  customers OccupationCustomerMapping[]
-  // created_at DateTime                    @default(now())
-  // updated_at DateTime                    @updatedAt
+  id         String                      @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  industry   String
+  customers  OccupationCustomerMapping[]
+  created_at DateTime?                   @default(now())
+  updated_at DateTime?                   @updatedAt
 
   @@map("occupations")
 }
@@ -128,6 +130,8 @@ model OccupationCustomerMapping {
   incomeBracket String
   from          DateTime
   to            DateTime
+  created_at    DateTime?  @default(now())
+  updated_at    DateTime?  @updatedAt
 
   @@map("occupation_customer_mapping")
 }
@@ -137,22 +141,24 @@ model Vehicle {
   name        String
   productType String
   customers   VehicleCustomerMapping[]
-  // created_at  DateTime                 @default(now())
-  // updated_at  DateTime                 @updatedAt
+  created_at  DateTime?                @default(now())
+  updated_at  DateTime?                @updatedAt
 
   @@map("vehicles")
 }
 
 model VehicleCustomerMapping {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  vehicle    Vehicle  @relation(fields: [vehicleId], references: [id])
-  vehicleId  String   @db.ObjectId
-  customerId String   @db.ObjectId
-  customer   Customer @relation(fields: [customerId], references: [id])
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicleId  String    @db.ObjectId
+  customerId String    @db.ObjectId
+  customer   Customer  @relation(fields: [customerId], references: [id])
   vin        String
   validity   String
   expiryDate DateTime
   status     String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   @@map("vehicle_customer_mapping")
 }
@@ -170,9 +176,9 @@ model Question {
   keywords       Keyword[]                     @relation(fields: [keywordIDs], references: [id])
   profileTypeIDs String[]                      @db.ObjectId
   profile_types  ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
-  // created_at     DateTime      @default(now())
-  // updated_at     DateTime      @updatedAt
   agentSubmits   AgentSubmitQuestionsMapping[]
+  created_at     DateTime?                     @default(now())
+  updated_at     DateTime?                     @updatedAt
 
   @@unique([question])
   @@map("questions")
@@ -191,8 +197,8 @@ model ProfileType {
   customers    ProfileTypeCustomerMapping[]
   serviceIDs   String[]                     @db.ObjectId
   services     Service[]                    @relation(fields: [serviceIDs], references: [id])
-  // created_at   DateTime?                     @default(now())
-  // updated_at   DateTime?                     @updatedAt
+  created_at   DateTime?                    @default(now())
+  updated_at   DateTime?                    @updatedAt
 
   @@unique([name])
   @@map("profile_types")
@@ -206,11 +212,11 @@ model ProfileTypeCustomerMapping {
   customer      Customer    @relation(fields: [customerId], references: [id])
   level         Int         @default(1)
   isEnabled     Boolean     @default(true)
-  created_at                  DateTime?                      @default(now())
-  updated_at                  DateTime?                      @updatedAt
+  created_at    DateTime?   @default(now())
+  updated_at    DateTime?   @updatedAt
 
-  @@map("profile_type_customer_mapping")
   @@index([customerId, isEnabled])
+  @@map("profile_type_customer_mapping")
 }
 
 model Service {
@@ -221,19 +227,19 @@ model Service {
   profileTypeIDs              String[]                      @db.ObjectId
   profile_types               ProfileType[]                 @relation(fields: [profileTypeIDs], references: [id])
   ServiceCustomerUsageMapping ServiceCustomerUsageMapping[]
-  // created_at                  DateTime                      @default(now())
-  // updated_at                  DateTime                      @updatedAt
+  created_at                  DateTime?                     @default(now())
+  updated_at                  DateTime?                     @updatedAt
 
   @@unique([name])
   @@map("services")
 }
 
 model ServiceCustomerUsageMapping {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  service           Service  @relation(fields: [serviceId], references: [id])
-  serviceId         String   @db.ObjectId
-  customerId        String   @db.ObjectId
-  customer          Customer @relation(fields: [customerId], references: [id])
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  service           Service   @relation(fields: [serviceId], references: [id])
+  serviceId         String    @db.ObjectId
+  customerId        String    @db.ObjectId
+  customer          Customer  @relation(fields: [customerId], references: [id])
   ticket_id         String
   order_id          String
   source_of_booking String
@@ -242,6 +248,8 @@ model ServiceCustomerUsageMapping {
   action            String
   action_date_time  String
   tat               Int
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @updatedAt
 
   @@map("service_customer_usage_mappings")
 }
@@ -444,6 +452,8 @@ model AgentSubmitKeywordsMapping {
   keywordId     String       @map("keyword_id") @db.ObjectId
   agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
   keyword       Keyword      @relation(fields: [keywordId], references: [id])
+  created_at    DateTime?    @default(now())
+  updated_at    DateTime?    @updatedAt
 
   @@unique([agentSubmitId, keywordId])
   @@map("agentSubmitKeywordsMapping")
@@ -455,6 +465,8 @@ model AgentSubmitQuestionsMapping {
   questionId    String       @map("question_id") @db.ObjectId
   agentSubmit   agentSubmits @relation(fields: [agentSubmitId], references: [id])
   question      Question     @relation(fields: [questionId], references: [id])
+  created_at    DateTime?    @default(now())
+  updated_at    DateTime?    @updatedAt
 
   @@unique([agentSubmitId, questionId])
   @@map("agentSubmitQuestionsMapping")
@@ -480,6 +492,8 @@ model CustomerHomecareMapping {
   homecare_customer_id String           @db.ObjectId
   customer             Customer         @relation(fields: [master_customer_id], references: [id])
   customer_homecare    CustomerHomecare @relation(fields: [homecare_customer_id], references: [id])
+  created_at           DateTime?        @default(now())
+  updated_at           DateTime?        @updatedAt
 
   @@unique([wp_user_id])
   @@map("customer_homecare_mappings")
@@ -502,6 +516,8 @@ model PersonalDetailsHomecare {
   clientId        String?
   programId       String?
   regCode         String?
+  created_at      DateTime?         @default(now())
+  updated_at      DateTime?         @updatedAt
 }
 
 model CustomerHomecare {
@@ -538,11 +554,13 @@ model CustomerSession {
 }
 
 model CampaignKeywordMapping {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
-  campaignId String   @db.ObjectId
-  keyword    Keyword  @relation(fields: [keywordId], references: [id])
-  keywordId  String   @db.ObjectId
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  campaign   Campaign  @relation(fields: [campaignId], references: [id])
+  campaignId String    @db.ObjectId
+  keyword    Keyword   @relation(fields: [keywordId], references: [id])
+  keywordId  String    @db.ObjectId
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 
   @@unique([campaignId, keywordId])
   @@map("campaign_keyword_mapping")
