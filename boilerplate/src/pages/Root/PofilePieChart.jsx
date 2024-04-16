@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Box } from "@mantine/core";
 import {
@@ -109,6 +109,26 @@ const RenderActiveShape = (props) => {
   );
 };
 
+const CustomTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#fff",
+          padding: "5px",
+          border: "1px solid #ccc",
+        }}
+      >
+        {payload.map((entry, index) => (
+          <p key={`item-${index}`}>{`${entry.name}: ${entry.value}`}</p>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const ProfilePieChart = () => {
   const distribution = useSelector(
     (state) => state.profileCountWidget.distribution,
@@ -118,7 +138,7 @@ const ProfilePieChart = () => {
   const dataToDisplay = Object.keys(distribution).map((key, index) => ({
     name: key,
     value: distribution[key],
-    color: COLORS[index % COLORS.length], // Assuming COLORS is defined elsewhere or you can define it within this component
+    color: COLORS[index % COLORS.length],
   }));
 
   return (
@@ -145,13 +165,8 @@ const ProfilePieChart = () => {
                 />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend
-              fontWeight="40"
-              align="center"
-              verticalAlign="bottom"
-              layout="horizontal"
-            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend align="center" verticalAlign="bottom" layout="horizontal" />
           </PieChart>
         </ResponsiveContainer>
       )}
