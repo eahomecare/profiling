@@ -136,7 +136,7 @@ const ProfilePieChart = () => {
   const status = useSelector((state) => state.profileCountWidget.status);
 
   const dataToDisplay = Object.keys(distribution).map((key, index) => ({
-    name: key,
+    name: key.charAt(0).toUpperCase() + key.slice(1), // Capitalizing the first letter of each legend name
     value: distribution[key],
     color: COLORS[index % COLORS.length],
   }));
