@@ -20,7 +20,6 @@ export const fetchMenuItems = createAsyncThunk(
     const response = await axios.get("/widget2/getMenuItems");
     const data = response.data;
 
-    // Transforming data to match Mantine's Select component requirement
     const sources = data.sources.map((source) => ({
       value: source,
       label: source,
