@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Box } from "@mantine/core";
+import { Box, Center, Flex, Text } from "@mantine/core";
 import {
   BarChart,
   Bar,
@@ -18,6 +18,22 @@ const CustomerBarChart = () => {
 
   // Loading indicator
   if (status === "loading") return <Box>Loading...</Box>;
+
+  // Check if there's data to display
+  if (!chartData || chartData.length === 0) {
+    return (
+      <Box
+        h={"400px"}
+        w={"full"}
+        pt={20}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text size="lg">No Data</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box h={"400px"} w={"full"} pt={20}>
