@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Box, Center, Text } from "@mantine/core";
 import {
   BarChart,
@@ -11,16 +10,10 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { fetchWidget3Distribution } from "../../redux/widget3Slice";
 
 const ProfileAnalysisBarChart = () => {
-  const dispatch = useDispatch();
   const chartData = useSelector((state) => state.widget3.distribution.data);
   const status = useSelector((state) => state.widget3.distribution.fetchStatus);
-
-  useEffect(() => {
-    dispatch(fetchWidget3Distribution({ source: "All" }));
-  }, [dispatch]);
 
   if (status === "loading") return <Box>Loading...</Box>;
   if (!chartData || chartData.length === 0) {
