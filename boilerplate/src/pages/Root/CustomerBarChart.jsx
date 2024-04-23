@@ -12,14 +12,11 @@ import {
 } from "recharts";
 
 const CustomerBarChart = () => {
-  // Using Redux state for chart data
   const chartData = useSelector((state) => state.widget2.distribution.data);
   const status = useSelector((state) => state.widget2.distribution.fetchStatus);
 
-  // Loading indicator
   if (status === "loading") return <Box>Loading...</Box>;
 
-  // Check if there's data to display
   if (!chartData || chartData.length === 0) {
     return (
       <Box
@@ -30,7 +27,7 @@ const CustomerBarChart = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Text size="lg">No Data</Text>
+        <Text size="lg">No Data Available</Text>
       </Box>
     );
   }

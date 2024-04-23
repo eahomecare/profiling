@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mantine/core";
+import { Box, Center, Text } from "@mantine/core";
 import {
   BarChart,
   Bar,
@@ -11,7 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { fetchWidget3Distribution } from "../../redux/widget3Slice"; // Ensure correct path
+import { fetchWidget3Distribution } from "../../redux/widget3Slice";
 
 const ProfileAnalysisBarChart = () => {
   const dispatch = useDispatch();
@@ -23,6 +23,20 @@ const ProfileAnalysisBarChart = () => {
   }, [dispatch]);
 
   if (status === "loading") return <Box>Loading...</Box>;
+  if (!chartData || chartData.length === 0) {
+    return (
+      <Box
+        h={"400px"}
+        w={"full"}
+        pt={20}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text size="lg">No Data Available</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box h={"400px"} w={"full"} pt={20}>
@@ -38,7 +52,6 @@ const ProfileAnalysisBarChart = () => {
         >
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <XAxis dataKey="label" />
-
           <YAxis
             label={{
               value: "No. of Entities",
