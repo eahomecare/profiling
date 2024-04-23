@@ -899,6 +899,59 @@ export class ProfileCountWidgetService
     if (month) {
       dateFormat = 'dd MMMM YYYY';
       calendarInterval = 'day';
+
+      const monthNumber =
+        parseInt(
+          moment().month(month).format('M'),
+          10,
+        ) - 1;
+      const startDate = moment({
+        year,
+        month: monthNumber,
+        day: 1,
+      }).toISOString();
+      const endDate = moment(startDate)
+        .endOf('month')
+        .toISOString();
+
+      query.bool.must.push({
+        nested: {
+          path: 'profiles',
+          query: {
+            range: {
+              'profiles.updated_at': {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          },
+        },
+      });
+    } else if (year) {
+      const startDate = moment({
+        year,
+        month: 0,
+        day: 1,
+      }).toISOString();
+      const endDate = moment({
+        year,
+        month: 11,
+        day: 31,
+      }).toISOString();
+
+      query.bool.must.push({
+        nested: {
+          path: 'profiles',
+          query: {
+            range: {
+              'profiles.updated_at': {
+                gte: startDate,
+                lte: endDate,
+              },
+            },
+          },
+        },
+      });
     }
 
     const dateHistogramAgg = {
