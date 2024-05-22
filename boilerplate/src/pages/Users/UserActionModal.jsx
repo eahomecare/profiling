@@ -170,7 +170,7 @@ const UserActionModal = ({
           >
             <Text>
               <Text c="#4E70EA" fw={700}>
-                Name:
+                Name1:
               </Text>{" "}
               {curr_user.email}
             </Text>

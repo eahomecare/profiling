@@ -47,7 +47,7 @@ const EditUserInfoModal = ({
     >
       <SimpleGrid cols={2}>
         <StyledTextInput
-          placeholder="First Name"
+          placeholder="First Name1"
           label="First Name"
           value={userDetails.firstname}
           onChange={(event) =>

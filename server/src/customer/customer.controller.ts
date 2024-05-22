@@ -17,6 +17,7 @@ import { JwtGuard } from '../auth/guard';
 import { CustomerService } from './customer.service';
 import { Customer, Prisma } from '@prisma/client';
 import { CreateCustomerHomecarePayload } from './types';
+import { CreateCustomerHomecareCrmPayload } from './types';
 import { CustomerElasticService } from './customerElastic.service';
 import {
   ColumnSearchDto,
@@ -178,6 +179,34 @@ export class CustomerController {
         );
       console.log(
         'Homecare customer created',
+        createdCustomer,
+      );
+      return {
+        message: 'Customer created successfully',
+        customer: createdCustomer,
+        status: 201,
+      };
+    } catch (error) {
+      console.error(error, 'ERROR');
+      return {
+        message: 'Failed to create customer',
+        status: 500,
+      };
+    }
+  }
+
+  // Homecare Customer CRM
+  @Post('/add/customer/hc/crm')
+  async addCustomerHcCrm(
+    @Body() data: CreateCustomerHomecareCrmPayload,
+  ) {
+    try {
+      const createdCustomer =
+        await this.customerService.addCustomerHomecareCrm(
+          data,
+        );
+      console.log(
+        'Homecare CRM customer created',
         createdCustomer,
       );
       return {
