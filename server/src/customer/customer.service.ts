@@ -555,21 +555,21 @@ export class CustomerService {
           },
         });
 
-      await this.prisma.personal_Details.create({
-        data: {
-          customer_id: customer.id,
-          full_name:
-            personalDetailsInput.full_name,
-          phone_number: customerInput.mobile,
-          email_address: customerInput.email,
-          date_of_birth: dateOfBirth,
-          gender: personalDetailsInput.gender,
-          address: personalDetailsInput.address,
-          employment:
-            personalDetailsInput.employment,
-          location: personalDetailsInput.location,
-        },
-      });
+        await this.prisma.personal_Details.create({
+          data: {
+            customer_id: customer.id,
+            full_name:
+              personalDetailsInput.full_name,
+            phone_number: customerInput.mobile,
+            email_address: customerInput.email,
+            date_of_birth: dateOfBirth,
+            gender: personalDetailsInput.gender,
+            address: personalDetailsInput.address,
+            employment:
+              personalDetailsInput.employment,
+            location: personalDetailsInput.location,
+          },
+        });
 
       const createdCustomer =
         await this.prisma.customer.findUnique({
@@ -665,16 +665,16 @@ export class CustomerService {
           },
         });
 
-      await this.prisma.personal_Details.create({
-        data: {
-          customer_id: customerMaster.id,
-          full_name: `${personalDetails.fname} ${personalDetails.lname}`,
-          phone_number: personalDetails.mobile,
-          email_address: personalDetails.email,
-          gender: personalDetails.gender,
-          location: personalDetails.location,
-        },
-      });
+        await this.prisma.personal_Details.create({
+          data: {
+            customer_id: customerMaster.id,
+            full_name: `${personalDetails.fname} ${personalDetails.lname}`,
+            phone_number: personalDetails.mobile,
+            email_address: personalDetails.email,
+            gender: personalDetails.gender,
+            location: personalDetails.location,
+          },
+        });
 
       const customerHomecareMapping =
         await this.prisma.customerHomecareMapping.create(
@@ -748,7 +748,7 @@ export class CustomerService {
 
       // Create CustomerHomecareCrm
       const customerHomecareCrm =
-        await this.prisma.customerHomecare.create(
+        await this.prisma.customerHomecareCrm.create(
           {
             data: {
               socketId,
@@ -766,9 +766,11 @@ export class CustomerService {
             },
           },
         );
+
+        console.log(customerHomecareCrm);
       
-      const personalDetailsHomecare =
-        await this.prisma.personalDetailsHomecare.create(
+      const personalDetailsHomecareCrm =
+        await this.prisma.personalDetailsHomecareCrm.create(
           {
             data: {
               ccode: personalDetails.ccode,
@@ -803,6 +805,58 @@ export class CustomerService {
             source: 'homecare',
           },
         });
+
+        await this.prisma.personal_Details.create({
+          data: {
+            customer_id: customerMaster.id,
+            full_name: `${personalDetails.fname} ${personalDetails.lname}`,
+            phone_number: personalDetails.mobile,
+            email_address: personalDetails.email,
+            gender: personalDetails.gender,
+            location: personalDetails.location,
+          },
+        });
+      
+      const customerHomecareMappingCrm =
+        await this.prisma.customerHomecareMappingCrm.create(
+          {
+            data: {
+              master_customer_id:
+                customerMaster.id,
+              wp_user_id,
+              homecare_customer_id:
+                customerHomecareCrm.id,
+            },
+          },
+        );
+
+        const allProfileTypes =
+        await this.prisma.profileType.findMany();
+
+      for (const profileType of allProfileTypes) {
+        await this.prisma.profileTypeCustomerMapping.create(
+          {
+            data: {
+              profileType: {
+                connect: {
+                  id: profileType.id,
+                },
+              },
+              customer: {
+                connect: {
+                  id: customerMaster.id,
+                },
+              },
+              level: 1,
+            },
+          },
+        );
+      }
+
+      //Update Profile Type mappings
+      await this.profileTypeCustommerMapping.updateProfileTypeCustomerMappingGeneric(
+        customerMaster.id,
+      );
 
     } catch (error) {
       throw Error(error);

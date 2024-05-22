@@ -65,6 +65,7 @@ model Customer {
   campaignIDs                 String[]                      @db.ObjectId
   campaign                    Campaign[]                    @relation(fields: [campaignIDs], references: [id])
   CustomerHomecareMapping     CustomerHomecareMapping[]
+  CustomerHomecareMappingCrm  CustomerHomecareMappingCrm[]
   CustomerSession             CustomerSession[]
 
   @@map("customers")
@@ -499,10 +500,45 @@ model CustomerHomecareMapping {
   @@map("customer_homecare_mappings")
 }
 
+model CustomerHomecareMappingCrm {
+  id                   String           @id @default(auto()) @map("_id") @db.ObjectId
+  master_customer_id   String           @db.ObjectId
+  wp_user_id           Int
+  homecare_customer_id String           @db.ObjectId
+  customer             Customer         @relation(fields: [master_customer_id], references: [id])
+  customer_homecare    CustomerHomecareCrm @relation(fields: [homecare_customer_id], references: [id])
+  created_at           DateTime?        @default(now())
+  updated_at           DateTime?        @updatedAt
+
+  @@unique([wp_user_id])
+  @@map("customer_homecare_mappings_crm")
+}
+
 model PersonalDetailsHomecare {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
   customer_id     String            @unique @db.ObjectId
   customer        CustomerHomecare? @relation(fields: [customer_id], references: [id])
+  ccode           String?
+  country         String?
+  fname           String?
+  lname           String?
+  gender          String?
+  location        String?
+  email           String?
+  mobile          String?
+  memberBenefitId String?
+  planId          String?
+  clientId        String?
+  programId       String?
+  regCode         String?
+  created_at      DateTime?         @default(now())
+  updated_at      DateTime?         @updatedAt
+}
+
+model PersonalDetailsHomecareCrm {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  customer_id     String            @unique @db.ObjectId
+  customer        CustomerHomecareCrm? @relation(fields: [customer_id], references: [id])
   ccode           String?
   country         String?
   fname           String?
@@ -536,6 +572,26 @@ model CustomerHomecare {
   createdAt                      DateTime                  @default(now())
   updatedAt                      DateTime                  @updatedAt
   CustomerHomecareMapping        CustomerHomecareMapping[]
+
+  @@unique([wp_user_id])
+}
+
+model CustomerHomecareCrm {
+  id                             String                    @id @default(auto()) @map("_id") @db.ObjectId
+  personalDetails                PersonalDetailsHomecareCrm?
+  socketId                       String?
+  cyberior_customer_id           String?
+  homecare_post_id               String?
+  cyberior_activation_status     String?
+  cyberior_id                    String?
+  cyberior_user_id               String?
+  cyberior_activation_date       String?
+  registrationVerificationStatus String?
+  wp_user_id                     Int
+  customer_id                    String?
+  createdAt                      DateTime                  @default(now())
+  updatedAt                      DateTime                  @updatedAt
+  CustomerHomecareMappingCrm     CustomerHomecareMappingCrm[]
 
   @@unique([wp_user_id])
 }
