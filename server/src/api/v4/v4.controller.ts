@@ -225,6 +225,8 @@ export class V4Controller {
     keywordsDto: KeywordsDto,
     @Res() res: Response,
   ) {
+    console.log(request,"REQ");
+    
     this.logger.log('Getting Customer Info');
     try {
       const decodedAuthorizationToken =
@@ -236,11 +238,11 @@ export class V4Controller {
           decodedAuthorizationToken,
         );
 
-      if (!agentSession) {
-        throw new UnauthorizedException(
-          'Invalid authorization token',
-        );
-      }
+      // if (!agentSession) {
+      //   throw new UnauthorizedException(
+      //     'Invalid authorization token',
+      //   );
+      // }
 
       const crmName = agentSession.CRM;
       const customer =
