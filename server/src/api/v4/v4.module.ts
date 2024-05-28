@@ -31,6 +31,7 @@ import { ContextService } from './context.service';
 import { ProfileCountWidgetService } from 'src/widgets/profileCountWidget.service';
 import { CustomerElasticService } from 'src/customer/customerElastic.service';
 
+
 @Module({
   imports: [ConfigModule, SearchModule],
   controllers: [V4Controller],
