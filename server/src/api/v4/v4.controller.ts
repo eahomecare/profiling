@@ -225,7 +225,7 @@ export class V4Controller {
     keywordsDto: KeywordsDto,
     @Res() res: Response,
   ) {
-    console.log(request,"REQ");
+    console.log(request.headers,"REQ");
     
     this.logger.log('Getting Customer Info');
     try {
