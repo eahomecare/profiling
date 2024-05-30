@@ -484,10 +484,13 @@ export class V4Controller {
         );
       }
 
-      const agentID =
-        await this.submitService.getAgentIDFromSession(
-          agentSession.id,
-        );
+      // const agentID =
+      //   await this.submitService.getAgentIDFromSession(
+      //     agentSession.id,
+      //   );
+
+      const agentIDHeader = request.headers['agentID']?request.headers['crm']:"";
+      const agentID = Array.isArray(agentIDHeader) ? agentIDHeader.join(', ') : agentIDHeader;
 
       const agentSubmitData = {
         CRM: agentSession.CRM,
