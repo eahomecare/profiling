@@ -49,7 +49,7 @@ export class AuthorizationService {
   }
 
   validateCrm(staticKey: string): string {
-    const crmNames = ['HC', 'CRM2', 'CRM3']; // update this with the actual CRM names
+    const crmNames = ['HC', 'CRM2', 'CRM3', 'HC_CRM']; // update this with the actual CRM names
     const crmName = crmNames.find(
       (crm) =>
         this.configService.get(
