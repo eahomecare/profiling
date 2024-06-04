@@ -13,6 +13,7 @@ import {
 } from '@prisma/client';
 import { tryCatch } from 'bullmq';
 import { CreateCustomerHomecarePayload } from './types';
+import { CreateCustomerHomecareCrmPayload } from './types';
 import { log } from 'console';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 import { CustomerElasticService } from './customerElastic.service';
@@ -718,6 +719,92 @@ export class CustomerService {
       );
 
       return customerHomecareMapping;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+
+  async addCustomerHomecareCrm(
+    payload: CreateCustomerHomecareCrmPayload,
+  ) {
+    try {
+      let {
+        personalDetails,
+        socketId,
+        cyberior_customer_id,
+        homecare_post_id,
+        cyberior_activation_status,
+        cyberior_id,
+        cyberior_user_id,
+        cyberior_activation_date,
+        registrationVerificationStatus,
+        wp_user_id,
+        customer_id,
+        createdAt,
+        updatedAt,
+      } = payload;
+
+      createdAt = new Date(createdAt);
+      updatedAt = new Date(updatedAt);
+
+      // Create CustomerHomecareCrm
+      const customerHomecareCrm =
+        await this.prisma.customerHomecare.create(
+          {
+            data: {
+              socketId,
+              cyberior_customer_id,
+              homecare_post_id,
+              cyberior_activation_status,
+              cyberior_id,
+              cyberior_user_id,
+              cyberior_activation_date,
+              registrationVerificationStatus,
+              wp_user_id,
+              customer_id,
+              createdAt,
+              updatedAt,
+            },
+          },
+        );
+      
+      const personalDetailsHomecare =
+        await this.prisma.personalDetailsHomecare.create(
+          {
+            data: {
+              ccode: personalDetails.ccode,
+              country: personalDetails.country,
+              fname: personalDetails.fname,
+              lname: personalDetails.lname,
+              gender: personalDetails.gender,
+              location: personalDetails.location,
+              email: personalDetails.email,
+              mobile: personalDetails.mobile,
+              memberBenefitId:
+                personalDetails.memberBenefitId,
+              planId: personalDetails.planId,
+              clientId: personalDetails.clientId,
+              programId:
+                personalDetails.programId,
+              regCode: personalDetails.regCode,
+              customer: {
+                connect: {
+                  id: customerHomecareCrm.id,
+                },
+              },
+            },
+          },
+        );
+
+      const customerMaster =
+        await this.prisma.customer.create({
+          data: {
+            mobile: personalDetails.mobile,
+            email: personalDetails.email,
+            source: 'homecare',
+          },
+        });
+
     } catch (error) {
       throw Error(error);
     }

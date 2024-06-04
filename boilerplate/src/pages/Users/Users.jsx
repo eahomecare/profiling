@@ -220,6 +220,7 @@ const Users = () => {
           e.preventDefault();
           if (column.id === "action") {
             handleEditUserModal(row.original);
+            alert(JSON.stringify(row, null, 2));
           }
         };
 
