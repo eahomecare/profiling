@@ -1,19 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  Campaign,
-  Prisma,
-  CampaignReport,
-} from '@prisma/client';
-import * as nodemailer from 'nodemailer';
+import { Campaign, Prisma } from '@prisma/client';
+import * as sendgrid from '@sendgrid/mail';
 
-const transporter = nodemailer.createTransport({
-  service: 'hotmail',
-  auth: {
-    user: 'europeassistance@hotmail.com',
-    pass: 'europe@2022',
-  },
-});
+sendgrid.setApiKey('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');
 
 type CustomCampaignReportCreateInput = {
   campaign: {
@@ -190,45 +180,41 @@ export class CampaignService {
       ) {
         return new Promise((resolve) => {
           const mailOptions = {
-            from: 'europeassistance@hotmail.com',
-            to: [
-              customer.personal_details
-                .email_address,
-              'sp241930@gmail.com',
+            from: 'support@eahomecare.in',
+            to: customer.personal_details.email_address,
+            cc: [
+              'adaruwala@europ-assistance.in',
+              'rpadave.extern@europ-assistance.in',
+              'zmeghani.extern@europ-assistance.in',
+              'spandey.extern@europ-assistance.in',
             ],
             subject: 'Campaign Notification',
-            text: `Dear ${customer.personal_details.full_name}, You have a new campaign.`,
+            html: `<p>Dear ${customer.personal_details.full_name}, You have a new campaign.</p>`,
           };
 
-          transporter.sendMail(
-            mailOptions,
-            (error, info) => {
-              if (error) {
-                console.log('Error: ', error);
-                const emailLog = {
-                  status: 'failed',
-                  exception: error,
-                  customer_id: customer.id,
-                  customer_email:
-                    customer.personal_details
-                      .email_address,
-                  log_time: Date.now(),
-                };
-                emailLogs.push(emailLog);
-              } else {
-                const emailLog = {
-                  status: 'success',
-                  customer_id: customer.id,
-                  customer_email:
-                    customer.personal_details
-                      .email_address,
-                  log_time: Date.now(),
-                };
-                emailLogs.push(emailLog);
-              }
+          sendgrid.send(mailOptions)
+            .then(() => {
+              const emailLog = {
+                status: 'success',
+                customer_id: customer.id,
+                customer_email: customer.personal_details.email_address,
+                log_time: Date.now(),
+              };
+              emailLogs.push(emailLog);
               resolve('done');
-            },
-          );
+            })
+            .catch((error) => {
+              console.log('Error: ', error);
+              const emailLog = {
+                status: 'failed',
+                exception: error,
+                customer_id: customer.id,
+                customer_email: customer.personal_details.email_address,
+                log_time: Date.now(),
+              };
+              emailLogs.push(emailLog);
+              resolve('done');
+            });
         });
       }
 
