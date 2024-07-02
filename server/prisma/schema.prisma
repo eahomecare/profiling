@@ -68,6 +68,7 @@ model Customer {
   CustomerHomecareMappingCrm  CustomerHomecareMappingCrm[]
   CustomerSession             CustomerSession[]
 
+  @@index([keywordIDs])
   @@map("customers")
 }
 
