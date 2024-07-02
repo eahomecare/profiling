@@ -225,7 +225,6 @@ export class V4Controller {
     keywordsDto: KeywordsDto,
     @Res() res: Response,
   ) {
-    console.log(request.headers.crm,"REQ");
     
     this.logger.log('Getting Customer Info');
     try {
@@ -244,7 +243,7 @@ export class V4Controller {
       //   );
       // }
 
-      const crmHeader = request.headers['crm'];
+      const crmHeader = request.headers['crm']?request.headers['crm']:"HC_CRM";
       const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader;
       const customer =
         await this.customerLookupService.findCustomerByCRMIdAndName(
@@ -315,11 +314,11 @@ export class V4Controller {
           decodedAuthorizationToken,
         );
 
-      //if (!agentSession) {
-        //throw new UnauthorizedException(
-          //'Invalid authorization token',
-        //);
-      //}
+      // if (!agentSession) {
+      //   throw new UnauthorizedException(
+      //     'Invalid authorization token',
+      //   );
+      // }
 
       const contextType =
         this.contextService.identifyContext(
@@ -379,15 +378,15 @@ export class V4Controller {
           decodedAuthorizationToken,
         );
 
-    //  if (!agentSession) {
-       // throw new UnauthorizedException(
-         // 'Invalid authorization token',
-       // );
-     // }
+      // if (!agentSession) {
+      //   throw new UnauthorizedException(
+      //     'Invalid authorization token',
+      //   );
+      // }
 
-     // const crmName = agentSession.CRM;
       const crmHeader = request.headers['crm']?request.headers['crm']:"HC_CRM";
       const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader;
+
       const customer =
         await this.customerLookupService.findCustomerByCRMIdAndName(
           questionsDto.customerCRMId,
@@ -464,40 +463,38 @@ export class V4Controller {
           decodedAuthorizationToken,
         );
 
-      //if (!agentSession) {
-        //throw new UnauthorizedException(
-          //'Invalid authorization token',
-        //);
-      //}
-
-      //const crmName = agentSession.CRM;
+      // if (!agentSession) {
+      //   throw new UnauthorizedException(
+      //     'Invalid authorization token',
+      //   );
+      // }
 
       const crmHeader = request.headers['crm']?request.headers['crm']:"HC_CRM";
-      const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader; 
-     
-    const customer =
+      const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader;
+
+      const customer =
         await this.customerLookupService.findCustomerByCRMIdAndName(
           submitDataDto.customerCRMId,
           crmName,
         );
-       
+
       if (!customer) {
         throw new UnauthorizedException(
           'No customer found with provided mobile number.',
         );
       }
 
-      //const agentID =
-        //await this.submitService.getAgentIDFromSession(
-         // agentSession.id,
-        //);
+      // const agentID =
+      //   await this.submitService.getAgentIDFromSession(
+      //     agentSession.id,
+      //   );
 
 
       const agentIDHeader = request.headers['agentID']?request.headers['agentID']:"";
       const agentID = Array.isArray(agentIDHeader) ? agentIDHeader.join(', ') : agentIDHeader;
 
       const agentSubmitData = {
-        CRM: crmName,
+        CRM: agentSession.CRM,
         customerID: customer.id,
         agentID,
         remarks: submitDataDto.remarks || '',
@@ -604,14 +601,14 @@ export class V4Controller {
           decodedToken,
         );
 
-     // if (!agentSession) {
-       // throw new UnauthorizedException(
-         // 'Invalid authorization token',
-        //);
-     // }
+      // if (!agentSession) {
+      //   throw new UnauthorizedException(
+      //     'Invalid authorization token',
+      //   );
+      // }
 
       const crmHeader = request.headers['crm']?request.headers['crm']:"HC_CRM";
-      const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader; 
+      const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader;
 
       const customer =
         await this.customerLookupService.findCustomerByCRMIdAndName(
@@ -652,19 +649,16 @@ export class V4Controller {
           decodedToken,
         );
 
-      //if (!agentSession) {
-        //throw new UnauthorizedException(
-          //'Invalid authorization token',
-        //);
-      //}
-
-      const crmHeader = request.headers['crm']?request.headers['crm']:"HC_CRM";
-      const crmName = Array.isArray(crmHeader) ? crmHeader.join(', ') : crmHeader;
+      if (!agentSession) {
+        throw new UnauthorizedException(
+          'Invalid authorization token',
+        );
+      }
 
       const customer =
         await this.customerLookupService.findCustomerByCRMIdAndName(
           campaignDto.customerCRMId,
-          crmName,
+          agentSession.CRM,
         );
 
       const campaignResult =
