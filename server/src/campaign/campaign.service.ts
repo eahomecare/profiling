@@ -3,7 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Campaign, Prisma } from '@prisma/client';
 import * as sendgrid from '@sendgrid/mail';
 
-sendgrid.setApiKey('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');
+
+
 
 type CustomCampaignReportCreateInput = {
   campaign: {
@@ -40,7 +41,14 @@ function isEmailLog(log: any): log is EmailLog {
 export class CampaignService {
   constructor(
     private readonly prisma: PrismaService,
-  ) {}
+    
+  ) {
+    sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+    console.log(process.env.SENDGRID_API_KEY);
+    
+  }
+
+
 
   async findAll(): Promise<Campaign[]> {
     return this.prisma.campaign.findMany({
