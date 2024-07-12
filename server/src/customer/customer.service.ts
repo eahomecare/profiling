@@ -505,34 +505,38 @@ export class CustomerService {
     }
   }
 
-  async getCustomersByKeyword(
-    keywordCategoryId: string,
-  ) {
+  async getCustomersByKeyword(keywordCategoryId: string) {
     try {
       console.log(keywordCategoryId);
-
-      const customers =
-        await this.prisma.customer.findMany({
-          where: {
-            keywords: {
-              some: {
-                id: keywordCategoryId,
-              },
-            },
-          },
-        });
-
+  
+      // Fetch keyword and associated customer IDs
+      const keyword = await this.prisma.keyword.findUnique({
+        where: { id: keywordCategoryId },
+        select: { customerIDs: true }
+      });
+  
+      if (!keyword) {
+        throw new Error('Keyword not found');
+      }
+  
+      const customerIDs = keyword.customerIDs;
+  
+      // Fetch customers using the customer IDs
+      const customers = await this.prisma.customer.findMany({
+        where: {
+          id: { in: customerIDs }
+        }
+      });
+  
       return customers;
     } catch (error) {
-      console.error(
-        'Error fetching customers by keyword category:',
-        error,
-      );
+      console.error('Error fetching customers by keyword category:', error);
       throw error;
     } finally {
       await this.prisma.$disconnect();
     }
   }
+  
 
   async addCustomer_Homecare(
     customerInput: Prisma.CustomerCreateInput,
