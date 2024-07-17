@@ -17,12 +17,15 @@ import { CreateCustomerHomecareCrmPayload } from './types';
 import { log } from 'console';
 import { ProfileTypeCustomerMappingService } from 'src/profile-type-customer-mapping/profile-type-customer-mapping.service';
 import { ProfileCountWidgetService } from '../widgets/profileCountWidget.service';
+import { CustomerElasticService } from './customerElastic.service';
 
 @Injectable()
 export class CustomerService {
   constructor(
     private prisma: PrismaService,
     private profileTypeCustommerMapping: ProfileTypeCustomerMappingService,
+    private customerElasticService: CustomerElasticService,
+
   ) {}
 
   async countCustomersByMonth(source: string) {
@@ -582,6 +585,11 @@ export class CustomerService {
           },
         });
 
+        await this.customerElasticService.indexOrUpdateCustomer(
+          'customertable',
+          customer.id,
+        );
+
       return createdCustomer;
     } catch (error) {
       return error;
@@ -809,6 +817,11 @@ export class CustomerService {
             source: 'homecare',
           },
         });
+
+        await this.customerElasticService.indexOrUpdateCustomer(
+          'customertable',
+          customerMaster.id,
+        );
 
         await this.prisma.personal_Details.create({
           data: {
