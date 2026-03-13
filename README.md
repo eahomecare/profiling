@@ -310,6 +310,334 @@ The system uses RAG because:
 
 ---
 
+## Custom Model Fine-Tuning with HuggingFace
+
+You're experimenting with training your own model using the survey examples. Here's the architecture and methods:
+
+### Why Fine-Tune Custom Models?
+
+**Current Approach (Using Pre-trained):**
+- OpenAI GPT-3: Expensive API calls (~$0.02-0.20 per request)
+- HuggingFace BigScience Bloom: Free but generic knowledge
+
+**Custom Fine-Tuned Model Benefits:**
+- ✅ Lower inference costs (local/hosted model)
+- ✅ Domain-specific knowledge (survey profiling)
+- ✅ Better quality for your specific task
+- ✅ Faster inference
+- ✅ Full control over model behavior
+
+### Fine-Tuning Methods & Architecture
+
+#### **Option 1: LoRA (Low-Rank Adaptation)**
+
+LoRA freezes the base model and adds learnable "adapters" to reduce training parameters by 90%+.
+
+**Architecture:**
+```
+Base Model (Frozen)           LoRA Adapters (Trainable)
+    │                                  │
+    ├─ Query Weight W_q (Frozen)  ├─ A (input: 4096→16)
+    ├─ Key Weight W_k (Frozen)    ├─ B (output: 16→4096)
+    └─ Value W_v (Frozen)         └─ BA (rank-16 update)
+    
+Final Output = W_v + BA (adds only small rank-16 modification)
+```
+
+**Training Code Example:**
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments
+from peft import get_peft_model, LoraConfig, TaskType
+
+# Load base model
+model_name = "google/flan-t5-base"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+# Configure LoRA
+lora_config = LoraConfig(
+    r=16,                           # LoRA rank (hidden dimension)
+    lora_alpha=32,                  # Scaling factor
+    target_modules=["q", "v"],      # Which layers to apply LoRA
+    lora_dropout=0.05,              # Regularization
+    bias="none",
+    task_type=TaskType.SEQ_2_SEQ_LM
+)
+
+# Apply LoRA to model
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()  # Shows ~3% trainable parameters
+
+# Training arguments
+training_args = TrainingArguments(
+    output_dir="./survey-model-lora",
+    num_train_epochs=3,
+    per_device_train_batch_size=8,
+    learning_rate=1e-4,
+    logging_steps=100,
+    save_steps=500,
+    warmup_steps=100,
+)
+
+# Train
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,  # Your survey examples
+)
+
+trainer.train()
+model.save_pretrained("./survey-model-lora-final")
+```
+
+**Training Requirements:**
+- **Time**: 2-4 hours on single GPU (e.g., Tesla V100)
+- **Memory**: 16GB GPU (vs 80GB+ for full fine-tuning)
+- **Data**: 1000+ examples recommended
+- **Cost**: ~$5-20 on cloud GPU
+
+---
+
+#### **Option 2: QLoRA (Quantized LoRA) - Most Cost-Effective**
+
+Combines LoRA with 4-bit quantization for ultra-low memory usage.
+
+**Architecture:**
+```
+Full Precision Model (32-bit)
+    │
+    ▼
+4-bit Quantized Base (bitsandbytes)    +    LoRA Adapters (Trainable)
+    │                                        │
+    └─ 4x smaller model                  └─ Full precision adapters
+       Uses 8GB GPU for 70B models           ~2-4GB for adapters
+```
+
+**QLoRA Training Code:**
+
+```python
+from transformers import AutoModelForCausalLM, BitsAndBytesConfig, AutoTokenizer
+from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model
+import torch
+
+# 4-bit quantization config
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",          # NormalFloat 4-bit
+    bnb_4bit_use_double_quant=True,     # double quantization
+    bnb_4bit_compute_dtype=torch.bfloat16
+)
+
+# Load with quantization
+model_name = "bigscience/bloom"
+model = AutoModelForCausalLM.from_pretrained(
+    model_name,
+    quantization_config=quantization_config,
+    device_map="auto"
+)
+
+# Prepare for training
+model = prepare_model_for_kbit_training(model)
+
+# Apply LoRA
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    modules_to_save=["query_key_value"],  # BLOOM specific
+    task_type=TaskType.CAUSAL_LM
+)
+
+model = get_peft_model(model, lora_config)
+
+# Train with lower memory footprint
+trainer = Trainer(...)
+trainer.train()
+```
+
+**Benefits of QLoRA:**
+- ✅ Can fine-tune 70B parameter models on single GPU
+- ✅ ~40% faster training than LoRA
+- ✅ Minimal performance loss vs full precision
+- ✅ Training cost: ~$2-5
+
+---
+
+#### **Option 3: Full Fine-Tuning (Traditional)**
+
+Train all model parameters (most compute-intensive but best quality).
+
+```python
+model = AutoModelForCausalLM.from_pretrained(model_name)
+
+training_args = TrainingArguments(
+    output_dir="./survey-model-full",
+    num_train_epochs=3,
+    per_device_train_batch_size=4,  # Smaller batch due to memory
+    gradient_accumulation_steps=2,
+    learning_rate=5e-5,
+    warmup_ratio=0.1,
+    save_strategy="epoch",
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=train_dataset,
+    data_collator=data_collator,
+)
+
+trainer.train()
+```
+
+---
+
+### Your Training Dataset Setup
+
+Using your `plainStringExamples.py` (~1500 examples):
+
+```python
+from datasets import Dataset
+import json
+
+# Convert your examples to HuggingFace dataset format
+examples = [
+    {
+        "input": "key: hobbies, level: 1",
+        "output": "Question: text: What kind of hobbies are you interested in?, level: 2, Answers: Reading, Music, Sports"
+    },
+    # ... more examples
+]
+
+dataset = Dataset.from_dict({
+    "input": [ex["input"] for ex in examples],
+    "output": [ex["output"] for ex in examples]
+})
+
+# Split train/validation
+split_dataset = dataset.train_test_split(test_size=0.1)
+
+# Format for model training
+def format_function(example):
+    return {
+        "text": f"Input: {example['input']}\nOutput: {example['output']}"
+    }
+
+formatted_dataset = split_dataset.map(format_function)
+```
+
+---
+
+### Training Comparison Table
+
+| Method | GPU Memory | Training Time | Cost | Quality | Use Case |
+|--------|-----------|---|------|---------|----------|
+| **LoRA** | 16GB | 2-4 hrs | $10-20 | 95% of full | **Recommended** |
+| **QLoRA** | 8GB | 3-5 hrs | $2-5 | 92% of full | Budget-conscious |
+| **Full** | 40GB+ | 6-12 hrs | $50-100+ | 100% | Best quality |
+| **No training (Current)** | N/A | N/A | $0.02-0.20/req | Variable | Quick prototyping |
+
+---
+
+### Fine-Tuning Pipeline Architecture
+
+```
+plainStringExamples.ts (~1500 examples)
+       │
+       ▼
+Convert to HF Dataset Format
+       │
+       ├─ Training Set (90%)
+       ├─ Validation Set (10%)
+       │
+       ▼
+Tokenize Examples
+       │
+       ▼
+Select Fine-Tuning Method
+       ├─ LoRA (recommended)
+       ├─ QLoRA (cost-effective)
+       └─ Full Fine-Tune (best quality)
+       │
+       ▼
+Configure Trainer
+       │
+       ├─ Learning Rate: 1e-4 to 5e-5
+       ├─ Batch Size: 4-16
+       ├─ Epochs: 3-5
+       ├─ Warmup Steps: 100-500
+       │
+       ▼
+Train Model
+       │
+       ├─ Save checkpoints every N steps
+       ├─ Monitor validation loss
+       ├─ Early stopping if no improvement
+       │
+       ▼
+Save LoRA Weights (~50MB) or Full Model
+       │
+       ▼
+Load in NestJS Service
+       │
+       ├─ Use LangChain with custom model
+       └─ Replace OpenAI API with local inference
+```
+
+---
+
+### Integration with Your NestJS Server
+
+Once fine-tuned, replace the OpenAI call with your model:
+
+```typescript
+import { HuggingFaceInference } from "langchain/llms/hf";
+
+// Option 1: Use HuggingFace Inference API
+const hf_model = new HuggingFaceInference({
+  apiKey: process.env.HUGGINGFACEHUB_API_TOKEN,
+  model: "your-username/survey-model-lora",  // Your fine-tuned model
+});
+
+// Option 2: Local inference (faster, no API costs)
+const local_model = new Ollama({
+  model: "survey-model-lora",
+  baseUrl: "http://localhost:11434"
+});
+
+// In LangchainService
+async process(inputString: string) {
+  // ... existing prompt setup ...
+  
+  const result = await hf_model.call(formattedPrompt);
+  // or
+  const result = await local_model.call(formattedPrompt);
+  
+  return result;
+}
+```
+
+---
+
+### Recommended Training Approach for Your Use Case
+
+**Step 1: Start with LoRA**
+- Use `google/flan-t5-base` or `bigscience/bloom`
+- Train for 3 epochs with your 1500 examples
+- Validate on holdout test set
+
+**Step 2: Evaluate Quality**
+- Compare outputs vs pre-trained models
+- Check consistency with your survey format
+- Measure inference speed
+
+**Step 3: Optimize**
+- If too slow → Use QLoRA for faster inference
+- If low quality → Add more examples or full fine-tune
+- If cost is high → Deploy as local service with Ollama
+
+---
+
 ## Data Categories (Training Examples)
 
 The system has pre-trained examples for:
