@@ -164,9 +164,146 @@ User Input                    LLM Processing                Output
 
 ---
 
+## RAG (Retrieval-Augmented Generation) Architecture
+
+This application heavily uses **RAG pattern** to improve the quality of generated survey questions.
+
+### RAG Flow
+
+```
+User Input
+    │
+    ▼
+Convert to Embedding (OpenAIEmbeddings)
+    │
+    ▼
+Vector Search (HNSWLib/Chroma)
+    │
+    ├─ Retrieve top-k relevant examples (k=50)
+    │
+    ▼
+Augment Prompt with Retrieved Examples
+    │
+    ├─ Example 1: hobbies → music → playing
+    ├─ Example 2: hobbies → music → listening
+    ├─ Example 3: sports → music → ... (less similar)
+    │      ...
+    ├─ Example 50
+    │
+    ▼
+Pass to LLM for Generation
+    │
+    ▼
+Generate New Question Following Retrieved Patterns
+```
+
+### Why RAG is Used Here
+
+**Without RAG (Direct Prompting):**
+```
+LLM might generate inconsistent formats, wrong level jumps, 
+or illogical answers not following the hierarchical pattern.
+```
+
+**With RAG (Now):**
+```
+LLM sees similar examples in the prompt → 
+Learns the exact pattern/format → 
+Generates consistent, contextually appropriate next question
+```
+
+### RAG Implementation Details
+
+**1. Retrieval (Vector Search)**
+
+```typescript
+const exampleSelector = 
+  SemanticSimilarityExampleSelector.fromExamples(
+    examples,                    // 100+ training examples
+    new OpenAIEmbeddings(),      // Embedding model
+    HNSWLib,                     // Vector DB (HNSW = Hierarchical Navigable Small World)
+    { k: 50 }                    // Retrieve top 50 most similar
+  );
+```
+
+The system converts the user input to a vector and finds the 50 most semantically similar examples from the knowledge base.
+
+**Example:** User input `'key: hobbies, level: 1, key: music, level: 2'` will retrieve examples about music-related questions at level 3, not about sports or food.
+
+**2. Augmentation (Adding Context)**
+
+```typescript
+const prompt = new FewShotPromptTemplate({
+  exampleSelector,              // Retrieved examples
+  examplePrompt,                // Template for formatting examples
+  suffix: `                     // Instructions for format
+    Output format:
+    Question: text: ..., level: ..., Answers: ...
+    {input}
+  `,
+  inputVariables: ['input']
+});
+```
+
+The final prompt looks like:
+
+```
+Example 1:
+Input: key: hobbies, level: 1, key: music, level: 2
+Response: Question: text: Do you enjoy listening or playing?, level: 3, Answers: ...
+
+Example 2:
+Input: key: hobbies, level: 1, key: reading, level: 2
+Response: Question: text: What type of books?, level: 3, Answers: ...
+
+... (more examples) ...
+
+Output format instructions...
+
+Now generate for:
+Input: key: hobbies, level: 1, key: music, level: 2
+```
+
+**3. Generation (LLM Response)**
+
+```typescript
+const model = new OpenAI({
+  openAIApiKey: process.env.OPEN_AI_KEY,
+  temperature: 0.9
+});
+
+const result = await model.call(formattedPrompt);
+```
+
+The LLM now has:
+- **Context**: 50 similar examples showing the pattern
+- **Instructions**: Clear format requirements in suffix
+- **Input**: The user's current selection
+
+Result: Consistent, contextually appropriate output.
+
+---
+
+## RAG vs Traditional Approaches
+
+| Approach | Method | Quality | Consistency |
+|----------|--------|---------|-------------|
+| **Hardcoded** | Store all 5-level trees as JSON | 100% consistent | Limited flexibility |
+| **Prompt Engineering Only** | Send instruction + input to LLM | Variable | Format inconsistency |
+| **RAG (Current)** | Retrieve similar examples + prompt LLM | High quality | Format consistent |
+
+The system uses RAG because:
+- ✅ Reduces hallucinations by providing concrete examples
+- ✅ Ensures format consistency (Question, Level, Answers always present)
+- ✅ Enables semantic matching (related topics retrieved together)
+- ✅ Scalable (add more examples without code changes)
+- ✅ Cost-effective (smaller context window needed than pure prompting)
+
+---
+
 ## Prompt Engineering Strategy
 
-1. **Pattern Learning**: LLM learns from 100+ examples how to structure answers
+1. **Pattern Learning**: LLM learns from 100+ retrieved examples how to structure answers
 2. **Semantic Matching**: Only relevant examples are included (not random 50)
 3. **Context Awareness**: Input history (e.g., "hobbies → music → playing") guides generation
 4. **Format Enforcement**: Suffix explicitly defines output structure: `Question: text: ..., level: ..., Answers: ...`
