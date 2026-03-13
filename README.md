@@ -4,7 +4,139 @@ This system uses **Few-Shot Learning with Semantic Similarity** to generate cont
 
 ---
 
-## Core Architecture
+## System Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────┐
+│                         CUSTOMER PROFILING SYSTEM                                    │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+
+                              DATA LAYER
+      ┌─────────────────────────────────────────────────────────────┐
+      │  plainStringExamples.ts (~1500 survey Q&A examples)          │
+      │  ├─ Hobbies, Sports, Food, Fitness, Travel, Tech, Gadgets   │
+      │  └─ 5-level hierarchical training data                       │
+      └──────────────────┬──────────────────────────────────────────┘
+                         │
+                    ┌────▼────────────────────────────────────────────┐
+                    │    TRAINING & FINE-TUNING PIPELINE              │
+                    │                                                  │
+                    │  ┌──────────────────────────────────────────┐   │
+                    │  │ LoRA Fine-Tuning                         │   │
+                    │  │ ├─ Base: Flan-T5 or Bloom               │   │
+                    │  │ ├─ Adapters: rank-16 (3% params)        │   │
+                    │  │ ├─ Time: 2-4 hrs on GPU                 │   │
+                    │  │ └─ Output: survey-model-lora (~50MB)     │   │
+                    │  └──────────────────────────────────────────┘   │
+                    │  ┌──────────────────────────────────────────┐   │
+                    │  │ QLoRA Fine-Tuning (Cost-effective)       │   │
+                    │  │ ├─ 4-bit Quantization + LoRA adapters   │   │
+                    │  │ ├─ Memory: 8GB GPU                       │   │
+                    │  │ ├─ Cost: $2-5                            │   │
+                    │  │ └─ Output: quantized-survey-model        │   │
+                    │  └──────────────────────────────────────────┘   │
+                    └────┬──────────────────────────────────────────────┘
+                         │
+        ┌────────────────┼────────────────┬──────────────────┐
+        │                │                │                  │
+        ▼                ▼                ▼                  ▼
+
+   EMBEDDING LAYER                   LLM OPTIONS
+   ┌─────────────────┐    ┌────────────────────────────────────────┐
+   │ Embedding       │    │ Option 1: OpenAI API (Production)     │
+   │ Models:         │    │ └─ GPT-3 (text-davinci-003)           │
+   │                 │    │ └─ Cost: $0.02-0.20 per request       │
+   │ ├─ OpenAI       │    │                                        │
+   │ │  (1536-dim)   │    │ Option 2: HuggingFace Hub (Free)      │
+   │ │  Cost: $0.10/ │    │ ├─ bigscience/bloom-560m              │
+   │ │  1M tokens    │    │ ├─ google/flan-t5-base                │
+   │ │               │    │ ├─ databricks/dolly-v2-12b            │
+   │ ├─ Sentence     │    │ └─ No API costs (rate limited)        │
+   │ │  Transformers │    │                                        │
+   │ │  (FAISS)      │    │ Option 3: Local Fine-Tuned Model      │
+   │ │  Free         │    │ └─ Custom-trained survey-model-lora   │
+   │ │               │    │ └─ Deploy via Ollama (local inference) │
+   │ └─ Embeddings   │    └────────────────────────────────────────┘
+   └────────┬────────┘                   │
+            │                            │
+            └────────────┬───────────────┘
+                         │
+        ┌────────────────▼──────────────────┐
+        │  VECTOR STORE / RETRIEVAL         │
+        │                                   │
+        │  ┌─────────────────────────────┐  │
+        │  │ Chroma DB                   │  │
+        │  │ ├─ In-memory vector store   │  │
+        │  │ ├─ Embedded in NestJS app   │  │
+        │  │ └─ 1500 embeddings indexed  │  │
+        │  └─────────────────────────────┘  │
+        │                                   │
+        │  ┌─────────────────────────────┐  │
+        │  │ HNSWLib (Alternative)       │  │
+        │  │ ├─ Hierarchical algorithms  │  │
+        │  │ ├─ Fast similarity search   │  │
+        │  │ └─ Used in TypeScript impl  │  │
+        │  └─────────────────────────────┘  │
+        │                                   │
+        │  ┌─────────────────────────────┐  │
+        │  │ FAISS (Alternative)         │  │
+        │  │ ├─ Facebook's search lib    │  │
+        │  │ └─ Used in Python Flask     │  │
+        │  └─────────────────────────────┘  │
+        └────────────────┬──────────────────┘
+                         │
+        ┌────────────────▼──────────────────────────────────┐
+        │     PROMPT ENGINEERING & RAG LAYER                │
+        │                                                    │
+        │  User Input: "key: hobbies, level: 1"            │
+        │          │                                        │
+        │          ▼                                        │
+        │  1. Convert to embedding vector                   │
+        │          │                                        │
+        │          ▼                                        │
+        │  2. Retrieval: Find top-50 similar examples       │
+        │          │                                        │
+        │          ▼                                        │
+        │  3. Augmentation: Build FewShotPrompt with        │
+        │     - Retrieved examples                          │
+        │     - Format instructions (suffix)                │
+        │     - User input                                  │
+        │          │                                        │
+        │          ▼                                        │
+        │  4. Generation: Send to LLM                       │
+        │          │                                        │
+        │          ▼                                        │
+        │  Output: "Question: text: ..., level: ..., ..."  │
+        └────────────────┬───────────────────────────────────┘
+                         │
+        ┌────────────────▼──────────────────┐
+        │   APPLICATION LAYER                │
+        │                                    │
+        │  NestJS Server                     │
+        │  ├─ langchain.controller.ts        │
+        │  ├─ langchain.service.ts           │
+        │  └─ POST /process endpoint         │
+        │                                    │
+        │  Python Flask (Alternative)        │
+        │  ├─ server-openai.py               │
+        │  ├─ server-huggingfacehub.py       │
+        │  └─ POST /process endpoint         │
+        └────────────────┬──────────────────┘
+                         │
+        ┌────────────────▼──────────────────┐
+        │   FRONTEND LAYER                   │
+        │                                    │
+        │  React Dashboard (boilerplate)    │
+        │  ├─ Survey UI Components           │
+        │  ├─ Question Display               │
+        │  ├─ Answer Selection               │
+        │  └─ Customer Profile Management    │
+        └────────────────────────────────────┘
+```
+
+---
+
+## Core Architecture Flow
 
 ```
 Frontend (React)
@@ -312,7 +444,7 @@ The system uses RAG because:
 
 ## Custom Model Fine-Tuning with HuggingFace
 
-You're experimenting with training your own model using the survey examples. Here's the architecture and methods:
+We are experimenting with training our own model using the survey examples. Here's the architecture and methods:
 
 ### Why Fine-Tune Custom Models?
 
@@ -492,9 +624,9 @@ trainer.train()
 
 ---
 
-### Your Training Dataset Setup
+### Our Training Dataset Setup
 
-Using your `plainStringExamples.py` (~1500 examples):
+Using our `plainStringExamples.py` (~1500 examples):
 
 ```python
 from datasets import Dataset
@@ -586,9 +718,9 @@ Load in NestJS Service
 
 ---
 
-### Integration with Your NestJS Server
+### Integration with Our NestJS Server
 
-Once fine-tuned, replace the OpenAI call with your model:
+Once fine-tuned, replace the OpenAI call with our fine-tuned model:
 
 ```typescript
 import { HuggingFaceInference } from "langchain/llms/hf";
@@ -596,7 +728,7 @@ import { HuggingFaceInference } from "langchain/llms/hf";
 // Option 1: Use HuggingFace Inference API
 const hf_model = new HuggingFaceInference({
   apiKey: process.env.HUGGINGFACEHUB_API_TOKEN,
-  model: "your-username/survey-model-lora",  // Your fine-tuned model
+  model: "our-org/survey-model-lora",  // Our fine-tuned model
 });
 
 // Option 2: Local inference (faster, no API costs)
@@ -619,16 +751,16 @@ async process(inputString: string) {
 
 ---
 
-### Recommended Training Approach for Your Use Case
+### Recommended Training Approach for Our Use Case
 
 **Step 1: Start with LoRA**
 - Use `google/flan-t5-base` or `bigscience/bloom`
-- Train for 3 epochs with your 1500 examples
+- Train for 3 epochs with our 1500 examples
 - Validate on holdout test set
 
 **Step 2: Evaluate Quality**
 - Compare outputs vs pre-trained models
-- Check consistency with your survey format
+- Check consistency with our survey format
 - Measure inference speed
 
 **Step 3: Optimize**
